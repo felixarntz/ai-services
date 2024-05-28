@@ -1,0 +1,69 @@
+name: PHP Code Linting
+
+on:
+  push:
+    branches:
+      - main
+    # Only run if PHP-related files changed.
+    paths:
+      - '.github/workflows/php-lint.yml'
+      - '**.php'
+      - 'phpcs.xml.dist'
+      - 'phpmd.xml'
+      - 'phpstan.neon.dist'
+      - 'composer.json'
+      - 'composer.lock'
+  pull_request:
+    branches:
+      - main
+    # Only run if PHP-related files changed.
+    paths:
+      - '.github/workflows/php-lint.yml'
+      - '**.php'
+      - 'phpcs.xml.dist'
+      - 'phpmd.xml'
+      - 'phpstan.neon.dist'
+      - 'composer.json'
+      - 'composer.lock'
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  php-lint:
+    name: PHP
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: styfle/cancel-workflow-action@0.12.1
+
+      - uses: actions/checkout@v3
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate Composer configuration
+        run: composer validate
+
+      - name: Install Composer dependencies
+        run: composer update
+
+      - name: Prefix relevant dependencies
+        run: composer prefix-dependencies
+
+      - name: PHP Lint
+        run: composer lint
+
+      - name: PHPStan
+        run: composer phpstan
+
+      - name: PHPMD
+        run: composer phpmd

@@ -1,0 +1,14 @@
+includes:
+	- phar://phpstan.phar/conf/bleedingEdge.neon
+parameters:
+	bootstrapFiles:
+		- php-tools/phpstan-bootstrap.php
+	level: 6
+	paths:
+		- includes/
+		- constants.php
+		- load.php
+		- uninstall.php
+	scanDirectories:
+		- third-party
+	treatPhpDocTypesAsCertain: false

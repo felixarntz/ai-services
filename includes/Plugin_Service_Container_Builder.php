@@ -1,0 +1,224 @@
+<?php
+/**
+ * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Service_Container_Builder
+ *
+ * @since n.e.x.t
+ * @package wp-oop-plugin-lib-example
+ */
+
+namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
+
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin\Settings_Page;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Installation\Plugin_Installer;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+
+/**
+ * Plugin service container builder.
+ *
+ * @since n.e.x.t
+ */
+class Plugin_Service_Container_Builder {
+
+	/**
+	 * Service container.
+	 *
+	 * @since n.e.x.t
+	 * @var Service_Container
+	 */
+	private $container;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since n.e.x.t
+	 */
+	public function __construct() {
+		$this->container = new Service_Container();
+	}
+
+	/**
+	 * Gets the service container.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Service_Container Service container for the plugin.
+	 */
+	public function get(): Service_Container {
+		return $this->container;
+	}
+
+	/**
+	 * Builds the plugin environment service for the service container.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $main_file Absolute path to the plugin main file.
+	 * @return self The builder instance, for chaining.
+	 */
+	public function build_env( string $main_file ): self {
+		$this->container['plugin_env'] = function () use ( $main_file ) {
+			return new Plugin_Env( $main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
+		};
+
+		return $this;
+	}
+
+	/**
+	 * Builds the services for the service container.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return self The builder instance, for chaining.
+	 */
+	public function build_services(): self {
+		$this->build_general_services();
+		$this->build_dependency_services();
+		$this->build_option_services();
+		$this->build_entity_services();
+		$this->build_admin_services();
+
+		return $this;
+	}
+
+	/**
+	 * Builds the general services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_general_services(): void {
+		$this->container['input']            = function () {
+			return new Input();
+		};
+		$this->container['current_user']     = function () {
+			return new Current_User();
+		};
+		$this->container['plugin_installer'] = function ( $cont ) {
+			return new Plugin_Installer(
+				$cont['plugin_env'],
+				$cont['option_container']['wpoopple_version'],
+				$cont['option_container']['wpoopple_delete_data'],
+				$cont['option_container']['wpoopple_options']
+			);
+		};
+	}
+
+	/**
+	 * Builds the dependency services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_dependency_services(): void {
+		$this->container['script_registry'] = function () {
+			return new Script_Registry();
+		};
+		$this->container['style_registry']  = function () {
+			return new Style_Registry();
+		};
+	}
+
+	/**
+	 * Builds the option services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_option_services(): void {
+		$this->container['option_repository'] = function () {
+			return new Option_Repository();
+		};
+		$this->container['option_container']  = function () {
+			$options = new Option_Container();
+			$this->add_options_to_container( $options );
+			return $options;
+		};
+		$this->container['option_registry']   = function () {
+			return new Option_Registry( 'wp_oop_plugin_lib_example' );
+		};
+	}
+
+	/**
+	 * Builds the entity services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_entity_services(): void {
+		$this->container['post_repository'] = function () {
+			return new Post_Repository();
+		};
+	}
+
+	/**
+	 * Builds the admin services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_admin_services(): void {
+		$this->container['admin_settings_menu'] = function () {
+			return new Admin_Menu( 'options-general.php' );
+		};
+		$this->container['admin_settings_page'] = function ( $cont ) {
+			return new Settings_Page(
+				$cont['plugin_env'],
+				$cont['script_registry']
+			);
+		};
+	}
+
+	/**
+	 * Adds the option definitions to the given option container.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Option_Container $options Option container instance.
+	 */
+	private function add_options_to_container( Option_Container $options ): void {
+		// Option to control plugin version.
+		$options['wpoopple_version'] = function () {
+			return new Option(
+				$this->container['option_repository'],
+				'wpoopple_version',
+				array(
+					'type'     => 'string',
+					'default'  => '',
+					'autoload' => true,
+				)
+			);
+		};
+
+		// Option for whether to delete data on uninstall.
+		$options['wpoopple_delete_data'] = function () {
+			return new Option(
+				$this->container['option_repository'],
+				'wpoopple_delete_data',
+				array(
+					'type'     => 'bool',
+					'default'  => false,
+					'autoload' => false,
+				)
+			);
+		};
+
+		// Option to store the main plugin data.
+		$options['wpoopple_options'] = function () {
+			return new Option(
+				$this->container['option_repository'],
+				'wpoopple_options',
+				array(
+					'type'     => 'object',
+					'default'  => array(),
+					'autoload' => true,
+				)
+			);
+		};
+	}
+}

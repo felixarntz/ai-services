@@ -19,6 +19,7 @@ $wp_oop_plugin_lib_folders = array(
 	'General',
 	'Installation',
 	'Options',
+	'Validation',
 );
 
 $wp_oop_plugin_lib_folders_concat = implode( '|', $wp_oop_plugin_lib_folders );

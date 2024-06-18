@@ -22,6 +22,7 @@ use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_L
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Validation\General_Validation_Rule_Builder;
 
 /**
  * Plugin service container builder.
@@ -184,26 +185,37 @@ class Plugin_Service_Container_Builder {
 	private function add_options_to_container( Option_Container $options ): void {
 		// Option to control plugin version.
 		$options['wpoopple_version'] = function () {
+			$sanitize_callback = ( new General_Validation_Rule_Builder() )
+				->require_string()
+				->format_version()
+				->get_option_sanitize_callback();
+
 			return new Option(
 				$this->container['option_repository'],
 				'wpoopple_version',
 				array(
-					'type'     => 'string',
-					'default'  => '',
-					'autoload' => true,
+					'type'              => 'string',
+					'sanitize_callback' => $sanitize_callback,
+					'default'           => '',
+					'autoload'          => true,
 				)
 			);
 		};
 
 		// Option for whether to delete data on uninstall.
 		$options['wpoopple_delete_data'] = function () {
+			$sanitize_callback = ( new General_Validation_Rule_Builder() )
+				->require_boolean()
+				->get_option_sanitize_callback();
+
 			return new Option(
 				$this->container['option_repository'],
 				'wpoopple_delete_data',
 				array(
-					'type'     => 'bool',
-					'default'  => false,
-					'autoload' => false,
+					'type'              => 'bool',
+					'sanitize_callback' => $sanitize_callback,
+					'default'           => false,
+					'autoload'          => false,
 				)
 			);
 		};

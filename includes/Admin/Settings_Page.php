@@ -63,11 +63,11 @@ class Settings_Page extends Abstract_Admin_Page {
 					'wpoopple-settings',
 					array(
 						'src'      => $this->plugin_env->url( 'build/index.js' ),
-						// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-						// 'manifest' => $this->plugin_env->path( 'build/index.asset.php' ),
+						'manifest' => $this->plugin_env->path( 'build/index.asset.php' ),
 						'strategy' => 'defer',
 					)
 				);
+				$this->script_registry->enqueue( 'wpoopple-settings' );
 			}
 		);
 	}

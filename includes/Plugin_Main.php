@@ -10,6 +10,7 @@ namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
 
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
 /**
  * Plugin main class.
@@ -113,12 +114,12 @@ class Plugin_Main implements With_Hooks {
 	 */
 	private function add_service_hooks(): void {
 		// Register options.
-		add_action(
-			'init',
-			function () {
+		$option_registrar = new Option_Hook_Registrar( $this->services['option_registry'] );
+		$option_registrar->add_register_callback(
+			function ( $registry ) {
 				foreach ( $this->services['option_container']->get_keys() as $key ) {
 					$option = $this->services['option_container']->get( $key );
-					$this->services['option_registry']->register(
+					$registry->register(
 						$option->get_key(),
 						$option->get_registration_args()
 					);

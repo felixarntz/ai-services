@@ -63,7 +63,7 @@ return array(
 				);
 			}
 			return $content;
-		}
+		},
 	),
 	'exclude-classes' => array( '/^WP_[A-Za-z0-9_]+$/' ),
 );

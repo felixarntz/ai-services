@@ -9,8 +9,16 @@
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
 
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin\Settings_Page;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot_AI;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot_Loader;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Generative_AI;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Installation\Plugin_Installer;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Filters;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
@@ -84,10 +92,33 @@ class Plugin_Service_Container_Builder {
 	 */
 	public function build_services(): self {
 		$this->build_general_services();
+		$this->build_capability_services();
 		$this->build_dependency_services();
 		$this->build_option_services();
 		$this->build_entity_services();
 		$this->build_admin_services();
+
+		$this->container['chatbot_loader'] = function ( $cont ) {
+			return new Chatbot_Loader(
+				$cont['current_user'],
+				$cont['option_container']['wpoopple_api_key']
+			);
+		};
+		$this->container['chatbot_ai']     = function ( $cont ) {
+			return new Chatbot_AI( $cont['generative_ai'] );
+		};
+		$this->container['chatbot']        = function ( $cont ) {
+			return new Chatbot(
+				$cont['plugin_env'],
+				$cont['script_registry'],
+				$cont['style_registry']
+			);
+		};
+		$this->container['generative_ai']  = function ( $cont ) {
+			return new Generative_AI(
+				$cont['option_container']['wpoopple_api_key']->get_value()
+			);
+		};
 
 		return $this;
 	}
@@ -111,6 +142,27 @@ class Plugin_Service_Container_Builder {
 				$cont['option_container']['wpoopple_delete_data'],
 				$cont['option_container']['wpoopple_options']
 			);
+		};
+	}
+
+	/**
+	 * Builds the capability services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_capability_services(): void {
+		$this->container['capability_container'] = function () {
+			$capabilities                            = new Capability_Container();
+			$capabilities['wpoopple_access_chatbot'] = static function () {
+				return new Base_Capability( 'wpoopple_access_chatbot', array( 'edit_posts' ) );
+			};
+			return $capabilities;
+		};
+		$this->container['capability_controller'] = function ( $cont ) {
+			return new Capability_Controller( $cont['capability_container'] );
+		};
+		$this->container['capability_filters']    = function ( $cont ) {
+			return new Capability_Filters( $cont['capability_container'] );
 		};
 	}
 
@@ -216,6 +268,24 @@ class Plugin_Service_Container_Builder {
 					'sanitize_callback' => $sanitize_callback,
 					'default'           => false,
 					'autoload'          => false,
+				)
+			);
+		};
+
+		$options['wpoopple_api_key'] = function () {
+			$sanitize_callback = ( new General_Validation_Rule_Builder() )
+				->require_string()
+				->format_regexp( '/^[A-Za-z0-9-]+$/' )
+				->get_option_sanitize_callback();
+
+			return new Option(
+				$this->container['option_repository'],
+				'wpoopple_api_key',
+				array(
+					'type'              => 'string',
+					'sanitize_callback' => $sanitize_callback,
+					'default'           => 'AIzaSyAwWr7iLmcF--aExgltOno8ppxdxPac5bQ', // TODO: Remove this.
+					'autoload'          => true,
 				)
 			);
 		};

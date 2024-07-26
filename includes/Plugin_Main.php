@@ -45,6 +45,7 @@ class Plugin_Main implements With_Hooks {
 	 */
 	public function add_hooks(): void {
 		$this->maybe_install_data();
+		$this->load_capabilities();
 		$this->add_service_hooks();
 
 		// Testing.
@@ -52,12 +53,15 @@ class Plugin_Main implements With_Hooks {
 			'admin_notices',
 			function () {
 				echo '<div class="notice notice-info"><p>';
-				if ( $this->services['current_user']->has_cap( 'manage_options' ) ) {
-					echo esc_html( $this->services['option_container']['wpoopple_version']->get_value() );
-					echo '<br>';
-					echo esc_html( $this->services['option_container']['wpoopple_delete_data']->get_value() );
-				} else {
-					esc_html_e( 'Current user cannot manage options.', 'wp-oop-plugin-lib-example' );
+
+				$model = $this->services['chatbot_ai']->get_model();
+				try {
+					$candidates = $model->generate_content( 'Where can I add new pages?' );
+					$text     = $this->services['chatbot_ai']->get_text_from_candidates( $candidates );
+					var_dump( $text );
+				} catch ( \Exception $e ) {
+					echo 'An error occurred: ';
+					echo esc_html( $e->getMessage() );
 				}
 				echo '</p></div>';
 			}
@@ -108,6 +112,32 @@ class Plugin_Main implements With_Hooks {
 	}
 
 	/**
+	 * Loads the plugin capabilities and sets up the relevant filters.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function load_capabilities() {
+		add_action(
+			'plugins_loaded',
+			function () {
+				$controller = $this->services['capability_controller'];
+
+				/**
+				 * Fires when the plugin capabilities are loaded.
+				 *
+				 * @since n.e.x.t
+				 *
+				 * @param Capability_Controller $controller The capability controller, which can be used to modify the
+				 *                                          rules for how capabilities are granted.
+				 */
+				do_action( 'wpoopple_load_capabilities', $controller );
+
+				$this->services['capability_filters']->add_hooks();
+			}
+		);
+	}
+
+	/**
 	 * Adds general service hooks on 'init' to initialize the plugin.
 	 *
 	 * @since n.e.x.t
@@ -132,6 +162,16 @@ class Plugin_Main implements With_Hooks {
 			'admin_menu',
 			function () {
 				$this->services['admin_settings_menu']->add_page( $this->services['admin_settings_page'] );
+			}
+		);
+
+		// Load chatbot if needed.
+		add_action(
+			'init',
+			function () {
+				if ( $this->services['chatbot_loader']->can_load() ) {
+					$this->services['chatbot_loader']->load( $this->services['chatbot'] );
+				}
 			}
 		);
 	}

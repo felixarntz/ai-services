@@ -142,6 +142,80 @@ class Chat_Session {
 	}
 
 	/**
+	 * Gets the chat history.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Content[] The chat history.
+	 */
+	public function get_history(): array {
+		return $this->history;
+	}
+
+	/**
+	 * Sends a chat message to the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|Parts|Content $content         The message to send.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Candidate[] The response candidates with generated content - usually just one.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
+	 */
+	public function send_message( $content, array $request_options = array() ): array {
+		$new_content = Formatter::format_new_content( $content );
+
+		$contents   = $this->history;
+		$contents[] = $new_content;
+
+		$params = array(
+			// TODO: Add support for tools and tool config, to support code generation.
+			'contents'         => array_map(
+				static function ( Content $content ) {
+					return $content->to_array();
+				},
+				$contents
+			),
+			'generationConfig' => $this->generation_config,
+			'safetySettings'   => array_map(
+				static function ( Safety_Setting $safety_setting ) {
+					return $safety_setting->to_array();
+				},
+				$this->safety_settings
+			),
+		);
+		if ( $this->system_instruction ) {
+			$params['systemInstruction'] = $this->system_instruction->to_array();
+		}
+
+		$response = $this->api->generate_content(
+			$this->model,
+			array_filter( $params ),
+			array_merge(
+				$this->request_options,
+				$request_options
+			)
+		);
+
+		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
+			throw new Generative_AI_Exception(
+				esc_html__( 'The response from the AI service is missing the "candidates" key.', 'wp-oop-plugin-lib-example' )
+			);
+		}
+
+		$candidates = array_map(
+			array( Candidate::class, 'from_array' ),
+			$response['candidates']
+		);
+
+		$this->history[] = $new_content;
+		$this->history[] = $candidates[0]->get_content();
+
+		return $candidates;
+	}
+
+	/**
 	 * Validates the chat history.
 	 *
 	 * @since n.e.x.t

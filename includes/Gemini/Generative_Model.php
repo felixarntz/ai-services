@@ -133,7 +133,8 @@ class Generative_Model {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string|Parts|Content|Content[] $content          The content to generate.
+	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
+	 *                                                        can be passed for additional context (e.g. chat history).
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
 	 * @return Candidate[] The response candidates with generated content - usually just one.
 	 *
@@ -141,20 +142,21 @@ class Generative_Model {
 	 */
 	public function generate_content( $content, array $request_options = array() ): array {
 		if ( is_array( $content ) ) {
-			$content = array_map(
+			$contents = array_map(
 				array( Formatter::class, 'format_new_content' ),
 				$content
 			);
 		} else {
-			$content = array( Formatter::format_new_content( $content ) );
+			$contents = array( Formatter::format_new_content( $content ) );
 		}
 
 		$params = array(
+			// TODO: Add support for tools and tool config, to support code generation.
 			'contents'         => array_map(
 				static function ( Content $content ) {
 					return $content->to_array();
 				},
-				$content
+				$contents
 			),
 			'generationConfig' => $this->generation_config,
 			'safetySettings'   => array_map(

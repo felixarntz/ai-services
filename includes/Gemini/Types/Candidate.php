@@ -102,6 +102,14 @@ class Candidate implements Arrayable {
 			throw new InvalidArgumentException( 'Candidate data must contain content.' );
 		}
 
+		/*
+		 * Apparently, the API sometimes omits this.
+		 * Given candidates are always part of a model response, we can safely assume the role is 'model'.
+		 */
+		if ( ! isset( $data['content']['role'] ) ) {
+			$data['content']['role'] = 'model';
+		}
+
 		$content = Content::from_array( $data['content'] );
 		unset( $data['content'] );
 

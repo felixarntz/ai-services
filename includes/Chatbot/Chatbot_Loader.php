@@ -63,7 +63,7 @@ class Chatbot_Loader {
 			return false;
 		}
 
-		if ( ! $this->current_user->has_cap( 'wpoopple_access_chatbot' ) ) {
+		if ( ! $this->current_user->has_cap( 'wpoopple_access_services' ) ) {
 			return false;
 		}
 
@@ -77,7 +77,7 @@ class Chatbot_Loader {
 	 *
 	 * @param Chatbot $chatbot The chatbot instance.
 	 */
-	public function load( Chatbot $chatbot ) {
+	public function load( Chatbot $chatbot ): void {
 		$chatbot->add_hooks();
 	}
 }

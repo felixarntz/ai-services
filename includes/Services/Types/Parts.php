@@ -102,7 +102,7 @@ final class Parts implements Arrayable {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param array $data The parts data.
+	 * @param array<string, mixed> $data The parts data.
 	 * @return Parts The Parts instance.
 	 *
 	 * @throws InvalidArgumentException Thrown if the parts data is invalid.

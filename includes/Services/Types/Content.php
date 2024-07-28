@@ -88,7 +88,7 @@ final class Content implements Arrayable {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param array $data The content data.
+	 * @param array<string, mixed> $data The content data.
 	 * @return Content Content instance.
 	 *
 	 * @throws InvalidArgumentException Thrown if the data is missing required fields.

@@ -8,17 +8,11 @@
 
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin\Settings_Page;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot_AI;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot_Loader;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Generative_AI;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Gemini_AI_Service;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Installation\Plugin_Installer;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Filters;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
@@ -37,7 +31,7 @@ use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_L
  *
  * @since n.e.x.t
  */
-class Plugin_Service_Container_Builder {
+final class Plugin_Service_Container_Builder {
 
 	/**
 	 * Service container.
@@ -68,16 +62,16 @@ class Plugin_Service_Container_Builder {
 	}
 
 	/**
-	 * Builds the plugin environment service for the service container.
+	 * Sets the plugin environment service in the service container.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $main_file Absolute path to the plugin main file.
+	 * @param Plugin_Env $plugin_env Plugin environment object.
 	 * @return self The builder instance, for chaining.
 	 */
-	public function build_env( string $main_file ): self {
-		$this->container['plugin_env'] = function () use ( $main_file ) {
-			return new Plugin_Env( $main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
+	public function set_env( Plugin_Env $plugin_env ): self {
+		$this->container['plugin_env'] = function () use ( $plugin_env ) {
+			return $plugin_env;
 		};
 
 		return $this;
@@ -92,30 +86,28 @@ class Plugin_Service_Container_Builder {
 	 */
 	public function build_services(): self {
 		$this->build_general_services();
-		$this->build_capability_services();
 		$this->build_dependency_services();
 		$this->build_option_services();
 		$this->build_entity_services();
-		$this->build_admin_services();
 
-		$this->container['chatbot_loader'] = function ( $cont ) {
+		$this->container['chatbot_loader'] = static function ( $cont ) {
 			return new Chatbot_Loader(
 				$cont['current_user'],
 				$cont['option_container']['wpoopple_api_key']
 			);
 		};
-		$this->container['chatbot_ai']     = function ( $cont ) {
+		$this->container['chatbot_ai']     = static function ( $cont ) {
 			return new Chatbot_AI( $cont['generative_ai'] );
 		};
-		$this->container['chatbot']        = function ( $cont ) {
+		$this->container['chatbot']        = static function ( $cont ) {
 			return new Chatbot(
 				$cont['plugin_env'],
 				$cont['script_registry'],
 				$cont['style_registry']
 			);
 		};
-		$this->container['generative_ai']  = function ( $cont ) {
-			return new Generative_AI(
+		$this->container['generative_ai']  = static function ( $cont ) {
+			return new Gemini_AI_Service(
 				$cont['option_container']['wpoopple_api_key']->get_value()
 			);
 		};
@@ -129,40 +121,18 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_general_services(): void {
-		$this->container['input']            = function () {
+		$this->container['input']            = static function () {
 			return new Input();
 		};
-		$this->container['current_user']     = function () {
+		$this->container['current_user']     = static function () {
 			return new Current_User();
 		};
-		$this->container['plugin_installer'] = function ( $cont ) {
+		$this->container['plugin_installer'] = static function ( $cont ) {
 			return new Plugin_Installer(
 				$cont['plugin_env'],
 				$cont['option_container']['wpoopple_version'],
-				$cont['option_container']['wpoopple_delete_data'],
-				$cont['option_container']['wpoopple_options']
+				$cont['option_container']['wpoopple_delete_data']
 			);
-		};
-	}
-
-	/**
-	 * Builds the capability services for the service container.
-	 *
-	 * @since n.e.x.t
-	 */
-	private function build_capability_services(): void {
-		$this->container['capability_container'] = function () {
-			$capabilities                            = new Capability_Container();
-			$capabilities['wpoopple_access_chatbot'] = static function () {
-				return new Base_Capability( 'wpoopple_access_chatbot', array( 'edit_posts' ) );
-			};
-			return $capabilities;
-		};
-		$this->container['capability_controller'] = function ( $cont ) {
-			return new Capability_Controller( $cont['capability_container'] );
-		};
-		$this->container['capability_filters']    = function ( $cont ) {
-			return new Capability_Filters( $cont['capability_container'] );
 		};
 	}
 
@@ -172,10 +142,10 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_dependency_services(): void {
-		$this->container['script_registry'] = function () {
+		$this->container['script_registry'] = static function () {
 			return new Script_Registry();
 		};
-		$this->container['style_registry']  = function () {
+		$this->container['style_registry']  = static function () {
 			return new Style_Registry();
 		};
 	}
@@ -186,7 +156,7 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_option_services(): void {
-		$this->container['option_repository'] = function () {
+		$this->container['option_repository'] = static function () {
 			return new Option_Repository();
 		};
 		$this->container['option_container']  = function () {
@@ -194,7 +164,7 @@ class Plugin_Service_Container_Builder {
 			$this->add_options_to_container( $options );
 			return $options;
 		};
-		$this->container['option_registry']   = function () {
+		$this->container['option_registry']   = static function () {
 			return new Option_Registry( 'wp_oop_plugin_lib_example' );
 		};
 	}
@@ -205,25 +175,8 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_entity_services(): void {
-		$this->container['post_repository'] = function () {
+		$this->container['post_repository'] = static function () {
 			return new Post_Repository();
-		};
-	}
-
-	/**
-	 * Builds the admin services for the service container.
-	 *
-	 * @since n.e.x.t
-	 */
-	private function build_admin_services(): void {
-		$this->container['admin_settings_menu'] = function () {
-			return new Admin_Menu( 'options-general.php' );
-		};
-		$this->container['admin_settings_page'] = function ( $cont ) {
-			return new Settings_Page(
-				$cont['plugin_env'],
-				$cont['script_registry']
-			);
 		};
 	}
 

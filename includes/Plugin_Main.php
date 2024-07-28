@@ -8,7 +8,11 @@
 
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
 
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_API;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_API_Instance;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_Loader;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
@@ -25,7 +29,23 @@ class Plugin_Main implements With_Hooks {
 	 * @since n.e.x.t
 	 * @var Service_Container
 	 */
-	private $services;
+	private $container;
+
+	/**
+	 * Services loader.
+	 *
+	 * @since n.e.x.t
+	 * @var Services_Loader
+	 */
+	private $services_loader;
+
+	/**
+	 * Services API instance.
+	 *
+	 * @since n.e.x.t
+	 * @var Services_API
+	 */
+	private $services_api;
 
 	/**
 	 * Constructor.
@@ -35,7 +55,19 @@ class Plugin_Main implements With_Hooks {
 	 * @param string $main_file Absolute path to the plugin main file.
 	 */
 	public function __construct( string $main_file ) {
-		$this->services = $this->set_up_container( $main_file );
+		$plugin_env = new Plugin_Env( $main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
+
+		// Instantiate the services loader, which separately initializes all functionality related to the AI services.
+		$this->services_loader = new Services_Loader( $plugin_env );
+
+		// Then retrieve the canonical AI services instance, which is created by the services loader.
+		$this->services_api = Services_API_Instance::get();
+
+		// Last but not least, set up the container for the main plugin functionality.
+		$this->container = $this->set_up_container( $plugin_env );
+
+		// TODO: Remove this once the services API is fully integrated (it's only here to please PHPStan).
+		$this->services_api->get_registered_service_slugs();
 	}
 
 	/**
@@ -44,8 +76,8 @@ class Plugin_Main implements With_Hooks {
 	 * @since n.e.x.t
 	 */
 	public function add_hooks(): void {
+		$this->services_loader->add_hooks();
 		$this->maybe_install_data();
-		$this->load_capabilities();
 		$this->add_service_hooks();
 
 		// Testing.
@@ -54,11 +86,11 @@ class Plugin_Main implements With_Hooks {
 			function () {
 				echo '<div class="notice notice-info"><p>';
 
-				$model = $this->services['chatbot_ai']->get_model();
+				$model = $this->container['chatbot_ai']->get_model();
 				try {
 					$candidates = $model->generate_content( 'Where can I add new pages?' );
-					$text     = $this->services['chatbot_ai']->get_text_from_candidates( $candidates );
-					var_dump( $text );
+					$text       = $this->container['chatbot_ai']->get_text_from_candidates( $candidates );
+					var_dump( $text ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 				} catch ( \Exception $e ) {
 					echo 'An error occurred: ';
 					echo esc_html( $e->getMessage() );
@@ -87,10 +119,10 @@ class Plugin_Main implements With_Hooks {
 		add_action(
 			'init',
 			function () {
-				if ( ! $this->services['current_user']->has_cap( 'activate_plugins' ) ) {
+				if ( ! $this->container['current_user']->has_cap( 'activate_plugins' ) ) {
 					return;
 				}
-				$this->services['plugin_installer']->install();
+				$this->container['plugin_installer']->install();
 			},
 			0
 		);
@@ -101,38 +133,12 @@ class Plugin_Main implements With_Hooks {
 		 * since handling it all within the activation hook is not scalable.
 		 */
 		register_activation_hook(
-			$this->services['plugin_env']->main_file(),
+			$this->container['plugin_env']->main_file(),
 			function ( $network_wide ) {
 				if ( $network_wide ) {
 					return;
 				}
-				$this->services['plugin_installer']->install();
-			}
-		);
-	}
-
-	/**
-	 * Loads the plugin capabilities and sets up the relevant filters.
-	 *
-	 * @since n.e.x.t
-	 */
-	private function load_capabilities() {
-		add_action(
-			'plugins_loaded',
-			function () {
-				$controller = $this->services['capability_controller'];
-
-				/**
-				 * Fires when the plugin capabilities are loaded.
-				 *
-				 * @since n.e.x.t
-				 *
-				 * @param Capability_Controller $controller The capability controller, which can be used to modify the
-				 *                                          rules for how capabilities are granted.
-				 */
-				do_action( 'wpoopple_load_capabilities', $controller );
-
-				$this->services['capability_filters']->add_hooks();
+				$this->container['plugin_installer']->install();
 			}
 		);
 	}
@@ -144,11 +150,11 @@ class Plugin_Main implements With_Hooks {
 	 */
 	private function add_service_hooks(): void {
 		// Register options.
-		$option_registrar = new Option_Hook_Registrar( $this->services['option_registry'] );
+		$option_registrar = new Option_Hook_Registrar( $this->container['option_registry'] );
 		$option_registrar->add_register_callback(
 			function ( $registry ) {
-				foreach ( $this->services['option_container']->get_keys() as $key ) {
-					$option = $this->services['option_container']->get( $key );
+				foreach ( $this->container['option_container']->get_keys() as $key ) {
+					$option = $this->container['option_container']->get( $key );
 					$registry->register(
 						$option->get_key(),
 						$option->get_registration_args()
@@ -157,37 +163,29 @@ class Plugin_Main implements With_Hooks {
 			}
 		);
 
-		// Register settings page.
-		add_action(
-			'admin_menu',
-			function () {
-				$this->services['admin_settings_menu']->add_page( $this->services['admin_settings_page'] );
-			}
-		);
-
 		// Load chatbot if needed.
 		add_action(
 			'init',
 			function () {
-				if ( $this->services['chatbot_loader']->can_load() ) {
-					$this->services['chatbot_loader']->load( $this->services['chatbot'] );
+				if ( $this->container['chatbot_loader']->can_load() ) {
+					$this->container['chatbot_loader']->load( $this->container['chatbot'] );
 				}
 			}
 		);
 	}
 
 	/**
-	 * Sets up the plugin container.
+	 * Sets up the plugin service container.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $main_file Absolute path to the plugin main file.
-	 * @return Service_Container Plugin container.
+	 * @param Plugin_Env $plugin_env Plugin environment object.
+	 * @return Service_Container The plugin service container.
 	 */
-	private function set_up_container( string $main_file ): Service_Container {
+	private function set_up_container( Plugin_Env $plugin_env ): Service_Container {
 		$builder = new Plugin_Service_Container_Builder();
 
-		return $builder->build_env( $main_file )
+		return $builder->set_env( $plugin_env )
 			->build_services()
 			->get();
 	}

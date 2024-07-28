@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin\Settings_Page
+ * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Admin\Settings_Page
  *
  * @since n.e.x.t
  * @package wp-oop-plugin-lib-example
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin;
+namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Admin;
 
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Abstract_Admin_Page;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
@@ -60,14 +60,14 @@ class Settings_Page extends Abstract_Admin_Page {
 			'admin_enqueue_scripts',
 			function () {
 				$this->script_registry->register(
-					'wpoopple-settings',
+					'wpoopple_services',
 					array(
 						'src'      => $this->plugin_env->url( 'build/index.js' ),
 						'manifest' => $this->plugin_env->path( 'build/index.asset.php' ),
 						'strategy' => 'defer',
 					)
 				);
-				$this->script_registry->enqueue( 'wpoopple-settings' );
+				$this->script_registry->enqueue( 'wpoopple_services' );
 			}
 		);
 	}
@@ -90,7 +90,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page slug.
 	 */
 	protected function slug(): string {
-		return 'wpoopple-settings';
+		return 'wpoopple_services';
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page title.
 	 */
 	protected function title(): string {
-		return __( 'WP OOP Plugin Lib Example', 'wp-oop-plugin-lib-example' );
+		return __( 'AI Services', 'wp-oop-plugin-lib-example' );
 	}
 
 	/**
@@ -112,6 +112,6 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page capability.
 	 */
 	protected function capability(): string {
-		return 'manage_options';
+		return 'wpoopple_manage_services';
 	}
 }

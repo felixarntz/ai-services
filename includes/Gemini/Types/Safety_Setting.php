@@ -8,7 +8,6 @@
 
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types;
 
-use InvalidArgumentException;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**

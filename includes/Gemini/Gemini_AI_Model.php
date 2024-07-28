@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Generative_Model
+ * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Gemini_AI_Model
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
@@ -9,18 +9,19 @@
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types\Candidate;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types\Content;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types\Parts;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types\Safety_Setting;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Abstract_Generative_AI_Model;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Candidate;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Content;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Util\Formatter;
 
 /**
- * Class representing a generative model API.
+ * Class representing a Gemini AI model.
  *
  * @since n.e.x.t
  */
-class Generative_Model {
+class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 
 	/**
 	 * The Gemini API instance.
@@ -29,14 +30,6 @@ class Generative_Model {
 	 * @var Gemini_API
 	 */
 	private $api;
-
-	/**
-	 * The Gemini API key.
-	 *
-	 * @since n.e.x.t
-	 * @var string
-	 */
-	private $api_key;
 
 	/**
 	 * The model name.
@@ -83,15 +76,14 @@ class Generative_Model {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string               $api_key         The API key.
+	 * @param Gemini_API           $api             The Gemini API instance.
 	 * @param array<string, mixed> $model_params    The model parameters.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameter is missing.
 	 */
-	public function __construct( string $api_key, array $model_params, array $request_options = array() ) {
-		$this->api_key         = $api_key;
-		$this->api             = new Gemini_API( $this->api_key );
+	public function __construct( Gemini_API $api, array $model_params, array $request_options = array() ) {
+		$this->api             = $api;
 		$this->request_options = $request_options;
 
 		if ( ! isset( $model_params['model'] ) ) {
@@ -129,27 +121,17 @@ class Generative_Model {
 	}
 
 	/**
-	 * Generates content using the model.
+	 * Sends a request to generate content.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
-	 *                                                        can be passed for additional context (e.g. chat history).
-	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
+	 * @param Content[]            $contents        Prompts for the content to generate.
+	 * @param array<string, mixed> $request_options The request options.
 	 * @return Candidate[] The response candidates with generated content - usually just one.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	public function generate_content( $content, array $request_options = array() ): array {
-		if ( is_array( $content ) ) {
-			$contents = array_map(
-				array( Formatter::class, 'format_new_content' ),
-				$content
-			);
-		} else {
-			$contents = array( Formatter::format_new_content( $content ) );
-		}
-
+	protected function send_generate_content_request( array $contents, array $request_options ): array {
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
 			'contents'         => array_map(
@@ -188,33 +170,6 @@ class Generative_Model {
 		return array_map(
 			array( Candidate::class, 'from_array' ),
 			$response['candidates']
-		);
-	}
-
-	/**
-	 * Starts a multi-turn chat session using the model.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param array<string, mixed> $chat_params Optional. The chat parameters. Default empty array.
-	 * @return Chat_Session The chat session.
-	 */
-	public function start_chat( $chat_params = array() ): Chat_Session {
-		$chat_params = array_merge(
-			array(
-				// TODO: Add support for tools and tool config, to support code generation.
-				'model'              => $this->model,
-				'generation_config'  => $this->generation_config,
-				'safety_settings'    => $this->safety_settings,
-				'system_instruction' => $this->system_instruction,
-			),
-			$chat_params
-		);
-
-		return new Chat_Session(
-			$this->api_key,
-			array_filter( $chat_params ),
-			$this->request_options
 		);
 	}
 }

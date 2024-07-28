@@ -93,7 +93,7 @@ final class Candidate implements Arrayable {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param array $data The content data.
+	 * @param array<string, mixed> $data The content data.
 	 * @return Candidate Candidate instance.
 	 *
 	 * @throws InvalidArgumentException Thrown if the data is missing required fields.

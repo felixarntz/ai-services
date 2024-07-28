@@ -8,7 +8,7 @@
 
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
@@ -27,7 +27,7 @@ class Gemini_API {
 	 * The HTTP instance to use for requests.
 	 *
 	 * @since n.e.x.t
-	 * @var string
+	 * @var HTTP
 	 */
 	private $http;
 
@@ -130,7 +130,7 @@ class Gemini_API {
 					sprintf(
 						/* translators: %s: error message */
 						__( 'Error while making request to the Gemini API: %s ', 'wp-oop-plugin-lib-example' ),
-						__( 'JSON response could not be decoded.', 'wp-oop-plugin-lib-example')
+						__( 'JSON response could not be decoded.', 'wp-oop-plugin-lib-example' )
 					)
 				)
 			);
@@ -144,9 +144,9 @@ class Gemini_API {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $model           The model name.
-	 * @param string $task            The task name.
-	 * @param array  $request_options Optional. The request options. Default empty array.
+	 * @param string               $model           The model name.
+	 * @param string               $task            The task name.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return string The request URL.
 	 */
 	private function get_request_url( string $model, string $task, array $request_options = array() ): string {
@@ -161,8 +161,8 @@ class Gemini_API {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param array $request_options The request options.
-	 * @return array The updated request options.
+	 * @param array<string, mixed> $request_options The request options.
+	 * @return array<string, mixed> The updated request options.
 	 */
 	private function add_request_headers( array $request_options ): array {
 		if ( ! isset( $request_options['headers'] ) ) {

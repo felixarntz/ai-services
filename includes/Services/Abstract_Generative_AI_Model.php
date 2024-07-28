@@ -8,6 +8,7 @@
 
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services;
 
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Candidate;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Chat_Session;
@@ -20,7 +21,7 @@ use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Util\Formatter;
  *
  * @since n.e.x.t
  */
-abstract class Abstract_Generative_AI_Model {
+abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 
 	/**
 	 * Generates content using the model.
@@ -34,7 +35,7 @@ abstract class Abstract_Generative_AI_Model {
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	public function generate_content( $content, array $request_options = array() ): array {
+	final public function generate_content( $content, array $request_options = array() ): array {
 		if ( is_array( $content ) ) {
 			$contents = array_map(
 				array( Formatter::class, 'format_new_content' ),
@@ -55,7 +56,7 @@ abstract class Abstract_Generative_AI_Model {
 	 * @param Content[] $history Optional. The chat history. Default empty array.
 	 * @return Chat_Session The chat session.
 	 */
-	public function start_chat( array $history = array() ): Chat_Session {
+	final public function start_chat( array $history = array() ): Chat_Session {
 		return new Chat_Session( $this, $history );
 	}
 

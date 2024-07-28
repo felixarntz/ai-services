@@ -8,11 +8,10 @@
 
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Generative_AI;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Generative_Model;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types\Candidate;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types\Content;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Gemini_AI_Service;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Candidate;
 
 /**
  * Class for the AI configuration powering the chatbot.
@@ -25,7 +24,7 @@ class Chatbot_AI {
 	 * The AI instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Generative_AI
+	 * @var Gemini_AI_Service
 	 */
 	private $ai;
 
@@ -33,7 +32,7 @@ class Chatbot_AI {
 	 * The generative model.
 	 *
 	 * @since n.e.x.t
-	 * @var Generative_Model|null
+	 * @var Generative_AI_Model|null
 	 */
 	private $model;
 
@@ -42,9 +41,9 @@ class Chatbot_AI {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Generative_AI $ai The AI instance.
+	 * @param Gemini_AI_Service $ai The AI instance.
 	 */
-	public function __construct( Generative_AI $ai ) {
+	public function __construct( Gemini_AI_Service $ai ) {
 		$this->ai = $ai;
 	}
 
@@ -53,11 +52,11 @@ class Chatbot_AI {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return Generative_Model The generative model.
+	 * @return Generative_AI_Model The generative model.
 	 */
-	public function get_model(): Generative_Model {
+	public function get_model(): Generative_AI_Model {
 		if ( null === $this->model ) {
-			$this->model = $this->ai->get_generative_model(
+			$this->model = $this->ai->get_model(
 				array(
 					'model'              => 'gemini-1.5-flash',
 					'system_instruction' => $this->get_system_instruction(),
@@ -76,6 +75,8 @@ class Chatbot_AI {
 	 *
 	 * @param Candidate[] $candidates The response from the generative model.
 	 * @return string The text.
+	 *
+	 * @throws Generative_AI_Exception If the response does not include any text parts.
 	 */
 	public function get_text_from_candidates( array $candidates ): string {
 		$content   = $candidates[0]->get_content();
@@ -112,19 +113,19 @@ class Chatbot_AI {
 	 * @return string The system instruction.
 	 */
 	private function get_system_instruction(): string {
-		$instruction = "You are a chatbot running inside a WordPress site.
+		$instruction = 'You are a chatbot running inside a WordPress site.
 You are here to help users with their questions and provide information.
 You can also provide assistance with troubleshooting and technical issues.
-The WordPress site URL is " . home_url( '/' ) . " and the URL to the admin interface is " . admin_url( '/' ) . ".
+The WordPress site URL is ' . home_url( '/' ) . ' and the URL to the admin interface is ' . admin_url( '/' ) . ".
 You may also provide links to relevant sections of the WordPress admin interface, contextually for the site.
 Any links provided must not be contained within the message text itself, but separately at the very end of the message.
 The link must be separated from the message text by three hyphens (---).
 For example: 'You can edit posts in the Posts screen. --- " . admin_url( 'edit.php' ) . "'.
 Here is some additional information about the WordPress site, so that you can help users more effectively:
- - The site is running on WordPress version " . get_bloginfo( 'version' ) . ".
- - The primary locale of the site is " . get_locale() . ".
- - The site is using the " . get_template() . " theme.
-";
+ - The site is running on WordPress version " . get_bloginfo( 'version' ) . '.
+ - The primary locale of the site is ' . get_locale() . '.
+ - The site is using the ' . get_template() . ' theme.
+';
 
 		if ( wp_is_block_theme() ) {
 			$instruction .= ' - The theme is a block theme.';

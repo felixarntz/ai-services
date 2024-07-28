@@ -20,6 +20,7 @@ use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_L
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
@@ -86,6 +87,7 @@ final class Services_Service_Container_Builder {
 		$this->build_general_services();
 		$this->build_capability_services();
 		$this->build_dependency_services();
+		$this->build_http_services();
 		$this->build_option_services();
 		$this->build_admin_services();
 
@@ -93,7 +95,8 @@ final class Services_Service_Container_Builder {
 			return new Services_API(
 				$cont['current_user'],
 				$cont['option_container'],
-				$cont['option_repository']
+				$cont['option_repository'],
+				$cont['http']
 			);
 		};
 
@@ -162,6 +165,17 @@ final class Services_Service_Container_Builder {
 		};
 		$this->container['style_registry']  = static function () {
 			return new Style_Registry();
+		};
+	}
+
+	/**
+	 * Builds the HTTP services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_http_services(): void {
+		$this->container['http'] = static function () {
+			return new HTTP();
 		};
 	}
 

@@ -11,6 +11,7 @@ namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services;
 use InvalidArgumentException;
 use RuntimeException;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Service;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
@@ -62,9 +63,20 @@ final class Service_Registration {
 	 * @since n.e.x.t
 	 *
 	 * @param string               $slug    The service slug.
-	 * @param callable             $creator The service creator. Receives the API key (string) as only parameter, and must
-	 *                                      return a Generative_AI_Service instance.
-	 * @param array<string, mixed> $args    Optional. The service arguments. Default empty array.
+	 * @param callable             $creator The service creator. Receives the API key (string) as first parameter, the
+	 *                                      HTTP instance as second parameter, and must return a Generative_AI_Service
+	 *                                      instance. Optionally, the class can implement the With_API_Client
+	 *                                      interface, if the service uses an API client class. Doing so benefits
+	 *                                      performance, as it allows the infrastructure to perform batch requests
+	 *                                      across multiple services.
+	 * @param array<string, mixed> $args    {
+	 *     Optional. The service arguments. Default empty array.
+	 *
+	 *     @type string            $name              The service name. Default is the slug with spaces and uppercase first letters.
+	 *     @type Option_Container  $option_container  The option container instance. Default is a new instance.
+	 *     @type Option_Repository $option_repository The option repository instance. Default is a new instance.
+	 *     @type HTTP              $http              The HTTP instance. Default is a new instance.
+	 * }
 	 */
 	public function __construct( string $slug, callable $creator, array $args = array() ) {
 		$this->slug    = $slug;
@@ -133,7 +145,7 @@ final class Service_Registration {
 			);
 		}
 
-		$instance = ( $this->creator )( $api_key );
+		$instance = ( $this->creator )( $api_key, $this->args['http'] );
 		if ( ! $instance instanceof Generative_AI_Service ) {
 			throw new RuntimeException(
 				esc_html(
@@ -184,6 +196,16 @@ final class Service_Registration {
 			}
 		} else {
 			$args['option_repository'] = new Option_Repository();
+		}
+
+		if ( isset( $args['http'] ) ) {
+			if ( ! $args['http'] instanceof HTTP ) {
+				throw new InvalidArgumentException(
+					esc_html__( 'The http argument must be an instance of HTTP.', 'wp-oop-plugin-lib-example' )
+				);
+			}
+		} else {
+			$args['http'] = new HTTP();
 		}
 
 		return $args;

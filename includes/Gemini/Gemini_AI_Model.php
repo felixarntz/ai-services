@@ -27,7 +27,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	 * The Gemini API instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Gemini_API
+	 * @var Gemini_API_Client
 	 */
 	private $api;
 
@@ -76,13 +76,13 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Gemini_API           $api             The Gemini API instance.
+	 * @param Gemini_API_Client    $api             The Gemini API instance.
 	 * @param array<string, mixed> $model_params    The model parameters.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameter is missing.
 	 */
-	public function __construct( Gemini_API $api, array $model_params, array $request_options = array() ) {
+	public function __construct( Gemini_API_Client $api, array $model_params, array $request_options = array() ) {
 		$this->api             = $api;
 		$this->request_options = $request_options;
 
@@ -152,7 +152,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 			$params['systemInstruction'] = $this->system_instruction->to_array();
 		}
 
-		$response = $this->api->generate_content(
+		$request  = $this->api->create_generate_content_request(
 			$this->model,
 			array_filter( $params ),
 			array_merge(
@@ -160,6 +160,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 				$request_options
 			)
 		);
+		$response = $this->api->make_request( $request );
 
 		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
 			throw new Generative_AI_Exception(

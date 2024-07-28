@@ -8,21 +8,24 @@
 
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini;
 
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_API_Client;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Service;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\With_API_Client;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 
 /**
  * Class for the Gemini AI service.
  *
  * @since n.e.x.t
  */
-class Gemini_AI_Service implements Generative_AI_Service {
+class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 
 	/**
 	 * The Gemini API instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Gemini_API
+	 * @var Gemini_API_Client
 	 */
 	private $api;
 
@@ -32,9 +35,24 @@ class Gemini_AI_Service implements Generative_AI_Service {
 	 * @since n.e.x.t
 	 *
 	 * @param string $api_key The API key.
+	 * @param HTTP   $http    Optional. The HTTP instance to use for requests. Default is a new instance.
 	 */
-	public function __construct( string $api_key ) {
-		$this->api = new Gemini_API( $api_key );
+	public function __construct( string $api_key, HTTP $http = null ) {
+		if ( ! $http ) {
+			$http = new HTTP();
+		}
+		$this->api = new Gemini_API_Client( $api_key, $http );
+	}
+
+	/**
+	 * Gets the API client instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Generative_AI_API_Client The API client instance.
+	 */
+	public function get_api_client(): Generative_AI_API_Client {
+		return $this->api;
 	}
 
 	/**

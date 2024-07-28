@@ -9,7 +9,9 @@
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini;
 
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Get_Request;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
 
@@ -52,6 +54,19 @@ class Gemini_API {
 	}
 
 	/**
+	 * Makes a request to list the available models with their information.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $params          Optional. The request parameters. Default empty array.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return array<string, mixed> The response data.
+	 */
+	public function list_models( array $params = array(), array $request_options = array() ): array {
+		return $this->make_get_request( 'models', $params, $request_options );
+	}
+
+	/**
 	 * Makes a request to generate content using the specified model.
 	 *
 	 * @since n.e.x.t
@@ -62,7 +77,78 @@ class Gemini_API {
 	 * @return array<string, mixed> The response data.
 	 */
 	public function generate_content( string $model, array $params, array $request_options = array() ): array {
-		return $this->make_model_request( $model, 'generateContent', $params, $request_options );
+		return $this->make_post_request( "{$model}:generateContent", $params, $request_options );
+	}
+
+	/**
+	 * Makes a GET request to the Gemini API.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return array<string, mixed> The response data.
+	 *
+	 * @throws Generative_AI_Exception If an error occurs while making the request.
+	 */
+	public function make_get_request( string $path, array $params, array $request_options = array() ): array {
+		$request = $this->create_get_request( $path, $params, $request_options );
+		return $this->make_request( $request );
+	}
+
+	/**
+	 * Makes a POST request to the Gemini API.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return array<string, mixed> The response data.
+	 *
+	 * @throws Generative_AI_Exception If an error occurs while making the request.
+	 */
+	public function make_post_request( string $path, array $params, array $request_options = array() ): array {
+		$request = $this->create_post_request( $path, $params, $request_options );
+		return $this->make_request( $request );
+	}
+
+	/**
+	 * Creates a GET request instance for the given parameters.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Request The request instance.
+	 */
+	public function create_get_request( string $path, array $params, array $request_options = array() ): Request {
+		return new Get_Request(
+			$this->get_request_url( $path, $request_options ),
+			$params,
+			// TODO: Test if this works. Otherwise we'll need to add a ?key=... query parameter.
+			$this->add_request_headers( $request_options )
+		);
+	}
+
+	/**
+	 * Creates a POST request instance for the given parameters.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Request The request instance.
+	 */
+	public function create_post_request( string $path, array $params, array $request_options = array() ): Request {
+		return new JSON_Post_Request(
+			$this->get_request_url( $path, $request_options ),
+			$params,
+			$this->add_request_headers( $request_options )
+		);
 	}
 
 	/**
@@ -70,23 +156,14 @@ class Gemini_API {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string               $model           The model name.
-	 * @param string               $task            The task name.
-	 * @param array<string, mixed> $params          The request parameters.
-	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @param Request $request The request instance.
 	 * @return array<string, mixed> The response data.
 	 *
 	 * @throws Generative_AI_Exception If an error occurs while making the request.
 	 * @throws Generative_AI_Exception If the response status code is not in the 200-299 range.
 	 * @throws Generative_AI_Exception If the response data could not be decoded.
 	 */
-	public function make_model_request( string $model, string $task, array $params, array $request_options = array() ): array {
-		$request = new JSON_Post_Request(
-			$this->get_request_url( $model, $task, $request_options ),
-			$params,
-			$this->add_request_headers( $request_options )
-		);
-
+	private function make_request( Request $request ): array {
 		try {
 			$response = $this->http->request( $request );
 		} catch ( Request_Exception $e ) {
@@ -144,16 +221,16 @@ class Gemini_API {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string               $model           The model name.
-	 * @param string               $task            The task name.
+	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return string The request URL.
 	 */
-	private function get_request_url( string $model, string $task, array $request_options = array() ): string {
-		$api_version = $request_options['api_version'] ?? self::DEFAULT_API_VERSION;
+	private function get_request_url( string $path, array $request_options = array() ): string {
 		$base_url    = $request_options['base_url'] ?? self::DEFAULT_BASE_URL;
+		$api_version = $request_options['api_version'] ?? self::DEFAULT_API_VERSION;
+		$path        = ltrim( $path, '/' );
 
-		return "{$base_url}/{$api_version}/{$model}:{$task}";
+		return "{$base_url}/{$api_version}/{$path}";
 	}
 
 	/**
@@ -168,7 +245,7 @@ class Gemini_API {
 		if ( ! isset( $request_options['headers'] ) ) {
 			$request_options['headers'] = array();
 		}
-		$request_options['headers']['X-Goog-Api-Client'] = 'wp-gemini/' . WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION;
+		$request_options['headers']['X-Goog-Api-Client'] = 'wp-oop-plugin-lib-example/' . WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION;
 		$request_options['headers']['X-Goog-Api-Key']    = $this->api_key;
 		return $request_options;
 	}

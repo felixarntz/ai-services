@@ -4,6 +4,11 @@
 import domReady from '@wordpress/dom-ready';
 import { createRoot, render } from '@wordpress/element';
 
+/**
+ * Internal dependencies
+ */
+import App from './components/App';
+
 function mountApp( Component, renderTarget ) {
 	if ( createRoot ) {
 		const root = createRoot( renderTarget );
@@ -20,10 +25,5 @@ domReady( () => {
 		return;
 	}
 
-	mountApp(
-		<div>
-			<p>The JS app is loaded.</p>
-		</div>,
-		renderTarget
-	);
+	mountApp( <App />, renderTarget );
 } );

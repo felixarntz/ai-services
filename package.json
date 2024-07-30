@@ -7,6 +7,10 @@
     "@wordpress/scripts": "^28.4.0",
     "fast-glob": "^3.3.2"
   },
+  "dependencies": {
+    "@wordpress/interface": "^6.4.0",
+		"clsx": "^2.1.1"
+  },
   "scripts": {
     "build": "wp-scripts build",
     "format-js": "wp-scripts format",

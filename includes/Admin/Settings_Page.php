@@ -10,6 +10,7 @@ namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin;
 
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Abstract_Admin_Page;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 
 /**
@@ -36,18 +37,28 @@ class Settings_Page extends Abstract_Admin_Page {
 	private $script_registry;
 
 	/**
+	 * WordPress style registry.
+	 *
+	 * @since n.e.x.t
+	 * @var Style_Registry
+	 */
+	private $style_registry;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
 	 *
 	 * @param Plugin_Env      $plugin_env      The plugin environment.
 	 * @param Script_Registry $script_registry WordPress script registry.
+	 * @param Style_Registry  $style_registry  WordPress style registry.
 	 */
-	public function __construct( Plugin_Env $plugin_env, Script_Registry $script_registry ) {
+	public function __construct( Plugin_Env $plugin_env, Script_Registry $script_registry, Style_Registry $style_registry ) {
 		parent::__construct();
 
 		$this->plugin_env      = $plugin_env;
 		$this->script_registry = $script_registry;
+		$this->style_registry  = $style_registry;
 	}
 
 	/**
@@ -67,7 +78,17 @@ class Settings_Page extends Abstract_Admin_Page {
 						'strategy' => 'defer',
 					)
 				);
+				$this->style_registry->register(
+					'wpoopple-settings',
+					array(
+						'src'          => $this->plugin_env->url( 'build/style-index.css' ),
+						'path'         => $this->plugin_env->path( 'build/style-index.css' ),
+						'manifest'     => $this->plugin_env->path( 'build/index.asset.php' ),
+						'dependencies' => array(),
+					)
+				);
 				$this->script_registry->enqueue( 'wpoopple-settings' );
+				$this->style_registry->enqueue( 'wpoopple-settings' );
 			}
 		);
 	}

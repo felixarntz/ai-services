@@ -170,7 +170,8 @@ class Plugin_Service_Container_Builder {
 		$this->container['admin_settings_page'] = function ( $cont ) {
 			return new Settings_Page(
 				$cont['plugin_env'],
-				$cont['script_registry']
+				$cont['script_registry'],
+				$cont['style_registry']
 			);
 		};
 	}

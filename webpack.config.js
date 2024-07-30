@@ -1,25 +1,36 @@
 const config = require( '@wordpress/scripts/config/webpack.config' );
 
 const { sync: glob } = require( 'fast-glob' );
+const path = require( 'path' );
 const { getWebpackEntryPoints } = require( '@wordpress/scripts/utils' );
 
 function getEntryPoints() {
-	const entryPoints = getWebpackEntryPoints();
+	const getOriginalEntryPoints = getWebpackEntryPoints( 'script' );
 
-	const [ entryFile ] = glob(
-		`${ process.env.WP_SRC_DIRECTORY }/index.[jt]s?(x)`,
-		{
+	return () => {
+		const entryPoints = getOriginalEntryPoints();
+
+		const srcDirectory = path.join(
+			__dirname,
+			process.env.WP_SRC_DIRECTORY || 'src'
+		);
+		const [ entryFile ] = glob( `index.[jt]s?(x)`, {
 			absolute: true,
-		}
-	);
-	if ( entryFile ) {
-		entryPoints.index = entryFile;
-	}
+			cwd: srcDirectory,
+		} );
+		if ( entryFile ) {
+			const entryName = entryFile
+				.replace( path.extname( entryFile ), '' )
+				.replace( srcDirectory + path.sep, '' );
 
-	return entryPoints;
+			entryPoints[ entryName ] = entryFile;
+		}
+
+		return entryPoints;
+	};
 }
 
 module.exports = {
 	...config,
-	entry: getEntryPoints,
+	entry: getEntryPoints(),
 };

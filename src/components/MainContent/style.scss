@@ -1,0 +1,26 @@
+.wpoopple-main-content {
+	.components-card {
+		margin: 16px;
+
+		& + .components-card {
+			margin-top: 0;
+		}
+
+		@media (min-width: 783px) {
+			margin: 64px;
+
+			& + .components-card {
+				margin-top: 0;
+			}
+		}
+
+		@media (min-width: 1248px) {
+			margin: 64px auto;
+			max-width: 960px;
+		}
+	}
+
+	&__heading {
+		margin: 0;
+	}
+}

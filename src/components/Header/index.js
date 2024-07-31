@@ -1,38 +1,31 @@
 /**
  * WordPress dependencies
  */
-import { __unstableMotion as motion } from '@wordpress/components';
+import { Button } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
 import './style.scss';
 
-const toolbarVariations = {
-	distractionFreeDisabled: { y: '-50px' },
-	distractionFreeHover: { y: 0 },
-	distractionFreeHidden: { y: '-50px' },
-	visible: { y: 0 },
-	hidden: { y: 0 },
-};
-
 export default function Header() {
+	const handleSave = () => {
+		window.console.log( 'Save clicked!' );
+	};
+
 	return (
-		<div className="wpoopple-interface-header">
-			<motion.div
-				variants={ toolbarVariations }
-				className="wpoopple-interface-header__toolbar"
-				transition={ { type: 'tween' } }
-			>
-				<div>Title</div>
-			</motion.div>
-			<motion.div
-				variants={ toolbarVariations }
-				transition={ { type: 'tween' } }
-				className="editor-header__settings"
-			>
-				<div>Save</div>
-			</motion.div>
+		<div className="wpoopple-header">
+			<div className="wpoopple-header__left">
+				<h1 className="wpoopple-header__title">
+					{ __( 'Title', 'wp-oop-plugin-lib-example' ) }
+				</h1>
+			</div>
+			<div className="wpoopple-header__right">
+				<Button variant="primary" onClick={ handleSave }>
+					{ __( 'Save', 'wp-oop-plugin-lib-example' ) }
+				</Button>
+			</div>
 		</div>
 	);
 }

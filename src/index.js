@@ -8,6 +8,7 @@ import { createRoot, render } from '@wordpress/element';
  * Internal dependencies
  */
 import App from './components/App';
+import './style.scss';
 
 function mountApp( Component, renderTarget ) {
 	if ( createRoot ) {

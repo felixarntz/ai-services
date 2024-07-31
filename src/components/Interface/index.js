@@ -16,6 +16,8 @@ import { useViewportMatch } from '@wordpress/compose';
  * Internal dependencies
  */
 import Header from '../Header';
+import MainContent from '../MainContent';
+import Footer from '../Footer';
 
 const interfaceLabels = {
 	header: __( 'Editor top bar', 'wp-oop-plugin-lib-example' ),
@@ -50,15 +52,13 @@ export default function Interface( { className } ) {
 			} ) }
 			labels={ interfaceLabels }
 			header={ <Header /> }
+			content={ <MainContent /> }
+			footer={ ! isDistractionFree && isLargeViewport && <Footer /> }
 			secondarySidebar={ undefined }
 			sidebar={
 				! isDistractionFree && (
 					<ComplementaryArea.Slot scope="wp-oop-plugin-lib-example/settings-screen" />
 				)
-			}
-			content={ <div>Content</div> }
-			footer={
-				! isDistractionFree && isLargeViewport && <div>Footer</div>
 			}
 			actions={ <div>Actions</div> }
 			shortcuts={ {

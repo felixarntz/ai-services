@@ -84,11 +84,18 @@ class Settings_Page extends Abstract_Admin_Page {
 						'src'          => $this->plugin_env->url( 'build/style-index.css' ),
 						'path'         => $this->plugin_env->path( 'build/style-index.css' ),
 						'manifest'     => $this->plugin_env->path( 'build/index.asset.php' ),
-						'dependencies' => array(),
+						'dependencies' => array( 'wp-components', 'wp-editor' ),
 					)
 				);
 				$this->script_registry->enqueue( 'wpoopple-settings' );
 				$this->style_registry->enqueue( 'wpoopple-settings' );
+			}
+		);
+
+		add_filter(
+			'admin_body_class',
+			static function ( $classes ) {
+				return "$classes remove-screen-spacing";
 			}
 		);
 	}

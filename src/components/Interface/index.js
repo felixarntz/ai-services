@@ -17,6 +17,8 @@ import { useViewportMatch } from '@wordpress/compose';
  */
 import Header from '../Header';
 import Footer from '../Footer';
+import Notices from '../Notices';
+import Snackbars from '../Snackbars';
 
 const interfaceLabels = {
 	header: __( 'Editor top bar', 'wp-oop-plugin-lib-example' ),
@@ -51,7 +53,14 @@ export default function Interface( { className, children } ) {
 			} ) }
 			labels={ interfaceLabels }
 			header={ <Header /> }
-			content={ children }
+			content={
+				<>
+					{ ! isDistractionFree && <Notices /> }
+					{ children }
+					<Snackbars />
+				</>
+			}
+			editorNotices={ <Notices /> }
 			footer={ ! isDistractionFree && isLargeViewport && <Footer /> }
 			secondarySidebar={ undefined }
 			sidebar={

@@ -1,4 +1,4 @@
-.wpoopple-main-content {
+.wpoopple-settings-cards {
 	.components-card {
 		margin: 16px;
 
@@ -14,9 +14,9 @@
 			}
 		}
 
-		@media (min-width: 1248px) {
+		@media (min-width: 1088px) { // 800 + 2*64 + 160 (admin menu width).
 			margin: 64px auto;
-			max-width: 960px;
+			max-width: 800px;
 		}
 	}
 

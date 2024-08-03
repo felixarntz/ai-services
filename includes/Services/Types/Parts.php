@@ -9,6 +9,9 @@
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types;
 
 use InvalidArgumentException;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Contracts\Part;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\Inline_Data_Part;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\Text_Part;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**
@@ -22,7 +25,7 @@ final class Parts implements Arrayable {
 	 * The parts of the content.
 	 *
 	 * @since n.e.x.t
-	 * @var array<string, mixed>[]
+	 * @var Part[]
 	 */
 	private $parts = array();
 
@@ -34,8 +37,8 @@ final class Parts implements Arrayable {
 	 * @param string $text The text.
 	 */
 	public function add_text_part( string $text ): void {
-		$this->parts[] = array(
-			'text' => $text,
+		$this->add_part(
+			Text_Part::from_array( array( 'text' => $text ) )
 		);
 	}
 
@@ -48,12 +51,27 @@ final class Parts implements Arrayable {
 	 * @param string $base64_data The base64-encoded data.
 	 */
 	public function add_inline_data_part( string $mime_type, string $base64_data ): void {
-		$this->parts[] = array(
-			'inlineData' => array(
-				'mimeType' => $mime_type,
-				'data'     => $base64_data,
-			),
+		$this->add_part(
+			Inline_Data_Part::from_array(
+				array(
+					'inlineData' => array(
+						'mimeType' => $mime_type,
+						'data'     => $base64_data,
+					),
+				)
+			)
 		);
+	}
+
+	/**
+	 * Adds a part to the content.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Part $part The part.
+	 */
+	public function add_part( Part $part ): void {
+		$this->parts[] = $part;
 	}
 
 	/**
@@ -73,11 +91,11 @@ final class Parts implements Arrayable {
 	 * @since n.e.x.t
 	 *
 	 * @param int $index The index.
-	 * @return array<string, mixed> The part.
+	 * @return Part The part.
 	 *
 	 * @throws InvalidArgumentException Thrown if the index is out of bounds.
 	 */
-	public function get( int $index ): array {
+	public function get( int $index ): Part {
 		if ( ! isset( $this->parts[ $index ] ) ) {
 			throw new InvalidArgumentException(
 				esc_html__( 'Index out of bounds.', 'wp-oop-plugin-lib-example' )
@@ -94,7 +112,12 @@ final class Parts implements Arrayable {
 	 * @return mixed[] Array representation.
 	 */
 	public function to_array(): array {
-		return $this->parts;
+		return array_map(
+			static function ( Part $part ) {
+				return $part->to_array();
+			},
+			$this->parts
+		);
 	}
 
 	/**
@@ -112,18 +135,13 @@ final class Parts implements Arrayable {
 
 		foreach ( $data as $part ) {
 			if ( ! is_array( $part ) ) {
-				throw new InvalidArgumentException( 'Invalid parts data.' );
+				throw new InvalidArgumentException( 'Invalid part data.' );
 			}
 
 			if ( isset( $part['text'] ) ) {
-				$parts->add_text_part( $part['text'] );
+				$parts->add_part( Text_Part::from_array( $part ) );
 			} elseif ( isset( $part['inlineData'] ) ) {
-				$inline_data = $part['inlineData'];
-				if ( ! is_array( $inline_data ) || ! isset( $inline_data['mimeType'], $inline_data['data'] ) ) {
-					throw new InvalidArgumentException( 'Invalid inline data part.' );
-				}
-
-				$parts->add_inline_data_part( $inline_data['mimeType'], $inline_data['data'] );
+				$parts->add_part( Inline_Data_Part::from_array( $part ) );
 			} else {
 				throw new InvalidArgumentException( 'Invalid part data.' );
 			}

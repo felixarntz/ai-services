@@ -10,6 +10,7 @@ namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types;
 
 use InvalidArgumentException;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Contracts\Part;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\File_Data_Part;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\Inline_Data_Part;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\Text_Part;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
@@ -57,6 +58,27 @@ final class Parts implements Arrayable {
 					'inlineData' => array(
 						'mimeType' => $mime_type,
 						'data'     => $base64_data,
+					),
+				)
+			)
+		);
+	}
+
+	/**
+	 * Adds a file data part to the content.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $mime_type The MIME type of the data.
+	 * @param string $file_uri  The URI of the file.
+	 */
+	public function add_file_data_part( string $mime_type, string $file_uri ): void {
+		$this->add_part(
+			File_Data_Part::from_array(
+				array(
+					'fileData' => array(
+						'mimeType' => $mime_type,
+						'fileUri'  => $file_uri,
 					),
 				)
 			)
@@ -142,6 +164,8 @@ final class Parts implements Arrayable {
 				$parts->add_part( Text_Part::from_array( $part ) );
 			} elseif ( isset( $part['inlineData'] ) ) {
 				$parts->add_part( Inline_Data_Part::from_array( $part ) );
+			} elseif ( isset( $part['fileData'] ) ) {
+				$parts->add_part( File_Data_Part::from_array( $part ) );
 			} else {
 				throw new InvalidArgumentException( 'Invalid part data.' );
 			}

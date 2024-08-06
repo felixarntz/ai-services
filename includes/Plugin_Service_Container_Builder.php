@@ -213,9 +213,10 @@ class Plugin_Service_Container_Builder {
 				$this->container['option_repository'],
 				'wpoopple_delete_data',
 				array(
-					'type'              => 'bool',
+					'type'              => 'boolean',
 					'sanitize_callback' => $sanitize_callback,
 					'default'           => false,
+					'show_in_rest'      => true,
 					'autoload'          => false,
 				)
 			);

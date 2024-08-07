@@ -9,6 +9,7 @@
 namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
 
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin\Settings_Page;
+use Vendor_NS\WP_OOP_Plugin_Lib_Example\Dependencies\Plugin_Script_Style_Loader;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Installation\Plugin_Installer;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
@@ -98,13 +99,13 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_general_services(): void {
-		$this->container['input']            = function () {
+		$this->container['input']            = static function () {
 			return new Input();
 		};
-		$this->container['current_user']     = function () {
+		$this->container['current_user']     = static function () {
 			return new Current_User();
 		};
-		$this->container['plugin_installer'] = function ( $cont ) {
+		$this->container['plugin_installer'] = static function ( $cont ) {
 			return new Plugin_Installer(
 				$cont['plugin_env'],
 				$cont['option_container']['wpoopple_version'],
@@ -120,11 +121,18 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_dependency_services(): void {
-		$this->container['script_registry'] = function () {
+		$this->container['script_registry']            = static function () {
 			return new Script_Registry();
 		};
-		$this->container['style_registry']  = function () {
+		$this->container['style_registry']             = static function () {
 			return new Style_Registry();
+		};
+		$this->container['plugin_script_style_loader'] = static function ( $cont ) {
+			return new Plugin_Script_Style_Loader(
+				$cont['plugin_env'],
+				$cont['script_registry'],
+				$cont['style_registry']
+			);
 		};
 	}
 
@@ -134,7 +142,7 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_option_services(): void {
-		$this->container['option_repository'] = function () {
+		$this->container['option_repository'] = static function () {
 			return new Option_Repository();
 		};
 		$this->container['option_container']  = function () {
@@ -142,7 +150,7 @@ class Plugin_Service_Container_Builder {
 			$this->add_options_to_container( $options );
 			return $options;
 		};
-		$this->container['option_registry']   = function () {
+		$this->container['option_registry']   = static function () {
 			return new Option_Registry( 'wp_oop_plugin_lib_example' );
 		};
 	}
@@ -153,7 +161,7 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_entity_services(): void {
-		$this->container['post_repository'] = function () {
+		$this->container['post_repository'] = static function () {
 			return new Post_Repository();
 		};
 	}
@@ -164,12 +172,11 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_admin_services(): void {
-		$this->container['admin_settings_menu'] = function () {
+		$this->container['admin_settings_menu'] = static function () {
 			return new Admin_Menu( 'options-general.php' );
 		};
-		$this->container['admin_settings_page'] = function ( $cont ) {
+		$this->container['admin_settings_page'] = static function ( $cont ) {
 			return new Settings_Page(
-				$cont['plugin_env'],
 				$cont['script_registry'],
 				$cont['style_registry']
 			);

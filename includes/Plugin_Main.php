@@ -127,6 +127,14 @@ class Plugin_Main implements With_Hooks {
 			}
 		);
 
+		// Register scripts and styles.
+		add_action(
+			'init',
+			function () {
+				$this->services['plugin_script_style_loader']->register_scripts_and_styles();
+			}
+		);
+
 		// Register settings page.
 		add_action(
 			'admin_menu',

@@ -14,17 +14,17 @@ function getEntryPoints() {
 			__dirname,
 			process.env.WP_SRC_DIRECTORY || 'src'
 		);
-		const [ entryFile ] = glob( `index.[jt]s?(x)`, {
+		const entryFiles = glob( `*/index.[jt]s?(x)`, {
 			absolute: true,
 			cwd: srcDirectory,
 		} );
-		if ( entryFile ) {
+		entryFiles.forEach( ( entryFile ) => {
 			const entryName = entryFile
 				.replace( path.extname( entryFile ), '' )
 				.replace( srcDirectory + path.sep, '' );
 
 			entryPoints[ entryName ] = entryFile;
-		}
+		} );
 
 		return entryPoints;
 	};

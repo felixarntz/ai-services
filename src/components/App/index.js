@@ -9,15 +9,13 @@ import { ErrorBoundary } from '@wordpress/editor';
  */
 import Interface from '../Interface';
 import ShortcutsRegister from '../ShortcutsRegister';
-import SettingsCards from '../SettingsCards';
+import './style.scss';
 
-export default function App() {
+export default function App( { children } ) {
 	return (
 		<SlotFillProvider>
 			<ErrorBoundary>
-				<Interface>
-					<SettingsCards />
-				</Interface>
+				<Interface>{ children }</Interface>
 				<ShortcutsRegister />
 			</ErrorBoundary>
 		</SlotFillProvider>

@@ -7,9 +7,7 @@ import { createRoot, render } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import App from './components/App';
-import './store';
-import './style.scss';
+import SettingsApp from './components/SettingsApp';
 
 function mountApp( Component, renderTarget ) {
 	if ( createRoot ) {
@@ -27,5 +25,5 @@ domReady( () => {
 		return;
 	}
 
-	mountApp( <App />, renderTarget );
+	mountApp( <SettingsApp />, renderTarget );
 } );

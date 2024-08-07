@@ -62,16 +62,16 @@ final class Plugin_Service_Container_Builder {
 	}
 
 	/**
-	 * Sets the plugin environment service in the service container.
+	 * Builds the plugin environment service for the service container.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Plugin_Env $plugin_env Plugin environment object.
+	 * @param string $main_file Absolute path to the plugin main file.
 	 * @return self The builder instance, for chaining.
 	 */
-	public function set_env( Plugin_Env $plugin_env ): self {
-		$this->container['plugin_env'] = function () use ( $plugin_env ) {
-			return $plugin_env;
+	public function build_env( string $main_file ): self {
+		$this->container['plugin_env'] = function () use ( $main_file ) {
+			return new Plugin_Env( $main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
 		};
 
 		return $this;

@@ -10,7 +10,6 @@ namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services;
 
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 
 /**
@@ -33,10 +32,10 @@ final class Services_Loader implements With_Hooks {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Plugin_Env $plugin_env Plugin environment object.
+	 * @param string $main_file Absolute path to the plugin main file.
 	 */
-	public function __construct( Plugin_Env $plugin_env ) {
-		$this->container = $this->set_up_container( $plugin_env );
+	public function __construct( string $main_file ) {
+		$this->container = $this->set_up_container( $main_file );
 		Services_API_Instance::set( $this->container['api'] );
 	}
 
@@ -128,13 +127,13 @@ final class Services_Loader implements With_Hooks {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Plugin_Env $plugin_env Plugin environment object.
+	 * @param string $main_file Absolute path to the plugin main file.
 	 * @return Service_Container The services service container.
 	 */
-	private function set_up_container( Plugin_Env $plugin_env ): Service_Container {
+	private function set_up_container( string $main_file ): Service_Container {
 		$builder = new Services_Service_Container_Builder();
 
-		return $builder->set_env( $plugin_env )
+		return $builder->build_env( $main_file )
 			->build_services()
 			->get();
 	}

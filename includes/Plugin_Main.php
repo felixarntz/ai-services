@@ -12,7 +12,6 @@ use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_API;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_API_Instance;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_Loader;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
@@ -55,16 +54,14 @@ class Plugin_Main implements With_Hooks {
 	 * @param string $main_file Absolute path to the plugin main file.
 	 */
 	public function __construct( string $main_file ) {
-		$plugin_env = new Plugin_Env( $main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
-
 		// Instantiate the services loader, which separately initializes all functionality related to the AI services.
-		$this->services_loader = new Services_Loader( $plugin_env );
+		$this->services_loader = new Services_Loader( $main_file );
 
 		// Then retrieve the canonical AI services instance, which is created by the services loader.
 		$this->services_api = Services_API_Instance::get();
 
 		// Last but not least, set up the container for the main plugin functionality.
-		$this->container = $this->set_up_container( $plugin_env );
+		$this->container = $this->set_up_container( $main_file );
 
 		// TODO: Remove this once the services API is fully integrated (it's only here to please PHPStan).
 		$this->services_api->get_registered_service_slugs();
@@ -175,17 +172,17 @@ class Plugin_Main implements With_Hooks {
 	}
 
 	/**
-	 * Sets up the plugin service container.
+	 * Sets up the plugin container.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Plugin_Env $plugin_env Plugin environment object.
-	 * @return Service_Container The plugin service container.
+	 * @param string $main_file Absolute path to the plugin main file.
+	 * @return Service_Container Plugin container.
 	 */
-	private function set_up_container( Plugin_Env $plugin_env ): Service_Container {
+	private function set_up_container( string $main_file ): Service_Container {
 		$builder = new Plugin_Service_Container_Builder();
 
-		return $builder->set_env( $plugin_env )
+		return $builder->build_env( $main_file )
 			->build_services()
 			->get();
 	}

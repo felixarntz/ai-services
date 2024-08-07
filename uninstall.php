@@ -37,14 +37,10 @@ if ( ! function_exists( 'wp_oop_plugin_lib_example_uninstall' ) ) {
 			return;
 		}
 
-		// Instantiate the plugin environment.
-		$class_name = 'Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env';
-		$plugin_env = new $class_name( $plugin_main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
-
 		// Assemble the plugin services.
 		$class_name = 'Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Service_Container_Builder';
 		$builder    = new $class_name();
-		$services   = $builder->set_env( $plugin_env )
+		$services   = $builder->build_env( $plugin_main_file )
 			->build_services()
 			->get();
 

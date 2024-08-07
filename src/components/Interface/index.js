@@ -11,12 +11,11 @@ import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 import { useViewportMatch } from '@wordpress/compose';
+import { createSlotFill } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
-import Header from '../Header';
-import Footer from '../Footer';
 import Notices from '../Notices';
 import Snackbars from '../Snackbars';
 
@@ -29,7 +28,12 @@ const interfaceLabels = {
 	footer: __( 'Editor footer', 'wp-oop-plugin-lib-example' ),
 };
 
-export default function Interface( { className, children } ) {
+const { Fill: HeaderFill, Slot: HeaderSlot } =
+	createSlotFill( 'InterfaceHeader' );
+const { Fill: FooterFill, Slot: FooterSlot } =
+	createSlotFill( 'InterfaceFooter' );
+
+function Interface( { className, children } ) {
 	const isDistractionFree = false;
 	const isLargeViewport = useViewportMatch( 'medium' );
 
@@ -52,7 +56,7 @@ export default function Interface( { className, children } ) {
 				'is-distraction-free': isDistractionFree,
 			} ) }
 			labels={ interfaceLabels }
-			header={ <Header /> }
+			header={ <HeaderSlot /> }
 			content={
 				<>
 					{ ! isDistractionFree && <Notices /> }
@@ -61,7 +65,7 @@ export default function Interface( { className, children } ) {
 				</>
 			}
 			editorNotices={ <Notices /> }
-			footer={ ! isDistractionFree && isLargeViewport && <Footer /> }
+			footer={ ! isDistractionFree && isLargeViewport && <FooterSlot /> }
 			secondarySidebar={ undefined }
 			sidebar={
 				! isDistractionFree && (
@@ -76,3 +80,8 @@ export default function Interface( { className, children } ) {
 		/>
 	);
 }
+
+Interface.Header = HeaderFill;
+Interface.Footer = FooterFill;
+
+export default Interface;

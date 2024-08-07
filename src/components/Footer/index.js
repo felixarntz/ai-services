@@ -1,22 +1,13 @@
 /**
- * WordPress dependencies
- */
-import { __ } from '@wordpress/i18n';
-
-/**
  * Internal dependencies
  */
+import Interface from '../Interface';
 import './style.scss';
 
-export default function Footer() {
+export default function Footer( { children } ) {
 	return (
-		<div className="wpoopple-footer">
-			<p>
-				{ __(
-					'All settings are up to date.',
-					'wp-oop-plugin-lib-example'
-				) }
-			</p>
-		</div>
+		<Interface.Footer>
+			<div className="wpoopple-footer">{ children }</div>
+		</Interface.Footer>
 	);
 }

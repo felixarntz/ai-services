@@ -1,31 +1,36 @@
 /**
  * WordPress dependencies
  */
-import { Button } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { createSlotFill } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
+import Interface from '../Interface';
 import './style.scss';
 
-export default function Header() {
-	const handleSave = () => {
-		window.console.log( 'Save clicked!' );
-	};
+const { Fill: HeaderLeftFill, Slot: HeaderLeftSlot } =
+	createSlotFill( 'HeaderLeft' );
+const { Fill: HeaderRightFill, Slot: HeaderRightSlot } =
+	createSlotFill( 'HeaderRight' );
 
+function Header( { children } ) {
 	return (
-		<div className="wpoopple-header">
-			<div className="wpoopple-header__left">
-				<h1 className="wpoopple-header__title">
-					{ __( 'Title', 'wp-oop-plugin-lib-example' ) }
-				</h1>
+		<Interface.Header>
+			<div className="wpoopple-header">
+				<div className="wpoopple-header__left">
+					<HeaderLeftSlot />
+					{ children }
+				</div>
+				<div className="wpoopple-header__right">
+					<HeaderRightSlot />
+				</div>
 			</div>
-			<div className="wpoopple-header__right">
-				<Button variant="primary" onClick={ handleSave }>
-					{ __( 'Save', 'wp-oop-plugin-lib-example' ) }
-				</Button>
-			</div>
-		</div>
+		</Interface.Header>
 	);
 }
+
+Header.Left = HeaderLeftFill;
+Header.Right = HeaderRightFill;
+
+export default Header;

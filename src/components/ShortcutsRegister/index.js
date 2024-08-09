@@ -14,7 +14,7 @@ export default function ShortcutsRegister() {
 			name: 'wp-oop-plugin-lib-example/next-region',
 			category: 'global',
 			description: __(
-				'Navigate to the next part of the settings screen.',
+				'Navigate to the next part of the screen.',
 				'wp-oop-plugin-lib-example'
 			),
 			keyCombination: {
@@ -33,7 +33,7 @@ export default function ShortcutsRegister() {
 			name: 'wp-oop-plugin-lib-example/previous-region',
 			category: 'global',
 			description: __(
-				'Navigate to the previous part of the settings screen.',
+				'Navigate to the previous part of the screen.',
 				'wp-oop-plugin-lib-example'
 			),
 			keyCombination: {

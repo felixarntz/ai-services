@@ -11,11 +11,13 @@ import Interface from '../Interface';
 import ShortcutsRegister from '../ShortcutsRegister';
 import './style.scss';
 
-export default function App( { children } ) {
+export default function App( { className, labels, children } ) {
 	return (
 		<SlotFillProvider>
 			<ErrorBoundary>
-				<Interface>{ children }</Interface>
+				<Interface className={ className } labels={ labels }>
+					{ children }
+				</Interface>
 				<ShortcutsRegister />
 			</ErrorBoundary>
 		</SlotFillProvider>

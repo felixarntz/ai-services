@@ -11,7 +11,7 @@ export default function ShortcutsRegister() {
 	const { registerShortcut } = useDispatch( keyboardShortcutsStore );
 	useEffect( () => {
 		registerShortcut( {
-			name: 'wp-oop-plugin-lib-example/settings-screen/next-region',
+			name: 'wp-oop-plugin-lib-example/next-region',
 			category: 'global',
 			description: __(
 				'Navigate to the next part of the settings screen.',
@@ -30,7 +30,7 @@ export default function ShortcutsRegister() {
 		} );
 
 		registerShortcut( {
-			name: 'wp-oop-plugin-lib-example/settings-screen/previous-region',
+			name: 'wp-oop-plugin-lib-example/previous-region',
 			category: 'global',
 			description: __(
 				'Navigate to the previous part of the settings screen.',

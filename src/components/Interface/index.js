@@ -28,10 +28,14 @@ export default function Interface( { className, labels, children } ) {
 		return {
 			previousShortcut: select(
 				keyboardShortcutsStore
-			).getAllShortcutKeyCombinations( 'core/editor/previous-region' ),
+			).getAllShortcutKeyCombinations(
+				'wp-oop-plugin-lib-example/previous-region'
+			),
 			nextShortcut: select(
 				keyboardShortcutsStore
-			).getAllShortcutKeyCombinations( 'core/editor/next-region' ),
+			).getAllShortcutKeyCombinations(
+				'wp-oop-plugin-lib-example/next-region'
+			),
 		};
 	} );
 

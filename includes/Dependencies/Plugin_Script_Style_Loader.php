@@ -65,6 +65,15 @@ class Plugin_Script_Style_Loader {
 	 */
 	public function register_scripts_and_styles(): void {
 		$this->script_registry->register(
+			'wpoopple-components',
+			array(
+				'src'      => $this->plugin_env->url( 'build/components/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/components/index.asset.php' ),
+				'strategy' => 'defer',
+			)
+		);
+
+		$this->script_registry->register(
 			'wpoopple-store',
 			array(
 				'src'      => $this->plugin_env->url( 'build/store/index.js' ),
@@ -90,12 +99,22 @@ class Plugin_Script_Style_Loader {
 		wp_scripts()->registered['wpoopple-settings-page']->deps[] = 'wpoopple-store';
 
 		$this->style_registry->register(
+			'wpoopple-components',
+			array(
+				'src'          => $this->plugin_env->url( 'build/components/style-index.css' ),
+				'path'         => $this->plugin_env->path( 'build/components/style-index.css' ),
+				'manifest'     => $this->plugin_env->path( 'build/components/index.asset.php' ),
+				'dependencies' => array( 'wp-components', 'wp-editor' ),
+			)
+		);
+
+		$this->style_registry->register(
 			'wpoopple-settings-page',
 			array(
 				'src'          => $this->plugin_env->url( 'build/settings-page/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/settings-page/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/settings-page/index.asset.php' ),
-				'dependencies' => array( 'wp-components', 'wp-editor' ),
+				'dependencies' => array( 'wp-components', 'wpoopple-components' ),
 			)
 		);
 	}

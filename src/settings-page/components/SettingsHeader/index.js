@@ -1,13 +1,13 @@
 /**
+ * External dependencies
+ */
+import { Header } from '@wp-oop-plugin-lib-example/components';
+
+/**
  * WordPress dependencies
  */
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-
-/**
- * Internal dependencies
- */
-import Header from '../../../components/Header';
 
 export default function SettingsHeader() {
 	const handleSave = () => {

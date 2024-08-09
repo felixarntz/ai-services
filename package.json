@@ -3,6 +3,7 @@
   "license": "GPL-2.0-or-later",
   "repository": "git+https://github.com/vendor-ns/wp-oop-plugin-lib-example.git",
   "devDependencies": {
+    "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
     "@wordpress/env": "^10.4.0",
     "@wordpress/scripts": "^28.4.0",
     "fast-glob": "^3.3.2"

@@ -17,6 +17,7 @@ In order to create a new plugin based on this foundation, perform the following 
     * Replace `WP_OOP_Plugin_Lib_Example` with `My_Plugin`
     * Replace `WP_OOP_PLUGIN_LIB_EXAMPLE` with `MY_PLUGIN`
     * Replace `WP OOP Plugin Lib Example` with `My Plugin`
+    * Replace `wpOopPluginLibExample` with `myPlugin`
     * Replace `wpoopple_` with `myplugin_`
     * Replace `wpoopple-` with `myplugin-`
     * Replace `Vendor_NS` with `My_Namespace`

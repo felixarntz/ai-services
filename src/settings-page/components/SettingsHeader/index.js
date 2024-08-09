@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { Header } from '@wp-oop-plugin-lib-example/components';
+import { Header, HeaderActions } from '@wp-oop-plugin-lib-example/components';
 
 /**
  * WordPress dependencies
@@ -16,14 +16,12 @@ export default function SettingsHeader() {
 
 	return (
 		<Header>
-			<Header.Left>
-				<h1>{ __( 'Settings', 'wp-oop-plugin-lib-example' ) }</h1>
-			</Header.Left>
-			<Header.Right>
+			<h1>{ __( 'Settings', 'wp-oop-plugin-lib-example' ) }</h1>
+			<HeaderActions>
 				<Button variant="primary" onClick={ handleSave }>
 					{ __( 'Save', 'wp-oop-plugin-lib-example' ) }
 				</Button>
-			</Header.Right>
+			</HeaderActions>
 		</Header>
 	);
 }

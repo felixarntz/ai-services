@@ -6,31 +6,24 @@ import { createSlotFill } from '@wordpress/components';
 /**
  * Internal dependencies
  */
-import Interface from '../Interface';
+import HeaderActions from '../HeaderActions';
 import './style.scss';
 
-const { Fill: HeaderLeftFill, Slot: HeaderLeftSlot } =
-	createSlotFill( 'HeaderLeft' );
-const { Fill: HeaderRightFill, Slot: HeaderRightSlot } =
-	createSlotFill( 'HeaderRight' );
+const { Fill, Slot } = createSlotFill( 'Header' );
 
 function Header( { children } ) {
 	return (
-		<Interface.Header>
+		<Fill>
 			<div className="wpoopple-header">
-				<div className="wpoopple-header__left">
-					<HeaderLeftSlot />
-					{ children }
-				</div>
+				<div className="wpoopple-header__left">{ children }</div>
 				<div className="wpoopple-header__right">
-					<HeaderRightSlot />
+					<HeaderActions.Slot />
 				</div>
 			</div>
-		</Interface.Header>
+		</Fill>
 	);
 }
 
-Header.Left = HeaderLeftFill;
-Header.Right = HeaderRightFill;
+Header.Slot = Slot;
 
 export default Header;

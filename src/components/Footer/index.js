@@ -1,13 +1,23 @@
 /**
+ * WordPress dependencies
+ */
+import { createSlotFill } from '@wordpress/components';
+
+/**
  * Internal dependencies
  */
-import Interface from '../Interface';
 import './style.scss';
 
-export default function Footer( { children } ) {
+const { Fill, Slot } = createSlotFill( 'Footer' );
+
+function Footer( { children } ) {
 	return (
-		<Interface.Footer>
+		<Fill>
 			<div className="wpoopple-footer">{ children }</div>
-		</Interface.Footer>
+		</Fill>
 	);
 }
+
+Footer.Slot = Slot;
+
+export default Footer;

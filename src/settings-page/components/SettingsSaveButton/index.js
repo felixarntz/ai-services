@@ -8,7 +8,10 @@ import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
  */
 import { Button } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { __ } from '@wordpress/i18n';
+
+const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
 
 export default function SettingsSaveButton() {
 	const { isLoading, isDirty, isSaving } = useSelect( ( select ) => {
@@ -27,23 +30,49 @@ export default function SettingsSaveButton() {
 		};
 	} );
 
+	const isDisabled = isLoading || ! isDirty || isSaving;
+
 	const { saveSettings } = useDispatch( pluginStore );
+	const { createErrorNotice, createSuccessNotice } =
+		useDispatch( noticesStore );
 
 	const handleSave = async () => {
-		await saveSettings();
+		if ( isDisabled ) {
+			return;
+		}
 
-		// TODO: Trigger snackbar notice.
+		try {
+			await saveSettings();
+		} catch ( error ) {
+			console.error( error ); // eslint-disable-line no-console
+			createErrorNotice(
+				__( 'Saving settings failed.', 'wp-oop-plugin-lib-example' ),
+				{
+					id: SAVE_SETTINGS_NOTICE_ID,
+					type: 'snackbar',
+					speak: true,
+				}
+			);
+			return;
+		}
+
+		createSuccessNotice(
+			__( 'Settings successfully saved.', 'wp-oop-plugin-lib-example' ),
+			{
+				id: SAVE_SETTINGS_NOTICE_ID,
+				type: 'snackbar',
+				speak: true,
+			}
+		);
 	};
-
-	const isDisabled = isLoading || ! isDirty || isSaving;
 
 	return (
 		<Button
 			variant="primary"
 			onClick={ handleSave }
-			disabled={ isDisabled }
 			isBusy={ isSaving }
-			accessibleWhenDisabled={ true }
+			aria-disabled={ isDisabled }
+			// The prop accessibleWhenDisabled should be used here, but doesn't work.
 		>
 			{ __( 'Save', 'wp-oop-plugin-lib-example' ) }
 		</Button>

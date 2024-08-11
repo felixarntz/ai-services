@@ -61,6 +61,8 @@ class Settings_Page extends Abstract_Admin_Page {
 			function () {
 				$this->script_registry->enqueue( 'wpoopple-settings-page' );
 				$this->style_registry->enqueue( 'wpoopple-settings-page' );
+
+				$this->preload_rest_api_data();
 			}
 		);
 
@@ -116,5 +118,28 @@ class Settings_Page extends Abstract_Admin_Page {
 	 */
 	protected function capability(): string {
 		return 'manage_options';
+	}
+
+	/**
+	 * Preloads relevant REST API data for the settings page so that it is available immediately.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function preload_rest_api_data(): void {
+		$preload_paths = array( '/wp/v2/settings' );
+
+		$preload_data = array_reduce(
+			$preload_paths,
+			'rest_preload_api_request',
+			array()
+		);
+
+		$this->script_registry->add_inline_code(
+			'wp-api-fetch',
+			sprintf(
+				'wp.apiFetch.use( wp.apiFetch.createPreloadingMiddleware( %s ) );',
+				wp_json_encode( $preload_data )
+			)
+		);
 	}
 }

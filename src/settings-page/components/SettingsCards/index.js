@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
+
+/**
  * WordPress dependencies
  */
 import {
@@ -7,6 +12,7 @@ import {
 	CardBody,
 	ToggleControl,
 } from '@wordpress/components';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -15,6 +21,19 @@ import { __ } from '@wordpress/i18n';
 import './style.scss';
 
 export default function SettingsCards() {
+	const { isLoading, deleteData } = useSelect( ( select ) => {
+		const { getSettings, isResolving, getDeleteData } =
+			select( pluginStore );
+
+		return {
+			isLoading:
+				getSettings() === undefined || isResolving( 'getSettings' ),
+			deleteData: getDeleteData(),
+		};
+	} );
+
+	const { setDeleteData } = useDispatch( pluginStore );
+
 	return (
 		<div className="wpoopple-settings-cards">
 			<Card>
@@ -33,10 +52,9 @@ export default function SettingsCards() {
 							'By default no data will be deleted, should you decide to uninstall the WP OOP Plugin Lib Example plugin. If you are certain that you want the data to be deleted, please enable this toggle.',
 							'wp-oop-plugin-lib-example'
 						) }
-						checked={ false }
-						onChange={ ( newValue ) => {
-							window.console.log( newValue );
-						} }
+						disabled={ isLoading }
+						checked={ deleteData || false }
+						onChange={ setDeleteData }
 					/>
 				</CardBody>
 			</Card>

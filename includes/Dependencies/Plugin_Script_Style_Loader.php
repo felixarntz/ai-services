@@ -82,12 +82,6 @@ class Plugin_Script_Style_Loader {
 			)
 		);
 
-		/*
-		 * TODO: Support Webpack dependency extraction for own scripts, then import store from the relevant external
-		 * inside the settings page script, so that it will be automatically recognized as a dependency.
-		 *
-		 * For now it'll need to be manually added as a dependency (see hack below).
-		 */
 		$this->script_registry->register(
 			'wpoopple-settings-page',
 			array(
@@ -96,7 +90,6 @@ class Plugin_Script_Style_Loader {
 				'strategy' => 'defer',
 			)
 		);
-		wp_scripts()->registered['wpoopple-settings-page']->deps[] = 'wpoopple-store';
 
 		$this->style_registry->register(
 			'wpoopple-components',

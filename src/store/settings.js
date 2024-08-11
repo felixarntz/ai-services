@@ -147,6 +147,9 @@ const resolvers = {
 const selectors = {
 	getSettings: createSelector(
 		( state ) => {
+			if ( ! state.savedSettings ) {
+				return undefined;
+			}
 			return {
 				...state.savedSettings,
 				...state.modifiedSettings,

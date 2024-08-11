@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import PropTypes from 'prop-types';
+
+/**
  * WordPress dependencies
  */
 import { createSlotFill } from '@wordpress/components';
@@ -23,6 +28,10 @@ function Header( { children } ) {
 		</Fill>
 	);
 }
+
+Header.propTypes = {
+	children: PropTypes.node.isRequired,
+};
 
 Header.Slot = Slot;
 

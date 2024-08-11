@@ -2,6 +2,7 @@
  * External dependencies
  */
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 
 /**
  * WordPress dependencies
@@ -67,3 +68,16 @@ export default function Interface( { className, labels, children } ) {
 		/>
 	);
 }
+
+Interface.propTypes = {
+	className: PropTypes.string,
+	labels: PropTypes.shape( {
+		header: PropTypes.string,
+		body: PropTypes.string,
+		sidebar: PropTypes.string,
+		secondarySidebar: PropTypes.string,
+		actions: PropTypes.string,
+		footer: PropTypes.string,
+	} ),
+	children: PropTypes.node.isRequired,
+};

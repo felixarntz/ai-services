@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import PropTypes from 'prop-types';
+
+/**
  * WordPress dependencies
  */
 import { createSlotFill } from '@wordpress/components';
@@ -17,6 +22,10 @@ function Footer( { children } ) {
 		</Fill>
 	);
 }
+
+Footer.propTypes = {
+	children: PropTypes.node.isRequired,
+};
 
 Footer.Slot = Slot;
 

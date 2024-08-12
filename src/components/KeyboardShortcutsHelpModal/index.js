@@ -2,6 +2,7 @@
  * External dependencies
  */
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 
 /**
  * WordPress dependencies
@@ -54,6 +55,13 @@ function KeyCombination( { keyCombination } ) {
 	);
 }
 
+KeyCombination.propTypes = {
+	keyCombination: PropTypes.shape( {
+		modifier: PropTypes.string,
+		character: PropTypes.string,
+	} ).isRequired,
+};
+
 function Shortcut( { name } ) {
 	const { keyCombination, description, aliases } = useSelect(
 		( select ) => {
@@ -91,6 +99,10 @@ function Shortcut( { name } ) {
 	);
 }
 
+Shortcut.propTypes = {
+	name: PropTypes.string.isRequired,
+};
+
 function ShortcutList( { shortcuts } ) {
 	return (
 		/*
@@ -115,7 +127,11 @@ function ShortcutList( { shortcuts } ) {
 	);
 }
 
-function ShortcutSection( { title, shortcuts, className } ) {
+ShortcutList.propTypes = {
+	shortcuts: PropTypes.arrayOf( PropTypes.string ).isRequired,
+};
+
+function ShortcutSection( { shortcuts, title, className } ) {
 	return (
 		<section
 			className={ clsx(
@@ -133,11 +149,13 @@ function ShortcutSection( { title, shortcuts, className } ) {
 	);
 }
 
-function ShortcutCategorySection( {
-	title,
-	categoryName,
-	additionalShortcuts = [],
-} ) {
+ShortcutSection.propTypes = {
+	shortcuts: PropTypes.arrayOf( PropTypes.string ).isRequired,
+	title: PropTypes.string,
+	className: PropTypes.string,
+};
+
+function ShortcutCategorySection( { title, categoryName } ) {
 	const categoryShortcuts = useSelect(
 		( select ) => {
 			return select( keyboardShortcutsStore ).getCategoryShortcuts(
@@ -147,13 +165,13 @@ function ShortcutCategorySection( {
 		[ categoryName ]
 	);
 
-	return (
-		<ShortcutSection
-			title={ title }
-			shortcuts={ categoryShortcuts.concat( additionalShortcuts ) }
-		/>
-	);
+	return <ShortcutSection title={ title } shortcuts={ categoryShortcuts } />;
 }
+
+ShortcutCategorySection.propTypes = {
+	title: PropTypes.string,
+	categoryName: PropTypes.string.isRequired,
+};
 
 export default function KeyboardShortcutsHelpModal() {
 	const isModalActive = useSelect(

@@ -12,6 +12,7 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import SettingsSaveButton from '../SettingsSaveButton';
+import SettingsMoreMenu from '../SettingsMoreMenu';
 
 export default function SettingsHeader() {
 	return (
@@ -19,6 +20,7 @@ export default function SettingsHeader() {
 			<h1>{ __( 'Settings', 'wp-oop-plugin-lib-example' ) }</h1>
 			<HeaderActions>
 				<SettingsSaveButton />
+				<SettingsMoreMenu />
 			</HeaderActions>
 		</Header>
 	);

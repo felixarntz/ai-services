@@ -8,8 +8,12 @@ import PropTypes from 'prop-types';
  * WordPress dependencies
  */
 import { InterfaceSkeleton } from '@wordpress/interface';
-import { useSelect } from '@wordpress/data';
-import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { store as preferencesStore } from '@wordpress/preferences';
+import {
+	useShortcut,
+	store as keyboardShortcutsStore,
+} from '@wordpress/keyboard-shortcuts';
 import { useViewportMatch } from '@wordpress/compose';
 
 /**
@@ -22,22 +26,34 @@ import Notices from '../Notices';
 import Snackbars from '../Snackbars';
 
 export default function Interface( { className, labels, children } ) {
-	const isDistractionFree = false;
 	const isLargeViewport = useViewportMatch( 'medium' );
 
-	const { previousShortcut, nextShortcut } = useSelect( ( select ) => {
-		return {
-			previousShortcut: select(
+	const { isDistractionFree, previousShortcut, nextShortcut } = useSelect(
+		( select ) => {
+			const { get } = select( preferencesStore );
+			const { getAllShortcutKeyCombinations } = select(
 				keyboardShortcutsStore
-			).getAllShortcutKeyCombinations(
-				'wp-oop-plugin-lib-example/previous-region'
-			),
-			nextShortcut: select(
-				keyboardShortcutsStore
-			).getAllShortcutKeyCombinations(
-				'wp-oop-plugin-lib-example/next-region'
-			),
-		};
+			);
+
+			return {
+				isDistractionFree: get(
+					'wp-oop-plugin-lib-example',
+					'distractionFree'
+				),
+				previousShortcut: getAllShortcutKeyCombinations(
+					'wp-oop-plugin-lib-example/previous-region'
+				),
+				nextShortcut: getAllShortcutKeyCombinations(
+					'wp-oop-plugin-lib-example/next-region'
+				),
+			};
+		}
+	);
+
+	const { toggle: togglePreference } = useDispatch( preferencesStore );
+
+	useShortcut( 'wp-oop-plugin-lib-example/toggle-distraction-free', () => {
+		togglePreference( 'wp-oop-plugin-lib-example', 'distractionFree' );
 	} );
 
 	return (

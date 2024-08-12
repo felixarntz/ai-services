@@ -14,6 +14,7 @@ import { ErrorBoundary } from '@wordpress/editor';
  */
 import Interface from '../Interface';
 import ShortcutsRegister from '../ShortcutsRegister';
+import KeyboardShortcutsHelpModal from '../KeyboardShortcutsHelpModal';
 import './style.scss';
 
 export default function App( { className, labels, children } ) {
@@ -24,6 +25,7 @@ export default function App( { className, labels, children } ) {
 					{ children }
 				</Interface>
 				<ShortcutsRegister />
+				<KeyboardShortcutsHelpModal />
 			</ErrorBoundary>
 		</SlotFillProvider>
 	);

@@ -3,6 +3,8 @@
  */
 import apiFetch from '@wordpress/api-fetch';
 import { createRegistrySelector, createSelector } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -13,6 +15,8 @@ const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
 const SAVE_SETTINGS_START = 'SAVE_SETTINGS_START';
 const SAVE_SETTINGS_FINISH = 'SAVE_SETTINGS_FINISH';
 const SET_DELETE_DATA = 'SET_DELETE_DATA';
+
+const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
 
 function updateModifiedSettings(
 	modifiedSettings,
@@ -66,7 +70,11 @@ const actions = {
 
 	saveSettings:
 		() =>
-		async ( { dispatch, select } ) => {
+		async ( { dispatch, select, registry } ) => {
+			if ( ! select.areSettingsSaveable() ) {
+				return;
+			}
+
 			const settings = select.getSettings();
 
 			await dispatch( {
@@ -74,19 +82,57 @@ const actions = {
 				payload: {},
 			} );
 
-			const updatedSettings = await apiFetch( {
-				path: '/wp/v2/settings',
-				method: 'POST',
-				data: {
-					wpoopple_delete_data: settings.deleteData,
-				},
-			} );
-			await dispatch.receiveSettings( updatedSettings );
+			let updatedSettings;
+			try {
+				updatedSettings = await apiFetch( {
+					path: '/wp/v2/settings',
+					method: 'POST',
+					data: {
+						wpoopple_delete_data: settings.deleteData,
+					},
+				} );
+			} catch ( error ) {
+				console.error( error?.message || error ); // eslint-disable-line no-console
+			}
+
+			if ( updatedSettings ) {
+				await dispatch.receiveSettings( updatedSettings );
+			}
 
 			await dispatch( {
 				type: SAVE_SETTINGS_FINISH,
 				payload: {},
 			} );
+
+			if ( updatedSettings ) {
+				registry
+					.dispatch( noticesStore )
+					.createSuccessNotice(
+						__(
+							'Settings successfully saved.',
+							'wp-oop-plugin-lib-example'
+						),
+						{
+							id: SAVE_SETTINGS_NOTICE_ID,
+							type: 'snackbar',
+							speak: true,
+						}
+					);
+			} else {
+				registry
+					.dispatch( noticesStore )
+					.createErrorNotice(
+						__(
+							'Saving settings failed.',
+							'wp-oop-plugin-lib-example'
+						),
+						{
+							id: SAVE_SETTINGS_NOTICE_ID,
+							type: 'snackbar',
+							speak: true,
+						}
+					);
+			}
 		},
 
 	setDeleteData( deleteData ) {
@@ -168,6 +214,22 @@ const selectors = {
 	isSavingSettings: ( state ) => {
 		return state.isSavingSettings;
 	},
+
+	areSettingsSaveable: createRegistrySelector( ( select ) => () => {
+		if ( select( STORE_NAME ).isSavingSettings() ) {
+			return false;
+		}
+
+		if ( ! select( STORE_NAME ).hasModifiedSettings() ) {
+			return false;
+		}
+
+		const settings = select( STORE_NAME ).getSettings();
+		return (
+			settings !== undefined &&
+			! select( STORE_NAME ).isResolving( 'getSettings' )
+		);
+	} ),
 
 	getDeleteData: createRegistrySelector( ( select ) => () => {
 		const settings = select( STORE_NAME ).getSettings();

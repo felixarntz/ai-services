@@ -1,0 +1,29 @@
+/**
+ * WordPress dependencies
+ */
+import { __ } from '@wordpress/i18n';
+import { MenuItem } from '@wordpress/components';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { store as interfaceStore } from '@wordpress/interface';
+import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
+
+export default function KeyboardShortcutsMenuItem() {
+	const { openModal } = useDispatch( interfaceStore );
+	const shortcut = useSelect( ( select ) =>
+		select( keyboardShortcutsStore ).getShortcutRepresentation(
+			'wp-oop-plugin-lib-example/keyboard-shortcuts',
+			'display'
+		)
+	);
+
+	return (
+		<MenuItem
+			onClick={ () =>
+				openModal( 'wp-oop-plugin-lib-example/keyboard-shortcuts-help' )
+			}
+			shortcut={ shortcut }
+		>
+			{ __( 'Keyboard shortcuts', 'wp-oop-plugin-lib-example' ) }
+		</MenuItem>
+	);
+}

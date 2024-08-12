@@ -11,6 +11,19 @@ export default function ShortcutsRegister() {
 	const { registerShortcut } = useDispatch( keyboardShortcutsStore );
 	useEffect( () => {
 		registerShortcut( {
+			name: 'wp-oop-plugin-lib-example/keyboard-shortcuts',
+			category: 'main',
+			description: __(
+				'Display these keyboard shortcuts.',
+				'wp-oop-plugin-lib-example'
+			),
+			keyCombination: {
+				modifier: 'access',
+				character: 'h',
+			},
+		} );
+
+		registerShortcut( {
 			name: 'wp-oop-plugin-lib-example/next-region',
 			category: 'global',
 			description: __(
@@ -50,6 +63,19 @@ export default function ShortcutsRegister() {
 					character: '~',
 				},
 			],
+		} );
+
+		registerShortcut( {
+			name: 'wp-oop-plugin-lib-example/toggle-distraction-free',
+			category: 'global',
+			description: __(
+				'Toggle distraction free mode.',
+				'wp-oop-plugin-lib-example'
+			),
+			keyCombination: {
+				modifier: 'primaryShift',
+				character: '\\',
+			},
 		} );
 	}, [ registerShortcut ] );
 

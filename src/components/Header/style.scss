@@ -17,6 +17,8 @@
 
 	&__right {
 		align-items: center;
-		display: flex;
+		display: inline-flex;
+		flex-wrap: nowrap;
+		gap: 8px;
 	}
 }

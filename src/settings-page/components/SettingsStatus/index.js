@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-import { Footer } from '@wp-oop-plugin-lib-example/components';
 import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
 
 /**
@@ -10,7 +9,7 @@ import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
-export default function SettingsFooter() {
+export default function SettingsStatus() {
 	const { isLoading, isDirty, isSaving } = useSelect( ( select ) => {
 		const {
 			getSettings,
@@ -44,9 +43,5 @@ export default function SettingsFooter() {
 		);
 	}
 
-	return (
-		<Footer>
-			<p>{ statusText }</p>
-		</Footer>
-	);
+	return <p>{ statusText }</p>;
 }

@@ -1,7 +1,12 @@
 /**
  * External dependencies
  */
-import { App } from '@wp-oop-plugin-lib-example/components';
+import {
+	App,
+	Header,
+	HeaderActions,
+	Footer,
+} from '@wp-oop-plugin-lib-example/components';
 
 /**
  * WordPress dependencies
@@ -13,9 +18,10 @@ import { __ } from '@wordpress/i18n';
  */
 import SettingsShortcutsRegister from '../SettingsShortcutsRegister';
 import SettingsShortcuts from '../SettingsShortcuts';
-import SettingsHeader from '../SettingsHeader';
+import SettingsSaveButton from '../SettingsSaveButton';
+import SettingsMoreMenu from '../SettingsMoreMenu';
 import SettingsCards from '../SettingsCards';
-import SettingsFooter from '../SettingsFooter';
+import SettingsStatus from '../SettingsStatus';
 
 const interfaceLabels = {
 	header: __( 'Settings top bar', 'wp-oop-plugin-lib-example' ),
@@ -30,9 +36,17 @@ export default function SettingsApp() {
 		<App labels={ interfaceLabels }>
 			<SettingsShortcutsRegister />
 			<SettingsShortcuts />
-			<SettingsHeader />
+			<Header>
+				<h1>{ __( 'Settings', 'wp-oop-plugin-lib-example' ) }</h1>
+				<HeaderActions>
+					<SettingsSaveButton />
+					<SettingsMoreMenu />
+				</HeaderActions>
+			</Header>
 			<SettingsCards />
-			<SettingsFooter />
+			<Footer>
+				<SettingsStatus />
+			</Footer>
 		</App>
 	);
 }

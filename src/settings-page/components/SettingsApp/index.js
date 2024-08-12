@@ -18,6 +18,7 @@ import { __ } from '@wordpress/i18n';
  */
 import SettingsShortcutsRegister from '../SettingsShortcutsRegister';
 import SettingsShortcuts from '../SettingsShortcuts';
+import UnsavedChangesWarning from '../UnsavedChangesWarning';
 import SettingsSaveButton from '../SettingsSaveButton';
 import SettingsMoreMenu from '../SettingsMoreMenu';
 import SettingsCards from '../SettingsCards';
@@ -36,6 +37,7 @@ export default function SettingsApp() {
 		<App labels={ interfaceLabels }>
 			<SettingsShortcutsRegister />
 			<SettingsShortcuts />
+			<UnsavedChangesWarning />
 			<Header>
 				<h1>{ __( 'Settings', 'wp-oop-plugin-lib-example' ) }</h1>
 				<HeaderActions>

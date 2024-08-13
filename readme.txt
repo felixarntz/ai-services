@@ -1,13 +1,13 @@
 === WP OOP Plugin Lib Example ===
 
-Plugin Name:       WP OOP Plugin Lib Example
-Plugin URI:        https://wordpress.org/plugins/wp-oop-plugin-lib-example/
-Author:            The Plugin Author
-Author URI:        https://the-plugin-author.com
-Tested up to:      6.6
-Stable tag:        1.0.0
-License:           GNU General Public License v2 (or later)
-License URI:       https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+Plugin Name:  WP OOP Plugin Lib Example
+Plugin URI:   https://wordpress.org/plugins/wp-oop-plugin-lib-example/
+Author:       The Plugin Author
+Author URI:   https://the-plugin-author.com
+Tested up to: 6.6
+Stable tag:   1.0.0
+License:      GPLv2 or later
+License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 The plugin description.
 

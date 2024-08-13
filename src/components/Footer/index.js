@@ -6,7 +6,11 @@ import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import { createSlotFill } from '@wordpress/components';
+import {
+	createSlotFill,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUseSlotFills as useSlotFills,
+} from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -27,11 +31,7 @@ const { Fill, Slot } = createSlotFill( 'Footer' );
  * @return {Component} The component to be rendered.
  */
 function Footer( { children } ) {
-	return (
-		<Fill>
-			<div className="wpoopple-footer">{ children }</div>
-		</Fill>
-	);
+	return <Fill>{ children }</Fill>;
 }
 
 Footer.propTypes = {
@@ -39,5 +39,17 @@ Footer.propTypes = {
 };
 
 Footer.Slot = Slot;
+
+/**
+ * Hook to check whether any fills are provided for the Footer slot.
+ *
+ * @since n.e.x.t
+ *
+ * @return {boolean} True if there are any Footer fills, false otherwise.
+ */
+export function useHasFooter() {
+	const fills = useSlotFills( 'Footer' );
+	return !! fills?.length;
+}
 
 export default Footer;

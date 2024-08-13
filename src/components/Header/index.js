@@ -6,12 +6,15 @@ import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import { createSlotFill } from '@wordpress/components';
+import {
+	createSlotFill,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUseSlotFills as useSlotFills,
+} from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
-import HeaderActions from '../HeaderActions';
 import './style.scss';
 
 const { Fill, Slot } = createSlotFill( 'Header' );
@@ -28,16 +31,7 @@ const { Fill, Slot } = createSlotFill( 'Header' );
  * @return {Component} The component to be rendered.
  */
 function Header( { children } ) {
-	return (
-		<Fill>
-			<div className="wpoopple-header">
-				<div className="wpoopple-header__left">{ children }</div>
-				<div className="wpoopple-header__right">
-					<HeaderActions.Slot />
-				</div>
-			</div>
-		</Fill>
-	);
+	return <Fill>{ children }</Fill>;
 }
 
 Header.propTypes = {
@@ -45,5 +39,17 @@ Header.propTypes = {
 };
 
 Header.Slot = Slot;
+
+/**
+ * Hook to check whether any fills are provided for the Header slot.
+ *
+ * @since n.e.x.t
+ *
+ * @return {boolean} True if there are any Header fills, false otherwise.
+ */
+export function useHasHeader() {
+	const fills = useSlotFills( 'Header' );
+	return !! fills?.length;
+}
 
 export default Header;

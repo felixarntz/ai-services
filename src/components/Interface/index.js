@@ -19,8 +19,9 @@ import { useViewportMatch } from '@wordpress/compose';
 /**
  * Internal dependencies
  */
-import Header from '../Header';
-import Footer from '../Footer';
+import { default as Header, useHasHeader } from '../Header';
+import HeaderActions from '../HeaderActions';
+import { default as Footer, useHasFooter } from '../Footer';
 import Sidebar from '../Sidebar';
 import Notices from '../Notices';
 import Snackbars from '../Snackbars';
@@ -67,6 +68,25 @@ export default function Interface( { className, labels, children } ) {
 		togglePreference( 'wp-oop-plugin-lib-example', 'distractionFree' );
 	} );
 
+	const hasHeader = useHasHeader();
+	const header = hasHeader && (
+		<div className="wpoopple-header">
+			<div className="wpoopple-header__left">
+				<Header.Slot />
+			</div>
+			<div className="wpoopple-header__right">
+				<HeaderActions.Slot />
+			</div>
+		</div>
+	);
+
+	const hasFooter = useHasFooter();
+	const footer = hasFooter && (
+		<div className="wpoopple-footer">
+			<Footer.Slot />
+		</div>
+	);
+
 	return (
 		<InterfaceSkeleton
 			enableRegionNavigation={ true }
@@ -75,7 +95,7 @@ export default function Interface( { className, labels, children } ) {
 				'is-distraction-free': isDistractionFree,
 			} ) }
 			labels={ labels }
-			header={ <Header.Slot /> }
+			header={ header }
 			content={
 				<>
 					{ ! isDistractionFree && <Notices /> }
@@ -84,7 +104,7 @@ export default function Interface( { className, labels, children } ) {
 				</>
 			}
 			editorNotices={ <Notices /> }
-			footer={ ! isDistractionFree && isLargeViewport && <Footer.Slot /> }
+			footer={ ! isDistractionFree && isLargeViewport && footer }
 			secondarySidebar={ undefined }
 			sidebar={ ! isDistractionFree && <Sidebar.Slot /> }
 			actions={ <div>Actions</div> }

@@ -6,7 +6,11 @@ import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import { createSlotFill } from '@wordpress/components';
+import {
+	createSlotFill,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUseSlotFills as useSlotFills,
+} from '@wordpress/components';
 
 const { Fill, Slot } = createSlotFill( 'HeaderActions' );
 
@@ -30,5 +34,17 @@ HeaderActions.propTypes = {
 };
 
 HeaderActions.Slot = Slot;
+
+/**
+ * Hook to check whether any fills are provided for the HeaderActions slot.
+ *
+ * @since n.e.x.t
+ *
+ * @return {boolean} True if there are any HeaderActions fills, false otherwise.
+ */
+export function useHasHeaderActions() {
+	const fills = useSlotFills( 'HeaderActions' );
+	return !! fills?.length;
+}
 
 export default HeaderActions;

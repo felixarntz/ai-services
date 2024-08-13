@@ -6,6 +6,7 @@ import {
 	Header,
 	HeaderActions,
 	Footer,
+	PinnedSidebars,
 } from '@wp-oop-plugin-lib-example/components';
 
 /**
@@ -49,6 +50,7 @@ export default function SettingsApp() {
 				<h1>{ __( 'Settings', 'wp-oop-plugin-lib-example' ) }</h1>
 				<HeaderActions>
 					<SettingsSaveButton />
+					<PinnedSidebars />
 					<SettingsMoreMenu />
 				</HeaderActions>
 			</Header>

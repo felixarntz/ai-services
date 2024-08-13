@@ -25,8 +25,8 @@ jobs:
       fail-fast: true
       matrix:
         php:
-        - '8.2'
-        wordpress: [ 'latest' ]
+        - '8.3' # Currently the wordpress/plugin-check-action always uses the latest PHP version anyway.
+        wordpress: [ 'latest' ] # Currently the wordpress/plugin-check-action only supports 'latest' or 'trunk'.
     steps:
       #- uses: styfle/cancel-workflow-action@0.12.1
 
@@ -60,3 +60,4 @@ jobs:
         uses: wordpress/plugin-check-action@v1
         with:
           wp-version: ${{ matrix.wordpress }}
+          exclude-checks: 'file_type,plugin_readme' # Exclude file_type because of the dev files present, and plugin_readme because there is no readme.txt yet.

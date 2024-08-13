@@ -60,4 +60,4 @@ jobs:
         uses: wordpress/plugin-check-action@v1
         with:
           wp-version: ${{ matrix.wordpress }}
-          exclude-checks: 'file_type,plugin_readme' # Exclude file_type because of the dev files present, and plugin_readme because there is no readme.txt yet.
+          exclude-checks: 'file_type' # Exclude file_type because of the dev files present in the repository.

@@ -23,6 +23,8 @@ In order to create a new plugin based on this foundation, perform the following 
     * Replace `Vendor_NS` with `My_Namespace`
     * Replace `vendor-ns` with `my-github`
     * Replace `The plugin description.` with `My plugin does something useful.`
+    * Replace `The Plugin Author` with `Real Author Name`
+    * Replace `https://the-plugin-author.com` with `https://real-author-website.com`
 3. Remove any parts of the PHP codebase that you don't need.
 4. Update the `README.md` file as needed.
 5. (Optional) If your plugin does not require any custom JavaScript, remove the `src` directory and the JavaScript-specific infrastructure files (e.g. `.github/workflows/js-lint.yml`, `.prettierignore`, `webpack.config.js`).

@@ -72,6 +72,14 @@ class Settings_Page extends Abstract_Admin_Page {
 				return "$classes remove-screen-spacing";
 			}
 		);
+
+		add_action(
+			'admin_notices',
+			static function () {
+				remove_all_actions( 'admin_notices' );
+			},
+			-9999
+		);
 	}
 
 	/**

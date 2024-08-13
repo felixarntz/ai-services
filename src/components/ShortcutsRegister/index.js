@@ -18,11 +18,11 @@ export default function ShortcutsRegister() {
 	const { registerShortcut } = useDispatch( keyboardShortcutsStore );
 	useEffect( () => {
 		registerShortcut( {
-			name: 'wp-oop-plugin-lib-example/keyboard-shortcuts',
+			name: 'wp-starter-plugin/keyboard-shortcuts',
 			category: 'main',
 			description: __(
 				'Display these keyboard shortcuts.',
-				'wp-oop-plugin-lib-example'
+				'wp-starter-plugin'
 			),
 			keyCombination: {
 				modifier: 'access',
@@ -31,11 +31,11 @@ export default function ShortcutsRegister() {
 		} );
 
 		registerShortcut( {
-			name: 'wp-oop-plugin-lib-example/next-region',
+			name: 'wp-starter-plugin/next-region',
 			category: 'global',
 			description: __(
 				'Navigate to the next part of the screen.',
-				'wp-oop-plugin-lib-example'
+				'wp-starter-plugin'
 			),
 			keyCombination: {
 				modifier: 'ctrl',
@@ -50,11 +50,11 @@ export default function ShortcutsRegister() {
 		} );
 
 		registerShortcut( {
-			name: 'wp-oop-plugin-lib-example/previous-region',
+			name: 'wp-starter-plugin/previous-region',
 			category: 'global',
 			description: __(
 				'Navigate to the previous part of the screen.',
-				'wp-oop-plugin-lib-example'
+				'wp-starter-plugin'
 			),
 			keyCombination: {
 				modifier: 'ctrlShift',
@@ -73,11 +73,11 @@ export default function ShortcutsRegister() {
 		} );
 
 		registerShortcut( {
-			name: 'wp-oop-plugin-lib-example/toggle-distraction-free',
+			name: 'wp-starter-plugin/toggle-distraction-free',
 			category: 'global',
 			description: __(
 				'Toggle distraction free mode.',
-				'wp-oop-plugin-lib-example'
+				'wp-starter-plugin'
 			),
 			keyCombination: {
 				modifier: 'primaryShift',

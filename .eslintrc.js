@@ -9,7 +9,7 @@ module.exports = {
 		...config.rules,
 		'import/no-unresolved': [
 			'error',
-			{ ignore: [ '^@wordpress/', '^@wp-oop-plugin-lib-example/' ] },
+			{ ignore: [ '^@wordpress/', '^@wp-starter-plugin/' ] },
 		],
 
 		// Require JS docblocks for all functions, just like in PHP.

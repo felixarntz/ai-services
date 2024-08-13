@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Main
+ * Class Vendor_NS\WP_Starter_Plugin\Plugin_Main
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
+namespace Vendor_NS\WP_Starter_Plugin;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
 /**
  * Plugin main class.
@@ -53,11 +53,11 @@ class Plugin_Main implements With_Hooks {
 			function () {
 				echo '<div class="notice notice-info"><p>';
 				if ( $this->services['current_user']->has_cap( 'manage_options' ) ) {
-					echo esc_html( $this->services['option_container']['wpoopple_version']->get_value() );
+					echo esc_html( $this->services['option_container']['wpsp_version']->get_value() );
 					echo '<br>';
-					echo esc_html( $this->services['option_container']['wpoopple_delete_data']->get_value() );
+					echo esc_html( $this->services['option_container']['wpsp_delete_data']->get_value() );
 				} else {
-					esc_html_e( 'Current user cannot manage options.', 'wp-oop-plugin-lib-example' );
+					esc_html_e( 'Current user cannot manage options.', 'wp-starter-plugin' );
 				}
 				echo '</p></div>';
 			}

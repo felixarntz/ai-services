@@ -1,1 +1,1 @@
-export const STORE_NAME = 'wp-oop-plugin-lib-example/data';
+export const STORE_NAME = 'wp-starter-plugin/data';

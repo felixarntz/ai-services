@@ -1,6 +1,6 @@
-=== WP OOP Plugin Lib Example ===
+=== WP Starter Plugin ===
 
-Plugin Name:  WP OOP Plugin Lib Example
+Plugin Name:  WP Starter Plugin
 Plugin URI:   https://the-plugin.com
 Author:       The Plugin Author
 Author URI:   https://the-plugin-author.com
@@ -20,14 +20,14 @@ Extended plugin description content.
 = Installation from within WordPress =
 
 1. Visit **Plugins > Add New**.
-2. Search for **WP OOP Plugin Lib Example**.
-3. Install and activate the WP OOP Plugin Lib Example plugin.
+2. Search for **WP Starter Plugin**.
+3. Install and activate the WP Starter Plugin plugin.
 
 = Manual installation =
 
-1. Upload the entire `wp-oop-plugin-lib-example` folder to the `/wp-content/plugins/` directory.
+1. Upload the entire `wp-starter-plugin` folder to the `/wp-content/plugins/` directory.
 2. Visit **Plugins**.
-3. Activate the WP OOP Plugin Lib Example plugin.
+3. Activate the WP Starter Plugin plugin.
 
 == Frequently Asked Questions ==
 

@@ -43,13 +43,13 @@ function Sidebar( {
 } ) {
 	return (
 		<ComplementaryArea
-			scope="wp-oop-plugin-lib-example"
+			scope="wp-starter-plugin"
 			identifier={ identifier }
 			title={ title }
 			icon={ icon }
 			isPinnable={ isPinnable }
 			isActiveByDefault={ isActiveByDefault }
-			closeLabel={ __( 'Close sidebar', 'wp-oop-plugin-lib-example' ) }
+			closeLabel={ __( 'Close sidebar', 'wp-starter-plugin' ) }
 		>
 			{ children }
 		</ComplementaryArea>
@@ -66,7 +66,7 @@ Sidebar.propTypes = {
 };
 
 Sidebar.Slot = () => {
-	return <ComplementaryArea.Slot scope="wp-oop-plugin-lib-example" />;
+	return <ComplementaryArea.Slot scope="wp-starter-plugin" />;
 };
 
 /**
@@ -77,7 +77,7 @@ Sidebar.Slot = () => {
  * @return {boolean} True if there are any Sidebar fills, false otherwise.
  */
 export function useHasSidebar() {
-	const fills = useSlotFills( 'ComplementaryArea/wp-oop-plugin-lib-example' );
+	const fills = useSlotFills( 'ComplementaryArea/wp-starter-plugin' );
 	return !! fills?.length;
 }
 

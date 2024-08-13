@@ -1,15 +1,15 @@
 <?php
 /**
- * Tests for Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Main
+ * Tests for Vendor_NS\WP_Starter_Plugin\Plugin_Main
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\PHPUnit\Tests;
+namespace Vendor_NS\WP_Starter_Plugin\PHPUnit\Tests;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\PHPUnit\Includes\Test_Case;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Main;
+use Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes\Test_Case;
+use Vendor_NS\WP_Starter_Plugin\Plugin_Main;
 
 class Plugin_Main_Tests extends Test_Case {
 

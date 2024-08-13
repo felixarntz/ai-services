@@ -2,7 +2,7 @@
 /**
  * PHP-Scoper configuration file.
  *
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
 use Symfony\Component\Finder\Finder;
@@ -12,7 +12,7 @@ use Symfony\Component\Finder\Finder;
  * It will be used in all translation strings from the underlying library, to make sure they are properly translatable
  * as part of the plugin.
  */
-$plugin_textdomain = 'wp-oop-plugin-lib-example';
+$plugin_textdomain = 'wp-starter-plugin';
 
 /*
  * You can optionally provide specific folder names from the WP OOP Plugin Lib "src" directory here to limit the
@@ -36,7 +36,7 @@ $wp_oop_plugin_lib_folders_regex = $wp_oop_plugin_lib_folders_concat
 	: '/^[A-Za-z0-9_]/';
 
 return array(
-	'prefix'             => 'Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies',
+	'prefix'             => 'Vendor_NS\WP_Starter_Plugin_Dependencies',
 	'finders'            => array(
 		Finder::create()
 			->files()

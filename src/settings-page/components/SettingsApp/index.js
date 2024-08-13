@@ -7,7 +7,7 @@ import {
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
-} from '@wp-oop-plugin-lib-example/components';
+} from '@wp-starter-plugin/components';
 
 /**
  * WordPress dependencies
@@ -26,11 +26,11 @@ import SettingsCards from '../SettingsCards';
 import SettingsStatus from '../SettingsStatus';
 
 const interfaceLabels = {
-	header: __( 'Settings top bar', 'wp-oop-plugin-lib-example' ),
-	body: __( 'Settings content', 'wp-oop-plugin-lib-example' ),
-	sidebar: __( 'Settings sidebar', 'wp-oop-plugin-lib-example' ),
-	actions: __( 'Settings actions', 'wp-oop-plugin-lib-example' ),
-	footer: __( 'Settings footer', 'wp-oop-plugin-lib-example' ),
+	header: __( 'Settings top bar', 'wp-starter-plugin' ),
+	body: __( 'Settings content', 'wp-starter-plugin' ),
+	sidebar: __( 'Settings sidebar', 'wp-starter-plugin' ),
+	actions: __( 'Settings actions', 'wp-starter-plugin' ),
+	footer: __( 'Settings footer', 'wp-starter-plugin' ),
 };
 
 /**
@@ -47,7 +47,7 @@ export default function SettingsApp() {
 			<SettingsShortcuts />
 			<UnsavedChangesWarning />
 			<Header>
-				<h1>{ __( 'Settings', 'wp-oop-plugin-lib-example' ) }</h1>
+				<h1>{ __( 'Settings', 'wp-starter-plugin' ) }</h1>
 				<HeaderActions>
 					<SettingsSaveButton />
 					<PinnedSidebars />

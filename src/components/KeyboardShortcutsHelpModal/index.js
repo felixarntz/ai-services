@@ -232,7 +232,7 @@ export default function KeyboardShortcutsHelpModal() {
 	const isModalActive = useSelect(
 		( select ) =>
 			select( interfaceStore ).isModalActive(
-				'wp-oop-plugin-lib-example/keyboard-shortcuts-help'
+				'wp-starter-plugin/keyboard-shortcuts-help'
 			),
 		[]
 	);
@@ -242,10 +242,10 @@ export default function KeyboardShortcutsHelpModal() {
 		if ( isModalActive ) {
 			closeModal();
 		} else {
-			openModal( 'wp-oop-plugin-lib-example/keyboard-shortcuts-help' );
+			openModal( 'wp-starter-plugin/keyboard-shortcuts-help' );
 		}
 	};
-	useShortcut( 'wp-oop-plugin-lib-example/keyboard-shortcuts', toggleModal );
+	useShortcut( 'wp-starter-plugin/keyboard-shortcuts', toggleModal );
 
 	if ( ! isModalActive ) {
 		return null;
@@ -254,13 +254,13 @@ export default function KeyboardShortcutsHelpModal() {
 	return (
 		<Modal
 			className="editor-keyboard-shortcut-help-modal"
-			title={ __( 'Keyboard shortcuts', 'wp-oop-plugin-lib-example' ) }
-			closeButtonLabel={ __( 'Close', 'wp-oop-plugin-lib-example' ) }
+			title={ __( 'Keyboard shortcuts', 'wp-starter-plugin' ) }
+			closeButtonLabel={ __( 'Close', 'wp-starter-plugin' ) }
 			onRequestClose={ toggleModal }
 		>
 			<ShortcutCategorySection categoryName="main" />
 			<ShortcutCategorySection
-				title={ __( 'Global shortcuts', 'wp-oop-plugin-lib-example' ) }
+				title={ __( 'Global shortcuts', 'wp-starter-plugin' ) }
 				categoryName="global"
 			/>
 		</Modal>

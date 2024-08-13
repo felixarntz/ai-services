@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
+import { store as pluginStore } from '@wp-starter-plugin/store';
 
 /**
  * WordPress dependencies
@@ -29,7 +29,7 @@ export default function UnsavedChangesWarning() {
 			if ( isDirty ) {
 				event.returnValue = __(
 					'You have unsaved changes. If you proceed, they will be lost.',
-					'wp-oop-plugin-lib-example'
+					'wp-starter-plugin'
 				);
 				return event.returnValue;
 			}

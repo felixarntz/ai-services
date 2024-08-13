@@ -1,7 +1,7 @@
 {
-  "name": "wp-oop-plugin-lib-example",
+  "name": "wp-starter-plugin",
   "license": "GPL-2.0-or-later",
-  "repository": "git+https://github.com/vendor-ns/wp-oop-plugin-lib-example.git",
+  "repository": "git+https://github.com/vendor-ns/wp-starter-plugin.git",
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
     "@wordpress/env": "^10.4.0",
@@ -19,6 +19,7 @@
     "format-js": "wp-scripts format",
     "format-php": "wp-env run cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer format",
     "phpstan": "wp-env run cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer phpstan",
+    "lint-css": "wp-scripts lint-style",
     "lint-js": "wp-scripts lint-js",
     "lint-php": "wp-env run cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer lint",
     "pretest-php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer update",

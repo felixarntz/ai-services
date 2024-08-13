@@ -1,11 +1,11 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\PHPUnit\Includes\Test_Case
+ * Class Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes\Test_Case
  *
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\PHPUnit\Includes;
+namespace Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes;
 
 use WP_UnitTestCase;
 

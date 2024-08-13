@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Autoloader
+ * Class Vendor_NS\WP_Starter_Plugin\Plugin_Autoloader
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
+namespace Vendor_NS\WP_Starter_Plugin;
 
 use InvalidArgumentException;
 
@@ -49,7 +49,7 @@ class Plugin_Autoloader {
 
 		if ( ! is_array( $this->class_map ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The provided class map file does not return a class map array.', 'wp-oop-plugin-lib-example' )
+				esc_html__( 'The provided class map file does not return a class map array.', 'wp-starter-plugin' )
 			);
 		}
 	}

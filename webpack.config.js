@@ -14,9 +14,9 @@ const {
 	camelCaseDash,
 } = require( '@wordpress/dependency-extraction-webpack-plugin/lib/util' );
 
-const PACKAGE_NAMESPACE = '@wp-oop-plugin-lib-example/';
-const LIBRARY_GLOBAL = 'wpOopPluginLibExample';
-const HANDLE_PREFIX = 'wpoopple-';
+const PACKAGE_NAMESPACE = '@wp-starter-plugin/';
+const LIBRARY_GLOBAL = 'wpStarterPlugin';
+const HANDLE_PREFIX = 'wpsp-';
 
 /**
  * Gets the entry points for the webpack configuration.

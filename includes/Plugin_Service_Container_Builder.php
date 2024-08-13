@@ -1,29 +1,29 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Service_Container_Builder
+ * Class Vendor_NS\WP_Starter_Plugin\Plugin_Service_Container_Builder
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
+namespace Vendor_NS\WP_Starter_Plugin;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Admin\Settings_Page;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Dependencies\Plugin_Script_Style_Loader;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Installation\Plugin_Installer;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Validation\General_Validation_Rule_Builder;
+use Vendor_NS\WP_Starter_Plugin\Admin\Settings_Page;
+use Vendor_NS\WP_Starter_Plugin\Dependencies\Plugin_Script_Style_Loader;
+use Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Validation\General_Validation_Rule_Builder;
 
 /**
  * Plugin service container builder.
@@ -70,7 +70,7 @@ class Plugin_Service_Container_Builder {
 	 */
 	public function build_env( string $main_file ): self {
 		$this->container['plugin_env'] = function () use ( $main_file ) {
-			return new Plugin_Env( $main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
+			return new Plugin_Env( $main_file, WP_STARTER_PLUGIN_VERSION );
 		};
 
 		return $this;
@@ -108,9 +108,9 @@ class Plugin_Service_Container_Builder {
 		$this->container['plugin_installer'] = static function ( $cont ) {
 			return new Plugin_Installer(
 				$cont['plugin_env'],
-				$cont['option_container']['wpoopple_version'],
-				$cont['option_container']['wpoopple_delete_data'],
-				$cont['option_container']['wpoopple_options']
+				$cont['option_container']['wpsp_version'],
+				$cont['option_container']['wpsp_delete_data'],
+				$cont['option_container']['wpsp_options']
 			);
 		};
 	}
@@ -151,7 +151,7 @@ class Plugin_Service_Container_Builder {
 			return $options;
 		};
 		$this->container['option_registry']   = static function () {
-			return new Option_Registry( 'wp_oop_plugin_lib_example' );
+			return new Option_Registry( 'wp_starter_plugin' );
 		};
 	}
 
@@ -192,7 +192,7 @@ class Plugin_Service_Container_Builder {
 	 */
 	private function add_options_to_container( Option_Container $options ): void {
 		// Option to control plugin version.
-		$options['wpoopple_version'] = function () {
+		$options['wpsp_version'] = function () {
 			$sanitize_callback = ( new General_Validation_Rule_Builder() )
 				->require_string()
 				->format_version()
@@ -200,7 +200,7 @@ class Plugin_Service_Container_Builder {
 
 			return new Option(
 				$this->container['option_repository'],
-				'wpoopple_version',
+				'wpsp_version',
 				array(
 					'type'              => 'string',
 					'sanitize_callback' => $sanitize_callback,
@@ -211,14 +211,14 @@ class Plugin_Service_Container_Builder {
 		};
 
 		// Option for whether to delete data on uninstall.
-		$options['wpoopple_delete_data'] = function () {
+		$options['wpsp_delete_data'] = function () {
 			$sanitize_callback = ( new General_Validation_Rule_Builder() )
 				->require_boolean()
 				->get_option_sanitize_callback();
 
 			return new Option(
 				$this->container['option_repository'],
-				'wpoopple_delete_data',
+				'wpsp_delete_data',
 				array(
 					'type'              => 'boolean',
 					'sanitize_callback' => $sanitize_callback,
@@ -230,10 +230,10 @@ class Plugin_Service_Container_Builder {
 		};
 
 		// Option to store the main plugin data.
-		$options['wpoopple_options'] = function () {
+		$options['wpsp_options'] = function () {
 			return new Option(
 				$this->container['option_repository'],
-				'wpoopple_options',
+				'wpsp_options',
 				array(
 					'type'     => 'object',
 					'default'  => array(),

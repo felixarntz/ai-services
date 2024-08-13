@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
+import { store as pluginStore } from '@wp-starter-plugin/store';
 
 /**
  * WordPress dependencies
@@ -35,19 +35,16 @@ export default function SettingsStatus() {
 
 	let statusText;
 	if ( isLoading ) {
-		statusText = __( 'Loading settings…', 'wp-oop-plugin-lib-example' );
+		statusText = __( 'Loading settings…', 'wp-starter-plugin' );
 	} else if ( isSaving ) {
-		statusText = __( 'Saving settings…', 'wp-oop-plugin-lib-example' );
+		statusText = __( 'Saving settings…', 'wp-starter-plugin' );
 	} else if ( isDirty ) {
 		statusText = __(
 			'Some settings were modified and need to be saved.',
-			'wp-oop-plugin-lib-example'
+			'wp-starter-plugin'
 		);
 	} else {
-		statusText = __(
-			'All settings are up to date.',
-			'wp-oop-plugin-lib-example'
-		);
+		statusText = __( 'All settings are up to date.', 'wp-starter-plugin' );
 	}
 
 	return <p>{ statusText }</p>;

@@ -4,7 +4,7 @@
 import {
 	DistractionFreePreferenceToggleMenuItem,
 	KeyboardShortcutsMenuItem,
-} from '@wp-oop-plugin-lib-example/components';
+} from '@wp-starter-plugin/components';
 
 /**
  * WordPress dependencies
@@ -31,7 +31,7 @@ export default function SettingsMoreMenu() {
 	const showIconLabels = useSelect(
 		( select ) =>
 			select( preferencesStore ).get(
-				'wp-oop-plugin-lib-example',
+				'wp-starter-plugin',
 				'showIconLabels'
 			),
 		[]
@@ -40,7 +40,7 @@ export default function SettingsMoreMenu() {
 	return (
 		<DropdownMenu
 			icon={ moreVertical }
-			label={ __( 'Options', 'wp-oop-plugin-lib-example' ) }
+			label={ __( 'Options', 'wp-starter-plugin' ) }
 			popoverProps={ {
 				placement: 'bottom-end',
 				className: 'more-menu-dropdown__content',
@@ -62,19 +62,19 @@ export default function SettingsMoreMenu() {
 						<MenuItem
 							icon={ external }
 							href={ __(
-								'https://wordpress.org/support/plugin/wp-oop-plugin-lib-example/',
-								'wp-oop-plugin-lib-example'
+								'https://wordpress.org/support/plugin/wp-starter-plugin/',
+								'wp-starter-plugin'
 							) }
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							{ __( 'Support', 'wp-oop-plugin-lib-example' ) }
+							{ __( 'Support', 'wp-starter-plugin' ) }
 							<VisuallyHidden as="span">
 								{
 									/* translators: accessibility text */
 									__(
 										'(opens in a new tab)',
-										'wp-oop-plugin-lib-example'
+										'wp-starter-plugin'
 									)
 								}
 							</VisuallyHidden>

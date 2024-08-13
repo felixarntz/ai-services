@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
+import { store as pluginStore } from '@wp-starter-plugin/store';
 
 /**
  * WordPress dependencies
@@ -42,22 +42,22 @@ export default function SettingsCards() {
 	const { setDeleteData } = useDispatch( pluginStore );
 
 	return (
-		<div className="wpoopple-settings-cards">
+		<div className="wpsp-settings-cards">
 			<Card>
 				<CardHeader>
-					<h2 className="wpoopple-settings-cards__heading">
-						{ __( 'Advanced', 'wp-oop-plugin-lib-example' ) }
+					<h2 className="wpsp-settings-cards__heading">
+						{ __( 'Advanced', 'wp-starter-plugin' ) }
 					</h2>
 				</CardHeader>
 				<CardBody>
 					<ToggleControl
 						label={ __(
 							'Delete plugin data upon uninstallation',
-							'wp-oop-plugin-lib-example'
+							'wp-starter-plugin'
 						) }
 						help={ __(
-							'By default no data will be deleted, should you decide to uninstall the WP OOP Plugin Lib Example plugin. If you are certain that you want the data to be deleted, please enable this toggle.',
-							'wp-oop-plugin-lib-example'
+							'By default no data will be deleted, should you decide to uninstall the WP Starter Plugin plugin. If you are certain that you want the data to be deleted, please enable this toggle.',
+							'wp-starter-plugin'
 						) }
 						disabled={ isLoading }
 						checked={ deleteData || false }

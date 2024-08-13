@@ -35,7 +35,7 @@ export default function Snackbars() {
 	return (
 		<SnackbarList
 			notices={ snackbarNotices }
-			className="wpoopple-notices__snackbar"
+			className="wpsp-notices__snackbar"
 			onRemove={ removeNotice }
 		/>
 	);

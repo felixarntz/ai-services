@@ -83,7 +83,7 @@ const actions = {
 			dispatch( {
 				type: RECEIVE_SETTINGS,
 				payload: {
-					settings: { deleteData: settings.wpoopple_delete_data },
+					settings: { deleteData: settings.wpsp_delete_data },
 				},
 			} );
 		};
@@ -115,7 +115,7 @@ const actions = {
 					path: '/wp/v2/settings',
 					method: 'POST',
 					data: {
-						wpoopple_delete_data: settings.deleteData,
+						wpsp_delete_data: settings.deleteData,
 					},
 				} );
 			} catch ( error ) {
@@ -137,7 +137,7 @@ const actions = {
 					.createSuccessNotice(
 						__(
 							'Settings successfully saved.',
-							'wp-oop-plugin-lib-example'
+							'wp-starter-plugin'
 						),
 						{
 							id: SAVE_SETTINGS_NOTICE_ID,
@@ -149,10 +149,7 @@ const actions = {
 				registry
 					.dispatch( noticesStore )
 					.createErrorNotice(
-						__(
-							'Saving settings failed.',
-							'wp-oop-plugin-lib-example'
-						),
+						__( 'Saving settings failed.', 'wp-starter-plugin' ),
 						{
 							id: SAVE_SETTINGS_NOTICE_ID,
 							type: 'snackbar',

@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
+import { store as pluginStore } from '@wp-starter-plugin/store';
 
 /**
  * WordPress dependencies
@@ -23,7 +23,7 @@ export default function SettingsShortcuts() {
 		event.preventDefault();
 		saveSettings();
 	};
-	useShortcut( 'wp-oop-plugin-lib-example/save', handleSave );
+	useShortcut( 'wp-starter-plugin/save', handleSave );
 
 	return null;
 }

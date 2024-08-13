@@ -49,14 +49,14 @@ export default function Interface( { className, labels, children } ) {
 
 			return {
 				isDistractionFree: get(
-					'wp-oop-plugin-lib-example',
+					'wp-starter-plugin',
 					'distractionFree'
 				),
 				previousShortcut: getAllShortcutKeyCombinations(
-					'wp-oop-plugin-lib-example/previous-region'
+					'wp-starter-plugin/previous-region'
 				),
 				nextShortcut: getAllShortcutKeyCombinations(
-					'wp-oop-plugin-lib-example/next-region'
+					'wp-starter-plugin/next-region'
 				),
 			};
 		}
@@ -64,17 +64,17 @@ export default function Interface( { className, labels, children } ) {
 
 	const { toggle: togglePreference } = useDispatch( preferencesStore );
 
-	useShortcut( 'wp-oop-plugin-lib-example/toggle-distraction-free', () => {
-		togglePreference( 'wp-oop-plugin-lib-example', 'distractionFree' );
+	useShortcut( 'wp-starter-plugin/toggle-distraction-free', () => {
+		togglePreference( 'wp-starter-plugin', 'distractionFree' );
 	} );
 
 	const hasHeader = useHasHeader();
 	const header = hasHeader && (
-		<div className="wpoopple-header">
-			<div className="wpoopple-header__left">
+		<div className="wpsp-header">
+			<div className="wpsp-header__left">
 				<Header.Slot />
 			</div>
-			<div className="wpoopple-header__right">
+			<div className="wpsp-header__right">
 				<HeaderActions.Slot />
 			</div>
 		</div>
@@ -82,7 +82,7 @@ export default function Interface( { className, labels, children } ) {
 
 	const hasFooter = useHasFooter();
 	const footer = hasFooter && (
-		<div className="wpoopple-footer">
+		<div className="wpsp-footer">
 			<Footer.Slot />
 		</div>
 	);
@@ -94,7 +94,7 @@ export default function Interface( { className, labels, children } ) {
 		<InterfaceSkeleton
 			enableRegionNavigation={ true }
 			isDistractionFree={ isDistractionFree }
-			className={ clsx( 'wpoopple-interface', className, {
+			className={ clsx( 'wpsp-interface', className, {
 				'is-distraction-free': isDistractionFree,
 			} ) }
 			labels={ labels }

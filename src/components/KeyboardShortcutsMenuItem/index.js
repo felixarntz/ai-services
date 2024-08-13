@@ -18,7 +18,7 @@ export default function KeyboardShortcutsMenuItem() {
 	const { openModal } = useDispatch( interfaceStore );
 	const shortcut = useSelect( ( select ) =>
 		select( keyboardShortcutsStore ).getShortcutRepresentation(
-			'wp-oop-plugin-lib-example/keyboard-shortcuts',
+			'wp-starter-plugin/keyboard-shortcuts',
 			'display'
 		)
 	);
@@ -26,11 +26,11 @@ export default function KeyboardShortcutsMenuItem() {
 	return (
 		<MenuItem
 			onClick={ () =>
-				openModal( 'wp-oop-plugin-lib-example/keyboard-shortcuts-help' )
+				openModal( 'wp-starter-plugin/keyboard-shortcuts-help' )
 			}
 			shortcut={ shortcut }
 		>
-			{ __( 'Keyboard shortcuts', 'wp-oop-plugin-lib-example' ) }
+			{ __( 'Keyboard shortcuts', 'wp-starter-plugin' ) }
 		</MenuItem>
 	);
 }

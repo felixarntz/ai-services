@@ -20,6 +20,13 @@ import {
 } from '@wordpress/components';
 import { store as preferencesStore } from '@wordpress/preferences';
 
+/**
+ * Renders the More menu to display in the header of the settings app.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function SettingsMoreMenu() {
 	const showIconLabels = useSelect(
 		( select ) =>

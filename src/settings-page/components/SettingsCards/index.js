@@ -20,6 +20,13 @@ import { __ } from '@wordpress/i18n';
  */
 import './style.scss';
 
+/**
+ * Renders the cards for all the settings controls.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function SettingsCards() {
 	const { isLoading, deleteData } = useSelect( ( select ) => {
 		const { getSettings, isResolving, getDeleteData } =

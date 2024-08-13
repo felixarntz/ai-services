@@ -32,6 +32,13 @@ const interfaceLabels = {
 	footer: __( 'Settings footer', 'wp-oop-plugin-lib-example' ),
 };
 
+/**
+ * Renders the full settings application.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function SettingsApp() {
 	return (
 		<App labels={ interfaceLabels }>

@@ -18,6 +18,15 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { displayShortcutList, shortcutAriaLabel } from '@wordpress/keycodes';
 import { store as interfaceStore } from '@wordpress/interface';
 
+/**
+ * Renders a shortcut key combination.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} props                Component props.
+ * @param {Object} props.keyCombination Object containing 'modifier' and 'character' properties (both strings).
+ * @return {Component} The component to be rendered.
+ */
 function KeyCombination( { keyCombination } ) {
 	const shortcut = keyCombination.modifier
 		? displayShortcutList[ keyCombination.modifier ](
@@ -62,6 +71,15 @@ KeyCombination.propTypes = {
 	} ).isRequired,
 };
 
+/**
+ * Renders a shortcut.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} props      Component props.
+ * @param {string} props.name Identifier that the shortcut is registered under in the store.
+ * @return {Component} The component to be rendered.
+ */
 function Shortcut( { name } ) {
 	const { keyCombination, description, aliases } = useSelect(
 		( select ) => {
@@ -103,6 +121,15 @@ Shortcut.propTypes = {
 	name: PropTypes.string.isRequired,
 };
 
+/**
+ * Renders a list of shortcuts.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}   props           Component props.
+ * @param {string[]} props.shortcuts List of shortcut identifiers.
+ * @return {Component} The component to be rendered.
+ */
 function ShortcutList( { shortcuts } ) {
 	return (
 		/*
@@ -131,6 +158,17 @@ ShortcutList.propTypes = {
 	shortcuts: PropTypes.arrayOf( PropTypes.string ).isRequired,
 };
 
+/**
+ * Renders a section for a group of shortcuts.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}   props           Component props.
+ * @param {string[]} props.shortcuts List of shortcut identifiers.
+ * @param {?string}  props.title     Title for the section.
+ * @param {?string}  props.className Class name to add to the section.
+ * @return {Component} The component to be rendered.
+ */
 function ShortcutSection( { shortcuts, title, className } ) {
 	return (
 		<section
@@ -155,6 +193,16 @@ ShortcutSection.propTypes = {
 	className: PropTypes.string,
 };
 
+/**
+ * Renders a section for a category of shortcuts.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}  props              Component props.
+ * @param {string}  props.categoryName Identifier of the shortcut category in the store.
+ * @param {?string} props.title        Title for the section.
+ * @return {Component} The component to be rendered.
+ */
 function ShortcutCategorySection( { title, categoryName } ) {
 	const categoryShortcuts = useSelect(
 		( select ) => {
@@ -173,6 +221,13 @@ ShortcutCategorySection.propTypes = {
 	categoryName: PropTypes.string.isRequired,
 };
 
+/**
+ * Renders the modal displaying the available keyboard shortcuts.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function KeyboardShortcutsHelpModal() {
 	const isModalActive = useSelect(
 		( select ) =>
@@ -182,6 +237,7 @@ export default function KeyboardShortcutsHelpModal() {
 		[]
 	);
 	const { openModal, closeModal } = useDispatch( interfaceStore );
+
 	const toggleModal = () => {
 		if ( isModalActive ) {
 			closeModal();

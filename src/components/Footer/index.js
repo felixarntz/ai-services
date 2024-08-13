@@ -15,6 +15,17 @@ import './style.scss';
 
 const { Fill, Slot } = createSlotFill( 'Footer' );
 
+/**
+ * Renders a wrapper for the footer of the application.
+ *
+ * Any children passed to this component will be rendered inside the footer.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}  props          Component props.
+ * @param {Element} props.children Child elements to render.
+ * @return {Component} The component to be rendered.
+ */
 function Footer( { children } ) {
 	return (
 		<Fill>

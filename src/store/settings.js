@@ -18,6 +18,19 @@ const SET_DELETE_DATA = 'SET_DELETE_DATA';
 
 const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
 
+/**
+ * Updates the modified settings object with the new settings, if they differ from the saved settings.
+ *
+ * For new settings that are now different from the saved settings, they will be added to the modified settings.
+ * For new settings that are now equal to the saved settings, they will be removed from the modified settings.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} modifiedSettings The modified settings object, as key value pairs.
+ * @param {Object} savedSettings    The saved settings object, as key value pairs.
+ * @param {Object} newSettings      The new settings object, as key value pairs.
+ * @return {Object} The updated modified settings object.
+ */
 function updateModifiedSettings(
 	modifiedSettings,
 	savedSettings,
@@ -57,20 +70,34 @@ const initialState = {
 };
 
 const actions = {
-	receiveSettings:
-		( settings ) =>
-		( { dispatch } ) => {
+	/**
+	 * Receives settings from the server.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {Object} settings Settings received from the server, as key value pairs.
+	 * @return {Function} Action creator.
+	 */
+	receiveSettings( settings ) {
+		return ( { dispatch } ) => {
 			dispatch( {
 				type: RECEIVE_SETTINGS,
 				payload: {
 					settings: { deleteData: settings.wpoopple_delete_data },
 				},
 			} );
-		},
+		};
+	},
 
-	saveSettings:
-		() =>
-		async ( { dispatch, select, registry } ) => {
+	/**
+	 * Saves all settings to the server.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return {Function} Action creator.
+	 */
+	saveSettings() {
+		return async ( { dispatch, select, registry } ) => {
 			if ( ! select.areSettingsSaveable() ) {
 				return;
 			}
@@ -133,8 +160,17 @@ const actions = {
 						}
 					);
 			}
-		},
+		};
+	},
 
+	/**
+	 * Sets the value for the deleteData setting.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {boolean} deleteData The new deleteData value.
+	 * @return {Object} Action object.
+	 */
 	setDeleteData( deleteData ) {
 		return {
 			type: SET_DELETE_DATA,
@@ -143,7 +179,16 @@ const actions = {
 	},
 };
 
-const reducer = ( state = initialState, action ) => {
+/**
+ * Reducer for the store mutations.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} state  Current state.
+ * @param {Object} action Action object.
+ * @return {Object} New state.
+ */
+function reducer( state = initialState, action ) {
 	switch ( action.type ) {
 		case RECEIVE_SETTINGS: {
 			const { settings } = action.payload;
@@ -179,15 +224,22 @@ const reducer = ( state = initialState, action ) => {
 	}
 
 	return state;
-};
+}
 
 const resolvers = {
-	getSettings:
-		() =>
-		async ( { dispatch } ) => {
+	/**
+	 * Fetches the settings from the server.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return {Function} Action creator.
+	 */
+	getSettings() {
+		return async ( { dispatch } ) => {
 			const settings = await apiFetch( { path: '/wp/v2/settings' } );
 			dispatch.receiveSettings( settings );
-		},
+		};
+	},
 };
 
 const selectors = {

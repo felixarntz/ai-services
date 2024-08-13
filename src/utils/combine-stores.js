@@ -4,7 +4,7 @@
  * @param {Array} array Any array.
  * @return {Array} All values in the input array that were duplicated.
  */
-const findDuplicates = ( array ) => {
+function findDuplicates( array ) {
 	const duplicates = [];
 	const counts = {};
 
@@ -17,7 +17,7 @@ const findDuplicates = ( array ) => {
 	}
 
 	return duplicates;
-};
+}
 
 /**
  * Collects and combines multiple objects of similar shape.
@@ -31,7 +31,7 @@ const findDuplicates = ( array ) => {
  * @param {...Object} items A list of arguments, each one should be an object to combine into one.
  * @return {Object} The combined object.
  */
-export const collect = ( ...items ) => {
+export function collect( ...items ) {
 	const collectedObject = items.reduce( ( acc, item ) => {
 		return { ...acc, ...item };
 	}, {} );
@@ -50,23 +50,13 @@ export const collect = ( ...items ) => {
 	}
 
 	return collectedObject;
-};
+}
 
-/**
- * Collects all actions.
- *
- * @param {...Object} args A list of objects, each containing their own actions.
- * @return {Object} The combined object.
- */
 export const collectActions = collect;
-
-/**
- * Collects all controls.
- *
- * @param {...Object} args A list of objects, each containing their own controls.
- * @return {Object} The combined object.
- */
 export const collectControls = collect;
+export const collectResolvers = collect;
+export const collectSelectors = collect;
+export const collectState = collect;
 
 /**
  * Collects all reducers and (optionally) provides initial state.
@@ -77,7 +67,7 @@ export const collectControls = collect;
  * @param {...(Object|Function)} args A list of reducers, each containing their own controls. If the first argument is not a function, it will be used as the combined reducer's `initialState`.
  * @return {Function} A Redux-style reducer.
  */
-export const collectReducers = ( ...args ) => {
+export function collectReducers( ...args ) {
 	const reducers = [ ...args ];
 	let initialState;
 
@@ -90,31 +80,7 @@ export const collectReducers = ( ...args ) => {
 			return reducer( newState, action );
 		}, state );
 	};
-};
-
-/**
- * Collects all resolvers.
- *
- * @param {...Object} args A list of objects, each containing their own resolvers.
- * @return {Object} The combined object.
- */
-export const collectResolvers = collect;
-
-/**
- * Collects all selectors.
- *
- * @param {...Object} args A list of objects, each containing their own selectors.
- * @return {Object} The combined object.
- */
-export const collectSelectors = collect;
-
-/**
- * Collects all state values.
- *
- * @param {...Object} args A list of objects, each containing their own state values.
- * @return {Object} The combined object.
- */
-export const collectState = collect;
+}
 
 /**
  * Passes through state unmodified; eg. an empty reducer.
@@ -122,7 +88,9 @@ export const collectState = collect;
  * @param {Object} state A store's state.
  * @return {Object} The same state data as passed in `state`.
  */
-const passthroughReducer = ( state ) => state;
+function passthroughReducer( state ) {
+	return state;
+}
 
 /**
  * Combines multiple stores.
@@ -130,7 +98,7 @@ const passthroughReducer = ( state ) => state;
  * @param {...Object} stores A list of objects, each a store containing one or more of the following keys: initialState, actions, controls, reducer, resolvers, selectors.
  * @return {Object} The combined store.
  */
-export const combineStores = ( ...stores ) => {
+export function combineStores( ...stores ) {
 	const combinedInitialState = collectState(
 		...stores.map( ( store ) => store.initialState || {} )
 	);
@@ -154,4 +122,4 @@ export const combineStores = ( ...stores ) => {
 			...stores.map( ( store ) => store.selectors || {} )
 		),
 	};
-};
+}

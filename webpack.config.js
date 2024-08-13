@@ -18,6 +18,14 @@ const PACKAGE_NAMESPACE = '@wp-oop-plugin-lib-example/';
 const LIBRARY_GLOBAL = 'wpOopPluginLibExample';
 const HANDLE_PREFIX = 'wpoopple-';
 
+/**
+ * Gets the entry points for the webpack configuration.
+ *
+ * This function extends the original entry points from the relevant '@wordpress/scripts' function with any index files
+ * in one level deep directories in src.
+ *
+ * @return {Function} A function returning the entry points object.
+ */
 function getEntryPoints() {
 	const getOriginalEntryPoints = getWebpackEntryPoints( 'script' );
 
@@ -71,6 +79,12 @@ module.exports = {
 				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
 		),
 		new DependencyExtractionWebpackPlugin( {
+			/**
+			 * Matches a request to an external to the global variable it is exposed in.
+			 *
+			 * @param {string} request The request package name.
+			 * @return {?string[]} The global variable name and property name, or undefined if not matched.
+			 */
 			requestToExternal( request ) {
 				if ( request.startsWith( PACKAGE_NAMESPACE ) ) {
 					return [
@@ -80,7 +94,15 @@ module.exports = {
 						),
 					];
 				}
+				return undefined;
 			},
+
+			/**
+			 * Matches a request to an external to the PHP asset handle it is exposed in.
+			 *
+			 * @param {string} request The request package name.
+			 * @return {?string} The PHP asset handle, or undefined if not matched.
+			 */
 			requestToHandle( request ) {
 				if ( request.startsWith( PACKAGE_NAMESPACE ) ) {
 					return (
@@ -88,6 +110,7 @@ module.exports = {
 						request.substring( PACKAGE_NAMESPACE.length )
 					);
 				}
+				return undefined;
 			},
 		} ),
 	],

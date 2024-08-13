@@ -6,6 +6,13 @@ import { useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 
+/**
+ * Renders a utility component to register general keyboard shortcuts for the application.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function ShortcutsRegister() {
 	// Registering the shortcuts.
 	const { registerShortcut } = useDispatch( keyboardShortcutsStore );

@@ -9,6 +9,14 @@ import { createRoot, render } from '@wordpress/element';
  */
 import SettingsApp from './components/SettingsApp';
 
+/**
+ * Mounts the given component into the DOM.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Component} Component    The component to be mounted.
+ * @param {Element}   renderTarget The target element to render the component into.
+ */
 function mountApp( Component, renderTarget ) {
 	if ( createRoot ) {
 		const root = createRoot( renderTarget );

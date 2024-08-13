@@ -17,6 +17,17 @@ import ShortcutsRegister from '../ShortcutsRegister';
 import KeyboardShortcutsHelpModal from '../KeyboardShortcutsHelpModal';
 import './style.scss';
 
+/**
+ * Renders the root of the application.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}  props           Component props.
+ * @param {?string} props.className Class name to add to the interface wrapper.
+ * @param {Object}  props.labels    Labels for the interface areas.
+ * @param {Element} props.children  Child elements to render.
+ * @return {Component} The component to be rendered.
+ */
 export default function App( { className, labels, children } ) {
 	return (
 		<SlotFillProvider>

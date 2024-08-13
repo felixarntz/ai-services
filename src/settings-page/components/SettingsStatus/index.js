@@ -9,6 +9,13 @@ import { store as pluginStore } from '@wp-oop-plugin-lib-example/store';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
+/**
+ * Renders the settings status text in a paragraph.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function SettingsStatus() {
 	const { isLoading, isDirty, isSaving } = useSelect( ( select ) => {
 		const {

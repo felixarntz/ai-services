@@ -10,6 +10,16 @@ import { store as noticesStore } from '@wordpress/notices';
  */
 import './style.scss';
 
+/**
+ * Renders the list of all regular notices in the store.
+ *
+ * This only includes notices added with the type 'default'.
+ * Non-dismissible notices are rendered in a separate list from dismissible notices.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function Notices() {
 	const { notices } = useSelect(
 		( select ) => ( {

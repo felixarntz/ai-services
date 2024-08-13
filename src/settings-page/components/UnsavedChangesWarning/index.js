@@ -10,6 +10,13 @@ import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
+/**
+ * Renders a utility component to conditionally trigger the browser warning about unsaved changes.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
 export default function UnsavedChangesWarning() {
 	const isDirty = useSelect( ( select ) => {
 		const { hasModifiedSettings } = select( pluginStore );

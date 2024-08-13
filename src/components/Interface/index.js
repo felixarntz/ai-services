@@ -25,6 +25,17 @@ import Sidebar from '../Sidebar';
 import Notices from '../Notices';
 import Snackbars from '../Snackbars';
 
+/**
+ * Renders the application interface wrapper.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}  props           Component props.
+ * @param {?string} props.className Class name to add to the interface wrapper.
+ * @param {Object}  props.labels    Labels for the interface areas.
+ * @param {Element} props.children  Child elements to render.
+ * @return {Component} The component to be rendered.
+ */
 export default function Interface( { className, labels, children } ) {
 	const isLargeViewport = useViewportMatch( 'medium' );
 

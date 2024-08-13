@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "wp-scripts build",
+    "format-css": "wp-scripts lint-style --fix",
     "format-js": "wp-scripts format",
     "format-php": "wp-env run cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer format",
     "phpstan": "wp-env run cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer phpstan",

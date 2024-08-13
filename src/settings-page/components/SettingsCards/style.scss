@@ -1,15 +1,16 @@
 .wpsp-settings-cards {
+
 	.components-card {
 		margin: 16px;
 
-		& + .components-card {
+		+ .components-card {
 			margin-top: 0;
 		}
 
 		@media (min-width: 783px) {
 			margin: 64px;
 
-			& + .components-card {
+			+ .components-card {
 				margin-top: 0;
 			}
 		}

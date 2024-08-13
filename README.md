@@ -51,6 +51,7 @@ In order to create a new plugin based on this foundation, perform the following 
 * `npm run test-php`: Runs the PHPUnit tests for a regular (single) WordPress site using the built-in development environment.
 * `npm run test-php-multisite`: Runs the PHPUnit tests for a WordPress multisite using the built-in development environment.
 * `npm run lint-css`: Checks the CSS code.
+* `npm run format-css`: Automatically fixes CSS code detected.
 * `npm run lint-js`: Checks the JavaScript code.
 * `npm run format-js`: Automatically fixes JavaScript code detected.
 

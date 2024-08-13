@@ -1,7 +1,7 @@
 === WP OOP Plugin Lib Example ===
 
 Plugin Name:  WP OOP Plugin Lib Example
-Plugin URI:   https://wordpress.org/plugins/wp-oop-plugin-lib-example/
+Plugin URI:   https://the-plugin.com
 Author:       The Plugin Author
 Author URI:   https://the-plugin-author.com
 Tested up to: 6.6

@@ -22,7 +22,7 @@ import { useViewportMatch } from '@wordpress/compose';
 import { default as Header, useHasHeader } from '../Header';
 import HeaderActions from '../HeaderActions';
 import { default as Footer, useHasFooter } from '../Footer';
-import Sidebar from '../Sidebar';
+import { default as Sidebar, useHasSidebar } from '../Sidebar';
 import Notices from '../Notices';
 import Snackbars from '../Snackbars';
 
@@ -87,6 +87,9 @@ export default function Interface( { className, labels, children } ) {
 		</div>
 	);
 
+	const hasSidebar = useHasSidebar();
+	const sidebar = hasSidebar && <Sidebar.Slot />;
+
 	return (
 		<InterfaceSkeleton
 			enableRegionNavigation={ true }
@@ -106,8 +109,8 @@ export default function Interface( { className, labels, children } ) {
 			editorNotices={ <Notices /> }
 			footer={ ! isDistractionFree && isLargeViewport && footer }
 			secondarySidebar={ undefined }
-			sidebar={ ! isDistractionFree && <Sidebar.Slot /> }
-			actions={ <div>Actions</div> }
+			sidebar={ ! isDistractionFree && sidebar }
+			actions={ undefined }
 			shortcuts={ {
 				previous: previousShortcut,
 				next: nextShortcut,

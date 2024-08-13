@@ -7,6 +7,10 @@ import PropTypes from 'prop-types';
  * WordPress dependencies
  */
 import { ComplementaryArea } from '@wordpress/interface';
+import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUseSlotFills as useSlotFills,
+} from '@wordpress/components';
 
 /**
  * Renders a sidebar for the application.
@@ -47,5 +51,17 @@ Sidebar.propTypes = {
 Sidebar.Slot = () => {
 	return <ComplementaryArea.Slot scope="wp-oop-plugin-lib-example" />;
 };
+
+/**
+ * Hook to check whether any fills are provided for the Sidebar slot.
+ *
+ * @since n.e.x.t
+ *
+ * @return {boolean} True if there are any Sidebar fills, false otherwise.
+ */
+export function useHasSidebar() {
+	const fills = useSlotFills( 'ComplementaryArea/wp-oop-plugin-lib-example' );
+	return !! fills?.length;
+}
 
 export default Sidebar;

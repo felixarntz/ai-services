@@ -8,15 +8,10 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\PHPUnit\Tests;
 
-<<<<<<< HEAD
 use ReflectionProperty;
 use Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes\Test_Case;
 use Vendor_NS\WP_Starter_Plugin\Plugin_Main;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
-=======
-use Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes\Test_Case;
-use Vendor_NS\WP_Starter_Plugin\Plugin_Main;
->>>>>>> starter/main
 
 class Plugin_Main_Tests extends Test_Case {
 

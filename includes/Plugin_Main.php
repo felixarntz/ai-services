@@ -25,7 +25,7 @@ class Plugin_Main implements With_Hooks {
 	 * @since n.e.x.t
 	 * @var Service_Container
 	 */
-	private $services;
+	private $container;
 
 	/**
 	 * Constructor.
@@ -35,7 +35,7 @@ class Plugin_Main implements With_Hooks {
 	 * @param string $main_file Absolute path to the plugin main file.
 	 */
 	public function __construct( string $main_file ) {
-		$this->services = $this->set_up_container( $main_file );
+		$this->container = $this->set_up_container( $main_file );
 	}
 
 	/**
@@ -52,10 +52,10 @@ class Plugin_Main implements With_Hooks {
 			'admin_notices',
 			function () {
 				echo '<div class="notice notice-info"><p>';
-				if ( $this->services['current_user']->has_cap( 'manage_options' ) ) {
-					echo esc_html( $this->services['option_container']['wpsp_version']->get_value() );
+				if ( $this->container['current_user']->has_cap( 'manage_options' ) ) {
+					echo esc_html( $this->container['option_container']['wpsp_version']->get_value() );
 					echo '<br>';
-					echo esc_html( $this->services['option_container']['wpsp_delete_data']->get_value() );
+					echo esc_html( $this->container['option_container']['wpsp_delete_data']->get_value() );
 				} else {
 					esc_html_e( 'Current user cannot manage options.', 'wp-starter-plugin' );
 				}
@@ -83,10 +83,10 @@ class Plugin_Main implements With_Hooks {
 		add_action(
 			'init',
 			function () {
-				if ( ! $this->services['current_user']->has_cap( 'activate_plugins' ) ) {
+				if ( ! $this->container['current_user']->has_cap( 'activate_plugins' ) ) {
 					return;
 				}
-				$this->services['plugin_installer']->install();
+				$this->container['plugin_installer']->install();
 			},
 			0
 		);
@@ -97,12 +97,12 @@ class Plugin_Main implements With_Hooks {
 		 * since handling it all within the activation hook is not scalable.
 		 */
 		register_activation_hook(
-			$this->services['plugin_env']->main_file(),
+			$this->container['plugin_env']->main_file(),
 			function ( $network_wide ) {
 				if ( $network_wide ) {
 					return;
 				}
-				$this->services['plugin_installer']->install();
+				$this->container['plugin_installer']->install();
 			}
 		);
 	}
@@ -114,11 +114,11 @@ class Plugin_Main implements With_Hooks {
 	 */
 	private function add_service_hooks(): void {
 		// Register options.
-		$option_registrar = new Option_Hook_Registrar( $this->services['option_registry'] );
+		$option_registrar = new Option_Hook_Registrar( $this->container['option_registry'] );
 		$option_registrar->add_register_callback(
 			function ( $registry ) {
-				foreach ( $this->services['option_container']->get_keys() as $key ) {
-					$option = $this->services['option_container']->get( $key );
+				foreach ( $this->container['option_container']->get_keys() as $key ) {
+					$option = $this->container['option_container']->get( $key );
 					$registry->register(
 						$option->get_key(),
 						$option->get_registration_args()
@@ -131,7 +131,7 @@ class Plugin_Main implements With_Hooks {
 		add_action(
 			'init',
 			function () {
-				$this->services['plugin_script_style_loader']->register_scripts_and_styles();
+				$this->container['plugin_script_style_loader']->register_scripts_and_styles();
 			}
 		);
 
@@ -139,7 +139,7 @@ class Plugin_Main implements With_Hooks {
 		add_action(
 			'admin_menu',
 			function () {
-				$this->services['admin_settings_menu']->add_page( $this->services['admin_settings_page'] );
+				$this->container['admin_settings_menu']->add_page( $this->container['admin_settings_page'] );
 			}
 		);
 	}

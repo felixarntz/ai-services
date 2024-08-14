@@ -11,6 +11,7 @@ namespace Vendor_NS\WP_Starter_Plugin;
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot;
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_AI;
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_Loader;
+use Vendor_NS\WP_Starter_Plugin\Dependencies\Plugin_Script_Style_Loader;
 use Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
@@ -142,11 +143,18 @@ final class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_dependency_services(): void {
-		$this->container['script_registry'] = static function () {
+		$this->container['script_registry']            = static function () {
 			return new Script_Registry();
 		};
-		$this->container['style_registry']  = static function () {
+		$this->container['style_registry']             = static function () {
 			return new Style_Registry();
+		};
+		$this->container['plugin_script_style_loader'] = static function ( $cont ) {
+			return new Plugin_Script_Style_Loader(
+				$cont['plugin_env'],
+				$cont['script_registry'],
+				$cont['style_registry']
+			);
 		};
 	}
 
@@ -217,9 +225,10 @@ final class Plugin_Service_Container_Builder {
 				$this->container['option_repository'],
 				'wpsp_delete_data',
 				array(
-					'type'              => 'bool',
+					'type'              => 'boolean',
 					'sanitize_callback' => $sanitize_callback,
 					'default'           => false,
+					'show_in_rest'      => true,
 					'autoload'          => false,
 				)
 			);

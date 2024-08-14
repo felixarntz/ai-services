@@ -19,4 +19,9 @@
 			<group>ms-required</group>
 		</exclude>
 	</groups>
+	<coverage includeUncoveredFiles="true">
+		<include>
+			<directory suffix=".php">includes</directory>
+		</include>
+	</coverage>
 </phpunit>

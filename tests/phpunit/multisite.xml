@@ -20,4 +20,9 @@
 			<group>ms-excluded</group>
 		</exclude>
 	</groups>
+	<coverage includeUncoveredFiles="true">
+		<include>
+			<directory suffix=".php">../../includes</directory>
+		</include>
+	</coverage>
 </phpunit>

@@ -4,6 +4,19 @@
 import domReady from '@wordpress/dom-ready';
 import { createRoot, render } from '@wordpress/element';
 
+/**
+ * Internal dependencies
+ */
+import SettingsApp from './components/SettingsApp';
+
+/**
+ * Mounts the given component into the DOM.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Component} Component    The component to be mounted.
+ * @param {Element}   renderTarget The target element to render the component into.
+ */
 function mountApp( Component, renderTarget ) {
 	if ( createRoot ) {
 		const root = createRoot( renderTarget );
@@ -20,10 +33,5 @@ domReady( () => {
 		return;
 	}
 
-	mountApp(
-		<div>
-			<p>The JS app is loaded.</p>
-		</div>,
-		renderTarget
-	);
+	mountApp( <SettingsApp />, renderTarget );
 } );

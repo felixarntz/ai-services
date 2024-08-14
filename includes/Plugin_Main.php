@@ -160,6 +160,14 @@ class Plugin_Main implements With_Hooks {
 			}
 		);
 
+		// Register scripts and styles.
+		add_action(
+			'init',
+			function () {
+				$this->container['plugin_script_style_loader']->register_scripts_and_styles();
+			}
+		);
+
 		// Load chatbot if needed.
 		add_action(
 			'init',

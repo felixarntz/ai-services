@@ -1,0 +1,27 @@
+.wpsp-settings-cards {
+
+	.components-card {
+		margin: 16px;
+
+		+ .components-card {
+			margin-top: 0;
+		}
+
+		@media (min-width: 783px) {
+			margin: 64px;
+
+			+ .components-card {
+				margin-top: 0;
+			}
+		}
+
+		@media (min-width: 1088px) { // 800 + 2*64 + 160 (admin menu width).
+			margin: 64px auto;
+			max-width: 800px;
+		}
+	}
+
+	&__heading {
+		margin: 0;
+	}
+}

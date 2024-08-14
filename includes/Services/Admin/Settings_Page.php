@@ -10,7 +10,7 @@ namespace Vendor_NS\WP_Starter_Plugin\Services\Admin;
 
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Abstract_Admin_Page;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 
 /**
  * Class representing the plugin's admin settings page.
@@ -18,14 +18,6 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Gener
  * @since n.e.x.t
  */
 class Settings_Page extends Abstract_Admin_Page {
-
-	/**
-	 * The plugin environment.
-	 *
-	 * @since n.e.x.t
-	 * @var Plugin_Env
-	 */
-	private $plugin_env;
 
 	/**
 	 * WordPress script registry.
@@ -36,18 +28,26 @@ class Settings_Page extends Abstract_Admin_Page {
 	private $script_registry;
 
 	/**
+	 * WordPress style registry.
+	 *
+	 * @since n.e.x.t
+	 * @var Style_Registry
+	 */
+	private $style_registry;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Plugin_Env      $plugin_env      The plugin environment.
 	 * @param Script_Registry $script_registry WordPress script registry.
+	 * @param Style_Registry  $style_registry  WordPress style registry.
 	 */
-	public function __construct( Plugin_Env $plugin_env, Script_Registry $script_registry ) {
+	public function __construct( Script_Registry $script_registry, Style_Registry $style_registry ) {
 		parent::__construct();
 
-		$this->plugin_env      = $plugin_env;
 		$this->script_registry = $script_registry;
+		$this->style_registry  = $style_registry;
 	}
 
 	/**
@@ -67,8 +67,28 @@ class Settings_Page extends Abstract_Admin_Page {
 						'strategy' => 'defer',
 					)
 				);
+
 				$this->script_registry->enqueue( 'wpsp_services' );
+				$this->script_registry->enqueue( 'wpsp-settings-page' );
+				$this->style_registry->enqueue( 'wpsp-settings-page' );
+
+				$this->preload_rest_api_data();
 			}
+		);
+
+		add_filter(
+			'admin_body_class',
+			static function ( $classes ) {
+				return "$classes remove-screen-spacing";
+			}
+		);
+
+		add_action(
+			'admin_notices',
+			static function () {
+				remove_all_actions( 'admin_notices' );
+			},
+			-9999
 		);
 	}
 
@@ -78,8 +98,11 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @since n.e.x.t
 	 */
 	public function render(): void {
-		// TODO.
-		echo '<div id="settings-page-root" class="wrap">Settings page test content.</div>';
+		?>
+		<div id="settings-page-root" class="wrap">
+			<?php esc_html_e( 'Loading…', 'wp-starter-plugin' ); ?>
+		</div>
+		<?php
 	}
 
 	/**
@@ -113,5 +136,28 @@ class Settings_Page extends Abstract_Admin_Page {
 	 */
 	protected function capability(): string {
 		return 'wpsp_manage_services';
+	}
+
+	/**
+	 * Preloads relevant REST API data for the settings page so that it is available immediately.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function preload_rest_api_data(): void {
+		$preload_paths = array( '/wp/v2/settings' );
+
+		$preload_data = array_reduce(
+			$preload_paths,
+			'rest_preload_api_request',
+			array()
+		);
+
+		$this->script_registry->add_inline_code(
+			'wp-api-fetch',
+			sprintf(
+				'wp.apiFetch.use( wp.apiFetch.createPreloadingMiddleware( %s ) );',
+				wp_json_encode( $preload_data )
+			)
+		);
 	}
 }

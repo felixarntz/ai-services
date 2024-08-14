@@ -1,15 +1,15 @@
 <?php
 /**
- * Interface Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_API_Client
+ * Interface Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
 
 /**
  * Interface for a class representing a client for a generative AI web API.

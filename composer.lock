@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba0ff5e20ed01ed31c37ab3d821aa46c",
+    "content-hash": "387220154b74bf4147cdf18fce7b76ec",
     "packages": [
         {
             "name": "composer/installers",
@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/felixarntz/wp-oop-plugin-lib.git",
-                "reference": "7850f627c6fdd82df9204d98c91657e2e5c1a8c5"
+                "reference": "8f43e8ed6c47e8b7b279552558aa24f38ff3691f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/7850f627c6fdd82df9204d98c91657e2e5c1a8c5",
-                "reference": "7850f627c6fdd82df9204d98c91657e2e5c1a8c5",
+                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/8f43e8ed6c47e8b7b279552558aa24f38ff3691f",
+                "reference": "8f43e8ed6c47e8b7b279552558aa24f38ff3691f",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "issues": "https://github.com/felixarntz/wp-oop-plugin-lib/issues",
                 "source": "https://github.com/felixarntz/wp-oop-plugin-lib/tree/main"
             },
-            "time": "2024-07-26T02:50:23+00:00"
+            "time": "2024-08-13T21:23:31+00:00"
         }
     ],
     "packages-dev": [

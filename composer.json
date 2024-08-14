@@ -1,5 +1,5 @@
 {
-  "name": "vendor-ns/wp-oop-plugin-lib-example",
+  "name": "vendor-ns/wp-starter-plugin",
   "description": "The plugin description.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
@@ -19,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Vendor_NS\\WP_OOP_Plugin_Lib_Example\\": "includes/"
+      "Vendor_NS\\WP_Starter_Plugin\\": "includes/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Vendor_NS\\WP_OOP_Plugin_Lib_Example\\PHPUnit\\Includes\\": "tests/phpunit/includes"
+      "Vendor_NS\\WP_Starter_Plugin\\PHPUnit\\Includes\\": "tests/phpunit/includes"
     }
   },
   "scripts": {

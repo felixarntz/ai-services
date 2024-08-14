@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Admin\Settings_Page
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Admin;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Admin;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Abstract_Admin_Page;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Abstract_Admin_Page;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 
 /**
  * Class representing the plugin's admin settings page.
@@ -60,14 +60,14 @@ class Settings_Page extends Abstract_Admin_Page {
 			'admin_enqueue_scripts',
 			function () {
 				$this->script_registry->register(
-					'wpoopple_services',
+					'wpsp_services',
 					array(
 						'src'      => $this->plugin_env->url( 'build/index.js' ),
 						'manifest' => $this->plugin_env->path( 'build/index.asset.php' ),
 						'strategy' => 'defer',
 					)
 				);
-				$this->script_registry->enqueue( 'wpoopple_services' );
+				$this->script_registry->enqueue( 'wpsp_services' );
 			}
 		);
 	}
@@ -90,7 +90,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page slug.
 	 */
 	protected function slug(): string {
-		return 'wpoopple_services';
+		return 'wpsp_services';
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page title.
 	 */
 	protected function title(): string {
-		return __( 'AI Services', 'wp-oop-plugin-lib-example' );
+		return __( 'AI Services', 'wp-starter-plugin' );
 	}
 
 	/**
@@ -112,6 +112,6 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page capability.
 	 */
 	protected function capability(): string {
-		return 'wpoopple_manage_services';
+		return 'wpsp_manage_services';
 	}
 }

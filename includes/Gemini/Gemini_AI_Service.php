@@ -1,18 +1,18 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Generative_AI
+ * Class Vendor_NS\WP_Starter_Plugin\Gemini\Generative_AI
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini;
+namespace Vendor_NS\WP_Starter_Plugin\Gemini;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_API_Client;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\With_API_Client;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 
 /**
  * Class for the Gemini AI service.

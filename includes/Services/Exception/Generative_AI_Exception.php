@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Exception;
 
 use RuntimeException;
 

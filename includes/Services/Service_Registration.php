@@ -1,20 +1,20 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Service_Registration
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Service_Registration
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services;
+namespace Vendor_NS\WP_Starter_Plugin\Services;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
 
 /**
  * Class representing a service registration.
@@ -83,7 +83,7 @@ final class Service_Registration {
 		$this->creator = $creator;
 		$this->args    = $this->parse_args( $args );
 
-		$this->api_key_option_slug                                    = sprintf( 'wpoopple_%s_api_key', $this->slug );
+		$this->api_key_option_slug                                    = sprintf( 'wpsp_%s_api_key', $this->slug );
 		$this->args['option_container'][ $this->api_key_option_slug ] = function () {
 			// TODO: Use a custom Option class that uses encryption and filters the API key.
 			return new Option(
@@ -138,7 +138,7 @@ final class Service_Registration {
 				esc_html(
 					sprintf(
 						/* translators: %s: service slug */
-						__( 'Cannot instantiate service %s without an API key.', 'wp-oop-plugin-lib-example' ),
+						__( 'Cannot instantiate service %s without an API key.', 'wp-starter-plugin' ),
 						$this->slug
 					)
 				)
@@ -151,7 +151,7 @@ final class Service_Registration {
 				esc_html(
 					sprintf(
 						/* translators: %s: service slug */
-						__( 'The service creator for %s must return an instance of Generative_AI_Service.', 'wp-oop-plugin-lib-example' ),
+						__( 'The service creator for %s must return an instance of Generative_AI_Service.', 'wp-starter-plugin' ),
 						$this->slug
 					)
 				)
@@ -181,7 +181,7 @@ final class Service_Registration {
 		if ( isset( $args['option_container'] ) ) {
 			if ( ! $args['option_container'] instanceof Option_Container ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The option_container argument must be an instance of Option_Container.', 'wp-oop-plugin-lib-example' )
+					esc_html__( 'The option_container argument must be an instance of Option_Container.', 'wp-starter-plugin' )
 				);
 			}
 		} else {
@@ -191,7 +191,7 @@ final class Service_Registration {
 		if ( isset( $args['option_repository'] ) ) {
 			if ( ! $args['option_repository'] instanceof Option_Repository ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The option_repository argument must be an instance of Option_Repository.', 'wp-oop-plugin-lib-example' )
+					esc_html__( 'The option_repository argument must be an instance of Option_Repository.', 'wp-starter-plugin' )
 				);
 			}
 		} else {
@@ -201,7 +201,7 @@ final class Service_Registration {
 		if ( isset( $args['http'] ) ) {
 			if ( ! $args['http'] instanceof HTTP ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The http argument must be an instance of HTTP.', 'wp-oop-plugin-lib-example' )
+					esc_html__( 'The http argument must be an instance of HTTP.', 'wp-starter-plugin' )
 				);
 			}
 		} else {

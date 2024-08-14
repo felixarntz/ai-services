@@ -1,20 +1,20 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Gemini_AI_Model
+ * Class Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Model
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini;
+namespace Vendor_NS\WP_Starter_Plugin\Gemini;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Types\Safety_Setting;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Abstract_Generative_AI_Model;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Candidate;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Content;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Util\Formatter;
+use Vendor_NS\WP_Starter_Plugin\Gemini\Types\Safety_Setting;
+use Vendor_NS\WP_Starter_Plugin\Services\Abstract_Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 
 /**
  * Class representing a Gemini AI model.
@@ -88,7 +88,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 
 		if ( ! isset( $model_params['model'] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The model parameter is required.', 'wp-oop-plugin-lib-example' )
+				esc_html__( 'The model parameter is required.', 'wp-starter-plugin' )
 			);
 		}
 
@@ -104,7 +104,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 			foreach ( $model_params['safety_settings'] as $safety_setting ) {
 				if ( ! $safety_setting instanceof Safety_Setting ) {
 					throw new InvalidArgumentException(
-						esc_html__( 'The safety_settings parameter must contain Safety_Setting instances.', 'wp-oop-plugin-lib-example' )
+						esc_html__( 'The safety_settings parameter must contain Safety_Setting instances.', 'wp-starter-plugin' )
 					);
 				}
 			}
@@ -164,7 +164,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 
 		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the AI service is missing the "candidates" key.', 'wp-oop-plugin-lib-example' )
+				esc_html__( 'The response from the AI service is missing the "candidates" key.', 'wp-starter-plugin' )
 			);
 		}
 

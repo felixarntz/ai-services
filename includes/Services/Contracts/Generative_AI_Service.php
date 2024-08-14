@@ -1,12 +1,12 @@
 <?php
 /**
- * Interface Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Service
+ * Interface Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
 
 /**
  * Interface for a class representing a generative AI service which provides access to models.

@@ -1,19 +1,19 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Parts
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Contracts\Part;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\File_Data_Part;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\Inline_Data_Part;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\Text_Part;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Contracts\Part;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\File_Data_Part;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Inline_Data_Part;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Text_Part;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**
  * Class representing parts of content for a generative model.
@@ -120,7 +120,7 @@ final class Parts implements Arrayable {
 	public function get( int $index ): Part {
 		if ( ! isset( $this->parts[ $index ] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'Index out of bounds.', 'wp-oop-plugin-lib-example' )
+				esc_html__( 'Index out of bounds.', 'wp-starter-plugin' )
 			);
 		}
 		return $this->parts[ $index ];

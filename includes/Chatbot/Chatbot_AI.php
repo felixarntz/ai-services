@@ -1,17 +1,17 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot_AI
+ * Class Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_AI
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot;
+namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Gemini_AI_Service;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Candidate;
+use Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
 
 /**
  * Class for the AI configuration powering the chatbot.
@@ -84,7 +84,7 @@ class Chatbot_AI {
 		$num_parts = $parts->count();
 		if ( ! $num_parts ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the AI service does not include any parts.', 'wp-oop-plugin-lib-example' )
+				esc_html__( 'The response from the AI service does not include any parts.', 'wp-starter-plugin' )
 			);
 		}
 
@@ -98,7 +98,7 @@ class Chatbot_AI {
 
 		if ( ! $text_parts ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the AI service does not include any text parts.', 'wp-oop-plugin-lib-example' )
+				esc_html__( 'The response from the AI service does not include any text parts.', 'wp-starter-plugin' )
 			);
 		}
 

@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot_Loader
+ * Class Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_Loader
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot;
+namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 
 /**
  * Class responsible for loading the Gemini AI-powered chatbot.
@@ -63,7 +63,7 @@ class Chatbot_Loader {
 			return false;
 		}
 
-		if ( ! $this->current_user->has_cap( 'wpoopple_access_services' ) ) {
+		if ( ! $this->current_user->has_cap( 'wpsp_access_services' ) ) {
 			return false;
 		}
 

@@ -1,21 +1,21 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_API
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Services_API
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services;
+namespace Vendor_NS\WP_Starter_Plugin\Services;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\With_API_Client;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
 
 /**
  * Main API class providing the entry point to the generative AI services.
@@ -155,7 +155,7 @@ final class Services_API {
 		 * In that case, the only thing left to check is whether the current user has the necessary capabilities.
 		 */
 		if ( isset( $this->service_instances[ $slug ] ) ) {
-			if ( ! $this->current_user->has_cap( 'wpoopple_access_service', $slug ) ) {
+			if ( ! $this->current_user->has_cap( 'wpsp_access_service', $slug ) ) {
 				return false;
 			}
 			return true;
@@ -184,7 +184,7 @@ final class Services_API {
 		$this->service_instances[ $slug ] = $instance;
 
 		// Finally, check whether the current user has the necessary capabilities.
-		return $this->current_user->has_cap( 'wpoopple_access_service', $slug );
+		return $this->current_user->has_cap( 'wpsp_access_service', $slug );
 	}
 
 	/**
@@ -206,7 +206,7 @@ final class Services_API {
 				esc_html(
 					sprintf(
 						/* translators: %s: The service slug. */
-						esc_html__( 'Service %s is either not registered or not available.', 'wp-oop-plugin-lib-example' ),
+						esc_html__( 'Service %s is either not registered or not available.', 'wp-starter-plugin' ),
 						$slug
 					)
 				)

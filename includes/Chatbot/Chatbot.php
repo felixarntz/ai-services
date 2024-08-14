@@ -1,17 +1,17 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot\Chatbot
+ * Class Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Chatbot;
+namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 
 /**
  * Class controlling the AI-powered chatbot.
@@ -85,7 +85,7 @@ class Chatbot implements With_Hooks {
 	 */
 	public function register_assets(): void {
 		$this->script_registry->register(
-			'wpoopple_chatbot',
+			'wpsp_chatbot',
 			array(
 				'src'      => $this->plugin_env->url( 'build/chatbot.js' ),
 				'manifest' => $this->plugin_env->path( 'build/chatbot.asset.php' ),
@@ -93,7 +93,7 @@ class Chatbot implements With_Hooks {
 			)
 		);
 		$this->style_registry->register(
-			'wpoopple_chatbot',
+			'wpsp_chatbot',
 			array(
 				'src' => $this->plugin_env->url( 'build/chatbot.css' ),
 			)
@@ -106,7 +106,7 @@ class Chatbot implements With_Hooks {
 	 * @since n.e.x.t
 	 */
 	public function enqueue_assets(): void {
-		$this->script_registry->enqueue( 'wpoopple_chatbot' );
-		$this->style_registry->enqueue( 'wpoopple_chatbot' );
+		$this->script_registry->enqueue( 'wpsp_chatbot' );
+		$this->style_registry->enqueue( 'wpsp_chatbot' );
 	}
 }

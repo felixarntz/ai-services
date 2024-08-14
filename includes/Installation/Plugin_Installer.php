@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Installation\Plugin_Installer
+ * Class Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Installation;
+namespace Vendor_NS\WP_Starter_Plugin\Installation;
 
 use Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Installation\Abstract_Installer;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Installation\Abstract_Installer;
 
 /**
  * Plugin installer (and uninstaller).

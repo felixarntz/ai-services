@@ -1,20 +1,20 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini\Gemini_API_Client
+ * Class Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_API_Client
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Gemini;
+namespace Vendor_NS\WP_Starter_Plugin\Gemini;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_API_Client;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Get_Request;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Get_Request;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
 
 /**
  * Class to interact directly with the Gemini API.
@@ -73,7 +73,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: original error message */
-						__( 'Error while making request to the Gemini API: %s ', 'wp-oop-plugin-lib-example' ),
+						__( 'Error while making request to the Gemini API: %s ', 'wp-starter-plugin' ),
 						$e->getMessage()
 					)
 				)
@@ -87,7 +87,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 			} else {
 				$error_message = sprintf(
 					/* translators: %d: HTTP status code */
-					__( 'Bad status code: %d', 'wp-oop-plugin-lib-example' ),
+					__( 'Bad status code: %d', 'wp-starter-plugin' ),
 					$response->get_status()
 				);
 			}
@@ -95,7 +95,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: error message */
-						__( 'Error while making request to the Gemini API: %s ', 'wp-oop-plugin-lib-example' ),
+						__( 'Error while making request to the Gemini API: %s ', 'wp-starter-plugin' ),
 						$error_message
 					)
 				)
@@ -108,8 +108,8 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: error message */
-						__( 'Error while making request to the Gemini API: %s ', 'wp-oop-plugin-lib-example' ),
-						__( 'JSON response could not be decoded.', 'wp-oop-plugin-lib-example' )
+						__( 'Error while making request to the Gemini API: %s ', 'wp-starter-plugin' ),
+						__( 'JSON response could not be decoded.', 'wp-starter-plugin' )
 					)
 				)
 			);
@@ -214,7 +214,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 		if ( ! isset( $request_options['headers'] ) ) {
 			$request_options['headers'] = array();
 		}
-		$request_options['headers']['X-Goog-Api-Client'] = 'wp-oop-plugin-lib-example/' . WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION;
+		$request_options['headers']['X-Goog-Api-Client'] = 'wp-starter-plugin/' . WP_STARTER_PLUGIN_VERSION;
 		$request_options['headers']['X-Goog-Api-Key']    = $this->api_key;
 		return $request_options;
 	}

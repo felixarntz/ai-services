@@ -1,20 +1,20 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Abstract_Generative_AI_Model
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Abstract_Generative_AI_Model
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services;
+namespace Vendor_NS\WP_Starter_Plugin\Services;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Candidate;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Chat_Session;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Content;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Util\Formatter;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Chat_Session;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 
 /**
  * Base class for a generative AI model.

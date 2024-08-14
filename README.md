@@ -1,4 +1,4 @@
-# WP OOP Plugin Lib Example
+# WP Starter Plugin
 
 This example plugin provides a reference and potential starting point for using the [WP OOP Plugin Lib library](https://github.com/felixarntz/wp-oop-plugin-lib). The plugin includes the library in a way that prevents conflicts with other plugins that may include it, by prefixing the classes.
 
@@ -12,13 +12,13 @@ In order to create a new plugin based on this foundation, perform the following 
 
 1. Copy all files into your new plugin's directory.
 2. Perform the following _case-sensitive_ replacements globally across all files (using your plugin's slug and its different variants, per the examples below):
-    * Replace `wp_oop_plugin_lib_example` with `my_plugin`
-    * Replace `wp-oop-plugin-lib-example` with `my-plugin`
-    * Replace `WP_OOP_Plugin_Lib_Example` with `My_Plugin`
-    * Replace `WP_OOP_PLUGIN_LIB_EXAMPLE` with `MY_PLUGIN`
-    * Replace `WP OOP Plugin Lib Example` with `My Plugin`
-    * Replace `wpoopple_` with `myplugin_`
-    * Replace `wpoopple-` with `myplugin-`
+    * Replace `wp_starter_plugin` with `my_plugin`
+    * Replace `wp-starter-plugin` with `my-plugin`
+    * Replace `WP_Starter_Plugin` with `My_Plugin`
+    * Replace `WP_STARTER_PLUGIN` with `MY_PLUGIN`
+    * Replace `WP Starter Plugin` with `My Plugin`
+    * Replace `wpsp_` with `myplugin_`
+    * Replace `wpsp-` with `myplugin-`
     * Replace `Vendor_NS` with `My_Namespace`
     * Replace `vendor-ns` with `my-github`
     * Replace `The plugin description.` with `My plugin does something useful.`

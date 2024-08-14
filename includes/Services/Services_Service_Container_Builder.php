@@ -1,29 +1,29 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_Service_Container_Builder
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Services_Service_Container_Builder
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services;
+namespace Vendor_NS\WP_Starter_Plugin\Services;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Admin\Settings_Page;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Filters;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Meta_Capability;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Filters;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Meta_Capability;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
 
 /**
  * Service container builder for the services loader.
@@ -70,7 +70,7 @@ final class Services_Service_Container_Builder {
 	 */
 	public function build_env( string $main_file ): self {
 		$this->container['plugin_env'] = function () use ( $main_file ) {
-			return new Plugin_Env( $main_file, WP_OOP_PLUGIN_LIB_EXAMPLE_VERSION );
+			return new Plugin_Env( $main_file, WP_STARTER_PLUGIN_VERSION );
 		};
 
 		return $this;
@@ -122,24 +122,24 @@ final class Services_Service_Container_Builder {
 	private function build_capability_services(): void {
 		$this->container['capability_container'] = static function () {
 			$capabilities                             = new Capability_Container();
-			$capabilities['wpoopple_manage_services'] = static function () {
+			$capabilities['wpsp_manage_services'] = static function () {
 				return new Base_Capability(
-					'wpoopple_manage_services',
+					'wpsp_manage_services',
 					array( 'manage_options' )
 				);
 			};
-			$capabilities['wpoopple_access_services'] = static function () {
+			$capabilities['wpsp_access_services'] = static function () {
 				return new Base_Capability(
-					'wpoopple_access_services',
+					'wpsp_access_services',
 					array( 'edit_posts' )
 				);
 			};
-			$capabilities['wpoopple_access_service']  = static function () {
+			$capabilities['wpsp_access_service']  = static function () {
 				return new Meta_Capability(
-					'wpoopple_access_service',
+					'wpsp_access_service',
 					// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 					static function ( int $user_id, string $service_slug ) {
-						return array( 'wpoopple_access_services' );
+						return array( 'wpsp_access_services' );
 					}
 				);
 			};
@@ -192,7 +192,7 @@ final class Services_Service_Container_Builder {
 			return new Option_Container();
 		};
 		$this->container['option_registry']   = static function () {
-			return new Option_Registry( 'wpoopple_services' );
+			return new Option_Registry( 'wpsp_services' );
 		};
 	}
 

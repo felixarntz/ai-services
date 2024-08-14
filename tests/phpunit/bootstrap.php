@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
 define( 'TESTS_PLUGIN_DIR', dirname( dirname( __DIR__ ) ) );

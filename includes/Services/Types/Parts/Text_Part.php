@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts\Text_Part
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Text_Part
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Parts;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
 
 use InvalidArgumentException;
 

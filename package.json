@@ -1,7 +1,7 @@
 {
-  "name": "wp-oop-plugin-lib-example",
+  "name": "wp-starter-plugin",
   "license": "GPL-2.0-or-later",
-  "repository": "git+https://github.com/vendor-ns/wp-oop-plugin-lib-example.git",
+  "repository": "git+https://github.com/vendor-ns/wp-starter-plugin.git",
   "devDependencies": {
     "@wordpress/env": "^10.4.0",
     "@wordpress/scripts": "^28.4.0",

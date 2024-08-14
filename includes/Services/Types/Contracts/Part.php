@@ -1,14 +1,14 @@
 <?php
 /**
- * Interface Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Contracts\Part
+ * Interface Vendor_NS\WP_Starter_Plugin\Services\Types\Contracts\Part
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Contracts;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Types\Contracts;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**
  * Interface for a class representing a part of content for a generative model.

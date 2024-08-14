@@ -1,17 +1,17 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types\Chat_Session
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Chat_Session
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Types;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Util\Formatter;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 
 /**
  * Class representing a chat session with a generative model
@@ -101,13 +101,13 @@ final class Chat_Session {
 		foreach ( $history as $content ) {
 			if ( ! $content instanceof Content ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The history must contain Content instances.', 'wp-oop-plugin-lib-example' )
+					esc_html__( 'The history must contain Content instances.', 'wp-starter-plugin' )
 				);
 			}
 
 			if ( $first && 'user' !== $content->get_role() ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The first Content instance in the history must be user content.', 'wp-oop-plugin-lib-example' )
+					esc_html__( 'The first Content instance in the history must be user content.', 'wp-starter-plugin' )
 				);
 			}
 
@@ -116,7 +116,7 @@ final class Chat_Session {
 					esc_html(
 						sprintf(
 							/* translators: %s: invalid role encountered */
-							__( 'The role %s is invalid.', 'wp-oop-plugin-lib-example' ),
+							__( 'The role %s is invalid.', 'wp-starter-plugin' ),
 							$content->get_role()
 						)
 					)
@@ -125,7 +125,7 @@ final class Chat_Session {
 
 			if ( $content->get_parts()->count() < 1 ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'Each Content instance must have at least one part.', 'wp-oop-plugin-lib-example' )
+					esc_html__( 'Each Content instance must have at least one part.', 'wp-starter-plugin' )
 				);
 			}
 

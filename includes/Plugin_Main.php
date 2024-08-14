@@ -1,19 +1,19 @@
 <?php
 /**
- * Class Vendor_NS\WP_OOP_Plugin_Lib_Example\Plugin_Main
+ * Class Vendor_NS\WP_Starter_Plugin\Plugin_Main
  *
  * @since n.e.x.t
- * @package wp-oop-plugin-lib-example
+ * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_OOP_Plugin_Lib_Example;
+namespace Vendor_NS\WP_Starter_Plugin;
 
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_API;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_API_Instance;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example\Services\Services_Loader;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Vendor_NS\WP_OOP_Plugin_Lib_Example_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
+use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
+use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
+use Vendor_NS\WP_Starter_Plugin\Services\Services_Loader;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
 /**
  * Plugin main class.

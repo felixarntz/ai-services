@@ -46,6 +46,7 @@ final class Services_Loader implements With_Hooks {
 	 */
 	public function add_hooks(): void {
 		$this->load_capabilities();
+		$this->load_dependencies();
 		$this->load_options();
 		$this->load_settings_page();
 	}
@@ -80,6 +81,20 @@ final class Services_Loader implements With_Hooks {
 				$this->container['capability_filters']->add_hooks();
 			},
 			0
+		);
+	}
+
+	/**
+	 * Registers the JS & CSS dependencies for the AI services.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function load_dependencies(): void {
+		add_action(
+			'init',
+			function () {
+				$this->container['services_script_style_loader']->register_scripts_and_styles();
+			}
 		);
 	}
 

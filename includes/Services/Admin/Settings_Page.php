@@ -59,18 +59,8 @@ class Settings_Page extends Abstract_Admin_Page {
 		add_action(
 			'admin_enqueue_scripts',
 			function () {
-				$this->script_registry->register(
-					'wpsp_services',
-					array(
-						'src'      => $this->plugin_env->url( 'build/index.js' ),
-						'manifest' => $this->plugin_env->path( 'build/index.asset.php' ),
-						'strategy' => 'defer',
-					)
-				);
-
-				$this->script_registry->enqueue( 'wpsp_services' );
-				$this->script_registry->enqueue( 'wpsp-settings-page' );
-				$this->style_registry->enqueue( 'wpsp-settings-page' );
+				$this->script_registry->enqueue( 'wpsp-services-page' );
+				$this->style_registry->enqueue( 'wpsp-services-page' );
 
 				$this->preload_rest_api_data();
 			}

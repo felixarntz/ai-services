@@ -1,23 +1,23 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Dependencies\Plugin_Script_Style_Loader
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Dependencies\Services_Script_Style_Loader
  *
  * @since n.e.x.t
  * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Dependencies;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Dependencies;
 
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 
 /**
- * Class responsible for registering the plugin's available scripts and styles.
+ * Class responsible for registering the available AI service related scripts and styles.
  *
  * @since n.e.x.t
  */
-class Plugin_Script_Style_Loader {
+class Services_Script_Style_Loader {
 
 	/**
 	 * The plugin environment.
@@ -83,10 +83,10 @@ class Plugin_Script_Style_Loader {
 		);
 
 		$this->script_registry->register(
-			'wpsp-settings-page',
+			'wpsp-services-page',
 			array(
-				'src'      => $this->plugin_env->url( 'build/settings-page/index.js' ),
-				'manifest' => $this->plugin_env->path( 'build/settings-page/index.asset.php' ),
+				'src'      => $this->plugin_env->url( 'build/services-page/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/services-page/index.asset.php' ),
 				'strategy' => 'defer',
 			)
 		);
@@ -102,11 +102,11 @@ class Plugin_Script_Style_Loader {
 		);
 
 		$this->style_registry->register(
-			'wpsp-settings-page',
+			'wpsp-services-page',
 			array(
-				'src'          => $this->plugin_env->url( 'build/settings-page/style-index.css' ),
-				'path'         => $this->plugin_env->path( 'build/settings-page/style-index.css' ),
-				'manifest'     => $this->plugin_env->path( 'build/settings-page/index.asset.php' ),
+				'src'          => $this->plugin_env->url( 'build/services-page/style-index.css' ),
+				'path'         => $this->plugin_env->path( 'build/services-page/style-index.css' ),
+				'manifest'     => $this->plugin_env->path( 'build/services-page/index.asset.php' ),
 				'dependencies' => array( 'wp-components', 'wpsp-components' ),
 			)
 		);

@@ -9,6 +9,7 @@
 namespace Vendor_NS\WP_Starter_Plugin\Services;
 
 use Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page;
+use Vendor_NS\WP_Starter_Plugin\Services\Dependencies\Services_Script_Style_Loader;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
@@ -160,11 +161,18 @@ final class Services_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_dependency_services(): void {
-		$this->container['script_registry'] = static function () {
+		$this->container['script_registry']              = static function () {
 			return new Script_Registry();
 		};
-		$this->container['style_registry']  = static function () {
+		$this->container['style_registry']               = static function () {
 			return new Style_Registry();
+		};
+		$this->container['services_script_style_loader'] = static function ( $cont ) {
+			return new Services_Script_Style_Loader(
+				$cont['plugin_env'],
+				$cont['script_registry'],
+				$cont['style_registry']
+			);
 		};
 	}
 

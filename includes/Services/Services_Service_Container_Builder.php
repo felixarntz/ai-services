@@ -10,6 +10,8 @@ namespace Vendor_NS\WP_Starter_Plugin\Services;
 
 use Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page;
 use Vendor_NS\WP_Starter_Plugin\Services\Dependencies\Services_Script_Style_Loader;
+use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\Data_Encryption;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
@@ -97,6 +99,7 @@ final class Services_Service_Container_Builder {
 				$cont['current_user'],
 				$cont['option_container'],
 				$cont['option_repository'],
+				$cont['option_encrypter'],
 				$cont['http']
 			);
 		};
@@ -201,6 +204,9 @@ final class Services_Service_Container_Builder {
 		};
 		$this->container['option_registry']   = static function () {
 			return new Option_Registry( 'wpsp_services' );
+		};
+		$this->container['option_encrypter']  = static function () {
+			return new Option_Encrypter( new Data_Encryption() );
 		};
 	}
 

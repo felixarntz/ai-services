@@ -17,7 +17,7 @@ use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
  *
  * @since n.e.x.t
  */
-class Formatter {
+final class Formatter {
 
 	/**
 	 * Formats the various supported formats of new user content into a consistent Content instance.

@@ -62,7 +62,7 @@ final class Service_Registration {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string               $slug    The service slug.
+	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
 	 * @param callable             $creator The service creator. Receives the API key (string) as first parameter, the
 	 *                                      HTTP instance as second parameter, and must return a Generative_AI_Service
 	 *                                      instance. Optionally, the class can implement the With_API_Client
@@ -79,13 +79,14 @@ final class Service_Registration {
 	 * }
 	 */
 	public function __construct( string $slug, callable $creator, array $args = array() ) {
+		$this->validate_slug( $slug );
+
 		$this->slug    = $slug;
 		$this->creator = $creator;
 		$this->args    = $this->parse_args( $args );
 
-		$this->api_key_option_slug                                    = sprintf( 'wpsp_%s_api_key', $this->slug );
+		$this->api_key_option_slug                                    = sprintf( 'wpsp_%s_api_key', $slug );
 		$this->args['option_container'][ $this->api_key_option_slug ] = function () {
-			// TODO: Use a custom Option class that uses encryption and filters the API key.
 			return new Option(
 				$this->args['option_repository'],
 				$this->api_key_option_slug,
@@ -118,6 +119,17 @@ final class Service_Registration {
 	 */
 	public function get_api_key_option(): Option {
 		return $this->args['option_container'][ $this->api_key_option_slug ];
+	}
+
+	/**
+	 * Gets the API key option slug.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The API key option slug.
+	 */
+	public function get_api_key_option_slug(): string {
+		return $this->api_key_option_slug;
 	}
 
 	/**
@@ -159,6 +171,23 @@ final class Service_Registration {
 		}
 
 		return $instance;
+	}
+
+	/**
+	 * Validates the service slug.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $slug The service slug.
+	 *
+	 * @throws InvalidArgumentException Thrown if the service slug contains disallowed characters.
+	 */
+	private function validate_slug( string $slug ): void {
+		if ( ! preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
+			throw new InvalidArgumentException(
+				esc_html__( 'The service slug must only contain lowercase letters, numbers, and hyphens.', 'wp-starter-plugin' )
+			);
+		}
 	}
 
 	/**

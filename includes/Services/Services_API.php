@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
@@ -65,6 +66,14 @@ final class Services_API {
 	private $option_repository;
 
 	/**
+	 * The option encrypter instance.
+	 *
+	 * @since n.e.x.t
+	 * @var Option_Encrypter
+	 */
+	private $option_encrypter;
+
+	/**
 	 * The HTTP instance.
 	 *
 	 * @since n.e.x.t
@@ -80,17 +89,20 @@ final class Services_API {
 	 * @param Current_User      $current_user      The current user instance.
 	 * @param Option_Container  $option_container  The option container instance.
 	 * @param Option_Repository $option_repository The option repository instance.
+	 * @param Option_Encrypter  $option_encrypter  The option encrypter instance.
 	 * @param HTTP              $http              The HTTP instance.
 	 */
 	public function __construct(
 		Current_User $current_user,
 		Option_Container $option_container,
 		Option_Repository $option_repository,
+		Option_Encrypter $option_encrypter,
 		HTTP $http
 	) {
 		$this->current_user      = $current_user;
 		$this->option_container  = $option_container;
 		$this->option_repository = $option_repository;
+		$this->option_encrypter  = $option_encrypter;
 		$this->http              = $http;
 	}
 
@@ -102,7 +114,7 @@ final class Services_API {
 	 * @see Generative_AI_Service
 	 * @see With_API_Client
 	 *
-	 * @param string               $slug    The service slug.
+	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
 	 * @param callable             $creator The service creator. Receives the API key (string) as first parameter, the
 	 *                                      HTTP instance as second parameter, and must return a Generative_AI_Service
 	 *                                      instance. Optionally, the class can implement the With_API_Client
@@ -121,6 +133,10 @@ final class Services_API {
 		$args['http']              = $this->http;
 
 		$this->service_registrations[ $slug ] = new Service_Registration( $slug, $creator, $args );
+
+		$this->option_encrypter->add_encryption_hooks(
+			$this->service_registrations[ $slug ]->get_api_key_option_slug()
+		);
 	}
 
 	/**

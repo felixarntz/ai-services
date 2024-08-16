@@ -124,19 +124,37 @@ final class Services_API {
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
-	 *     @type string $name The service name. Default is the slug with spaces and uppercase first letters.
+	 *     @type string $name           The service name. Default is the slug with spaces and uppercase first letters.
+	 *     @type bool   $allow_override Whether the service can be overridden by another service with the same slug.
+	 *                                  Default true.
 	 * }
+	 *
+	 * @throws InvalidArgumentException Thrown if an already registered slug or invalid arguments are provided.
 	 */
 	public function register_service( string $slug, callable $creator, array $args = array() ): void {
+		if ( isset( $this->service_registrations[ $slug ] ) && ! $this->service_registrations[ $slug ]->allows_override() ) {
+			throw new InvalidArgumentException(
+				esc_html(
+					sprintf(
+						/* translators: %s: The service slug. */
+						esc_html__( 'Service %s is already registered and cannot be overridden.', 'wp-starter-plugin' ),
+						$slug
+					)
+				)
+			);
+		}
+
 		$args['option_container']  = $this->option_container;
 		$args['option_repository'] = $this->option_repository;
 		$args['http']              = $this->http;
 
 		$this->service_registrations[ $slug ] = new Service_Registration( $slug, $creator, $args );
 
-		$this->option_encrypter->add_encryption_hooks(
-			$this->service_registrations[ $slug ]->get_api_key_option_slug()
-		);
+		// Ensure the API key option is encrypted.
+		$option_slug = $this->service_registrations[ $slug ]->get_api_key_option_slug();
+		if ( ! $this->option_encrypter->has_encryption( $option_slug ) ) {
+			$this->option_encrypter->add_encryption_hooks( $option_slug );
+		}
 	}
 
 	/**

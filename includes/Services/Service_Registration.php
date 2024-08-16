@@ -72,7 +72,10 @@ final class Service_Registration {
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
-	 *     @type string            $name              The service name. Default is the slug with spaces and uppercase first letters.
+	 *     @type string            $name              The service name. Default is the slug with spaces and uppercase
+	 *                                                first letters.
+	 *     @type bool              $allow_override    Whether the service can be overridden by another service with the
+	 *                                                same slug. Default true.
 	 *     @type Option_Container  $option_container  The option container instance. Default is a new instance.
 	 *     @type Option_Repository $option_repository The option repository instance. Default is a new instance.
 	 *     @type HTTP              $http              The HTTP instance. Default is a new instance.
@@ -174,6 +177,28 @@ final class Service_Registration {
 	}
 
 	/**
+	 * Gets the service name.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The service name.
+	 */
+	public function get_name(): string {
+		return $this->args['name'];
+	}
+
+	/**
+	 * Checks whether the service can be overridden.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return bool True if the service can be overridden, false otherwise.
+	 */
+	public function allows_override(): bool {
+		return $this->args['allow_override'];
+	}
+
+	/**
 	 * Validates the service slug.
 	 *
 	 * @since n.e.x.t
@@ -205,6 +230,12 @@ final class Service_Registration {
 			$args['name'] = (string) $args['name'];
 		} else {
 			$args['name'] = ucwords( str_replace( array( '-', '_' ), ' ', $this->slug ) );
+		}
+
+		if ( isset( $args['allow_override'] ) ) {
+			$args['allow_override'] = (bool) $args['allow_override'];
+		} else {
+			$args['allow_override'] = true;
 		}
 
 		if ( isset( $args['option_container'] ) ) {

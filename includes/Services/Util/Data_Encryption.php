@@ -12,6 +12,7 @@ namespace Vendor_NS\WP_Starter_Plugin\Services\Util;
  * Class responsible for encrypting and decrypting data.
  *
  * @since n.e.x.t
+ * @see https://felix-arntz.me/blog/storing-confidential-data-in-wordpress/
  */
 final class Data_Encryption {
 

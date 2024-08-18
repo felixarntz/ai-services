@@ -28,7 +28,7 @@ interface With_Image_Generation {
 	 * @param string|Parts|Content|Content[] $content         Prompt for the image to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
-	 * @return Candidate[] The response candidates with generated content - usually just one.
+	 * @return Candidate[] The response candidates with generated images - usually just one.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */

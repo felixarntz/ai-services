@@ -12,7 +12,7 @@ use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Gemini\Types\Safety_Setting;
 use Vendor_NS\WP_Starter_Plugin\Services\Abstract_Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 
@@ -141,11 +141,11 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
-	 * @return Candidate[] The response candidates with generated content - usually just one.
+	 * @return Candidates The response candidates with generated content - usually just one.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	protected function send_generate_content_request( array $contents, array $request_options ): array {
+	protected function send_generate_content_request( array $contents, array $request_options ): Candidates {
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
 			'contents'         => array_map(
@@ -182,9 +182,6 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 			);
 		}
 
-		return array_map(
-			array( Candidate::class, 'from_array' ),
-			$response['candidates']
-		);
+		return Candidates::from_array( $response['candidates'] );
 	}
 }

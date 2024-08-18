@@ -11,7 +11,8 @@ namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Text_Part;
 
 /**
  * Class for the AI configuration powering the chatbot.
@@ -73,33 +74,24 @@ class Chatbot_AI {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Candidate[] $candidates The response from the generative model.
+	 * @param Candidates $candidates The candidates response from the generative model.
 	 * @return string The text.
 	 *
 	 * @throws Generative_AI_Exception If the response does not include any text parts.
 	 */
-	public function get_text_from_candidates( array $candidates ): string {
-		$content   = $candidates[0]->get_content();
-		$parts     = $content->get_parts();
-		$num_parts = $parts->count();
-		if ( ! $num_parts ) {
-			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the AI service does not include any parts.', 'wp-starter-plugin' )
-			);
-		}
-
-		$text_parts = array();
-		for ( $i = 0; $i < $num_parts; $i++ ) {
-			$part = $parts->get( $i );
-			if ( isset( $part['text'] ) ) {
-				$text_parts[] = trim( $part['text'] );
-			}
-		}
-
-		if ( ! $text_parts ) {
+	public function get_text_from_candidates( Candidates $candidates ): string {
+		$candidates = $candidates->filter( array( 'part_class_name' => Text_Part::class ) );
+		if ( count( $candidates ) === 0 ) {
 			throw new Generative_AI_Exception(
 				esc_html__( 'The response from the AI service does not include any text parts.', 'wp-starter-plugin' )
 			);
+		}
+
+		$parts = $candidates->get( 0 )->get_content()->get_parts();
+
+		$text_parts = array();
+		foreach ( $parts as $part ) {
+			$text_parts[] = trim( $part->to_array()['text'] );
 		}
 
 		return implode( "\n\n", $text_parts );

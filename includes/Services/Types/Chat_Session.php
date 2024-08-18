@@ -69,22 +69,39 @@ final class Chat_Session {
 	 *
 	 * @param string|Parts|Content $content         The message to send.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return Candidate[] The response candidates with generated content - usually just one.
+	 * @return Content The response content.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	public function send_message( $content, array $request_options = array() ): array {
+	public function send_message( $content, array $request_options = array() ): Content {
 		$new_content = Formatter::format_new_content( $content );
 
 		$contents   = $this->history;
 		$contents[] = $new_content;
 
+		$candidate_filter_args = array();
+		if ( isset( $request_options['candidate_filter_args'] ) ) {
+			$candidate_filter_args = $request_options['candidate_filter_args'];
+			unset( $request_options['candidate_filter_args'] );
+		}
+
 		$candidates = $this->model->generate_content( $contents, $request_options );
+		if ( $candidate_filter_args ) {
+			$candidates = $candidates->filter( $candidate_filter_args );
+		}
+
+		if ( count( $candidates ) === 0 ) {
+			throw new Generative_AI_Exception(
+				esc_html__( 'The response did not include any relevant candidates.', 'wp-starter-plugin' )
+			);
+		}
+
+		$response_content = $candidates->get( 0 )->get_content();
 
 		$this->history[] = $new_content;
-		$this->history[] = $candidates[0]->get_content();
+		$this->history[] = $response_content;
 
-		return $candidates;
+		return $response_content;
 	}
 
 	/**

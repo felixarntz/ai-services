@@ -10,7 +10,7 @@ namespace Vendor_NS\WP_Starter_Plugin\Services;
 
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Chat_Session;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
@@ -31,11 +31,11 @@ abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
-	 * @return Candidate[] The response candidates with generated content - usually just one.
+	 * @return Candidates The response candidates with generated content - usually just one.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	final public function generate_content( $content, array $request_options = array() ): array {
+	final public function generate_content( $content, array $request_options = array() ): Candidates {
 		if ( is_array( $content ) ) {
 			$contents = array_map(
 				array( Formatter::class, 'format_new_content' ),
@@ -67,9 +67,9 @@ abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
-	 * @return Candidate[] The response candidates with generated content - usually just one.
+	 * @return Candidates The response candidates with generated content - usually just one.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	abstract protected function send_generate_content_request( array $contents, array $request_options ): array;
+	abstract protected function send_generate_content_request( array $contents, array $request_options ): Candidates;
 }

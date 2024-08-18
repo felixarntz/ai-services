@@ -8,19 +8,22 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
 
+use ArrayIterator;
 use InvalidArgumentException;
+use Traversable;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Contracts\Part;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\File_Data_Part;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Inline_Data_Part;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Text_Part;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
 
 /**
- * Class representing parts of content for a generative model.
+ * Class representing a collection of content parts for a generative model.
  *
  * @since n.e.x.t
  */
-final class Parts implements Arrayable {
+final class Parts implements Collection, Arrayable {
 
 	/**
 	 * The parts of the content.
@@ -97,14 +100,62 @@ final class Parts implements Arrayable {
 	}
 
 	/**
-	 * Returns the number of parts.
+	 * Returns an iterator for the parts collection.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return int The number of parts.
+	 * @return ArrayIterator<int, Part> Collection iterator.
+	 */
+	public function getIterator(): Traversable {
+		return new ArrayIterator( $this->parts );
+	}
+
+	/**
+	 * Returns the size of the parts collection.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return int Collection size.
 	 */
 	public function count(): int {
 		return count( $this->parts );
+	}
+
+	/**
+	 * Filters the parts collection by the given criteria.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $args {
+	 *     The filter arguments.
+	 *
+	 *     @type string $class_name The class name to only allow parts of that class.
+	 * }
+	 * @return Parts The filtered parts collection.
+	 */
+	public function filter( array $args ): self {
+		if ( isset( $args['class_name'] ) ) {
+			$class_name = $args['class_name'];
+			$map        = static function ( Part $part ) use ( $class_name ) {
+				if ( $part instanceof $class_name ) {
+					return call_user_func( array( $class_name, 'from_array' ), $part->to_array() );
+				}
+				return null;
+			};
+		} else {
+			$map = static function ( Part $part ) {
+				return call_user_func( array( get_class( $part ), 'from_array' ), $part->to_array() );
+			};
+		}
+
+		$parts = new Parts();
+		foreach ( $this->parts as $part ) {
+			$mapped_part = $map( $part );
+			if ( $mapped_part ) {
+				$parts->add_part( $mapped_part );
+			}
+		}
+		return $parts;
 	}
 
 	/**

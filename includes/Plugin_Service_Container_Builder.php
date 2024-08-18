@@ -11,8 +11,8 @@ namespace Vendor_NS\WP_Starter_Plugin;
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot;
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_AI;
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_Loader;
-use Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer;
+use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
@@ -90,25 +90,19 @@ final class Plugin_Service_Container_Builder {
 		$this->build_option_services();
 		$this->build_entity_services();
 
-		$this->container['chatbot_loader'] = static function ( $cont ) {
+		$this->container['chatbot_loader'] = static function () {
 			return new Chatbot_Loader(
-				$cont['current_user'],
-				$cont['option_container']['wpsp_api_key']
+				Services_API_Instance::get()
 			);
 		};
-		$this->container['chatbot_ai']     = static function ( $cont ) {
-			return new Chatbot_AI( $cont['generative_ai'] );
+		$this->container['chatbot_ai']     = static function () {
+			return new Chatbot_AI( Services_API_Instance::get()->get_service( 'gemini' ) );
 		};
 		$this->container['chatbot']        = static function ( $cont ) {
 			return new Chatbot(
 				$cont['plugin_env'],
 				$cont['script_registry'],
 				$cont['style_registry']
-			);
-		};
-		$this->container['generative_ai']  = static function ( $cont ) {
-			return new Gemini_AI_Service(
-				$cont['option_container']['wpsp_api_key']->get_value()
 			);
 		};
 

@@ -22,6 +22,15 @@ use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
 interface Generative_AI_Model {
 
 	/**
+	 * Gets the model name.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The model name.
+	 */
+	public function get_model_name(): string;
+
+	/**
 	 * Generates content using the model.
 	 *
 	 * @since n.e.x.t

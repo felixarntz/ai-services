@@ -8,8 +8,8 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
-use Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
 
@@ -24,7 +24,7 @@ class Chatbot_AI {
 	 * The AI instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Gemini_AI_Service
+	 * @var Generative_AI_Service
 	 */
 	private $ai;
 
@@ -41,9 +41,9 @@ class Chatbot_AI {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Gemini_AI_Service $ai The AI instance.
+	 * @param Generative_AI_Service $ai The AI instance.
 	 */
-	public function __construct( Gemini_AI_Service $ai ) {
+	public function __construct( Generative_AI_Service $ai ) {
 		$this->ai = $ai;
 	}
 

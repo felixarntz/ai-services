@@ -8,11 +8,13 @@
 
 namespace Vendor_NS\WP_Starter_Plugin;
 
+use Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_Loader;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
 /**
@@ -63,8 +65,7 @@ class Plugin_Main implements With_Hooks {
 		// Last but not least, set up the container for the main plugin functionality.
 		$this->container = $this->set_up_container( $main_file );
 
-		// TODO: Remove this once the services API is fully integrated (it's only here to please PHPStan).
-		$this->services_api->get_registered_service_slugs();
+		$this->register_default_services();
 	}
 
 	/**
@@ -83,14 +84,18 @@ class Plugin_Main implements With_Hooks {
 			function () {
 				echo '<div class="notice notice-info"><p>';
 
-				$model = $this->container['chatbot_ai']->get_model();
-				try {
-					$candidates = $model->generate_content( 'Where can I add new pages?' );
-					$text       = $this->container['chatbot_ai']->get_text_from_candidates( $candidates );
-					var_dump( $text ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-				} catch ( \Exception $e ) {
-					echo 'An error occurred: ';
-					echo esc_html( $e->getMessage() );
+				if ( $this->container['chatbot_loader']->can_load() ) {
+					$model = $this->container['chatbot_ai']->get_model();
+					try {
+						$candidates = $model->generate_content( 'Where can I add new pages?' );
+						$text       = $this->container['chatbot_ai']->get_text_from_candidates( $candidates );
+						var_dump( $text ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+					} catch ( \Exception $e ) {
+						echo 'An error occurred: ';
+						echo esc_html( $e->getMessage() );
+					}
+				} else {
+					echo 'Chatbot not available.';
 				}
 				echo '</p></div>';
 			}
@@ -185,5 +190,23 @@ class Plugin_Main implements With_Hooks {
 		return $builder->build_env( $main_file )
 			->build_services()
 			->get();
+	}
+
+	/**
+	 * Registers the default AI services.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function register_default_services(): void {
+		$this->services_api->register_service(
+			'gemini',
+			static function ( string $api_key, HTTP $http ) {
+				return new Gemini_AI_Service( $api_key, $http );
+			},
+			array(
+				'name'           => 'Gemini (Google)',
+				'allow_override' => false,
+			)
+		);
 	}
 }

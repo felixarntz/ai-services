@@ -8,8 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
+use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
 
 /**
  * Class responsible for loading the Gemini AI-powered chatbot.
@@ -19,32 +18,22 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Optio
 class Chatbot_Loader {
 
 	/**
-	 * The current user.
+	 * Services API instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Current_User
+	 * @var Services_API
 	 */
-	private $current_user;
-
-	/**
-	 * The Gemini API key option.
-	 *
-	 * @since n.e.x.t
-	 * @var Option
-	 */
-	private $api_key;
+	private $services_api;
 
 	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Current_User $current_user The current user.
-	 * @param Option       $api_key      The Gemini API key option.
+	 * @param Services_API $services_api The services API instance.
 	 */
-	public function __construct( Current_User $current_user, Option $api_key ) {
-		$this->current_user = $current_user;
-		$this->api_key      = $api_key;
+	public function __construct( Services_API $services_api ) {
+		$this->services_api = $services_api;
 	}
 
 	/**
@@ -55,19 +44,7 @@ class Chatbot_Loader {
 	 * @return bool True if the chatbot can be loaded, false otherwise.
 	 */
 	public function can_load(): bool {
-		if ( ! $this->api_key->get_value() ) {
-			return false;
-		}
-
-		if ( ! $this->current_user->is_logged_in() ) {
-			return false;
-		}
-
-		if ( ! $this->current_user->has_cap( 'wpsp_access_services' ) ) {
-			return false;
-		}
-
-		return true;
+		return $this->services_api->is_service_available( 'gemini' );
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Gemini\Generative_AI
+ * Class Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service
  *
  * @since n.e.x.t
  * @package wp-plugin-starter

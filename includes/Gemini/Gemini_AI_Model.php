@@ -121,6 +121,20 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	}
 
 	/**
+	 * Gets the model name.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The model name.
+	 */
+	public function get_model_name(): string {
+		if ( str_starts_with( $this->model, 'models/' ) ) {
+			return substr( $this->model, 7 );
+		}
+		return $this->model;
+	}
+
+	/**
 	 * Sends a request to generate content.
 	 *
 	 * @since n.e.x.t

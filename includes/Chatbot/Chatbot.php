@@ -87,15 +87,18 @@ class Chatbot implements With_Hooks {
 		$this->script_registry->register(
 			'wpsp_chatbot',
 			array(
-				'src'      => $this->plugin_env->url( 'build/chatbot.js' ),
-				'manifest' => $this->plugin_env->path( 'build/chatbot.asset.php' ),
+				'src'      => $this->plugin_env->url( 'build/chatbot/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/chatbot/index.asset.php' ),
 				'strategy' => 'defer',
 			)
 		);
 		$this->style_registry->register(
 			'wpsp_chatbot',
 			array(
-				'src' => $this->plugin_env->url( 'build/chatbot.css' ),
+				'src'          => $this->plugin_env->url( 'build/chatbot/style-index.css' ),
+				'path'         => $this->plugin_env->path( 'build/chatbot/style-index.css' ),
+				'manifest'     => $this->plugin_env->path( 'build/chatbot/index.asset.php' ),
+				'dependencies' => array(),
 			)
 		);
 	}

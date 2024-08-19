@@ -8,7 +8,7 @@ import { createReduxStore, register } from '@wordpress/data';
  */
 import { STORE_NAME } from './name';
 import settingsStoreConfig from './settings';
-import { combineStores } from '../utils/combine-stores';
+import combineStores from '../utils/combine-stores';
 
 const storeConfig = combineStores( settingsStoreConfig );
 

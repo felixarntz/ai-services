@@ -196,6 +196,19 @@ const actions = {
 	},
 
 	/**
+	 * Sets the value for an API key setting.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string} service The service name.
+	 * @param {string} apiKey  The new API key.
+	 * @return {Object} Action object.
+	 */
+	getApiKey( service, apiKey ) {
+		return actions.setSetting( `${ camelCase( service ) }ApiKey`, apiKey );
+	},
+
+	/**
 	 * Sets the value for the deleteData setting.
 	 *
 	 * @since n.e.x.t
@@ -351,6 +364,10 @@ const selectors = {
 		}
 		return settings[ setting ];
 	} ),
+
+	getApiKey: ( state, service ) => {
+		return selectors.getSetting( state, `${ camelCase( service ) }ApiKey` );
+	},
 
 	getDeleteData: ( state ) => {
 		return selectors.getSetting( state, 'deleteData' );

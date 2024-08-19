@@ -89,7 +89,7 @@ class Plugin_Main implements With_Hooks {
 					try {
 						$candidates = $model->generate_content( 'Where can I add new pages?' );
 						var_dump( $candidates->to_array() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-						$text       = $this->container['chatbot_ai']->get_text_from_candidates( $candidates );
+						$text = $this->container['chatbot_ai']->get_text_from_candidates( $candidates );
 						var_dump( $text ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 					} catch ( \Exception $e ) {
 						echo 'An error occurred: ';

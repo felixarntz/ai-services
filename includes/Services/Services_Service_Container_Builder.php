@@ -11,6 +11,9 @@ namespace Vendor_NS\WP_Starter_Plugin\Services;
 use Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page;
 use Vendor_NS\WP_Starter_Plugin\Services\Dependencies\Services_Script_Style_Loader;
 use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
+use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Get_REST_Route;
+use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_List_REST_Route;
+use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_REST_Resource_Schema;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\Data_Encryption;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
@@ -27,6 +30,9 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Namespace;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Collection;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Registry;
 
 /**
  * Service container builder for the services loader.
@@ -92,6 +98,7 @@ final class Services_Service_Container_Builder {
 		$this->build_dependency_services();
 		$this->build_http_services();
 		$this->build_option_services();
+		$this->build_rest_services();
 		$this->build_admin_services();
 
 		$this->container['api'] = static function ( $cont ) {
@@ -207,6 +214,30 @@ final class Services_Service_Container_Builder {
 		};
 		$this->container['option_encrypter']  = static function () {
 			return new Option_Encrypter( new Data_Encryption() );
+		};
+	}
+
+	/**
+	 * Builds the REST services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_rest_services(): void {
+		$this->container['rest_namespace']        = function () {
+			return new REST_Namespace( 'wp-starter-plugin/v1' );
+		};
+		$this->container['rest_route_collection'] = function ( $cont ) {
+			$resource_schema = new Service_REST_Resource_Schema( $cont['rest_namespace'] );
+
+			return new REST_Route_Collection(
+				array(
+					new Service_List_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
+					new Service_Get_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
+				)
+			);
+		};
+		$this->container['rest_route_registry']   = function ( $cont ) {
+			return new REST_Route_Registry( $cont['rest_namespace'] );
 		};
 	}
 

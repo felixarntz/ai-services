@@ -48,6 +48,7 @@ final class Services_Loader implements With_Hooks {
 		$this->load_capabilities();
 		$this->load_dependencies();
 		$this->load_options();
+		$this->load_rest_routes();
 		$this->load_settings_page();
 	}
 
@@ -120,6 +121,25 @@ final class Services_Loader implements With_Hooks {
 				}
 			},
 			0
+		);
+	}
+
+	/**
+	 * Loads the plugin's REST API routes..
+	 *
+	 * @since n.e.x.t
+	 */
+	private function load_rest_routes(): void {
+		add_action(
+			'rest_api_init',
+			function () {
+				foreach ( $this->container['rest_route_collection'] as $rest_route ) {
+					$this->container['rest_route_registry']->register(
+						$rest_route->get_base(),
+						$rest_route->get_registration_args()
+					);
+				}
+			}
 		);
 	}
 

@@ -222,6 +222,22 @@ final class Services_API {
 	}
 
 	/**
+	 * Gets the service name.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $slug The service slug.
+	 * @return string The service name, or empty string if the service is not registered.
+	 */
+	public function get_service_name( string $slug ): string {
+		if ( ! isset( $this->service_registrations[ $slug ] ) ) {
+			return '';
+		}
+
+		return $this->service_registrations[ $slug ]->get_name();
+	}
+
+	/**
 	 * Gets a generative AI service instance.
 	 *
 	 * Before calling this method, you should check whether the service is available using

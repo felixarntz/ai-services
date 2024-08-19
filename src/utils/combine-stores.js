@@ -98,7 +98,7 @@ function passthroughReducer( state ) {
  * @param {...Object} stores A list of objects, each a store containing one or more of the following keys: initialState, actions, controls, reducer, resolvers, selectors.
  * @return {Object} The combined store.
  */
-export function combineStores( ...stores ) {
+export default function combineStores( ...stores ) {
 	const combinedInitialState = collectState(
 		...stores.map( ( store ) => store.initialState || {} )
 	);

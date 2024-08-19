@@ -28,14 +28,15 @@ $wp_oop_plugin_lib_folders = array(
 	'HTTP',
 	'Installation',
 	'Options',
+	'REST_Routes',
 	'Validation',
 );
 
 $wp_oop_plugin_lib_folders_concat = implode( '|', $wp_oop_plugin_lib_folders );
 
 $wp_oop_plugin_lib_folders_regex = $wp_oop_plugin_lib_folders_concat
-	? "/^($wp_oop_plugin_lib_folders_concat)/"
-	: '/^[A-Za-z0-9_]/';
+	? "/^($wp_oop_plugin_lib_folders_concat)\//"
+	: '/^[A-Za-z0-9_]\//';
 
 return array(
 	'prefix'             => 'Vendor_NS\WP_Starter_Plugin_Dependencies',

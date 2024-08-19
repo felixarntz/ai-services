@@ -10,11 +10,14 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
+import camelCaseDash from '../utils/camel-case-dash';
+
+const PLUGIN_SETTINGS_PREFIX = 'wpsp_';
 
 const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
 const SAVE_SETTINGS_START = 'SAVE_SETTINGS_START';
 const SAVE_SETTINGS_FINISH = 'SAVE_SETTINGS_FINISH';
-const SET_DELETE_DATA = 'SET_DELETE_DATA';
+const SET_SETTING = 'SET_SETTING';
 
 const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
 
@@ -66,6 +69,7 @@ function updateModifiedSettings(
 const initialState = {
 	savedSettings: undefined,
 	modifiedSettings: {},
+	optionNameMap: {},
 	isSavingSettings: false,
 };
 
@@ -83,7 +87,7 @@ const actions = {
 			dispatch( {
 				type: RECEIVE_SETTINGS,
 				payload: {
-					settings: { deleteData: settings.wpsp_delete_data },
+					settings,
 				},
 			} );
 		};
@@ -103,6 +107,23 @@ const actions = {
 			}
 
 			const settings = select.getSettings();
+			const options = {};
+			Object.keys( settings ).forEach( ( localName ) => {
+				const optionName = select.getOptionName( localName );
+				if ( ! optionName ) {
+					// eslint-disable-next-line no-console
+					console.error(
+						`Invalid setting ${ localName } that does not correspond to a WordPress option.`
+					);
+					return;
+				}
+
+				if ( ! select.isSettingModified( localName ) ) {
+					return;
+				}
+
+				options[ optionName ] = settings[ localName ];
+			} );
 
 			await dispatch( {
 				type: SAVE_SETTINGS_START,
@@ -114,9 +135,7 @@ const actions = {
 				updatedSettings = await apiFetch( {
 					path: '/wp/v2/settings',
 					method: 'POST',
-					data: {
-						wpsp_delete_data: settings.deleteData,
-					},
+					data: options,
 				} );
 			} catch ( error ) {
 				console.error( error?.message || error ); // eslint-disable-line no-console
@@ -161,6 +180,22 @@ const actions = {
 	},
 
 	/**
+	 * Sets the value for a setting.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string} setting The setting name.
+	 * @param {*}      value   The new value for the setting.
+	 * @return {Object} Action object.
+	 */
+	setSetting( setting, value ) {
+		return {
+			type: SET_SETTING,
+			payload: { setting, value },
+		};
+	},
+
+	/**
 	 * Sets the value for the deleteData setting.
 	 *
 	 * @since n.e.x.t
@@ -169,10 +204,7 @@ const actions = {
 	 * @return {Object} Action object.
 	 */
 	setDeleteData( deleteData ) {
-		return {
-			type: SET_DELETE_DATA,
-			payload: { deleteData },
-		};
+		return actions.setSetting( 'deleteData', deleteData );
 	},
 };
 
@@ -189,10 +221,25 @@ function reducer( state = initialState, action ) {
 	switch ( action.type ) {
 		case RECEIVE_SETTINGS: {
 			const { settings } = action.payload;
+			const pluginSettings = {};
+			const optionNameMap = {};
+			Object.keys( settings ).forEach( ( optionName ) => {
+				// Skip settings that are not part of the plugin.
+				if ( ! optionName.startsWith( PLUGIN_SETTINGS_PREFIX ) ) {
+					return;
+				}
+
+				const localName = camelCaseDash(
+					optionName.replace( PLUGIN_SETTINGS_PREFIX, '' )
+				);
+				pluginSettings[ localName ] = settings[ optionName ];
+				optionNameMap[ localName ] = optionName;
+			} );
 			return {
 				...state,
-				savedSettings: settings,
+				savedSettings: pluginSettings,
 				modifiedSettings: {},
+				optionNameMap,
 			};
 		}
 		case SAVE_SETTINGS_START: {
@@ -207,14 +254,14 @@ function reducer( state = initialState, action ) {
 				isSavingSettings: false,
 			};
 		}
-		case SET_DELETE_DATA: {
-			const { deleteData } = action.payload;
+		case SET_SETTING: {
+			const { setting, value } = action.payload;
 			return {
 				...state,
 				modifiedSettings: updateModifiedSettings(
 					state.modifiedSettings,
 					state.savedSettings,
-					{ deleteData }
+					{ [ setting ]: value }
 				),
 			};
 		}
@@ -280,10 +327,22 @@ const selectors = {
 		);
 	} ),
 
-	getDeleteData: createRegistrySelector( ( select ) => () => {
+	getSetting: createRegistrySelector( ( select ) => ( state, setting ) => {
 		const settings = select( STORE_NAME ).getSettings();
-		return settings?.deleteData;
+		return settings?.[ setting ];
 	} ),
+
+	getDeleteData: ( state ) => {
+		return selectors.getSetting( state, 'deleteData' );
+	},
+
+	isSettingModified: ( state, setting ) => {
+		return state.modifiedSettings[ setting ] !== undefined;
+	},
+
+	getOptionName: ( state, setting ) => {
+		return state.optionNameMap[ setting ];
+	},
 };
 
 const storeConfig = {

@@ -10,7 +10,7 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import camelCaseDash from '../utils/camel-case-dash';
+import camelCase from '../utils/camel-case';
 
 const PLUGIN_SETTINGS_PREFIX = 'wpsp_';
 
@@ -113,7 +113,7 @@ const actions = {
 				if ( ! optionName ) {
 					// eslint-disable-next-line no-console
 					console.error(
-						`Invalid setting ${ localName } that does not correspond to a WordPress option.`
+						`Setting ${ localName } does not correspond to a WordPress option.`
 					);
 					return;
 				}
@@ -229,7 +229,7 @@ function reducer( state = initialState, action ) {
 					return;
 				}
 
-				const localName = camelCaseDash(
+				const localName = camelCase(
 					optionName.replace( PLUGIN_SETTINGS_PREFIX, '' )
 				);
 				pluginSettings[ localName ] = settings[ optionName ];
@@ -256,6 +256,18 @@ function reducer( state = initialState, action ) {
 		}
 		case SET_SETTING: {
 			const { setting, value } = action.payload;
+			if ( state.savedSettings === undefined ) {
+				// eslint-disable-next-line no-console
+				console.error(
+					`Setting ${ setting } cannot be set before settings are loaded.`
+				);
+				return state;
+			}
+			if ( state.savedSettings[ setting ] === undefined ) {
+				// eslint-disable-next-line no-console
+				console.error( `Invalid setting ${ setting }.` );
+				return state;
+			}
 			return {
 				...state,
 				modifiedSettings: updateModifiedSettings(
@@ -329,7 +341,15 @@ const selectors = {
 
 	getSetting: createRegistrySelector( ( select ) => ( state, setting ) => {
 		const settings = select( STORE_NAME ).getSettings();
-		return settings?.[ setting ];
+		if ( settings === undefined ) {
+			return undefined;
+		}
+		if ( settings[ setting ] === undefined ) {
+			// eslint-disable-next-line no-console
+			console.error( `Invalid setting ${ setting }.` );
+			return undefined;
+		}
+		return settings[ setting ];
 	} ),
 
 	getDeleteData: ( state ) => {

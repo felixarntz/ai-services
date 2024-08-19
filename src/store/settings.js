@@ -10,7 +10,7 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import camelCaseDash from '../utils/camel-case-dash';
+import camelCase from '../utils/camel-case';
 
 const PLUGIN_SETTINGS_PREFIX = 'wpsp_';
 
@@ -229,7 +229,7 @@ function reducer( state = initialState, action ) {
 					return;
 				}
 
-				const localName = camelCaseDash(
+				const localName = camelCase(
 					optionName.replace( PLUGIN_SETTINGS_PREFIX, '' )
 				);
 				pluginSettings[ localName ] = settings[ optionName ];

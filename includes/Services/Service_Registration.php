@@ -94,9 +94,10 @@ final class Service_Registration {
 				$this->args['option_repository'],
 				$this->api_key_option_slug,
 				array(
-					'type'     => 'string',
-					'autoload' => true,
-					'default'  => '',
+					'type'         => 'string',
+					'default'      => '',
+					'show_in_rest' => true,
+					'autoload'     => true,
 				)
 			);
 		};

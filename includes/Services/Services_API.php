@@ -276,4 +276,26 @@ final class Services_API {
 	public function get_registered_service_slugs(): array {
 		return array_keys( $this->service_registrations );
 	}
+
+	/**
+	 * Gets the list of all available service slugs.
+	 *
+	 * For features where it is okay to use any service, this method can be used to get the available services.
+	 * Any of the service slugs can then be passed to the {@see Services_API::get_service()} method to get the service
+	 * instance and perform the desired operations.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string[] The list of available service slugs.
+	 */
+	public function get_available_service_slugs(): array {
+		return array_values(
+			array_filter(
+				$this->get_registered_service_slugs(),
+				function ( string $slug ): bool {
+					return $this->is_service_available( $slug );
+				}
+			)
+		);
+	}
 }

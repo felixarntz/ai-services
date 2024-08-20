@@ -90,11 +90,12 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param array<string, mixed> $model_params    The model parameters.
+	 * @param string               $model           The model slug.
+	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Generative_AI_Model The generative model.
 	 */
-	public function get_model( array $model_params, array $request_options = array() ): Generative_AI_Model {
-		return new Gemini_AI_Model( $this->api, $model_params, $request_options );
+	public function get_model( string $model, array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
+		return new Gemini_AI_Model( $this->api, $model, $model_params, $request_options );
 	}
 }

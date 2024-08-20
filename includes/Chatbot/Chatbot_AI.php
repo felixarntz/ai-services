@@ -58,10 +58,8 @@ class Chatbot_AI {
 	public function get_model(): Generative_AI_Model {
 		if ( null === $this->model ) {
 			$this->model = $this->ai->get_model(
-				array(
-					'model'              => 'gemini-1.5-flash',
-					'system_instruction' => $this->get_system_instruction(),
-				)
+				'gemini-1.5-flash',
+				array( 'system_instruction' => $this->get_system_instruction() )
 			);
 		}
 		return $this->model;

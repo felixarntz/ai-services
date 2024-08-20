@@ -77,25 +77,20 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	 * @since n.e.x.t
 	 *
 	 * @param Gemini_API_Client    $api             The Gemini API instance.
-	 * @param array<string, mixed> $model_params    The model parameters.
+	 * @param string               $model           The model slug.
+	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameter is missing.
 	 */
-	public function __construct( Gemini_API_Client $api, array $model_params, array $request_options = array() ) {
+	public function __construct( Gemini_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		$this->api             = $api;
 		$this->request_options = $request_options;
 
-		if ( ! isset( $model_params['model'] ) ) {
-			throw new InvalidArgumentException(
-				esc_html__( 'The model parameter is required.', 'wp-starter-plugin' )
-			);
-		}
-
-		if ( str_contains( $model_params['model'], '/' ) ) {
-			$this->model = $model_params['model'];
+		if ( str_contains( $model, '/' ) ) {
+			$this->model = $model;
 		} else {
-			$this->model = 'models/' . $model_params['model'];
+			$this->model = 'models/' . $model;
 		}
 
 		$this->generation_config = $model_params['generation_config'] ?? array();

@@ -40,9 +40,10 @@ interface Generative_AI_Service {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param array<string, mixed> $model_params    The model parameters.
+	 * @param string               $model           The model slug.
+	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Generative_AI_Model The generative model.
 	 */
-	public function get_model( array $model_params, array $request_options = array() ): Generative_AI_Model;
+	public function get_model( string $model, array $model_params = array(), array $request_options = array() ): Generative_AI_Model;
 }

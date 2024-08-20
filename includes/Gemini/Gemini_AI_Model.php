@@ -173,7 +173,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 
 		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the AI service is missing the "candidates" key.', 'wp-starter-plugin' )
+				esc_html__( 'The response from the Gemini API is missing the "candidates" key.', 'wp-starter-plugin' )
 			);
 		}
 

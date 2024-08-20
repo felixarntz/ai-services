@@ -8,6 +8,8 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
 
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+
 /**
  * Interface for a class representing a generative AI service which provides access to models.
  *
@@ -22,6 +24,8 @@ interface Generative_AI_Service {
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return string[] The available model slugs.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array;
 

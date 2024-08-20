@@ -12,6 +12,7 @@ use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
+use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 
 /**
@@ -62,10 +63,25 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return string[] The available model slugs.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		// TODO: Implement this.
-		return array();
+		$request  = $this->api->create_list_models_request();
+		$response = $this->api->make_request( $request );
+
+		if ( ! isset( $response['models'] ) || ! $response['models'] ) {
+			throw new Generative_AI_Exception(
+				esc_html__( 'The response from the Gemini API is missing the "models" key.', 'wp-starter-plugin' )
+			);
+		}
+
+		return array_map(
+			static function ( array $model ) {
+				return $model['baseModelId'];
+			},
+			$response['models']
+		);
 	}
 
 	/**

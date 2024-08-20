@@ -106,10 +106,16 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 			);
 		}
 
-		if ( ! $this->current_user->has_cap( 'wpsp_access_service', $request['slug'] ) ) {
+		/*
+		 * While it may seem intuitive to check for the singular 'wpsp_access_service' capability here, this is not the
+		 * right place to do so as this endpoint is purely for informational purposes.
+		 * For example, the value of 'is_available' field includes the result of the 'wpsp_access_service' check, among
+		 * other conditions.
+		 */
+		if ( ! $this->current_user->has_cap( 'wpsp_access_services' ) ) {
 			throw REST_Exception::create(
 				'rest_cannot_view',
-				esc_html__( 'Sorry, you are not allowed to access this service.', 'wp-starter-plugin' ),
+				esc_html__( 'Sorry, you are not allowed to access services.', 'wp-starter-plugin' ),
 				$this->current_user->is_logged_in() ? 403 : 401
 			);
 		}

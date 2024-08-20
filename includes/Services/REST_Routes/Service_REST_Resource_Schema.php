@@ -95,6 +95,15 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'available_models'   => array(
+					'description' => __( 'List of the available model slugs (empty if the service is not available).', 'wp-starter-plugin' ),
+					'type'        => 'array',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+					'items'       => array(
+						'type' => 'string',
+					),
+				),
 				'has_forced_api_key' => array(
 					'description' => __( 'Whether the service API key is force-set (i.e. not modifiable by changing the option value).', 'wp-starter-plugin' ),
 					'type'        => 'boolean',

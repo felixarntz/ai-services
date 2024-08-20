@@ -13,6 +13,7 @@ use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\Service_Request_Cache;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
@@ -155,6 +156,14 @@ final class Services_API {
 		if ( ! $this->option_encrypter->has_encryption( $option_slug ) ) {
 			$this->option_encrypter->add_encryption_hooks( $option_slug );
 		}
+
+		// Ensure any service request caches are invalidated when the API key changes.
+		$invalid_service_caches = static function () use ( $slug ) {
+			Service_Request_Cache::invalidate_caches( $slug );
+		};
+		add_action( "add_option_{$option_slug}", $invalid_service_caches );
+		add_action( "update_option_{$option_slug}", $invalid_service_caches );
+		add_action( "delete_option_{$option_slug}", $invalid_service_caches );
 	}
 
 	/**
@@ -209,7 +218,7 @@ final class Services_API {
 		// Test whether the API key is valid by listing the models.
 		$instance = $this->service_registrations[ $slug ]->create_instance();
 		try {
-			$instance->list_models();
+			Service_Request_Cache::wrap_transient( $slug, array( $instance, 'list_models' ) );
 		} catch ( Generative_AI_Exception $e ) {
 			return false;
 		}

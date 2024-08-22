@@ -22,13 +22,13 @@ use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
 interface Generative_AI_Model {
 
 	/**
-	 * Gets the model name.
+	 * Gets the model slug.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return string The model name.
+	 * @return string The model slug.
 	 */
-	public function get_model_name(): string;
+	public function get_model_slug(): string;
 
 	/**
 	 * Generates content using the model.

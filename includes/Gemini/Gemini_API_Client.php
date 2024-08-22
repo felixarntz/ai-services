@@ -136,7 +136,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string               $model           The model name.
+	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $params          The request parameters.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Request The request instance.

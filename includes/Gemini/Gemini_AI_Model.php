@@ -32,7 +32,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	private $api;
 
 	/**
-	 * The model name.
+	 * The model slug.
 	 *
 	 * @since n.e.x.t
 	 * @var string
@@ -116,13 +116,13 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	}
 
 	/**
-	 * Gets the model name.
+	 * Gets the model slug.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return string The model name.
+	 * @return string The model slug.
 	 */
-	public function get_model_name(): string {
+	public function get_model_slug(): string {
 		if ( str_starts_with( $this->model, 'models/' ) ) {
 			return substr( $this->model, 7 );
 		}

@@ -11,6 +11,7 @@ namespace Vendor_NS\WP_Starter_Plugin\Services;
 use Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page;
 use Vendor_NS\WP_Starter_Plugin\Services\Dependencies\Services_Script_Style_Loader;
 use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
+use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Generate_Content_REST_Route;
 use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Get_REST_Route;
 use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_List_REST_Route;
 use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_REST_Resource_Schema;
@@ -233,6 +234,7 @@ final class Services_Service_Container_Builder {
 				array(
 					new Service_List_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
 					new Service_Get_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
+					new Service_Generate_Content_REST_Route( $cont['api'], $cont['current_user'] ),
 				)
 			);
 		};

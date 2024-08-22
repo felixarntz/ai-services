@@ -62,6 +62,40 @@ final class Candidate implements Arrayable {
 	}
 
 	/**
+	 * Gets a field value from the additional data.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $field The field name.
+	 * @return mixed|null The field value, or null if not found.
+	 */
+	public function get_field_value( string $field ) {
+		if ( isset( $this->additional_data[ $field ] ) ) {
+			return $this->additional_data[ $field ];
+		}
+
+		if ( str_contains( $field, '_' ) ) {
+			$camel_case_field = $this->underscore_to_camel_case( $field );
+			if ( isset( $this->additional_data[ $camel_case_field ] ) ) {
+				return $this->additional_data[ $camel_case_field ];
+			}
+		}
+
+		/*
+		 * A few common special cases.
+		 * For instance, "finish_reason" is sometimes called "stop_reason".
+		 */
+		switch ( $field ) {
+			case 'finish_reason':
+				return $this->get_field_value( 'stop_reason' );
+			case 'finishReason':
+				return $this->get_field_value( 'stopReason' );
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets the additional data.
 	 *
 	 * @since n.e.x.t
@@ -115,5 +149,17 @@ final class Candidate implements Arrayable {
 		unset( $data['content'] );
 
 		return new Candidate( $content, $data );
+	}
+
+	/**
+	 * Transforms a snake_case string to camelCase.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $input The snake_case string.
+	 * @return string The camelCase string.
+	 */
+	private function underscore_to_camel_case( string $input ): string {
+		return lcfirst( str_replace( '_', '', ucwords( $input, '_' ) ) );
 	}
 }

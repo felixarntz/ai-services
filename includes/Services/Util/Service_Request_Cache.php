@@ -8,6 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Services\Util;
 
+use Exception;
 use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
@@ -27,6 +28,9 @@ final class Service_Request_Cache {
 	 * includes a timestamp of when the service configuration was last changed, so that the cache is invalidated as
 	 * needed.
 	 *
+	 * If the method throws an exception, the exception is cached as well, so that it can be rethrown on subsequent
+	 * calls.
+	 *
 	 * The transient is stored for 24 hours.
 	 *
 	 * @since n.e.x.t
@@ -35,6 +39,8 @@ final class Service_Request_Cache {
 	 * @param callable $method       Method to cache.
 	 * @param mixed[]  $args         Optional. Method arguments. Default empty array.
 	 * @return mixed Method return value, potentially served from cache.
+	 *
+	 * @throws Exception Rethrown original exception from the method call, if there was one.
 	 */
 	public static function wrap_transient( string $service_slug, callable $method, array $args = array() ) {
 		$key          = self::get_cache_key( $method, $args );
@@ -44,8 +50,13 @@ final class Service_Request_Cache {
 
 		$value = get_transient( $transient_name );
 		if ( false === $value ) {
-			$value = call_user_func_array( $method, $args );
-			set_transient( $transient_name, $value, DAY_IN_SECONDS );
+			$value = self::call_method( $method, $args );
+			set_transient( $transient_name, self::sanitize_value_for_cache( $value ), DAY_IN_SECONDS );
+		} else {
+			$value = self::parse_value_from_cache( $value );
+		}
+		if ( $value instanceof Exception ) {
+			throw $value;
 		}
 		return $value;
 	}
@@ -59,6 +70,9 @@ final class Service_Request_Cache {
 	 *
 	 * The service slug is used as the cache group.
 	 *
+	 * If the method throws an exception, the exception is cached as well, so that it can be rethrown on subsequent
+	 * calls.
+	 *
 	 * The cached value is stored for 24 hours.
 	 *
 	 * @since n.e.x.t
@@ -67,6 +81,8 @@ final class Service_Request_Cache {
 	 * @param callable $method       Method to cache.
 	 * @param mixed[]  $args         Optional. Method arguments. Default empty array.
 	 * @return mixed Method return value, potentially served from cache.
+	 *
+	 * @throws Exception Rethrown original exception from the method call, if there was one.
 	 */
 	public static function wrap_cache( string $service_slug, callable $method, array $args = array() ) {
 		$key          = self::get_cache_key( $method, $args );
@@ -76,8 +92,13 @@ final class Service_Request_Cache {
 
 		$value = wp_cache_get( $cache_name, $service_slug );
 		if ( false === $value ) {
-			$value = call_user_func_array( $method, $args );
-			wp_cache_set( $cache_name, $value, $service_slug, DAY_IN_SECONDS );
+			$value = self::call_method( $method, $args );
+			wp_cache_set( $cache_name, self::sanitize_value_for_cache( $value ), $service_slug, DAY_IN_SECONDS );
+		} else {
+			$value = self::parse_value_from_cache( $value );
+		}
+		if ( $value instanceof Exception ) {
+			throw $value;
 		}
 		return $value;
 	}
@@ -103,6 +124,67 @@ final class Service_Request_Cache {
 		) {
 			wp_cache_flush_group( $service_slug );
 		}
+	}
+
+	/**
+	 * Calls the given method with the given arguments, catching any exceptions that are thrown.
+	 *
+	 * If an exception is thrown, it will be returned instead of the method's return value.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param callable $method Method to call.
+	 * @param mixed[]  $args   Method arguments.
+	 * @return mixed Method return value or exception.
+	 */
+	private static function call_method( callable $method, array $args ) {
+		try {
+			return call_user_func_array( $method, $args );
+		} catch ( Exception $e ) {
+			return $e;
+		}
+	}
+
+	/**
+	 * Sanitizes the given value to be stored in the cache.
+	 *
+	 * If the value is an exception, it is converted to an array with the exception class name and message.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param mixed $value Value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	private static function sanitize_value_for_cache( $value ) {
+		if ( is_object( $value ) && $value instanceof Exception ) {
+			return array(
+				'classname' => get_class( $value ),
+				'message'   => $value->getMessage(),
+			);
+		}
+		return $value;
+	}
+
+	/**
+	 * Parses the given value from the cache.
+	 *
+	 * This converts any sanitized exceptions back to their original exception form.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param mixed $value Value from the cache.
+	 * @return mixed Parsed value.
+	 */
+	private static function parse_value_from_cache( $value ) {
+		if ( is_array( $value ) && isset( $value['classname'], $value['message'] ) ) {
+			$class = $value['classname'];
+			if ( ! class_exists( $class ) ) { // This should never be true, but a reasonable safeguard.
+				$class = Exception::class;
+			}
+			$message = $value['message'];
+			return new $class( $message );
+		}
+		return $value;
 	}
 
 	/**

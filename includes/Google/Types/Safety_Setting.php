@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Gemini\Types\Safety_Setting
+ * Class Vendor_NS\WP_Starter_Plugin\Google\Types\Safety_Setting
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Gemini\Types;
+namespace Vendor_NS\WP_Starter_Plugin\Google\Types;
 
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 

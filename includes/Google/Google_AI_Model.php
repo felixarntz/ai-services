@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Model
+ * Class Vendor_NS\WP_Starter_Plugin\Google\Google_AI_Model
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Gemini;
+namespace Vendor_NS\WP_Starter_Plugin\Google;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Gemini\Types\Safety_Setting;
+use Vendor_NS\WP_Starter_Plugin\Google\Types\Safety_Setting;
 use Vendor_NS\WP_Starter_Plugin\Services\Abstract_Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
@@ -17,17 +17,17 @@ use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 
 /**
- * Class representing a Gemini AI model.
+ * Class representing a Google AI model.
  *
  * @since n.e.x.t
  */
-class Gemini_AI_Model extends Abstract_Generative_AI_Model {
+class Google_AI_Model extends Abstract_Generative_AI_Model {
 
 	/**
-	 * The Gemini API instance.
+	 * The Google AI API instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Gemini_API_Client
+	 * @var Google_AI_API_Client
 	 */
 	private $api;
 
@@ -76,14 +76,14 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Gemini_API_Client    $api             The Gemini API instance.
+	 * @param Google_AI_API_Client $api             The Google AI API instance.
 	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameter is missing.
 	 */
-	public function __construct( Gemini_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
+	public function __construct( Google_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		$this->api             = $api;
 		$this->request_options = $request_options;
 
@@ -173,7 +173,7 @@ class Gemini_AI_Model extends Abstract_Generative_AI_Model {
 
 		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the Gemini API is missing the "candidates" key.', 'wp-starter-plugin' )
+				esc_html__( 'The response from the Google AI API is missing the "candidates" key.', 'wp-starter-plugin' )
 			);
 		}
 

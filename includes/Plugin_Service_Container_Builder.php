@@ -96,7 +96,7 @@ final class Plugin_Service_Container_Builder {
 			);
 		};
 		$this->container['chatbot_ai']     = static function () {
-			return new Chatbot_AI( Services_API_Instance::get()->get_service( 'gemini' ) );
+			return new Chatbot_AI( Services_API_Instance::get()->get_service( 'google' ) );
 		};
 		$this->container['chatbot']        = static function ( $cont ) {
 			return new Chatbot(

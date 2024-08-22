@@ -11,7 +11,7 @@ namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
 
 /**
- * Class responsible for loading the Gemini AI-powered chatbot.
+ * Class responsible for loading the Google AI-powered chatbot.
  *
  * @since n.e.x.t
  */
@@ -44,7 +44,7 @@ class Chatbot_Loader {
 	 * @return bool True if the chatbot can be loaded, false otherwise.
 	 */
 	public function can_load(): bool {
-		return $this->services_api->is_service_available( 'gemini' );
+		return $this->services_api->is_service_available( 'google' );
 	}
 
 	/**

@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_API_Client
+ * Class Vendor_NS\WP_Starter_Plugin\Google\Google_AI_API_Client
  *
  * @since n.e.x.t
  * @package wp-starter-plugin
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Gemini;
+namespace Vendor_NS\WP_Starter_Plugin\Google;
 
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
@@ -17,17 +17,17 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
 
 /**
- * Class to interact directly with the Gemini API.
+ * Class to interact directly with the Google Generative Language API.
  *
  * @since n.e.x.t
  */
-class Gemini_API_Client implements Generative_AI_API_Client {
+class Google_AI_API_Client implements Generative_AI_API_Client {
 
 	const DEFAULT_BASE_URL    = 'https://generativelanguage.googleapis.com';
 	const DEFAULT_API_VERSION = 'v1beta';
 
 	/**
-	 * The Gemini API key.
+	 * The Google Generative Language API key.
 	 *
 	 * @since n.e.x.t
 	 * @var string
@@ -73,7 +73,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: original error message */
-						__( 'Error while making request to the Gemini API: %s ', 'wp-starter-plugin' ),
+						__( 'Error while making request to the Google Generative Language API: %s ', 'wp-starter-plugin' ),
 						$e->getMessage()
 					)
 				)
@@ -95,7 +95,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: error message */
-						__( 'Error while making request to the Gemini API: %s ', 'wp-starter-plugin' ),
+						__( 'Error while making request to the Google Generative Language API: %s ', 'wp-starter-plugin' ),
 						$error_message
 					)
 				)
@@ -108,7 +108,7 @@ class Gemini_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: error message */
-						__( 'Error while making request to the Gemini API: %s ', 'wp-starter-plugin' ),
+						__( 'Error while making request to the Google Generative Language API: %s ', 'wp-starter-plugin' ),
 						__( 'JSON response could not be decoded.', 'wp-starter-plugin' )
 					)
 				)

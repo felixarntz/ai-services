@@ -8,7 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin;
 
-use Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service;
+use Vendor_NS\WP_Starter_Plugin\Google\Google_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_Loader;
@@ -200,12 +200,12 @@ class Plugin_Main implements With_Hooks {
 	 */
 	private function register_default_services(): void {
 		$this->services_api->register_service(
-			'gemini',
+			'google',
 			static function ( string $api_key, HTTP $http ) {
-				return new Gemini_AI_Service( $api_key, $http );
+				return new Google_AI_Service( $api_key, $http );
 			},
 			array(
-				'name'           => 'Gemini (Google)',
+				'name'           => 'Google (Gemini)',
 				'allow_override' => false,
 			)
 		);

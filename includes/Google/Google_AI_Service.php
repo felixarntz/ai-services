@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Gemini\Gemini_AI_Service
+ * Class Vendor_NS\WP_Starter_Plugin\Google\Google_AI_Service
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Gemini;
+namespace Vendor_NS\WP_Starter_Plugin\Google;
 
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
@@ -16,17 +16,17 @@ use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 
 /**
- * Class for the Gemini AI service.
+ * Class for the Google AI service.
  *
  * @since n.e.x.t
  */
-class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
+class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 
 	/**
-	 * The Gemini API instance.
+	 * The Google AI API instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Gemini_API_Client
+	 * @var Google_AI_API_Client
 	 */
 	private $api;
 
@@ -42,7 +42,7 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 		if ( ! $http ) {
 			$http = new HTTP();
 		}
-		$this->api = new Gemini_API_Client( $api_key, $http );
+		$this->api = new Google_AI_API_Client( $api_key, $http );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 	 * @return string The service slug.
 	 */
 	public function get_service_slug(): string {
-		return 'gemini';
+		return 'google';
 	}
 
 	/**
@@ -83,7 +83,7 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 
 		if ( ! isset( $response['models'] ) || ! $response['models'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the Gemini API is missing the "models" key.', 'wp-starter-plugin' )
+				esc_html__( 'The response from the Google AI API is missing the "models" key.', 'wp-starter-plugin' )
 			);
 		}
 
@@ -106,6 +106,6 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 	 * @return Generative_AI_Model The generative model.
 	 */
 	public function get_model( string $model, array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
-		return new Gemini_AI_Model( $this->api, $model, $model_params, $request_options );
+		return new Google_AI_Model( $this->api, $model, $model_params, $request_options );
 	}
 }

@@ -231,6 +231,84 @@ final class Services_API {
 	}
 
 	/**
+	 * Checks whether any services are available.
+	 *
+	 * For some use-cases it may be acceptable to use any AI service. In those cases, this method can be used to check
+	 * whether any services are available. If so, an arbitrary available service can be retrieved using the
+	 * {@see Services_API::get_service()} method.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string[] $slugs Optional. The list of service slugs to check for availability. If empty, all registered
+	 *                        services will be checked. Default empty array.
+	 * @return bool True if any of the services are available, false otherwise.
+	 */
+	public function has_available_services( array $slugs = array() ): bool {
+		if ( count( $slugs ) === 0 ) {
+			$slugs = $this->get_registered_service_slugs();
+		}
+		foreach ( $slugs as $slug ) {
+			if ( $this->is_service_available( $slug ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Gets a generative AI service instance.
+	 *
+	 * If you intend to call this method with a specific service slug, you should first check whether the service is
+	 * available using {@see Services_API::is_service_available()}.
+	 *
+	 * If you intend to call this method without a service slug or a list of multiple slugs, you should first check
+	 * if any of the services are available using {@see Services_API::has_available_services()}.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|string[] $slugs Optional. The service slug to get, or an array of service slugs to get the first
+	 *                               available service from. If empty, any available service will be returned. Default
+	 *                               empty array.
+	 * @return Generative_AI_Service The service instance.
+	 *
+	 * @throws InvalidArgumentException Thrown if no service corresponding to the given list is registered or available.
+	 */
+	public function get_service( $slugs = array() ): Generative_AI_Service {
+		// Normalize the parameter to an array of slugs and populate with defaults if necessary.
+		if ( is_string( $slugs ) && '' !== $slugs ) {
+			$slugs = array( $slugs );
+		} elseif ( ! is_array( $slugs ) || count( $slugs ) === 0 ) {
+			$slugs = $this->get_registered_service_slugs();
+		}
+
+		foreach ( $slugs as $slug ) {
+			if ( $this->is_service_available( $slug ) ) {
+				return $this->service_instances[ $slug ];
+			}
+		}
+
+		// If no available service instance was found, throw an exception.
+		if ( count( $slugs ) > 1 ) {
+			$message = sprintf(
+				/* translators: %s: Comma-separated list of service slugs */
+				__( 'None of the services is registered or available: %s', 'wp-starter-plugin' ),
+				implode(
+					_x( ', ', 'Used between list items, there is a space after the comma.', 'wp-starter-plugin' ),
+					$slugs
+				)
+			);
+		} else {
+			$message = sprintf(
+				/* translators: %s: The service slug. */
+				__( 'Service %s is either not registered or not available.', 'wp-starter-plugin' ),
+				$slugs[0]
+			);
+		}
+
+		throw new InvalidArgumentException( esc_html( $message ) );
+	}
+
+	/**
 	 * Gets the service name.
 	 *
 	 * @since n.e.x.t
@@ -247,35 +325,6 @@ final class Services_API {
 	}
 
 	/**
-	 * Gets a generative AI service instance.
-	 *
-	 * Before calling this method, you should check whether the service is available using
-	 * {@see Services_API::is_service_available()}.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param string $slug The service slug.
-	 * @return Generative_AI_Service The service instance.
-	 *
-	 * @throws InvalidArgumentException Thrown if the service is either not registered or not available.
-	 */
-	public function get_service( string $slug ): Generative_AI_Service {
-		if ( ! isset( $this->service_instances[ $slug ] ) ) {
-			throw new InvalidArgumentException(
-				esc_html(
-					sprintf(
-						/* translators: %s: The service slug. */
-						esc_html__( 'Service %s is either not registered or not available.', 'wp-starter-plugin' ),
-						$slug
-					)
-				)
-			);
-		}
-
-		return $this->service_instances[ $slug ];
-	}
-
-	/**
 	 * Gets the list of all registered service slugs.
 	 *
 	 * @since n.e.x.t
@@ -284,27 +333,5 @@ final class Services_API {
 	 */
 	public function get_registered_service_slugs(): array {
 		return array_keys( $this->service_registrations );
-	}
-
-	/**
-	 * Gets the list of all available service slugs.
-	 *
-	 * For features where it is okay to use any service, this method can be used to get the available services.
-	 * Any of the service slugs can then be passed to the {@see Services_API::get_service()} method to get the service
-	 * instance and perform the desired operations.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @return string[] The list of available service slugs.
-	 */
-	public function get_available_service_slugs(): array {
-		return array_values(
-			array_filter(
-				$this->get_registered_service_slugs(),
-				function ( string $slug ): bool {
-					return $this->is_service_available( $slug );
-				}
-			)
-		);
 	}
 }

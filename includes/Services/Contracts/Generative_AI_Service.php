@@ -18,6 +18,15 @@ use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 interface Generative_AI_Service {
 
 	/**
+	 * Gets the service slug.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The service slug.
+	 */
+	public function get_service_slug(): string;
+
+	/**
 	 * Lists the available generative model slugs.
 	 *
 	 * @since n.e.x.t
@@ -28,16 +37,6 @@ interface Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array;
-
-	/**
-	 * Checks if the generative model with the provided slug exists.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param string $model The model slug.
-	 * @return bool True if the model exists, false otherwise.
-	 */
-	public function has_model( string $model ): bool;
 
 	/**
 	 * Gets a generative model instance for the provided model parameters.

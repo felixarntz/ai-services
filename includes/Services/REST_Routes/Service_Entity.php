@@ -10,7 +10,6 @@ namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
 
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\Service_Request_Cache;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Contracts\Entity;
 
 /**
@@ -131,7 +130,7 @@ class Service_Entity implements Entity {
 
 		$service = $this->services_api->get_service( $this->slug );
 		try {
-			return Service_Request_Cache::wrap_transient( $this->slug, array( $service, 'list_models' ) );
+			return $service->list_models();
 		} catch ( Generative_AI_Exception $e ) {
 			return array();
 		}

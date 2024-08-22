@@ -10,7 +10,10 @@ namespace Vendor_NS\WP_Starter_Plugin\Services;
 
 use InvalidArgumentException;
 use RuntimeException;
+use Vendor_NS\WP_Starter_Plugin\Services\Cache\Cached_AI_Service;
+use Vendor_NS\WP_Starter_Plugin\Services\Cache\Cached_AI_Service_With_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
@@ -172,6 +175,25 @@ final class Service_Registration {
 					)
 				)
 			);
+		}
+		if ( $instance->get_service_slug() !== $this->slug ) {
+			throw new RuntimeException(
+				esc_html(
+					sprintf(
+						/* translators: 1: service slug registered, 2: service slug returned by the class */
+						__( 'The service creator for %1$s must return an instance of Generative_AI_Service with the same slug, but instead it returned another slug %2$s.', 'wp-starter-plugin' ),
+						$this->slug,
+						$instance->get_service_slug()
+					)
+				)
+			);
+		}
+
+		// Wrap the instance in a cache decorator.
+		if ( $instance instanceof With_API_Client ) {
+			$instance = new Cached_AI_Service_With_API_Client( $instance );
+		} else {
+			$instance = new Cached_AI_Service( $instance );
 		}
 
 		return $instance;

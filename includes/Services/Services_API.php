@@ -9,11 +9,11 @@
 namespace Vendor_NS\WP_Starter_Plugin\Services;
 
 use InvalidArgumentException;
+use Vendor_NS\WP_Starter_Plugin\Services\Cache\Service_Request_Cache;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\Service_Request_Cache;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
@@ -110,22 +110,33 @@ final class Services_API {
 	/**
 	 * Registers a generative AI service.
 	 *
+	 * An AI service consists at least of a service class that implements the Generative_AI_Service interface and a
+	 * model class that implements the Generative_AI_Model interface. Optionally, the service class can implement the
+	 * With_API_Client interface, if the service uses an API client class. Doing so benefits performance, as it allows
+	 * the infrastructure to perform batch requests across multiple services.
+	 *
+	 * Consumers of the service will access the service class through a proxy wrapper class which automatically handles
+	 * caching and other infrastructure concerns. It is therefore advised to not implement any caching concerns in the
+	 * service class itself as well as to not implement any public methods other than those required by the relevant
+	 * interfaces.
+	 *
+	 * The $creator parameter of this method needs to return the instance of the service class.
+	 *
 	 * @since n.e.x.t
 	 *
 	 * @see Generative_AI_Service
 	 * @see With_API_Client
 	 *
-	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
+	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens. It
+	 *                                      must be unique and must match the service slug returned by the service class.
 	 * @param callable             $creator The service creator. Receives the API key (string) as first parameter, the
 	 *                                      HTTP instance as second parameter, and must return a Generative_AI_Service
-	 *                                      instance. Optionally, the class can implement the With_API_Client
-	 *                                      interface, if the service uses an API client class. Doing so benefits
-	 *                                      performance, as it allows the infrastructure to perform batch requests
-	 *                                      across multiple services.
+	 *                                      instance.
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
-	 *     @type string $name           The service name. Default is the slug with spaces and uppercase first letters.
+	 *     @type string $name           The user-facing service name. Default is the slug with spaces and uppercase
+	 *                                  first letters.
 	 *     @type bool   $allow_override Whether the service can be overridden by another service with the same slug.
 	 *                                  Default true.
 	 * }
@@ -218,7 +229,7 @@ final class Services_API {
 		// Test whether the API key is valid by listing the models.
 		$instance = $this->service_registrations[ $slug ]->create_instance();
 		try {
-			Service_Request_Cache::wrap_transient( $slug, array( $instance, 'list_models' ) );
+			$instance->list_models();
 		} catch ( Generative_AI_Exception $e ) {
 			return false;
 		}

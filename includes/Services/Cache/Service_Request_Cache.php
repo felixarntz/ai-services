@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Util\Service_Request_Cache
+ * Class Vendor_NS\WP_Starter_Plugin\Services\Cache\Service_Request_Cache
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Util;
+namespace Vendor_NS\WP_Starter_Plugin\Services\Cache;
 
 use Exception;
 use InvalidArgumentException;

@@ -46,6 +46,17 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
+	 * Gets the service slug.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The service slug.
+	 */
+	public function get_service_slug(): string {
+		return 'gemini';
+	}
+
+	/**
 	 * Gets the API client instance.
 	 *
 	 * @since n.e.x.t
@@ -82,23 +93,6 @@ class Gemini_AI_Service implements Generative_AI_Service, With_API_Client {
 			},
 			$response['models']
 		);
-	}
-
-	/**
-	 * Checks if the generative model with the provided slug exists.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param string $model The model slug.
-	 * @return bool True if the model exists, false otherwise.
-	 */
-	public function has_model( string $model ): bool {
-		if ( ! str_contains( $model, '/' ) ) {
-			$model = 'models/' . $model;
-		}
-
-		// TODO: Implement this.
-		return false;
 	}
 
 	/**

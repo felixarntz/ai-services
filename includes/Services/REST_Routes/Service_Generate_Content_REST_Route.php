@@ -239,6 +239,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					array(
 						'description' => __( 'Array of contents, including history from previous user prompts and their model answers.', 'wp-starter-plugin' ),
 						'type'        => 'array',
+						'minItems'    => 1,
 						'items'       => $this->get_content_schema( array( Content::ROLE_USER, Content::ROLE_MODEL ) ),
 					),
 				),
@@ -304,8 +305,9 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 */
 	private function get_parts_schema(): array {
 		return array(
-			'type'  => 'array',
-			'items' => array(
+			'type'     => 'array',
+			'minItems' => 1,
+			'items'    => array(
 				'type'  => 'object',
 				'oneOf' => array(
 					array(

@@ -35,7 +35,6 @@ abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 	 * @return Candidates The response candidates with generated content - usually just one.
 	 *
 	 * @throws InvalidArgumentException Thrown if the given content is invalid.
-	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	final public function generate_content( $content, array $request_options = array() ): Candidates {
 		if ( is_array( $content ) ) {
@@ -45,6 +44,12 @@ abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 			);
 		} else {
 			$contents = array( Formatter::format_new_content( $content ) );
+		}
+
+		if ( Content::ROLE_USER !== $contents[0]->get_role() ) {
+			throw new InvalidArgumentException(
+				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'wp-starter-plugin' )
+			);
 		}
 
 		return $this->send_generate_content_request( $contents, $request_options );

@@ -145,7 +145,6 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		}
 
 		try {
-			// TODO: Allow processing model_params, e.g. to parse data into classes where applicable.
 			$model = $service->get_model( $model, $request['model_params'] ?? array() );
 		} catch ( Generative_AI_Exception $e ) {
 			throw REST_Exception::create(

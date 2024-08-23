@@ -8,6 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Google\Types;
 
+use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**
@@ -90,5 +91,23 @@ class Safety_Setting implements Arrayable {
 			'category'  => $this->category,
 			'threshold' => $this->threshold,
 		);
+	}
+
+	/**
+	 * Creates a Safety_Setting instance from an array of content data.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $data The content data.
+	 * @return Safety_Setting Safety_Setting instance.
+	 *
+	 * @throws InvalidArgumentException Thrown if the data is missing required fields.
+	 */
+	public static function from_array( array $data ): Safety_Setting {
+		if ( ! isset( $data['category'], $data['threshold'] ) ) {
+			throw new InvalidArgumentException( 'Safety_Setting data must contain category and threshold.' );
+		}
+
+		return new Safety_Setting( $data['category'], $data['threshold'] );
 	}
 }

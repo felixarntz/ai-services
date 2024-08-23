@@ -96,8 +96,10 @@ class Google_AI_Model extends Abstract_Generative_AI_Model {
 		$this->generation_config = $model_params['generation_config'] ?? array();
 
 		if ( isset( $model_params['safety_settings'] ) ) {
-			foreach ( $model_params['safety_settings'] as $safety_setting ) {
-				if ( ! $safety_setting instanceof Safety_Setting ) {
+			foreach ( $model_params['safety_settings'] as $index => $safety_setting ) {
+				if ( is_array( $safety_setting ) ) {
+					$model_params['safety_settings'][ $index ] = Safety_Setting::from_array( $safety_setting );
+				} elseif ( ! $safety_setting instanceof Safety_Setting ) {
 					throw new InvalidArgumentException(
 						esc_html__( 'The safety_settings parameter must contain Safety_Setting instances.', 'wp-starter-plugin' )
 					);

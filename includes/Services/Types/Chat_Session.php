@@ -122,21 +122,9 @@ final class Chat_Session {
 				);
 			}
 
-			if ( $first && 'user' !== $content->get_role() ) {
+			if ( $first && Content::ROLE_USER !== $content->get_role() ) {
 				throw new InvalidArgumentException(
 					esc_html__( 'The first Content instance in the history must be user content.', 'wp-starter-plugin' )
-				);
-			}
-
-			if ( ! $this->is_valid_role( $content->get_role() ) ) {
-				throw new InvalidArgumentException(
-					esc_html(
-						sprintf(
-							/* translators: %s: invalid role encountered */
-							__( 'The role %s is invalid.', 'wp-starter-plugin' ),
-							$content->get_role()
-						)
-					)
 				);
 			}
 
@@ -148,17 +136,5 @@ final class Chat_Session {
 
 			$first = false;
 		}
-	}
-
-	/**
-	 * Checks if the given role is valid.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param string $role The role to check.
-	 * @return bool True if the role is valid, false otherwise.
-	 */
-	private function is_valid_role( string $role ): bool {
-		return in_array( $role, array( 'user', 'model', 'function', 'system' ), true );
 	}
 }

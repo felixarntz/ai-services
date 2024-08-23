@@ -51,8 +51,33 @@ class Safety_Setting implements Arrayable {
 	 *
 	 * @param string $category  The safety setting category.
 	 * @param string $threshold The safety setting threshold.
+	 *
+	 * @throws InvalidArgumentException Thrown if the given category or threshold is invalid.
 	 */
 	public function __construct( string $category, string $threshold ) {
+		if ( ! $this->is_valid_category( $category ) ) {
+			throw new InvalidArgumentException(
+				esc_html(
+					sprintf(
+						/* translators: %s: invalid category encountered */
+						__( 'The category %s is invalid.', 'wp-starter-plugin' ),
+						$category
+					)
+				)
+			);
+		}
+		if ( ! $this->is_valid_threshold( $threshold ) ) {
+			throw new InvalidArgumentException(
+				esc_html(
+					sprintf(
+						/* translators: %s: invalid threshold encountered */
+						__( 'The threshold %s is invalid.', 'wp-starter-plugin' ),
+						$threshold
+					)
+				)
+			);
+		}
+
 		$this->category  = $category;
 		$this->threshold = $threshold;
 	}
@@ -109,5 +134,47 @@ class Safety_Setting implements Arrayable {
 		}
 
 		return new Safety_Setting( $data['category'], $data['threshold'] );
+	}
+
+	/**
+	 * Checks if the given category is valid.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $category The category to check.
+	 * @return bool True if the category is valid, false otherwise.
+	 */
+	private function is_valid_category( string $category ): bool {
+		return in_array(
+			$category,
+			array(
+				self::HARM_CATEGORY_HATE_SPEECH,
+				self::HARM_CATEGORY_SEXUALLY_EXPLICIT,
+				self::HARM_CATEGORY_HARASSMENT,
+				self::HARM_CATEGORY_DANGEROUS_CONTENT,
+			),
+			true
+		);
+	}
+
+	/**
+	 * Checks if the given threshold is valid.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $threshold The threshold to check.
+	 * @return bool True if the threshold is valid, false otherwise.
+	 */
+	private function is_valid_threshold( string $threshold ): bool {
+		return in_array(
+			$threshold,
+			array(
+				self::BLOCK_LOW_AND_ABOVE,
+				self::BLOCK_MEDIUM_AND_ABOVE,
+				self::BLOCK_ONLY_HIGH,
+				self::BLOCK_NONE,
+			),
+			true
+		);
 	}
 }

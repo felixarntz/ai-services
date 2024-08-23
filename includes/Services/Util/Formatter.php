@@ -28,7 +28,7 @@ final class Formatter {
 	 * @return Content The formatted new content.
 	 */
 	public static function format_new_content( $content ): Content {
-		return self::format_content( $content, 'user' );
+		return self::format_content( $content, Content::ROLE_USER );
 	}
 
 	/**
@@ -40,7 +40,7 @@ final class Formatter {
 	 * @return Content The formatted system instruction.
 	 */
 	public static function format_system_instruction( $input ): Content {
-		return self::format_content( $input, 'system' );
+		return self::format_content( $input, Content::ROLE_SYSTEM );
 	}
 
 	/**

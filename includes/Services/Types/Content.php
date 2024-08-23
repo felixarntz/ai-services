@@ -18,6 +18,10 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Gener
  */
 final class Content implements Arrayable {
 
+	const ROLE_USER   = 'user';
+	const ROLE_MODEL  = 'model';
+	const ROLE_SYSTEM = 'system';
+
 	/**
 	 * The role of the content.
 	 *
@@ -41,8 +45,22 @@ final class Content implements Arrayable {
 	 *
 	 * @param string $role  The role of the content.
 	 * @param Parts  $parts The parts of the content.
+	 *
+	 * @throws InvalidArgumentException Thrown if the given role is invalid.
 	 */
 	public function __construct( string $role, Parts $parts ) {
+		if ( ! $this->is_valid_role( $role ) ) {
+			throw new InvalidArgumentException(
+				esc_html(
+					sprintf(
+						/* translators: %s: invalid role encountered */
+						__( 'The role %s is invalid.', 'wp-starter-plugin' ),
+						$role
+					)
+				)
+			);
+		}
+
 		$this->role  = $role;
 		$this->parts = $parts;
 	}
@@ -99,5 +117,25 @@ final class Content implements Arrayable {
 		}
 
 		return new Content( $data['role'], Parts::from_array( $data['parts'] ) );
+	}
+
+	/**
+	 * Checks if the given role is valid.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $role The role to check.
+	 * @return bool True if the role is valid, false otherwise.
+	 */
+	private function is_valid_role( string $role ): bool {
+		return in_array(
+			$role,
+			array(
+				self::ROLE_USER,
+				self::ROLE_MODEL,
+				self::ROLE_SYSTEM,
+			),
+			true
+		);
 	}
 }

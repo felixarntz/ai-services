@@ -9,8 +9,11 @@
 namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
 
 use InvalidArgumentException;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
@@ -168,9 +171,11 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			);
 		}
 
+		// Parse content data into one of the supported formats.
+		$content = $this->parse_content( $request['content'] );
+
 		try {
-			// TODO: Parse content data into the correct classes (detect data and rely on from_array() methods).
-			$candidates = $model->generate_content( $request['content'] );
+			$candidates = $model->generate_content( $content );
 		} catch ( Generative_AI_Exception $e ) {
 			throw REST_Exception::create(
 				'rest_generating_content_failed',
@@ -180,6 +185,16 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					esc_html( $e->getMessage() )
 				),
 				500
+			);
+		} catch ( InvalidArgumentException $e ) {
+			throw REST_Exception::create(
+				'rest_invalid_content',
+				sprintf(
+					/* translators: %s: original error message */
+					esc_html__( 'Invalid content provided: %s', 'wp-starter-plugin' ),
+					esc_html( $e->getMessage() )
+				),
+				400
 			);
 		}
 
@@ -194,19 +209,39 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @return array<string, mixed> Route arguments.
 	 */
 	protected function args(): array {
-		// TODO: Complete this.
 		return array(
 			'model'        => array(
 				'description' => __( 'Model slug.', 'wp-starter-plugin' ),
 				'type'        => 'string',
 			),
 			'model_params' => array(
-				'description' => __( 'Model parameters.', 'wp-starter-plugin' ),
-				'type'        => 'array',
+				'description'          => __( 'Model parameters.', 'wp-starter-plugin' ),
+				'type'                 => 'object',
+				'properties'           => array(),
+				'additionalProperties' => true,
 			),
 			'content'      => array(
-				'description' => __( 'Content data.', 'wp-starter-plugin' ),
-				'type'        => 'array', // TODO: Or a string.
+				'description' => __( 'Content data to pass to the model, including the prompt and optional history.', 'wp-starter-plugin' ),
+				'type'        => array( 'string', 'object', 'array' ),
+				'oneOf'       => array(
+					array(
+						'description' => __( 'Prompt text as a string.', 'wp-starter-plugin' ),
+						'type'        => 'string',
+					),
+					array_merge(
+						array( 'description' => __( 'Prompt including multi modal data such as files.', 'wp-starter-plugin' ) ),
+						$this->get_parts_schema()
+					),
+					array_merge(
+						array( 'description' => __( 'Prompt content object.', 'wp-starter-plugin' ) ),
+						$this->get_content_schema( array( Content::ROLE_USER ) )
+					),
+					array(
+						'description' => __( 'Array of contents, including history from previous user prompts and their model answers.', 'wp-starter-plugin' ),
+						'type'        => 'array',
+						'items'       => $this->get_content_schema( array( Content::ROLE_USER, Content::ROLE_MODEL ) ),
+					),
+				),
 			),
 		);
 	}
@@ -238,18 +273,143 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @return array<string, mixed> The schema for the route.
 	 */
 	private function get_schema(): array {
-		// TODO: Complete this.
 		return array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'candidate',
-			'type'       => 'object',
-			'properties' => array(
-				'content' => array(
-					'description' => __( 'Candidate content.', 'wp-starter-plugin' ),
-					'type'        => 'array',
-					'readonly'    => true,
+			'$schema'              => 'http://json-schema.org/draft-04/schema#',
+			'title'                => 'candidate',
+			'type'                 => 'object',
+			'properties'           => array(
+				'content' => array_merge(
+					array(
+						'description' => __( 'Candidate content.', 'wp-starter-plugin' ),
+						'readonly'    => true,
+					),
+					$this->get_content_schema(
+						array( Content::ROLE_USER, Content::ROLE_MODEL, Content::ROLE_SYSTEM )
+					)
+				),
+			),
+			'additionalProperties' => true,
+		);
+	}
+
+	/**
+	 * Gets the REST schema that corresponds to a content Parts object.
+	 *
+	 * This must be in sync with the data structure of the {@see Parts} class.
+	 *
+	 * @since n.e.x.t
+	 * @see Parts
+	 *
+	 * @return array<string, mixed> The schema for a Parts object.
+	 */
+	private function get_parts_schema(): array {
+		return array(
+			'type'  => 'array',
+			'items' => array(
+				'type'  => 'object',
+				'oneOf' => array(
+					array(
+						'properties' => array(
+							'text' => array(
+								'description' => __( 'Prompt text content.', 'wp-starter-plugin' ),
+								'type'        => 'string',
+							),
+						),
+					),
+					array(
+						'properties' => array(
+							'inlineData' => array(
+								'description' => __( 'Inline data as part of the prompt, such as a file.', 'wp-starter-plugin' ),
+								'type'        => 'object',
+								'properties'  => array(
+									'mimeType' => array(
+										'description' => __( 'MIME type of the inline data.', 'wp-starter-plugin' ),
+										'type'        => 'string',
+									),
+									'data'     => array(
+										'description' => __( 'Base64-encoded data.', 'wp-starter-plugin' ),
+										'type'        => 'string',
+									),
+								),
+							),
+						),
+					),
+					array(
+						'properties' => array(
+							'fileData' => array(
+								'description' => __( 'Reference to a file as part of the prompt.', 'wp-starter-plugin' ),
+								'type'        => 'object',
+								'properties'  => array(
+									'mimeType' => array(
+										'description' => __( 'MIME type of the file data.', 'wp-starter-plugin' ),
+										'type'        => 'string',
+									),
+									'fileUri'  => array(
+										'description' => __( 'URI of the file.', 'wp-starter-plugin' ),
+										'type'        => 'string',
+									),
+								),
+							),
+						),
+					),
 				),
 			),
 		);
+	}
+
+	/**
+	 * Gets the REST schema that corresponds to a Content object.
+	 *
+	 * This must be in sync with the data structure of the {@see Content} class.
+	 *
+	 * @since n.e.x.t
+	 * @see Content
+	 *
+	 * @param string[] $allowed_roles Which content roles to include in the schema.
+	 * @return array<string, mixed> The schema for a Content object.
+	 */
+	private function get_content_schema( array $allowed_roles ): array {
+		return array(
+			'type'       => 'object',
+			'properties' => array(
+				'role'  => array(
+					'type' => 'string',
+					'enum' => $allowed_roles,
+				),
+				'parts' => $this->get_parts_schema(),
+			),
+		);
+	}
+
+	/**
+	 * Parses the content data into one of the formats expected by the {@see Generative_AI_Model::generate_content()} method.
+	 *
+	 * The implementation of this method goes hand in hand with the schema definitions for the 'content' parameter.
+	 *
+	 * @since n.e.x.t
+	 * @see Generative_AI_Model::generate_content()
+	 *
+	 * @param mixed $content The content data.
+	 * @return string|Parts|Content|Content[] The parsed content data.
+	 */
+	private function parse_content( $content ) {
+		if ( is_string( $content ) ) { // A simple text prompt.
+			return $content;
+		}
+
+		if ( wp_is_numeric_array( $content ) ) {
+			if ( isset( $content[0]['role'] ) ) { // An array of content, i.e. likely including history.
+				return array_map(
+					static function ( $content ) {
+						return Content::from_array( $content );
+					},
+					$content
+				);
+			}
+
+			return Parts::from_array( $content ); // An array of parts, i.e. likely a multi-modal prompt.
+		}
+
+		return Content::from_array( $content );
 	}
 }

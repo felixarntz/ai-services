@@ -8,6 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Services;
 
+use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
@@ -33,6 +34,7 @@ abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
 	 * @return Candidates The response candidates with generated content - usually just one.
 	 *
+	 * @throws InvalidArgumentException Thrown if the given content is invalid.
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	final public function generate_content( $content, array $request_options = array() ): Candidates {

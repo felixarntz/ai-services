@@ -8,6 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
 
+use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Chat_Session;
@@ -40,6 +41,7 @@ interface Generative_AI_Model {
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
 	 * @return Candidates The response candidates with generated content - usually just one.
 	 *
+	 * @throws InvalidArgumentException Thrown if the given content is invalid.
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function generate_content( $content, array $request_options = array() ): Candidates;

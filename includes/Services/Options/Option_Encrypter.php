@@ -75,6 +75,11 @@ final class Option_Encrypter {
 	 * @return string Encrypted option value.
 	 */
 	public function encrypt_option( $value, string $option_slug ): string {
+		// Do not encrypt if the value is empty.
+		if ( '' === $value ) {
+			return $value;
+		}
+
 		// Bail if the value is already encrypted.
 		if ( is_string( $value ) && str_starts_with( $value, self::ENCRYPTION_PREFIX ) ) {
 			return $value;

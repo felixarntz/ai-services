@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
 
 /**
  * WordPress dependencies
@@ -23,7 +23,7 @@ export default function SettingsStatus() {
 			isResolving,
 			hasModifiedSettings,
 			isSavingSettings,
-		} = select( pluginStore );
+		} = select( pluginSettingsStore );
 
 		return {
 			isLoading:

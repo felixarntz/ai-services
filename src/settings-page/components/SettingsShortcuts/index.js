@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
 
 /**
  * WordPress dependencies
@@ -17,7 +17,7 @@ import { useShortcut } from '@wordpress/keyboard-shortcuts';
  * @return {Component} The component to be rendered.
  */
 export default function SettingsShortcuts() {
-	const { saveSettings } = useDispatch( pluginStore );
+	const { saveSettings } = useDispatch( pluginSettingsStore );
 
 	const handleSave = ( event ) => {
 		event.preventDefault();

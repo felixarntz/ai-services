@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
 
 /**
  * WordPress dependencies
@@ -19,7 +19,7 @@ import { __ } from '@wordpress/i18n';
  */
 export default function UnsavedChangesWarning() {
 	const isDirty = useSelect( ( select ) => {
-		const { hasModifiedSettings } = select( pluginStore );
+		const { hasModifiedSettings } = select( pluginSettingsStore );
 
 		return hasModifiedSettings();
 	} );

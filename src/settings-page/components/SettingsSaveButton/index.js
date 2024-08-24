@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
 
 /**
  * WordPress dependencies
@@ -19,7 +19,8 @@ import { __ } from '@wordpress/i18n';
  */
 export default function SettingsSaveButton() {
 	const { isSaving, isSaveable } = useSelect( ( select ) => {
-		const { isSavingSettings, areSettingsSaveable } = select( pluginStore );
+		const { isSavingSettings, areSettingsSaveable } =
+			select( pluginSettingsStore );
 
 		return {
 			isSaving: isSavingSettings(),
@@ -27,7 +28,7 @@ export default function SettingsSaveButton() {
 		};
 	} );
 
-	const { saveSettings } = useDispatch( pluginStore );
+	const { saveSettings } = useDispatch( pluginSettingsStore );
 
 	return (
 		<Button

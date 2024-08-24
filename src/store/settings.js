@@ -108,6 +108,7 @@ const actions = {
 
 			const settings = select.getSettings();
 			const options = {};
+			const servicesToRefresh = [];
 			Object.keys( settings ).forEach( ( localName ) => {
 				const optionName = select.getOptionName( localName );
 				if ( ! optionName ) {
@@ -123,6 +124,12 @@ const actions = {
 				}
 
 				options[ optionName ] = settings[ localName ];
+
+				// Record services that need to be refreshed because their API key has changed.
+				const match = optionName.match( /^wpsp_([a-z0-9-]+)_api_key$/ );
+				if ( match ) {
+					servicesToRefresh.push( match[ 1 ] );
+				}
 			} );
 
 			await dispatch( {
@@ -143,6 +150,11 @@ const actions = {
 
 			if ( updatedSettings ) {
 				await dispatch.receiveSettings( updatedSettings );
+
+				// Refresh services that have new API keys.
+				servicesToRefresh.forEach( ( service ) =>
+					dispatch.refreshService( service )
+				);
 			}
 
 			await dispatch( {
@@ -204,7 +216,7 @@ const actions = {
 	 * @param {string} apiKey  The new API key.
 	 * @return {Object} Action object.
 	 */
-	getApiKey( service, apiKey ) {
+	setApiKey( service, apiKey ) {
 		return actions.setSetting( `${ camelCase( service ) }ApiKey`, apiKey );
 	},
 

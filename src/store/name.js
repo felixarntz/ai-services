@@ -1,1 +1,1 @@
-export const STORE_NAME = 'wp-starter-plugin/data';
+export const STORE_NAME = 'wp-starter-plugin/settings';

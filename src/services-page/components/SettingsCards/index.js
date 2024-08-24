@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-starter-plugin/store';
+import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
 
 /**
  * WordPress dependencies
@@ -30,7 +30,7 @@ import './style.scss';
 export default function SettingsCards() {
 	const { isLoading, deleteData } = useSelect( ( select ) => {
 		const { getSettings, isResolving, getDeleteData } =
-			select( pluginStore );
+			select( pluginSettingsStore );
 
 		return {
 			isLoading:
@@ -39,7 +39,7 @@ export default function SettingsCards() {
 		};
 	} );
 
-	const { setDeleteData } = useDispatch( pluginStore );
+	const { setDeleteData } = useDispatch( pluginSettingsStore );
 
 	return (
 		<div className="wpsp-settings-cards">

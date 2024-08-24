@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginStore } from '@wp-starter-plugin/store';
+import { store as pluginStore } from '@wp-starter-plugin/settings-store';
 
 /**
  * WordPress dependencies

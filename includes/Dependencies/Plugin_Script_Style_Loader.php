@@ -74,10 +74,10 @@ class Plugin_Script_Style_Loader {
 		);
 
 		$this->script_registry->register(
-			'wpsp-store',
+			'wpsp-settings-store',
 			array(
-				'src'      => $this->plugin_env->url( 'build/store/index.js' ),
-				'manifest' => $this->plugin_env->path( 'build/store/index.asset.php' ),
+				'src'      => $this->plugin_env->url( 'build/settings-store/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/settings-store/index.asset.php' ),
 				'strategy' => 'defer',
 			)
 		);

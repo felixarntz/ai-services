@@ -134,7 +134,10 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @since n.e.x.t
 	 */
 	private function preload_rest_api_data(): void {
-		$preload_paths = array( '/wp/v2/settings' );
+		$preload_paths = array(
+			'/wp-starter-plugin/v1/services?context=edit',
+			'/wp/v2/settings',
+		);
 
 		$preload_data = array_reduce(
 			$preload_paths,

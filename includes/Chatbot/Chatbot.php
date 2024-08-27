@@ -96,24 +96,6 @@ class Chatbot implements With_Hooks {
 		} else {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		}
-
-		// Testing.
-		add_action(
-			'admin_notices',
-			function () {
-				echo '<div class="notice notice-info"><p>';
-				$model = $this->ai->get_model();
-				try {
-					$candidates = $model->generate_content( 'Where can I add new pages?' );
-					$text       = $this->ai->get_text_from_candidates( $candidates );
-					var_dump( $text ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-				} catch ( \Exception $e ) {
-					echo 'An error occurred: ';
-					echo esc_html( $e->getMessage() );
-				}
-				echo '</p></div>';
-			}
-		);
 	}
 
 	/**

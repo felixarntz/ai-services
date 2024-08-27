@@ -162,7 +162,6 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 		return new Get_Request(
 			$this->get_request_url( $path, $request_options ),
 			$params,
-			// TODO: Test if this works. Otherwise we'll need to add a ?key=... query parameter.
 			$this->add_default_options( $this->add_request_headers( $request_options ) )
 		);
 	}

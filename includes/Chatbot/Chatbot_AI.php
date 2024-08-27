@@ -22,12 +22,12 @@ use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Text_Part;
 class Chatbot_AI {
 
 	/**
-	 * The AI instance.
+	 * The AI service instance.
 	 *
 	 * @since n.e.x.t
 	 * @var Generative_AI_Service
 	 */
-	private $ai;
+	private $service;
 
 	/**
 	 * The generative model.
@@ -42,10 +42,10 @@ class Chatbot_AI {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Generative_AI_Service $ai The AI instance.
+	 * @param Generative_AI_Service $service The AI instance.
 	 */
-	public function __construct( Generative_AI_Service $ai ) {
-		$this->ai = $ai;
+	public function __construct( Generative_AI_Service $service ) {
+		$this->service = $service;
 	}
 
 	/**
@@ -57,7 +57,8 @@ class Chatbot_AI {
 	 */
 	public function get_model(): Generative_AI_Model {
 		if ( null === $this->model ) {
-			$this->model = $this->ai->get_model(
+			// TODO: Support services other than Google.
+			$this->model = $this->service->get_model(
 				'gemini-1.5-flash',
 				array( 'system_instruction' => $this->get_system_instruction() )
 			);

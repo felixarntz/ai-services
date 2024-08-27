@@ -65,10 +65,10 @@ class Services_Script_Style_Loader {
 	 */
 	public function register_scripts_and_styles(): void {
 		$this->script_registry->register(
-			'wpsp-components',
+			'wpsp-ai-store',
 			array(
-				'src'      => $this->plugin_env->url( 'build/components/index.js' ),
-				'manifest' => $this->plugin_env->path( 'build/components/index.asset.php' ),
+				'src'      => $this->plugin_env->url( 'build/ai-store/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/ai-store/index.asset.php' ),
 				'strategy' => 'defer',
 			)
 		);
@@ -78,6 +78,15 @@ class Services_Script_Style_Loader {
 			array(
 				'src'      => $this->plugin_env->url( 'build/settings-store/index.js' ),
 				'manifest' => $this->plugin_env->path( 'build/settings-store/index.asset.php' ),
+				'strategy' => 'defer',
+			)
+		);
+
+		$this->script_registry->register(
+			'wpsp-components',
+			array(
+				'src'      => $this->plugin_env->url( 'build/components/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/components/index.asset.php' ),
 				'strategy' => 'defer',
 			)
 		);

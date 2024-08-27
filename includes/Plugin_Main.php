@@ -77,30 +77,6 @@ class Plugin_Main implements With_Hooks {
 		$this->services_loader->add_hooks();
 		$this->maybe_install_data();
 		$this->add_service_hooks();
-
-		// Testing.
-		add_action(
-			'admin_notices',
-			function () {
-				echo '<div class="notice notice-info"><p>';
-
-				if ( $this->container['chatbot_loader']->can_load() ) {
-					$model = $this->container['chatbot_ai']->get_model();
-					try {
-						$candidates = $model->generate_content( 'Where can I add new pages?' );
-						var_dump( $candidates->to_array() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-						$text = $this->container['chatbot_ai']->get_text_from_candidates( $candidates );
-						var_dump( $text ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-					} catch ( \Exception $e ) {
-						echo 'An error occurred: ';
-						echo esc_html( $e->getMessage() );
-					}
-				} else {
-					echo 'Chatbot not available.';
-				}
-				echo '</p></div>';
-			}
-		);
 	}
 
 	/**

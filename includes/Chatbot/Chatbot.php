@@ -8,6 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
@@ -45,6 +46,14 @@ class Chatbot implements With_Hooks {
 	private $style_registry;
 
 	/**
+	 * The AI instance.
+	 *
+	 * @since n.e.x.t
+	 * @var Chatbot_AI
+	 */
+	private $ai;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
@@ -57,6 +66,17 @@ class Chatbot implements With_Hooks {
 		$this->plugin_env      = $plugin_env;
 		$this->script_registry = $script_registry;
 		$this->style_registry  = $style_registry;
+	}
+
+	/**
+	 * Sets the AI service for the chatbot.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Generative_AI_Service $ai_service The AI service.
+	 */
+	public function set_service( Generative_AI_Service $ai_service ): void {
+		$this->ai = new Chatbot_AI( $ai_service );
 	}
 
 	/**
@@ -76,6 +96,25 @@ class Chatbot implements With_Hooks {
 		} else {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		}
+
+		// Testing.
+		add_action(
+			'admin_notices',
+			function () {
+				echo '<div class="notice notice-info"><p>';
+				$model = $this->ai->get_model();
+				try {
+					$candidates = $model->generate_content( 'Where can I add new pages?' );
+					var_dump( $candidates->to_array() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+					$text = $this->ai->get_text_from_candidates( $candidates );
+					var_dump( $text ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+				} catch ( \Exception $e ) {
+					echo 'An error occurred: ';
+					echo esc_html( $e->getMessage() );
+				}
+				echo '</p></div>';
+			}
+		);
 	}
 
 	/**

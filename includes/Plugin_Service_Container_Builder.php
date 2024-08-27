@@ -9,7 +9,6 @@
 namespace Vendor_NS\WP_Starter_Plugin;
 
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot;
-use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_AI;
 use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_Loader;
 use Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
@@ -94,9 +93,6 @@ final class Plugin_Service_Container_Builder {
 			return new Chatbot_Loader(
 				Services_API_Instance::get()
 			);
-		};
-		$this->container['chatbot_ai']     = static function () {
-			return new Chatbot_AI( Services_API_Instance::get()->get_service( 'google' ) );
 		};
 		$this->container['chatbot']        = static function ( $cont ) {
 			return new Chatbot(

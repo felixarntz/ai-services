@@ -44,7 +44,7 @@ class Chatbot_Loader {
 	 * @return bool True if the chatbot can be loaded, false otherwise.
 	 */
 	public function can_load(): bool {
-		return $this->services_api->is_service_available( 'google' );
+		return $this->services_api->has_available_services();
 	}
 
 	/**
@@ -55,6 +55,7 @@ class Chatbot_Loader {
 	 * @param Chatbot $chatbot The chatbot instance.
 	 */
 	public function load( Chatbot $chatbot ): void {
+		$chatbot->set_service( $this->services_api->get_service() );
 		$chatbot->add_hooks();
 	}
 }

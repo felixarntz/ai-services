@@ -142,7 +142,7 @@ final class Candidates implements Collection, Arrayable {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param array<string, mixed> $data The candidates data.
+	 * @param array<string, mixed>[] $data The candidates data.
 	 * @return Candidates The Candidates instance.
 	 *
 	 * @throws InvalidArgumentException Thrown if the candidates data is invalid.

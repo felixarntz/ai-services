@@ -55,7 +55,7 @@ class Chatbot_Loader {
 	 * @param Chatbot $chatbot The chatbot instance.
 	 */
 	public function load( Chatbot $chatbot ): void {
-		$chatbot->set_service( $this->services_api->get_service() );
+		$chatbot->set_service( $this->services_api->get_available_service() );
 		$chatbot->add_hooks();
 	}
 }

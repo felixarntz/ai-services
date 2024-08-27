@@ -128,7 +128,7 @@ class Service_Entity implements Entity {
 			return array();
 		}
 
-		$service = $this->services_api->get_service( $this->slug );
+		$service = $this->services_api->get_available_service( $this->slug );
 		try {
 			return $service->list_models();
 		} catch ( Generative_AI_Exception $e ) {

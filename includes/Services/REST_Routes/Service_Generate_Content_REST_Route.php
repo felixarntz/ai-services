@@ -129,7 +129,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			);
 		}
 
-		$service = $this->services_api->get_service( $request['slug'] );
+		$service = $this->services_api->get_available_service( $request['slug'] );
 
 		if ( isset( $request['model'] ) ) {
 			$model = $request['model'];

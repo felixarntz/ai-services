@@ -246,7 +246,7 @@ final class Services_API {
 	 *
 	 * For some use-cases it may be acceptable to use any AI service. In those cases, this method can be used to check
 	 * whether any services are available. If so, an arbitrary available service can be retrieved using the
-	 * {@see Services_API::get_service()} method.
+	 * {@see Services_API::get_available_service()} method.
 	 *
 	 * @since n.e.x.t
 	 *
@@ -267,7 +267,7 @@ final class Services_API {
 	}
 
 	/**
-	 * Gets a generative AI service instance.
+	 * Gets a generative AI service instance that is available for use.
 	 *
 	 * If you intend to call this method with a specific service slug, you should first check whether the service is
 	 * available using {@see Services_API::is_service_available()}.
@@ -280,11 +280,11 @@ final class Services_API {
 	 * @param string|string[] $slugs Optional. The service slug to get, or an array of service slugs to get the first
 	 *                               available service from. If empty, any available service will be returned. Default
 	 *                               empty array.
-	 * @return Generative_AI_Service The service instance.
+	 * @return Generative_AI_Service The available service instance.
 	 *
 	 * @throws InvalidArgumentException Thrown if no service corresponding to the given list is registered or available.
 	 */
-	public function get_service( $slugs = array() ): Generative_AI_Service {
+	public function get_available_service( $slugs = array() ): Generative_AI_Service {
 		// Normalize the parameter to an array of slugs and populate with defaults if necessary.
 		if ( is_string( $slugs ) && '' !== $slugs ) {
 			$slugs = array( $slugs );

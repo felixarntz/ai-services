@@ -216,24 +216,6 @@ final class Plugin_Service_Container_Builder {
 			);
 		};
 
-		$options['wpsp_api_key'] = function () {
-			$sanitize_callback = ( new General_Validation_Rule_Builder() )
-				->require_string()
-				->format_regexp( '/^[A-Za-z0-9-]+$/' )
-				->get_option_sanitize_callback();
-
-			return new Option(
-				$this->container['option_repository'],
-				'wpsp_api_key',
-				array(
-					'type'              => 'string',
-					'sanitize_callback' => $sanitize_callback,
-					'default'           => 'AIzaSyAwWr7iLmcF--aExgltOno8ppxdxPac5bQ', // TODO: Remove this.
-					'autoload'          => true,
-				)
-			);
-		};
-
 		// Option to store the main plugin data.
 		$options['wpsp_options'] = function () {
 			return new Option(

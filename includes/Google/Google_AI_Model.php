@@ -173,12 +173,58 @@ class Google_AI_Model extends Abstract_Generative_AI_Model {
 		);
 		$response = $this->api->make_request( $request );
 
+		return $this->get_response_candidates( $response );
+	}
+
+	/**
+	 * Extracts the candidates with content from the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $response The response data.
+	 * @return Candidates The candidates with content parts.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response does not have any candidates with content.
+	 */
+	private function get_response_candidates( array $response ): Candidates {
 		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
 			throw new Generative_AI_Exception(
 				esc_html__( 'The response from the Google AI API is missing the "candidates" key.', 'wp-starter-plugin' )
 			);
 		}
 
-		return Candidates::from_array( $response['candidates'] );
+		$candidates = array();
+		$errors     = array();
+		foreach ( $response['candidates'] as $candidate ) {
+			if ( ! isset( $candidate['content'] ) ) {
+				if ( isset( $candidate['finishReason'] ) ) {
+					$errors[] = $candidate['finishReason'];
+				}
+				continue;
+			}
+
+			$candidates[] = $candidate;
+		}
+
+		if ( count( $candidates ) === 0 ) {
+			$message = __( 'The response from the Google AI API does not include any candidates with content.', 'wp-starter-plugin' );
+
+			$errors = array_unique( $errors );
+			if ( count( $errors ) > 0 ) {
+				$message .= ' ' . sprintf(
+					/* translators: %s: finish reason code */
+					__( 'Finish reason: %s', 'wp-starter-plugin' ),
+					implode(
+						_x( ', ', 'Used between list items, there is a space after the comma.', 'wp-starter-plugin' ),
+						$errors
+					)
+				);
+			}
+			throw new Generative_AI_Exception(
+				esc_html( $message )
+			);
+		}
+
+		return Candidates::from_array( $candidates );
 	}
 }

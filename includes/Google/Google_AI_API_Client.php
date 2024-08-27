@@ -163,7 +163,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 			$this->get_request_url( $path, $request_options ),
 			$params,
 			// TODO: Test if this works. Otherwise we'll need to add a ?key=... query parameter.
-			$this->add_request_headers( $request_options )
+			$this->add_default_options( $this->add_request_headers( $request_options ) )
 		);
 	}
 
@@ -181,7 +181,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 		return new JSON_Post_Request(
 			$this->get_request_url( $path, $request_options ),
 			$params,
-			$this->add_request_headers( $request_options )
+			$this->add_default_options( $this->add_request_headers( $request_options ) )
 		);
 	}
 
@@ -217,5 +217,20 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 		$request_options['headers']['X-Goog-Api-Client'] = 'wp-starter-plugin/' . WP_STARTER_PLUGIN_VERSION;
 		$request_options['headers']['X-Goog-Api-Key']    = $this->api_key;
 		return $request_options;
+	}
+
+	/**
+	 * Adds default options to the request options.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $request_options The request options.
+	 * @return array<string, mixed> The updated request options.
+	 */
+	private function add_default_options( array $request_options ): array {
+		$default_options = array(
+			'timeout' => 15,
+		);
+		return array_merge( $default_options, $request_options );
 	}
 }

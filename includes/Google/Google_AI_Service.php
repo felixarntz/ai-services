@@ -90,7 +90,13 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 
 		return array_map(
 			static function ( array $model ) {
-				return $model['baseModelId'];
+				if ( isset( $model['baseModelId'] ) ) {
+					return $model['baseModelId'];
+				}
+				if ( str_starts_with( $model['name'], 'models/' ) ) {
+					return substr( $model['name'], 7 );
+				}
+				return $model['name'];
 			},
 			$response['models']
 		);

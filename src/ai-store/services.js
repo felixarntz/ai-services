@@ -8,6 +8,7 @@ import { createRegistrySelector } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
+import { getGenerativeAiService } from './generative-ai-service';
 
 const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
 
@@ -85,18 +86,67 @@ const selectors = {
 		return state.services;
 	},
 
-	getService: createRegistrySelector( ( select ) => ( state, slug ) => {
-		const services = select( STORE_NAME ).getServices();
-		if ( services === undefined ) {
-			return undefined;
+	isServiceRegistered: createRegistrySelector(
+		( select ) => ( state, slug ) => {
+			const services = select( STORE_NAME ).getServices();
+			if ( services === undefined ) {
+				return undefined;
+			}
+			return services[ slug ] !== undefined;
 		}
-		if ( services[ slug ] === undefined ) {
-			// eslint-disable-next-line no-console
-			console.error( `Invalid service ${ slug }.` );
-			return undefined;
+	),
+
+	isServiceAvailable: createRegistrySelector(
+		( select ) => ( state, slug ) => {
+			const services = select( STORE_NAME ).getServices();
+			if ( services === undefined ) {
+				return undefined;
+			}
+			return (
+				services[ slug ] !== undefined && services[ slug ].is_available
+			);
 		}
-		return services[ slug ];
-	} ),
+	),
+
+	hasAvailableServices: createRegistrySelector(
+		( select ) => ( state, slugs ) => {
+			const services = select( STORE_NAME ).getServices();
+			if ( services === undefined ) {
+				return undefined;
+			}
+			if ( ! slugs ) {
+				slugs = Object.keys( services );
+			}
+			return slugs.some(
+				( slug ) =>
+					services[ slug ] !== undefined &&
+					services[ slug ].is_available
+			);
+		}
+	),
+
+	getAvailableService: createRegistrySelector(
+		( select ) => ( state, slugs ) => {
+			const services = select( STORE_NAME ).getServices();
+			if ( services === undefined ) {
+				return undefined;
+			}
+			if ( typeof slugs === 'string' ) {
+				slugs = [ slugs ];
+			} else if ( ! slugs ) {
+				slugs = Object.keys( services );
+			}
+			const availableSlug = slugs.find(
+				( slug ) =>
+					services[ slug ] !== undefined &&
+					services[ slug ].is_available
+			);
+			if ( ! availableSlug ) {
+				return null;
+			}
+			return getGenerativeAiService( services[ availableSlug ] );
+		}
+	),
 };
 
 const storeConfig = {

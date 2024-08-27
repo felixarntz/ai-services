@@ -95,15 +95,19 @@ export class GenerativeAiService {
 			}
 		}
 
-		return await apiFetch( {
-			path: `/wp-starter-plugin/v1/services/${ this.slug }:generate-content`,
-			method: 'POST',
-			data: {
-				content,
-				model: model || '',
-				modelParams: modelParams || {},
-			},
-		} );
+		try {
+			return await apiFetch( {
+				path: `/wp-starter-plugin/v1/services/${ this.slug }:generate-content`,
+				method: 'POST',
+				data: {
+					content,
+					model: model || '',
+					modelParams: modelParams || {},
+				},
+			} );
+		} catch ( error ) {
+			throw new Error( error.message || error.code || error );
+		}
 	}
 }
 

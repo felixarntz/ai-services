@@ -131,7 +131,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 
 		$service = $this->services_api->get_available_service( $request['slug'] );
 
-		if ( isset( $request['model'] ) ) {
+		if ( isset( $request['model'] ) && '' !== $request['model'] ) {
 			$model = $request['model'];
 		} else {
 			// For now, we just use the first model available. TODO: Improve this later, e.g. by specifying a default.
@@ -180,8 +180,9 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			throw REST_Exception::create(
 				'rest_generating_content_failed',
 				sprintf(
-					/* translators: %s: original error message */
-					esc_html__( 'Generating content failed: %s', 'wp-starter-plugin' ),
+					/* translators: 1: model slug, 2: original error message */
+					esc_html__( 'Generating content with model %1$s failed: %2$s', 'wp-starter-plugin' ),
+					esc_html( $model->get_model_slug() ),
 					esc_html( $e->getMessage() )
 				),
 				500
@@ -190,8 +191,9 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			throw REST_Exception::create(
 				'rest_invalid_content',
 				sprintf(
-					/* translators: %s: original error message */
-					esc_html__( 'Invalid content provided: %s', 'wp-starter-plugin' ),
+					/* translators: 1: model slug, 2: original error message */
+					esc_html__( 'Invalid content provided to model %1$s: %2$s', 'wp-starter-plugin' ),
+					esc_html( $model->get_model_slug() ),
 					esc_html( $e->getMessage() )
 				),
 				400

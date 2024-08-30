@@ -9,7 +9,7 @@
 namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 
@@ -21,10 +21,10 @@ use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 final class Chat_Session {
 
 	/**
-	 * The generative AI model.
+	 * The generative AI model with support for text generation.
 	 *
 	 * @since n.e.x.t
-	 * @var Generative_AI_Model
+	 * @var With_Text_Generation
 	 */
 	private $model;
 
@@ -41,10 +41,10 @@ final class Chat_Session {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Generative_AI_Model $model   The generative AI model.
-	 * @param Content[]           $history Optional. The chat history. Default empty array.
+	 * @param With_Text_Generation $model   The generative AI model with support for text generation.
+	 * @param Content[]            $history Optional. The chat history. Default empty array.
 	 */
-	public function __construct( Generative_AI_Model $model, array $history = array() ) {
+	public function __construct( With_Text_Generation $model, array $history = array() ) {
 		$this->model = $model;
 
 		$this->validate_history( $history );

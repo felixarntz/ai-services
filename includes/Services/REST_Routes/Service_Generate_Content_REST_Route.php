@@ -9,7 +9,7 @@
 namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
@@ -167,6 +167,14 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					esc_html__( 'Invalid model slug or model params: %s', 'wp-starter-plugin' ),
 					esc_html( $e->getMessage() )
 				),
+				400
+			);
+		}
+
+		if ( ! $model instanceof With_Text_Generation ) {
+			throw REST_Exception::create(
+				'rest_model_lacks_support',
+				esc_html__( 'The model does not support text generation.', 'wp-starter-plugin' ),
 				400
 			);
 		}
@@ -386,12 +394,12 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	}
 
 	/**
-	 * Parses the content data into one of the formats expected by the {@see Generative_AI_Model::generate_text()} method.
+	 * Parses the content data into one of the formats expected by the {@see With_Text_Generation::generate_text()} method.
 	 *
 	 * The implementation of this method goes hand in hand with the schema definitions for the 'content' parameter.
 	 *
 	 * @since n.e.x.t
-	 * @see Generative_AI_Model::generate_text()
+	 * @see With_Text_Generation::generate_text()
 	 *
 	 * @param mixed $content The content data.
 	 * @return string|Parts|Content|Content[] The parsed content data.

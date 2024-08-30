@@ -14,7 +14,7 @@ use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
 
 /**
- * Interface for a class (typically a model) which allows generating images.
+ * Interface for a model which allows generating images.
  *
  * @since n.e.x.t
  */

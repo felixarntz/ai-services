@@ -10,8 +10,10 @@ namespace Vendor_NS\WP_Starter_Plugin\Google;
 
 use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Google\Types\Safety_Setting;
-use Vendor_NS\WP_Starter_Plugin\Services\Abstract_Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Traits\With_Text_Generation_Trait;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
 use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
@@ -21,7 +23,8 @@ use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
  *
  * @since n.e.x.t
  */
-class Google_AI_Model extends Abstract_Generative_AI_Model {
+class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
+	use With_Text_Generation_Trait;
 
 	/**
 	 * The Google AI API instance.

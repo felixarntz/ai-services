@@ -79,6 +79,15 @@ export class GenerativeAiService {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( { content, model, modelParams } ) {
+		if ( ! this.capabilities.includes( 'text-generation' ) ) {
+			throw new Error(
+				__(
+					'The service does not support text generation.',
+					'wp-starter-plugin'
+				)
+			);
+		}
+
 		// Do some very basic validation.
 		if ( ! content ) {
 			throw new Error(

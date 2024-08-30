@@ -8,6 +8,7 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
 
+use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Resource_Schema;
 
 /**
@@ -102,6 +103,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'readonly'    => true,
 					'items'       => array(
 						'type' => 'string',
+						'enum' => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION, AI_Capabilities::CAPABILITY_IMAGE_GENERATION ),
 					),
 				),
 				'available_models'   => array(

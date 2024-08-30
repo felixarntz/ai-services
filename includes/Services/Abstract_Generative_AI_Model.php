@@ -25,18 +25,18 @@ use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 
 	/**
-	 * Generates content using the model.
+	 * Generates text content using the model.
 	 *
 	 * @since n.e.x.t
 	 *
 	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
-	 * @return Candidates The response candidates with generated content - usually just one.
+	 * @return Candidates The response candidates with generated text content - usually just one.
 	 *
 	 * @throws InvalidArgumentException Thrown if the given content is invalid.
 	 */
-	final public function generate_content( $content, array $request_options = array() ): Candidates {
+	final public function generate_text( $content, array $request_options = array() ): Candidates {
 		if ( is_array( $content ) ) {
 			$contents = array_map(
 				array( Formatter::class, 'format_new_content' ),
@@ -52,7 +52,7 @@ abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 			);
 		}
 
-		return $this->send_generate_content_request( $contents, $request_options );
+		return $this->send_generate_text_request( $contents, $request_options );
 	}
 
 	/**
@@ -68,15 +68,15 @@ abstract class Abstract_Generative_AI_Model implements Generative_AI_Model {
 	}
 
 	/**
-	 * Sends a request to generate content.
+	 * Sends a request to generate text content.
 	 *
 	 * @since n.e.x.t
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
-	 * @return Candidates The response candidates with generated content - usually just one.
+	 * @return Candidates The response candidates with generated text content - usually just one.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	abstract protected function send_generate_content_request( array $contents, array $request_options ): Candidates;
+	abstract protected function send_generate_text_request( array $contents, array $request_options ): Candidates;
 }

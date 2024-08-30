@@ -132,17 +132,17 @@ class Google_AI_Model extends Abstract_Generative_AI_Model {
 	}
 
 	/**
-	 * Sends a request to generate content.
+	 * Sends a request to generate text content.
 	 *
 	 * @since n.e.x.t
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
-	 * @return Candidates The response candidates with generated content - usually just one.
+	 * @return Candidates The response candidates with generated text content - usually just one.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
-	protected function send_generate_content_request( array $contents, array $request_options ): Candidates {
+	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
 			'contents'         => array_map(

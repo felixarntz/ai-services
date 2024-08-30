@@ -85,7 +85,7 @@ final class Chat_Session {
 			unset( $request_options['candidate_filter_args'] );
 		}
 
-		$candidates = $this->model->generate_content( $contents, $request_options );
+		$candidates = $this->model->generate_text( $contents, $request_options );
 		if ( $candidate_filter_args ) {
 			$candidates = $candidates->filter( $candidate_filter_args );
 		}

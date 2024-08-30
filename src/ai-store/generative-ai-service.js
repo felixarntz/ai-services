@@ -55,7 +55,7 @@ export class GenerativeAiService {
 	}
 
 	/**
-	 * Generates content using the service.
+	 * Generates text content using the service.
 	 *
 	 * @since n.e.x.t
 	 *
@@ -63,9 +63,9 @@ export class GenerativeAiService {
 	 * @param {string|Object|Object[]} args.content     Content data to pass to the model, including the prompt and optional history.
 	 * @param {string}                 args.model       Model slug.
 	 * @param {Object}                 args.modelParams Model parameters.
-	 * @return {Promise<Object[]>} Model response candidates with the generated content.
+	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
-	async generateContent( { content, model, modelParams } ) {
+	async generateText( { content, model, modelParams } ) {
 		// Do some very basic validation.
 		if ( ! content ) {
 			throw new Error(
@@ -97,7 +97,7 @@ export class GenerativeAiService {
 
 		try {
 			return await apiFetch( {
-				path: `/wp-starter-plugin/v1/services/${ this.slug }:generate-content`,
+				path: `/wp-starter-plugin/v1/services/${ this.slug }:generate-text`,
 				method: 'POST',
 				data: {
 					content,

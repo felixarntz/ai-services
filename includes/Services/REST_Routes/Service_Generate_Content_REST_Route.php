@@ -27,7 +27,7 @@ use WP_REST_Server;
  * @since n.e.x.t
  */
 class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
-	const BASE    = '/services/(?P<slug>[\w-]+):generate-content';
+	const BASE    = '/services/(?P<slug>[\w-]+):generate-text';
 	const METHODS = WP_REST_Server::CREATABLE;
 
 	/**
@@ -175,7 +175,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		$content = $this->parse_content( $request['content'] );
 
 		try {
-			$candidates = $model->generate_content( $content );
+			$candidates = $model->generate_text( $content );
 		} catch ( Generative_AI_Exception $e ) {
 			throw REST_Exception::create(
 				'rest_generating_content_failed',
@@ -386,12 +386,12 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	}
 
 	/**
-	 * Parses the content data into one of the formats expected by the {@see Generative_AI_Model::generate_content()} method.
+	 * Parses the content data into one of the formats expected by the {@see Generative_AI_Model::generate_text()} method.
 	 *
 	 * The implementation of this method goes hand in hand with the schema definitions for the 'content' parameter.
 	 *
 	 * @since n.e.x.t
-	 * @see Generative_AI_Model::generate_content()
+	 * @see Generative_AI_Model::generate_text()
 	 *
 	 * @param mixed $content The content data.
 	 * @return string|Parts|Content|Content[] The parsed content data.

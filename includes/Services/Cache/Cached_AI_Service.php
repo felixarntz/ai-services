@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
 
 /**
  * Class representing a cached AI service through a decorator pattern.
@@ -48,6 +49,18 @@ class Cached_AI_Service implements Generative_AI_Service {
 	 */
 	public function get_service_slug(): string {
 		return $this->service->get_service_slug();
+	}
+
+	/**
+	 * Gets the list of AI capabilities that the service and its models support.
+	 *
+	 * @since n.e.x.t
+	 * @see AI_Capabilities
+	 *
+	 * @return string[] The list of AI capabilities.
+	 */
+	public function get_capabilities(): array {
+		return $this->service->get_capabilities();
 	}
 
 	/**

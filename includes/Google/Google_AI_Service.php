@@ -14,6 +14,7 @@ use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 
 /**
@@ -55,6 +56,18 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 */
 	public function get_service_slug(): string {
 		return 'google';
+	}
+
+	/**
+	 * Gets the list of AI capabilities that the service and its models support.
+	 *
+	 * @since n.e.x.t
+	 * @see AI_Capabilities
+	 *
+	 * @return string[] The list of AI capabilities.
+	 */
+	public function get_capabilities(): array {
+		return AI_Capabilities::get_model_class_capabilities( Google_AI_Model::class );
 	}
 
 	/**

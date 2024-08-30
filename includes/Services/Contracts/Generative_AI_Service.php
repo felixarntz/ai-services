@@ -10,6 +10,7 @@ namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
 
 use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
 
 /**
  * Interface for a class representing a generative AI service which provides access to models.
@@ -26,6 +27,16 @@ interface Generative_AI_Service {
 	 * @return string The service slug.
 	 */
 	public function get_service_slug(): string;
+
+	/**
+	 * Gets the list of AI capabilities that the service and its models support.
+	 *
+	 * @since n.e.x.t
+	 * @see AI_Capabilities
+	 *
+	 * @return string[] The list of AI capabilities.
+	 */
+	public function get_capabilities(): array;
 
 	/**
 	 * Lists the available generative model slugs.

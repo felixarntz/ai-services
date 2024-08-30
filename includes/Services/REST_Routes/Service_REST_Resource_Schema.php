@@ -95,6 +95,15 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'capabilities'       => array(
+					'description' => __( 'List of the AI capabilities that the service supports (empty if the service is not available).', 'wp-starter-plugin' ),
+					'type'        => 'array',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+					'items'       => array(
+						'type' => 'string',
+					),
+				),
 				'available_models'   => array(
 					'description' => __( 'List of the available model slugs (empty if the service is not available).', 'wp-starter-plugin' ),
 					'type'        => 'array',

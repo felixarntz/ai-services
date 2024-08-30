@@ -108,12 +108,29 @@ class Service_Entity implements Entity {
 				return $this->services_api->get_service_name( $this->slug );
 			case 'is_available':
 				return $this->services_api->is_service_available( $this->slug );
+			case 'capabilities':
+				return $this->get_capabilities();
 			case 'available_models':
 				return $this->get_available_models();
 			case 'has_forced_api_key':
 				return $this->has_forced_api_key();
 		}
 		return null;
+	}
+
+	/**
+	 * Gets the AI capabilities that the service supports
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string[] List of the AI capabilities, or empty array if the service is not available.
+	 */
+	private function get_capabilities(): array {
+		if ( ! $this->services_api->is_service_available( $this->slug ) ) {
+			return array();
+		}
+
+		return $this->services_api->get_available_service( $this->slug )->get_capabilities();
 	}
 
 	/**

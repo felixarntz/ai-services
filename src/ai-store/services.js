@@ -12,6 +12,42 @@ import { getGenerativeAiService } from './generative-ai-service';
 
 const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
 
+/**
+ * Gets the first available service slug, optionally satisfying the given criteria.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}   services          Service objects, keyed by slug.
+ * @param {Object}   args              Optional. Arguments to filter the services to consider.
+ * @param {string[]} args.slugs        Optional. List of service slugs, to only consider any of these services.
+ * @param {string[]} args.capabilities Optional. List of AI capabilities, to only consider services that support all of these
+ *                                     capabilities.
+ * @return {string} The first available service slug, or empty string if no service is available.
+ */
+function getAvailableServiceSlug( services, args ) {
+	const slugs = args.slugs || Object.keys( services );
+
+	for ( const slug of slugs ) {
+		if ( ! services[ slug ] || ! services[ slug ].is_available ) {
+			continue;
+		}
+
+		if ( args.capabilities ) {
+			const missingCapabilities = args.capabilities.filter(
+				( capability ) =>
+					! services[ slug ].capabilities.includes( capability )
+			);
+			if ( missingCapabilities.length ) {
+				continue;
+			}
+		}
+
+		return slug;
+	}
+
+	return '';
+}
+
 const initialState = {
 	services: undefined,
 };
@@ -109,42 +145,37 @@ const selectors = {
 	),
 
 	hasAvailableServices: createRegistrySelector(
-		( select ) => ( state, slugs ) => {
+		( select ) => ( state, args ) => {
 			const services = select( STORE_NAME ).getServices();
 			if ( services === undefined ) {
 				return undefined;
 			}
-			if ( ! slugs ) {
-				slugs = Object.keys( services );
-			}
-			return slugs.some(
-				( slug ) =>
-					services[ slug ] !== undefined &&
-					services[ slug ].is_available
-			);
+
+			const slug = getAvailableServiceSlug( services, args );
+			return !! slug;
 		}
 	),
 
 	getAvailableService: createRegistrySelector(
-		( select ) => ( state, slugs ) => {
+		( select ) => ( state, args ) => {
 			const services = select( STORE_NAME ).getServices();
 			if ( services === undefined ) {
 				return undefined;
 			}
-			if ( typeof slugs === 'string' ) {
-				slugs = [ slugs ];
-			} else if ( ! slugs ) {
-				slugs = Object.keys( services );
+
+			if ( typeof args === 'string' ) {
+				const slug = args;
+				if ( ! services[ slug ] || ! services[ slug ].is_available ) {
+					return null;
+				}
+				return getGenerativeAiService( services[ slug ] );
 			}
-			const availableSlug = slugs.find(
-				( slug ) =>
-					services[ slug ] !== undefined &&
-					services[ slug ].is_available
-			);
-			if ( ! availableSlug ) {
+
+			const slug = getAvailableServiceSlug( services, args );
+			if ( ! slug ) {
 				return null;
 			}
-			return getGenerativeAiService( services[ availableSlug ] );
+			return getGenerativeAiService( services[ slug ] );
 		}
 	),
 };

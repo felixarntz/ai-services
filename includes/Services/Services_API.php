@@ -250,20 +250,18 @@ final class Services_API {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string[] $slugs Optional. The list of service slugs to check for availability. If empty, all registered
-	 *                        services will be checked. Default empty array.
+	 * @param array<string, mixed> $args {
+	 *     Optional. Arguments to filter the services to consider. By default, any available service is considered.
+	 *
+	 *     @type string[] $slugs        List of service slugs, to only consider any of these services.
+	 *     @type string[] $capabilities List of AI capabilities, to only consider services that support all of these
+	 *                                  capabilities.
+	 * }
 	 * @return bool True if any of the services are available, false otherwise.
 	 */
-	public function has_available_services( array $slugs = array() ): bool {
-		if ( count( $slugs ) === 0 ) {
-			$slugs = $this->get_registered_service_slugs();
-		}
-		foreach ( $slugs as $slug ) {
-			if ( $this->is_service_available( $slug ) ) {
-				return true;
-			}
-		}
-		return false;
+	public function has_available_services( array $args = array() ): bool {
+		$slug = $this->get_available_service_slug( $args );
+		return '' !== $slug;
 	}
 
 	/**
@@ -272,51 +270,49 @@ final class Services_API {
 	 * If you intend to call this method with a specific service slug, you should first check whether the service is
 	 * available using {@see Services_API::is_service_available()}.
 	 *
-	 * If you intend to call this method without a service slug or a list of multiple slugs, you should first check
-	 * if any of the services are available using {@see Services_API::has_available_services()}.
+	 * If you intend to call this method to get any service (optionally with additional criteria to satisfy), you
+	 * should first check if any of the services are available using {@see Services_API::has_available_services()}.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string|string[] $slugs Optional. The service slug to get, or an array of service slugs to get the first
-	 *                               available service from. If empty, any available service will be returned. Default
-	 *                               empty array.
+	 * @param string|array<string, mixed> $args Optional. Either a single service slug to get that service, or
+	 *                                          arguments to get any service that satisfies the criteria from these
+	 *                                          arguments. See {@see Services_API::has_available_services()} for the
+	 *                                          possible arguments. Default is an empty array so that any available
+	 *                                          service is considered.
 	 * @return Generative_AI_Service The available service instance.
 	 *
-	 * @throws InvalidArgumentException Thrown if no service corresponding to the given list is registered or available.
+	 * @throws InvalidArgumentException Thrown if no service corresponding to the given arguments is available.
 	 */
-	public function get_available_service( $slugs = array() ): Generative_AI_Service {
-		// Normalize the parameter to an array of slugs and populate with defaults if necessary.
-		if ( is_string( $slugs ) && '' !== $slugs ) {
-			$slugs = array( $slugs );
-		} elseif ( ! is_array( $slugs ) || count( $slugs ) === 0 ) {
-			$slugs = $this->get_registered_service_slugs();
-		}
-
-		foreach ( $slugs as $slug ) {
-			if ( $this->is_service_available( $slug ) ) {
-				return $this->service_instances[ $slug ];
+	public function get_available_service( $args = array() ): Generative_AI_Service {
+		if ( is_string( $args ) ) {
+			$slug = $args;
+			if ( ! $this->is_service_available( $slug ) ) {
+				throw new InvalidArgumentException(
+					esc_html(
+						sprintf(
+							/* translators: %s: The service slug. */
+							__( 'Service %s is either not registered or not available.', 'wp-starter-plugin' ),
+							$slug
+						)
+					)
+				);
 			}
+
+			return $this->service_instances[ $slug ];
 		}
 
-		// If no available service instance was found, throw an exception.
-		if ( count( $slugs ) > 1 ) {
-			$message = sprintf(
-				/* translators: %s: Comma-separated list of service slugs */
-				__( 'None of the services is registered or available: %s', 'wp-starter-plugin' ),
-				implode(
-					_x( ', ', 'Used between list items, there is a space after the comma.', 'wp-starter-plugin' ),
-					$slugs
-				)
-			);
-		} else {
-			$message = sprintf(
-				/* translators: %s: The service slug. */
-				__( 'Service %s is either not registered or not available.', 'wp-starter-plugin' ),
-				$slugs[0]
-			);
+		$slug = $this->get_available_service_slug( $args );
+		if ( '' === $slug ) {
+			if ( count( $args ) > 0 ) {
+				$message = __( 'No service satisfying the given arguments is registered and available.', 'wp-starter-plugin' );
+			} else {
+				$message = __( 'No service is registered and available.', 'wp-starter-plugin' );
+			}
+			throw new InvalidArgumentException( esc_html( $message ) );
 		}
 
-		throw new InvalidArgumentException( esc_html( $message ) );
+		return $this->service_instances[ $slug ];
 	}
 
 	/**
@@ -344,5 +340,36 @@ final class Services_API {
 	 */
 	public function get_registered_service_slugs(): array {
 		return array_keys( $this->service_registrations );
+	}
+
+	/**
+	 * Gets the first available service slug, optionally satisfying the given criteria.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $args Optional. Arguments to filter the services to consider. See
+	 *                                   {@see Services_API::has_available_services()} for the possible arguments.
+	 *                                   By default, any available service is considered.
+	 * @return string The first available service slug, or empty string if no service is available.
+	 */
+	private function get_available_service_slug( array $args = array() ): string {
+		$slugs = $args['slugs'] ?? $this->get_registered_service_slugs();
+
+		foreach ( $slugs as $slug ) {
+			if ( ! $this->is_service_available( $slug ) ) {
+				continue;
+			}
+
+			if ( isset( $args['capabilities'] ) ) {
+				$missing_capabilities = array_diff( $args['capabilities'], $this->service_instances[ $slug ]->get_capabilities() );
+				if ( count( $missing_capabilities ) > 0 ) {
+					continue;
+				}
+			}
+
+			return $slug;
+		}
+
+		return '';
 	}
 }

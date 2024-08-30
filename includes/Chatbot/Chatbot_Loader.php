@@ -9,6 +9,7 @@
 namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
+use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
 
 /**
  * Class responsible for loading the Google AI-powered chatbot.
@@ -44,7 +45,9 @@ class Chatbot_Loader {
 	 * @return bool True if the chatbot can be loaded, false otherwise.
 	 */
 	public function can_load(): bool {
-		return $this->services_api->has_available_services();
+		return $this->services_api->has_available_services(
+			array( 'capabilities' => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION ) )
+		);
 	}
 
 	/**
@@ -55,7 +58,11 @@ class Chatbot_Loader {
 	 * @param Chatbot $chatbot The chatbot instance.
 	 */
 	public function load( Chatbot $chatbot ): void {
-		$chatbot->set_service( $this->services_api->get_available_service() );
+		$chatbot->set_service(
+			$this->services_api->get_available_service(
+				array( 'capabilities' => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION ) )
+			)
+		);
 		$chatbot->add_hooks();
 	}
 }

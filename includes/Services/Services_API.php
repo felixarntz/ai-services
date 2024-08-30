@@ -144,6 +144,18 @@ final class Services_API {
 	 * @throws InvalidArgumentException Thrown if an already registered slug or invalid arguments are provided.
 	 */
 	public function register_service( string $slug, callable $creator, array $args = array() ): void {
+		if ( 'browser' === $slug ) {
+			throw new InvalidArgumentException(
+				esc_html(
+					sprintf(
+						/* translators: %s: The service slug. */
+						esc_html__( 'Service %s is reserved for in-browser AI and cannot be registered.', 'wp-starter-plugin' ),
+						$slug
+					)
+				)
+			);
+		}
+
 		if ( isset( $this->service_registrations[ $slug ] ) && ! $this->service_registrations[ $slug ]->allows_override() ) {
 			throw new InvalidArgumentException(
 				esc_html(

@@ -14,7 +14,7 @@ use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
 
 /**
- * Class representing a chat session with a generative model
+ * Class representing a chat session with a generative model.
  *
  * @since n.e.x.t
  */

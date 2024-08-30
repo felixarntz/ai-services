@@ -5,6 +5,84 @@ import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 
 /**
+ * Formats the various supported formats of new user content into a consistent content shape.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string|Object|Object[]} content New content.
+ * @return {Object} The formatted new content.
+ */
+function formatNewContent( content ) {
+	if ( typeof content === 'string' ) {
+		return {
+			role: 'user',
+			parts: [ { text: content } ],
+		};
+	}
+
+	if ( Array.isArray( content ) ) {
+		// Could be an array of contents or parts.
+		if ( content[ 0 ].role || content[ 0 ].parts ) {
+			return content;
+		}
+
+		return {
+			role: 'user',
+			parts: content,
+		};
+	}
+
+	if ( ! content.role || ! content.parts ) {
+		throw new Error(
+			__(
+				'The value must be a string, a parts object, or a content object.',
+				'wp-starter-plugin'
+			)
+		);
+	}
+
+	return content;
+}
+
+/**
+ * Validates the chat history.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object[]} history Chat history.
+ */
+function validateChatHistory( history ) {
+	history.forEach( ( content, index ) => {
+		if ( ! content.role || ! content.parts ) {
+			throw new Error(
+				__(
+					'The content object must have a role and parts properties.',
+					'wp-starter-plugin'
+				)
+			);
+		}
+
+		if ( index === 0 && content.role !== 'user' ) {
+			throw new Error(
+				__(
+					'The first content object in the history must be user content.',
+					'wp-starter-plugin'
+				)
+			);
+		}
+
+		if ( content.parts.length === 0 ) {
+			throw new Error(
+				__(
+					'Each Content instance must have at least one part.',
+					'wp-starter-plugin'
+				)
+			);
+		}
+	} );
+}
+
+/**
  * Performs some very basic client-side validation for the content argument.
  *
  * @since n.e.x.t
@@ -142,6 +220,30 @@ class GenerativeAiService {
 			throw new Error( error.message || error.code || error );
 		}
 	}
+
+	/**
+	 * Starts a multi-turn chat session using the service.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {Object}   args             Optional arguments for starting the chat session.
+	 * @param {Object[]} args.history     Chat history.
+	 * @param {string}   args.model       Model slug.
+	 * @param {Object}   args.modelParams Model parameters.
+	 * @return {ChatSession} Chat session.
+	 */
+	startChat( { history, model, modelParams } ) {
+		if ( ! this.capabilities.includes( 'text-generation' ) ) {
+			throw new Error(
+				__(
+					'The service does not support text generation.',
+					'wp-starter-plugin'
+				)
+			);
+		}
+
+		return new ChatSession( this, { history, model, modelParams } );
+	}
 }
 
 /**
@@ -217,6 +319,75 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 				},
 			},
 		];
+	}
+}
+
+/**
+ * Class representing a chat session with a generative model.
+ *
+ * @since n.e.x.t
+ */
+export class ChatSession {
+	/**
+	 * Constructor.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {GenerativeAiService} service             Generative AI service.
+	 * @param {Object}              options             Chat options.
+	 * @param {Object[]}            options.history     Chat history.
+	 * @param {string}              options.model       Model slug.
+	 * @param {Object}              options.modelParams Model parameters.
+	 */
+	constructor( service, { history, model, modelParams } ) {
+		this.service = service;
+		this.model = model;
+		this.modelParams = modelParams;
+
+		if ( history ) {
+			validateChatHistory( history );
+			this.history = history;
+		} else {
+			this.history = [];
+		}
+	}
+
+	/**
+	 * Gets the chat history.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return {Object[]} Chat history.
+	 */
+	getHistory() {
+		return this.history;
+	}
+
+	/**
+	 * Sends a chat message to the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string|Object|Object[]} content Chat message content.
+	 * @return {Promise<Object>} The response content.
+	 */
+	async sendMessage( content ) {
+		const newContent = formatNewContent( content );
+
+		const contents = [ ...this.history, newContent ];
+
+		const candidates = await this.service.generateText( {
+			content: contents,
+			model: this.model,
+			modelParams: this.modelParams,
+		} );
+
+		// TODO: Support optional candidateFilterArgs, similar to PHP implementation.
+		const responseContent = candidates[ 0 ].content;
+
+		this.history = [ ...this.history, newContent, responseContent ];
+
+		return responseContent;
 	}
 }
 

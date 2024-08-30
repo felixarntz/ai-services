@@ -8,6 +8,7 @@ import { createRegistrySelector } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
+import { getBrowserServiceData } from './browser';
 import { getGenerativeAiService } from './generative-ai-service';
 
 const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
@@ -112,6 +113,7 @@ const resolvers = {
 			const services = await apiFetch( {
 				path: '/wp-starter-plugin/v1/services',
 			} );
+			services.push( await getBrowserServiceData() );
 			dispatch.receiveServices( services );
 		};
 	},

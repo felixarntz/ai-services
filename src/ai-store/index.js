@@ -8,9 +8,10 @@ import { createReduxStore, register } from '@wordpress/data';
  */
 import { STORE_NAME } from './name';
 import servicesStoreConfig from './services';
+import chatStoreConfig from './chat';
 import combineStores from '../utils/combine-stores';
 
-const storeConfig = combineStores( servicesStoreConfig );
+const storeConfig = combineStores( servicesStoreConfig, chatStoreConfig );
 
 export const store = createReduxStore( STORE_NAME, storeConfig );
 register( store );

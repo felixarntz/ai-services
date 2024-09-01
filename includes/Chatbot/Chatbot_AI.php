@@ -8,12 +8,44 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
+
 /**
  * Class for the AI configuration powering the chatbot.
  *
  * @since n.e.x.t
  */
 class Chatbot_AI {
+
+	/**
+	 * The site environment.
+	 *
+	 * @since n.e.x.t
+	 * @var Site_Env
+	 */
+	private $site_env;
+
+	/**
+	 * The current user instance.
+	 *
+	 * @since n.e.x.t
+	 * @var Current_User
+	 */
+	private $current_user;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Site_Env     $site_env    The site environment.
+	 * @param Current_User $current_user The current user instance.
+	 */
+	public function __construct( Site_Env $site_env, Current_User $current_user ) {
+		$this->site_env     = $site_env;
+		$this->current_user = $current_user;
+	}
 
 	/**
 	 * Gets the system instruction for the chatbot.
@@ -26,19 +58,25 @@ class Chatbot_AI {
 		$instruction = 'You are a chatbot running inside a WordPress site.
 You are here to help users with their questions and provide information.
 You can also provide assistance with troubleshooting and technical issues.
-The WordPress site URL is ' . home_url( '/' ) . ' and the URL to the admin interface is ' . admin_url( '/' ) . ".
+The WordPress site URL is ' . $this->site_env->url( '/' ) . ' and the URL to the admin interface is ' . $this->site_env->admin_url( '/' ) . ".
 You may also provide links to relevant sections of the WordPress admin interface, contextually for the site.
 Any links provided must not be contained within the message text itself, but separately at the very end of the message.
 The link must be separated from the message text by three hyphens (---).
-For example: 'You can edit posts in the Posts screen. --- " . admin_url( 'edit.php' ) . "'.
+For example: 'You can edit posts in the Posts screen. --- " . $this->site_env->admin_url( 'edit.php' ) . "'.
 Please provide the information in a clear and concise manner, and avoid using jargon or technical terms.
 Do not provide any code snippets or technical details, unless specifically requested by the user.
 Do not hallucinate or provide false information.
 Here is some additional information about the WordPress site, so that you can help users more effectively:
- - The site is running on WordPress version " . get_bloginfo( 'version' ) . '.
- - The primary locale of the site is ' . get_locale() . '.
- - The site is using the ' . get_template() . ' theme.
+ - The site is running on WordPress version " . $this->site_env->get_info( 'version' ) . '.
+ - The primary language of the site is ' . $this->site_env->get_info( 'language' ) . '.
 ';
+
+		$themes = $this->site_env->get_active_themes();
+		if ( count( $themes ) === 2 ) {
+			$instruction .= ' - The site is using the ' . $themes[1] . ' theme, with the ' . $themes[0] . ' child theme.' . "\n";
+		} else {
+			$instruction .= ' - The site is using the ' . $themes[0] . ' theme.' . "\n";
+		}
 
 		if ( wp_is_block_theme() ) {
 			$instruction .= ' - The theme is a block theme.' . "\n";
@@ -54,7 +92,7 @@ Here is some additional information about the WordPress site, so that you can he
 			$instruction .= '- No plugins are active on the site.' . "\n";
 		}
 
-		$current_user = wp_get_current_user();
+		$current_user = $this->current_user->get();
 		if ( $current_user->exists() ) {
 			$wp_roles = wp_roles();
 			if ( isset( $current_user->roles[0] ) && isset( $wp_roles->role_names[ $current_user->roles[0] ] ) ) {
@@ -89,7 +127,7 @@ Here is some additional information about the WordPress site, so that you can he
 	 * @return string[] List of plain text strings with information about the active plugins (name, version, and link URL).
 	 */
 	private function get_active_plugins_info(): array {
-		$active_plugins = wp_get_active_and_valid_plugins();
+		$active_plugins = $this->site_env->get_active_plugins();
 		if ( count( $active_plugins ) === 0 ) {
 			return array();
 		}

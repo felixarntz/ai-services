@@ -19,6 +19,7 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Gener
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
@@ -97,6 +98,8 @@ final class Plugin_Service_Container_Builder {
 		$this->container['chatbot']        = static function ( $cont ) {
 			return new Chatbot(
 				$cont['plugin_env'],
+				$cont['site_env'],
+				$cont['current_user'],
 				$cont['script_registry'],
 				$cont['style_registry']
 			);
@@ -116,6 +119,9 @@ final class Plugin_Service_Container_Builder {
 		};
 		$this->container['current_user']     = static function () {
 			return new Current_User();
+		};
+		$this->container['site_env']         = static function () {
+			return new Site_Env();
 		};
 		$this->container['plugin_installer'] = static function ( $cont ) {
 			return new Plugin_Installer(

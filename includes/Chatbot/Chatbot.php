@@ -11,7 +11,9 @@ namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
 
 /**
  * Class controlling the AI-powered chatbot.
@@ -48,7 +50,7 @@ class Chatbot implements With_Hooks {
 	 * The AI instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Chatbot_AI|null
+	 * @var Chatbot_AI
 	 */
 	private $ai;
 
@@ -58,13 +60,22 @@ class Chatbot implements With_Hooks {
 	 * @since n.e.x.t
 	 *
 	 * @param Plugin_Env      $plugin_env      The plugin environment.
+	 * @param Site_Env        $site_env        The site environment.
+	 * @param Current_User    $current_user    The current user instance.
 	 * @param Script_Registry $script_registry The WordPress script registry instance.
 	 * @param Style_Registry  $style_registry  The WordPress style registry instance.
 	 */
-	public function __construct( Plugin_Env $plugin_env, Script_Registry $script_registry, Style_Registry $style_registry ) {
+	public function __construct(
+		Plugin_Env $plugin_env,
+		Site_Env $site_env,
+		Current_User $current_user,
+		Script_Registry $script_registry,
+		Style_Registry $style_registry
+	) {
 		$this->plugin_env      = $plugin_env;
 		$this->script_registry = $script_registry;
 		$this->style_registry  = $style_registry;
+		$this->ai              = new Chatbot_AI( $site_env, $current_user );
 	}
 
 	/**
@@ -99,9 +110,6 @@ class Chatbot implements With_Hooks {
 	 * @return array<string, mixed> The model parameters, containing 'system_instruction'.
 	 */
 	public function get_model_params(): array {
-		if ( ! isset( $this->ai ) ) {
-			$this->ai = new Chatbot_AI();
-		}
 		return array(
 			'system_instruction' => $this->ai->get_system_instruction(),
 		);

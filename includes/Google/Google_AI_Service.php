@@ -14,6 +14,8 @@ use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 
@@ -121,7 +123,16 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 * @since n.e.x.t
 	 *
 	 * @param string               $model           The model slug.
-	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
+	 * @param array<string, mixed> $model_params    {
+	 *     Optional. Additional model parameters. Default empty array.
+	 *
+	 *     @type array<string, mixed>                    $generation_config  Optional. Model generation configuration
+	 *                                                                       options. Default empty array.
+	 *     @type string|Parts|Content                    $system_instruction Optional. The system instruction for the
+	 *                                                                       model. Default none.
+	 *     @type Safety_Setting[]|array<string, mixed>[] $safety_settings    Optional. The safety settings for the
+	 *                                                                       model. Default empty array.
+	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Generative_AI_Model The generative model.
 	 *

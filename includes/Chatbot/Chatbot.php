@@ -8,7 +8,6 @@
 
 namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
@@ -49,7 +48,7 @@ class Chatbot implements With_Hooks {
 	 * The AI instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Chatbot_AI
+	 * @var Chatbot_AI|null
 	 */
 	private $ai;
 
@@ -69,17 +68,6 @@ class Chatbot implements With_Hooks {
 	}
 
 	/**
-	 * Sets the AI service for the chatbot.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param Generative_AI_Service $ai_service The AI service.
-	 */
-	public function set_service( Generative_AI_Service $ai_service ): void {
-		$this->ai = new Chatbot_AI( $ai_service );
-	}
-
-	/**
 	 * Adds relevant WordPress hooks.
 	 *
 	 * @since n.e.x.t
@@ -96,6 +84,27 @@ class Chatbot implements With_Hooks {
 		} else {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		}
+
+		add_filter(
+			'wp_starter_plugin_rest_model_params',
+			array( $this, 'filter_rest_model_params' )
+		);
+	}
+
+	/**
+	 * Gets the model parameters to use for the chatbot.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The model parameters, containing 'system_instruction'.
+	 */
+	public function get_model_params(): array {
+		if ( ! isset( $this->ai ) ) {
+			$this->ai = new Chatbot_AI();
+		}
+		return array(
+			'system_instruction' => $this->ai->get_system_instruction(),
+		);
 	}
 
 	/**
@@ -131,5 +140,22 @@ class Chatbot implements With_Hooks {
 	public function enqueue_assets(): void {
 		$this->script_registry->enqueue( 'wpsp_chatbot' );
 		$this->style_registry->enqueue( 'wpsp_chatbot' );
+	}
+
+	/**
+	 * Filters the model parameters for the REST API.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
+	 *                                           'generation_config' and 'system_instruction'.
+	 * @return array<string, mixed> The filtered model parameters.
+	 */
+	public function filter_rest_model_params( array $model_params ): array {
+		if ( isset( $model_params['use_wpps_chatbot'] ) || isset( $model_params['useWppsChatbot'] ) ) {
+			$model_params = array_merge( $model_params, $this->get_model_params() );
+			unset( $model_params['use_wpps_chatbot'], $model_params['useWppsChatbot'] );
+		}
+		return $model_params;
 	}
 }

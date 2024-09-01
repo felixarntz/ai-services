@@ -9,6 +9,8 @@
 namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
 
 use InvalidArgumentException;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
+use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
 use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
 use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
@@ -147,37 +149,8 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			}
 		}
 
-		try {
-			$model = $service->get_model( $model, $request['model_params'] ?? array() );
-		} catch ( Generative_AI_Exception $e ) {
-			throw REST_Exception::create(
-				'rest_cannot_get_model',
-				sprintf(
-					/* translators: %s: original error message */
-					esc_html__( 'Getting the model failed: %s', 'wp-starter-plugin' ),
-					esc_html( $e->getMessage() )
-				),
-				500
-			);
-		} catch ( InvalidArgumentException $e ) {
-			throw REST_Exception::create(
-				'rest_invalid_model_params',
-				sprintf(
-					/* translators: %s: original error message */
-					esc_html__( 'Invalid model slug or model params: %s', 'wp-starter-plugin' ),
-					esc_html( $e->getMessage() )
-				),
-				400
-			);
-		}
-
-		if ( ! $model instanceof With_Text_Generation ) {
-			throw REST_Exception::create(
-				'rest_model_lacks_support',
-				esc_html__( 'The model does not support text generation.', 'wp-starter-plugin' ),
-				400
-			);
-		}
+		$model_params = $this->process_model_params( $request['model_params'] ?? array() );
+		$model        = $this->get_model( $service, $model, $model_params );
 
 		// Parse content data into one of the supported formats.
 		$content = $this->parse_content( $request['content'] );
@@ -209,6 +182,92 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		}
 
 		return rest_ensure_response( $candidates->to_array() );
+	}
+
+	/**
+	 * Retrieves the (text-based) model with the given slug and parameters.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Generative_AI_Service $service      The service instance to get the model from.
+	 * @param string                $model        The model slug.
+	 * @param array<string, mixed>  $model_params The model parameters.
+	 * @return Generative_AI_Model&With_Text_Generation The model.
+	 *
+	 * @throws REST_Exception Thrown when the model cannot be retrieved or invalid parameters are provided.
+	 */
+	protected function get_model( Generative_AI_Service $service, string $model, array $model_params ): Generative_AI_Model {
+		try {
+			$model = $service->get_model( $model, $model_params );
+		} catch ( Generative_AI_Exception $e ) {
+			throw REST_Exception::create(
+				'rest_cannot_get_model',
+				sprintf(
+					/* translators: %s: original error message */
+					esc_html__( 'Getting the model failed: %s', 'wp-starter-plugin' ),
+					esc_html( $e->getMessage() )
+				),
+				500
+			);
+		} catch ( InvalidArgumentException $e ) {
+			throw REST_Exception::create(
+				'rest_invalid_model_params',
+				sprintf(
+					/* translators: %s: original error message */
+					esc_html__( 'Invalid model slug or model params: %s', 'wp-starter-plugin' ),
+					esc_html( $e->getMessage() )
+				),
+				400
+			);
+		}
+
+		if ( ! $model instanceof With_Text_Generation ) {
+			throw REST_Exception::create(
+				'rest_model_lacks_support',
+				esc_html__( 'The model does not support text generation.', 'wp-starter-plugin' ),
+				400
+			);
+		}
+
+		return $model;
+	}
+
+	/**
+	 * Processes the model parameters before retrieving the model with them.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $model_params The model parameters.
+	 * @return array<string, mixed> The processed model parameters.
+	 */
+	protected function process_model_params( array $model_params ): array {
+		// Transforms common model parameters from camelCase to snake_case.
+		$snake_case_map = array(
+			'generationConfig'  => 'generation_config',
+			'systemInstruction' => 'system_instruction',
+		);
+		foreach ( $snake_case_map as $camel_case => $snake_case ) {
+			if ( isset( $model_params[ $camel_case ] ) ) {
+				if ( ! isset( $model_params[ $snake_case ] ) ) {
+					$model_params[ $snake_case ] = $model_params[ $camel_case ];
+				}
+				unset( $model_params[ $camel_case ] );
+			}
+		}
+
+		/**
+		 * Filters the model parameters passed to the REST API before retrieving the model with them.
+		 *
+		 * This can be used, for example, to inject additional parameters via server-side logic in order to decouple
+		 * them from the client-side implementation.
+		 *
+		 * @since n.e.x.t
+		 *
+		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
+		 *                                           'generation_config' and 'system_instruction'.
+		 * @return array<string, mixed> The processed model parameters.
+		 */
+		return (array) apply_filters( 'wp_starter_plugin_rest_model_params', $model_params );
 	}
 
 	/**

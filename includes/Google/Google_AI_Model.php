@@ -81,7 +81,9 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	 *
 	 * @param Google_AI_API_Client $api             The Google AI API instance.
 	 * @param string               $model           The model slug.
-	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
+	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. See
+	 *                                              {@see Google_AI_Service::get_model()} for the list of available
+	 *                                              parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameter is missing.
@@ -98,6 +100,12 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 
 		$this->generation_config = $model_params['generation_config'] ?? array();
 
+		// TODO: Add support for tools and tool config, to support code generation.
+
+		if ( isset( $model_params['system_instruction'] ) ) {
+			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
+		}
+
 		if ( isset( $model_params['safety_settings'] ) ) {
 			foreach ( $model_params['safety_settings'] as $index => $safety_setting ) {
 				if ( is_array( $safety_setting ) ) {
@@ -111,12 +119,6 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 			$this->safety_settings = $model_params['safety_settings'];
 		} else {
 			$this->safety_settings = array();
-		}
-
-		// TODO: Add support for tools and tool config, to support code generation.
-
-		if ( isset( $model_params['system_instruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
 		}
 	}
 

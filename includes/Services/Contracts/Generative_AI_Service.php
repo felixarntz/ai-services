@@ -10,6 +10,8 @@ namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
 
 use InvalidArgumentException;
 use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
+use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
 use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
 
 /**
@@ -56,7 +58,13 @@ interface Generative_AI_Service {
 	 * @since n.e.x.t
 	 *
 	 * @param string               $model           The model slug.
-	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
+	 * @param array<string, mixed> $model_params    {
+	 *     Optional. Additional model parameters. Default empty array.
+	 *
+	 *     @type array<string, mixed> $generation_config  Optional. Model generation configuration options. Default
+	 *                                                    empty array.
+	 *     @type string|Parts|Content $system_instruction Optional. The system instruction for the model. Default none.
+	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Generative_AI_Model The generative model.
 	 *

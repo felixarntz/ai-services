@@ -12,6 +12,7 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Depen
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
 
@@ -61,6 +62,7 @@ class Chatbot implements With_Hooks {
 	 *
 	 * @param Plugin_Env      $plugin_env      The plugin environment.
 	 * @param Site_Env        $site_env        The site environment.
+	 * @param Network_Env     $network_env     The network environment.
 	 * @param Current_User    $current_user    The current user instance.
 	 * @param Script_Registry $script_registry The WordPress script registry instance.
 	 * @param Style_Registry  $style_registry  The WordPress style registry instance.
@@ -68,6 +70,7 @@ class Chatbot implements With_Hooks {
 	public function __construct(
 		Plugin_Env $plugin_env,
 		Site_Env $site_env,
+		Network_Env $network_env,
 		Current_User $current_user,
 		Script_Registry $script_registry,
 		Style_Registry $style_registry
@@ -75,7 +78,7 @@ class Chatbot implements With_Hooks {
 		$this->plugin_env      = $plugin_env;
 		$this->script_registry = $script_registry;
 		$this->style_registry  = $style_registry;
-		$this->ai              = new Chatbot_AI( $site_env, $current_user );
+		$this->ai              = new Chatbot_AI( $site_env, $network_env, $current_user );
 	}
 
 	/**

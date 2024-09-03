@@ -9,6 +9,7 @@
 namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
 
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
 
 /**
@@ -27,6 +28,14 @@ class Chatbot_AI {
 	private $site_env;
 
 	/**
+	 * The network environment.
+	 *
+	 * @since n.e.x.t
+	 * @var Network_Env
+	 */
+	private $network_env;
+
+	/**
 	 * The current user instance.
 	 *
 	 * @since n.e.x.t
@@ -40,10 +49,12 @@ class Chatbot_AI {
 	 * @since n.e.x.t
 	 *
 	 * @param Site_Env     $site_env    The site environment.
+	 * @param Network_Env  $network_env The network environment.
 	 * @param Current_User $current_user The current user instance.
 	 */
-	public function __construct( Site_Env $site_env, Current_User $current_user ) {
+	public function __construct( Site_Env $site_env, Network_Env $network_env, Current_User $current_user ) {
 		$this->site_env     = $site_env;
+		$this->network_env  = $network_env;
 		$this->current_user = $current_user;
 	}
 
@@ -103,16 +114,16 @@ Here is some additional information about the WordPress site, so that you can he
 			$instruction .= '- The current user is not logged in.' . "\n";
 		}
 
-		if ( is_multisite() ) {
+		if ( $this->network_env->is_multisite() ) {
 			$instruction .= '- The site is part of a multisite network.';
 			if ( is_main_site() ) {
 				$instruction .= ' It is the main site of the network.' . "\n";
 			} else {
 				$instruction .= ' It is a subsite of the network.' . "\n";
 			}
-			if ( is_super_admin() ) {
+			if ( $this->current_user->is_super_admin() ) {
 				$instruction .= '  - The current user is a network administrator.' . "\n";
-				$instruction .= '  - The URL to the network admin interface is ' . network_admin_url( '/' ) . '.' . "\n";
+				$instruction .= '  - The URL to the network admin interface is ' . $this->network_env->admin_url( '/' ) . '.' . "\n";
 			}
 		}
 
@@ -128,6 +139,9 @@ Here is some additional information about the WordPress site, so that you can he
 	 */
 	private function get_active_plugins_info(): array {
 		$active_plugins = $this->site_env->get_active_plugins();
+		if ( $this->network_env->is_multisite() ) {
+			$active_plugins = array_merge( $this->network_env->get_active_plugins(), $active_plugins );
+		}
 		if ( count( $active_plugins ) === 0 ) {
 			return array();
 		}

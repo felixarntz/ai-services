@@ -95,8 +95,10 @@ class Chatbot implements With_Hooks {
 
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+			add_action( 'admin_footer', array( $this, 'render_app_root' ) );
 		} else {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+			add_action( 'wp_footer', array( $this, 'render_app_root' ) );
 		}
 
 		add_filter(
@@ -133,12 +135,21 @@ class Chatbot implements With_Hooks {
 			)
 		);
 		$this->style_registry->register(
+			'react_chatbot_kit',
+			array(
+				'src'          => $this->plugin_env->url( 'build/chatbot/index.css' ),
+				'path'         => $this->plugin_env->path( 'build/chatbot/index.css' ),
+				'manifest'     => $this->plugin_env->path( 'build/chatbot/index.asset.php' ),
+				'dependencies' => array(),
+			)
+		);
+		$this->style_registry->register(
 			'wpsp_chatbot',
 			array(
 				'src'          => $this->plugin_env->url( 'build/chatbot/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/chatbot/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/chatbot/index.asset.php' ),
-				'dependencies' => array(),
+				'dependencies' => array( 'react_chatbot_kit', 'wp-components' ),
 			)
 		);
 	}
@@ -151,6 +162,17 @@ class Chatbot implements With_Hooks {
 	public function enqueue_assets(): void {
 		$this->script_registry->enqueue( 'wpsp_chatbot' );
 		$this->style_registry->enqueue( 'wpsp_chatbot' );
+	}
+
+	/**
+	 * Renders the chatbot app root.
+	 *
+	 * @since n.e.x.t
+	 */
+	public function render_app_root(): void {
+		?>
+		<div id="wp-starter-plugin-chatbot-root" class="chatbot-root"></div>
+		<?php
 	}
 
 	/**

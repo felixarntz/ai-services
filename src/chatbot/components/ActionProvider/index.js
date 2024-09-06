@@ -1,4 +1,18 @@
+/**
+ * External dependencies
+ */
+import { store as aiStore } from '@wp-starter-plugin/ai-store';
+
+/**
+ * WordPress dependencies
+ */
 import { Children, cloneElement } from '@wordpress/element';
+import { useDispatch } from '@wordpress/data';
+
+/**
+ * Internal dependencies
+ */
+import { useChatIdContext } from '../../context';
 
 /**
  * Utility component for the chatbot.
@@ -16,11 +30,24 @@ export default function ActionProvider( {
 	setState,
 	children,
 } ) {
+	const chatId = useChatIdContext();
+	const { sendMessage } = useDispatch( aiStore );
+
+	const respond = async ( message ) => {
+		const aiResponse = await sendMessage( chatId, message );
+		const chatResponse = createChatBotMessage(
+			aiResponse?.parts?.[ 0 ]?.text || 'I am sorry, I do not understand.'
+		);
+		setState( ( state ) => ( {
+			...state,
+			messages: [ ...state.messages, chatResponse ],
+		} ) );
+	};
 	return (
 		<div>
 			{ Children.map( children, ( child ) => {
 				return cloneElement( child, {
-					actions: {},
+					actions: { respond },
 				} );
 			} ) }
 		</div>

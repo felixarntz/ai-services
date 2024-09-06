@@ -1,3 +1,6 @@
+/**
+ * WordPress dependencies
+ */
 import { Children, cloneElement } from '@wordpress/element';
 
 /**
@@ -12,7 +15,7 @@ import { Children, cloneElement } from '@wordpress/element';
  */
 export default function MessageParser( { children, actions } ) {
 	const parse = ( message ) => {
-		console.log( message ); // eslint-disable-line no-console
+		actions.respond( message );
 	};
 
 	return (
@@ -20,7 +23,7 @@ export default function MessageParser( { children, actions } ) {
 			{ Children.map( children, ( child ) => {
 				return cloneElement( child, {
 					parse,
-					actions: {},
+					actions,
 				} );
 			} ) }
 		</div>

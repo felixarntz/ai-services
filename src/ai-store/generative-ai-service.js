@@ -159,7 +159,7 @@ class GenerativeAiService {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( { content, model, modelParams } ) {
-		if ( ! this.capabilities.includes( 'text-generation' ) ) {
+		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
@@ -198,7 +198,7 @@ class GenerativeAiService {
 	 * @return {ChatSession} Chat session.
 	 */
 	startChat( { history, model, modelParams } ) {
-		if ( ! this.capabilities.includes( 'text-generation' ) ) {
+		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
@@ -229,7 +229,7 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( { content, model, modelParams } ) {
-		if ( ! this.capabilities.includes( 'text-generation' ) ) {
+		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
 					'The service does not support text generation.',

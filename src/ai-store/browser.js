@@ -42,7 +42,7 @@ async function getBrowserAiCapabilities( ai ) {
 	if ( ai.canCreateTextSession ) {
 		const supportsTextGeneration = await ai.canCreateTextSession();
 		if ( supportsTextGeneration && supportsTextGeneration === 'readily' ) {
-			capabilities.push( 'text-generation' );
+			capabilities.push( 'text_generation' );
 		}
 	}
 

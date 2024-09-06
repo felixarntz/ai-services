@@ -17,7 +17,7 @@ const LOAD_CHAT_START = 'LOAD_CHAT_START';
 const LOAD_CHAT_FINISH = 'LOAD_CHAT_FINISH';
 
 const SERVICE_ARGS = {
-	capabilities: [ 'text-generation' ],
+	capabilities: [ 'text_generation' ],
 };
 
 const chatSessionInstances = {};
@@ -136,6 +136,8 @@ const actions = {
 				type: LOAD_CHAT_FINISH,
 				payload: { chatId },
 			} );
+
+			return response;
 		};
 	},
 

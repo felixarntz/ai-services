@@ -78,8 +78,8 @@ Please provide the information in a clear and concise manner, and avoid using ja
 Do not provide any code snippets or technical details, unless specifically requested by the user.
 Do not hallucinate or provide false information.
 Here is some additional information about the WordPress site, so that you can help users more effectively:
- - The site is running on WordPress version " . $this->site_env->get_info( 'version' ) . '.
- - The primary language of the site is ' . $this->site_env->get_info( 'language' ) . '.
+ - The site is running on WordPress version " . $this->site_env->info( 'version' ) . '.
+ - The primary language of the site is ' . $this->site_env->info( 'language' ) . '.
 ';
 
 		$themes = $this->site_env->get_active_themes();

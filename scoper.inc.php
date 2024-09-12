@@ -66,5 +66,5 @@ return array(
 		},
 	),
 	'exclude-namespaces' => array( 'WpOrg' ),
-	'exclude-classes'    => array( '/^WP_[A-Za-z0-9_]+$/' ),
+	'exclude-classes'    => array( '/^(WP|Requests)_[A-Za-z0-9_]+$/' ),
 );

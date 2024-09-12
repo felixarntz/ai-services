@@ -66,6 +66,7 @@ class Chatbot_AI {
 	 * @return string The system instruction.
 	 */
 	public function get_system_instruction(): string {
+		// TODO: Use i18n functions.
 		$instruction = 'You are a chatbot running inside a WordPress site.
 You are here to help users with their questions and provide information.
 You can also provide assistance with troubleshooting and technical issues.

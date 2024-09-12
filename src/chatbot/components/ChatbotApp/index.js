@@ -36,11 +36,10 @@ export default function ChatbotApp() {
 	const [ isVisible, setIsVisible ] = useState( false );
 	const toggleVisibility = () => setIsVisible( ! isVisible );
 
-	const { service, hasChat, isLoading } = useSelect( ( select ) => {
+	const { service, hasChat } = useSelect( ( select ) => {
 		return {
 			service: select( aiStore ).getAvailableService( SERVICE_ARGS ),
 			hasChat: !! select( aiStore ).getChat( CHAT_ID ),
-			isLoading: select( aiStore ).isChatLoading( CHAT_ID ),
 		};
 	} );
 
@@ -63,12 +62,6 @@ export default function ChatbotApp() {
 		}
 	}, [ isVisible, service, hasChat, startChat ] );
 
-	useEffect( () => {
-		if ( isLoading ) {
-			console.log( 'Chat is loading...' ); // eslint-disable-line no-console
-		}
-	}, [ isLoading ] );
-
 	return (
 		<>
 			<div
@@ -89,7 +82,7 @@ export default function ChatbotApp() {
 			<Button
 				variant="primary"
 				onClick={ toggleVisibility }
-				className="chatbot-button"
+				className="chatbot-button button button-primary" // Used so that we don't need to load the heavy 'wp-components' stylesheet everywhere.
 				aria-controls="wp-starter-plugin-chatbot-container"
 				aria-expanded={ isVisible }
 			>

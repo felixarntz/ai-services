@@ -178,7 +178,7 @@ class GenerativeAiService {
 				data: {
 					content,
 					model: model || '',
-					modelParams: modelParams || {},
+					model_params: modelParams || {},
 				},
 			} );
 		} catch ( error ) {

@@ -131,26 +131,9 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			);
 		}
 
-		$service = $this->services_api->get_available_service( $request['slug'] );
-
-		if ( isset( $request['model'] ) && '' !== $request['model'] ) {
-			$model = $request['model'];
-		} else {
-			// For now, we just use the first model available. TODO: Improve this later, e.g. by specifying a default.
-			try {
-				$model_slugs = $service->list_models();
-				$model       = $model_slugs[0];
-			} catch ( Generative_AI_Exception $e ) {
-				throw REST_Exception::create(
-					'rest_cannot_determine_model',
-					esc_html__( 'Determining the model to use failed.', 'wp-starter-plugin' ),
-					500
-				);
-			}
-		}
-
+		$service      = $this->services_api->get_available_service( $request['slug'] );
 		$model_params = $this->process_model_params( $request['model_params'] ?? array() );
-		$model        = $this->get_model( $service, $model, $model_params );
+		$model        = $this->get_model( $service, $model_params );
 
 		// Parse content data into one of the supported formats.
 		$content = $this->parse_content( $request['content'] );
@@ -190,15 +173,14 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @since n.e.x.t
 	 *
 	 * @param Generative_AI_Service $service      The service instance to get the model from.
-	 * @param string                $model        The model slug.
 	 * @param array<string, mixed>  $model_params The model parameters.
 	 * @return Generative_AI_Model&With_Text_Generation The model.
 	 *
 	 * @throws REST_Exception Thrown when the model cannot be retrieved or invalid parameters are provided.
 	 */
-	protected function get_model( Generative_AI_Service $service, string $model, array $model_params ): Generative_AI_Model {
+	protected function get_model( Generative_AI_Service $service, array $model_params ): Generative_AI_Model {
 		try {
-			$model = $service->get_model( $model, $model_params );
+			$model = $service->get_model( $model_params );
 		} catch ( Generative_AI_Exception $e ) {
 			throw REST_Exception::create(
 				'rest_cannot_get_model',
@@ -279,14 +261,34 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 */
 	protected function args(): array {
 		return array(
-			'model'        => array(
-				'description' => __( 'Model slug.', 'wp-starter-plugin' ),
-				'type'        => 'string',
-			),
 			'model_params' => array(
 				'description'          => __( 'Model parameters.', 'wp-starter-plugin' ),
 				'type'                 => 'object',
-				'properties'           => array(),
+				'properties'           => array(
+					'model'              => array(
+						'description' => __( 'Model slug.', 'wp-starter-plugin' ),
+						'type'        => 'string',
+					),
+					'generation_config'  => array(
+						'description'          => __( 'Model generation configuration options.', 'wp-starter-plugin' ),
+						'type'                 => 'object',
+						'additionalProperties' => true,
+					),
+					'system_instruction' => array(
+						'description' => __( 'System instruction for the model.', 'wp-starter-plugin' ),
+						'type'        => array( 'string', 'object', 'array' ),
+						'oneOf'       => array(
+							array(
+								'description' => __( 'Prompt text as a string.', 'wp-starter-plugin' ),
+								'type'        => 'string',
+							),
+							array_merge(
+								array( 'description' => __( 'Prompt content object.', 'wp-starter-plugin' ) ),
+								$this->get_content_schema( array( Content::ROLE_SYSTEM ) )
+							),
+						),
+					),
+				),
 				'additionalProperties' => true,
 			),
 			'content'      => array(

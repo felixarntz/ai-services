@@ -64,6 +64,17 @@ class Cached_AI_Service implements Generative_AI_Service {
 	}
 
 	/**
+	 * Gets the default model slug to use with the service when none is provided.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The default model slug.
+	 */
+	public function get_default_model_slug(): string {
+		return $this->service->get_default_model_slug();
+	}
+
+	/**
 	 * Lists the available generative model slugs.
 	 *
 	 * @since n.e.x.t
@@ -85,15 +96,21 @@ class Cached_AI_Service implements Generative_AI_Service {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string               $model           The model slug.
-	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. Default empty array.
+	 * @param array<string, mixed> $model_params    {
+	 *     Optional. Model parameters. Default empty array.
+	 *
+	 *     @type string               $model              The model slug. By default, the service's default model slug
+	 *                                                    is used.
+	 *     @type array<string, mixed> $generation_config  Model generation configuration options. Default empty array.
+	 *     @type string|Parts|Content $system_instruction The system instruction for the model. Default none.
+	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Generative_AI_Model The generative model.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model slug or parameters are invalid.
 	 * @throws Generative_AI_Exception Thrown if getting the model fails.
 	 */
-	public function get_model( string $model, array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
-		return $this->service->get_model( $model, $model_params, $request_options );
+	public function get_model( array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
+		return $this->service->get_model( $model_params, $request_options );
 	}
 }

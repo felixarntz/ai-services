@@ -73,6 +73,17 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
+	 * Gets the default model slug to use with the service when none is provided.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The default model slug.
+	 */
+	public function get_default_model_slug(): string {
+		return 'gemini-1.5-flash';
+	}
+
+	/**
 	 * Gets the API client instance.
 	 *
 	 * @since n.e.x.t
@@ -122,14 +133,15 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $model_params    {
-	 *     Optional. Additional model parameters. Default empty array.
+	 *     Optional. Model parameters. Default empty array.
 	 *
-	 *     @type array<string, mixed>                    $generation_config  Optional. Model generation configuration
-	 *                                                                       options. Default empty array.
-	 *     @type string|Parts|Content                    $system_instruction Optional. The system instruction for the
-	 *                                                                       model. Default none.
+	 *     @type string                                  $model              The model slug. By default, the service's
+	 *                                                                       default model slug is used.
+	 *     @type array<string, mixed>                    $generation_config  Model generation configuration options.
+	 *                                                                       Default empty array.
+	 *     @type string|Parts|Content                    $system_instruction The system instruction for the model.
+	 *                                                                       Default none.
 	 *     @type Safety_Setting[]|array<string, mixed>[] $safety_settings    Optional. The safety settings for the
 	 *                                                                       model. Default empty array.
 	 * }
@@ -139,7 +151,14 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 * @throws InvalidArgumentException Thrown if the model slug or parameters are invalid.
 	 * @throws Generative_AI_Exception Thrown if getting the model fails.
 	 */
-	public function get_model( string $model, array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
+	public function get_model( array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
+		if ( isset( $model_params['model'] ) ) {
+			$model = $model_params['model'];
+			unset( $model_params['model'] );
+		} else {
+			$model = $this->get_default_model_slug();
+		}
+
 		return new Google_AI_Model( $this->api, $model, $model_params, $request_options );
 	}
 }

@@ -55,7 +55,6 @@ export default function ChatbotApp() {
 			} else if ( service ) {
 				startChat( CHAT_ID, {
 					service: service.slug,
-					model: 'gemini-1.5-flash', // TODO: Make this configurable.
 					modelParams: { useWppsChatbot: true },
 				} );
 			}

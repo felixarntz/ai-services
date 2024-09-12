@@ -154,11 +154,10 @@ class GenerativeAiService {
 	 *
 	 * @param {Object}                 args             Arguments for generating content.
 	 * @param {string|Object|Object[]} args.content     Content data to pass to the model, including the prompt and optional history.
-	 * @param {string}                 args.model       Model slug.
-	 * @param {Object}                 args.modelParams Model parameters.
+	 * @param {Object}                 args.modelParams Model parameters (including optional model slug).
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
-	async generateText( { content, model, modelParams } ) {
+	async generateText( { content, modelParams } ) {
 		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
@@ -177,7 +176,6 @@ class GenerativeAiService {
 				method: 'POST',
 				data: {
 					content,
-					model: model || '',
 					model_params: modelParams || {},
 				},
 			} );
@@ -193,11 +191,10 @@ class GenerativeAiService {
 	 *
 	 * @param {Object}   args             Optional arguments for starting the chat session.
 	 * @param {Object[]} args.history     Chat history.
-	 * @param {string}   args.model       Model slug.
 	 * @param {Object}   args.modelParams Model parameters.
 	 * @return {ChatSession} Chat session.
 	 */
-	startChat( { history, model, modelParams } ) {
+	startChat( { history, modelParams } ) {
 		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
@@ -207,7 +204,7 @@ class GenerativeAiService {
 			);
 		}
 
-		return new ChatSession( this, { history, model, modelParams } );
+		return new ChatSession( this, { history, modelParams } );
 	}
 }
 
@@ -224,11 +221,10 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 	 *
 	 * @param {Object}                 args             Arguments for generating content.
 	 * @param {string|Object|Object[]} args.content     Content data to pass to the model, including the prompt and optional history.
-	 * @param {string}                 args.model       Model slug.
 	 * @param {Object}                 args.modelParams Model parameters.
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
-	async generateText( { content, model, modelParams } ) {
+	async generateText( { content, modelParams } ) {
 		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
@@ -265,13 +261,6 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 			}
 		}
 
-		if ( model ) {
-			modelParams = {
-				model,
-				...modelParams,
-			};
-		}
-
 		const session = await window.ai.createTextSession( modelParams );
 		const resultText = await session.prompt( content );
 
@@ -301,12 +290,10 @@ export class ChatSession {
 	 * @param {GenerativeAiService} service             Generative AI service.
 	 * @param {Object}              options             Chat options.
 	 * @param {Object[]}            options.history     Chat history.
-	 * @param {string}              options.model       Model slug.
 	 * @param {Object}              options.modelParams Model parameters.
 	 */
-	constructor( service, { history, model, modelParams } ) {
+	constructor( service, { history, modelParams } ) {
 		this.service = service;
-		this.model = model;
 		this.modelParams = modelParams;
 
 		if ( history ) {
@@ -343,7 +330,6 @@ export class ChatSession {
 
 		const candidates = await this.service.generateText( {
 			content: contents,
-			model: this.model,
 			modelParams: this.modelParams,
 		} );
 

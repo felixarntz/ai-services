@@ -37,11 +37,10 @@ const actions = {
 	 * @param {string} chatId              Identifier to use for the chat.
 	 * @param {Object} options             Chat options.
 	 * @param {string} options.service     AI service to use.
-	 * @param {string} options.model       Model to use.
-	 * @param {Object} options.modelParams Model parameters.
+	 * @param {Object} options.modelParams Model parameters (including optional model slug).
 	 * @return {Function} Action creator.
 	 */
-	startChat( chatId, { service, model, modelParams } ) {
+	startChat( chatId, { service, modelParams } ) {
 		return async ( { dispatch, select } ) => {
 			if ( select.getServices() === undefined ) {
 				await resolveSelect( STORE_NAME ).getServices();
@@ -74,7 +73,6 @@ const actions = {
 
 			const session = await aiService.startChat( {
 				history,
-				model,
 				modelParams,
 			} );
 
@@ -82,7 +80,6 @@ const actions = {
 				session,
 				service,
 				history,
-				model,
 				modelParams,
 			} );
 
@@ -151,14 +148,13 @@ const actions = {
 	 * @param {ChatSession} options.session     Chat session.
 	 * @param {string}      options.service     AI service to use.
 	 * @param {Object}      options.history     Chat history.
-	 * @param {string}      options.model       Model to use.
 	 * @param {Object}      options.modelParams Model parameters.
 	 * @return {Object} Action creator.
 	 */
-	receiveChat( chatId, { session, service, history, model, modelParams } ) {
+	receiveChat( chatId, { session, service, history, modelParams } ) {
 		return {
 			type: RECEIVE_CHAT,
-			payload: { chatId, session, service, history, model, modelParams },
+			payload: { chatId, session, service, history, modelParams },
 		};
 	},
 
@@ -207,7 +203,7 @@ const actions = {
 function reducer( state = initialState, action ) {
 	switch ( action.type ) {
 		case RECEIVE_CHAT: {
-			const { chatId, session, service, history, model, modelParams } =
+			const { chatId, session, service, history, modelParams } =
 				action.payload;
 			chatSessionInstances[ chatId ] = session;
 			return {
@@ -216,7 +212,6 @@ function reducer( state = initialState, action ) {
 					...state.chatConfigs,
 					[ chatId ]: {
 						service,
-						model,
 						modelParams,
 					},
 				},

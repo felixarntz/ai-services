@@ -16,9 +16,7 @@ import ChatbotMessage from './components/ChatbotMessage';
 
 const config = {
 	initialMessages: [
-		createChatBotMessage(
-			__( 'How can I help you?', 'ai-services' )
-		),
+		createChatBotMessage( __( 'How can I help you?', 'ai-services' ) ),
 	],
 	customComponents: {
 		header: () => <ChatbotHeader />,

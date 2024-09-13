@@ -75,10 +75,7 @@ export default function ShortcutsRegister() {
 		registerShortcut( {
 			name: 'ai-services/toggle-distraction-free',
 			category: 'global',
-			description: __(
-				'Toggle distraction free mode.',
-				'ai-services'
-			),
+			description: __( 'Toggle distraction free mode.', 'ai-services' ),
 			keyCombination: {
 				modifier: 'primaryShift',
 				character: '\\',

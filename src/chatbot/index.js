@@ -33,9 +33,7 @@ function mountApp( Component, renderTarget ) {
 
 // Initialize the app once the DOM is ready.
 domReady( () => {
-	const renderTarget = document.getElementById(
-		'ai-services-chatbot-root'
-	);
+	const renderTarget = document.getElementById( 'ai-services-chatbot-root' );
 	if ( ! renderTarget ) {
 		return;
 	}

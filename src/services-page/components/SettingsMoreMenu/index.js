@@ -30,10 +30,7 @@ import { store as preferencesStore } from '@wordpress/preferences';
 export default function SettingsMoreMenu() {
 	const showIconLabels = useSelect(
 		( select ) =>
-			select( preferencesStore ).get(
-				'ai-services',
-				'showIconLabels'
-			),
+			select( preferencesStore ).get( 'ai-services', 'showIconLabels' ),
 		[]
 	);
 
@@ -72,10 +69,7 @@ export default function SettingsMoreMenu() {
 							<VisuallyHidden as="span">
 								{
 									/* translators: accessibility text */
-									__(
-										'(opens in a new tab)',
-										'ai-services'
-									)
+									__( '(opens in a new tab)', 'ai-services' )
 								}
 							</VisuallyHidden>
 						</MenuItem>

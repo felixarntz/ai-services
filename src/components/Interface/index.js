@@ -48,10 +48,7 @@ export default function Interface( { className, labels, children } ) {
 			);
 
 			return {
-				isDistractionFree: get(
-					'ai-services',
-					'distractionFree'
-				),
+				isDistractionFree: get( 'ai-services', 'distractionFree' ),
 				previousShortcut: getAllShortcutKeyCombinations(
 					'ai-services/previous-region'
 				),

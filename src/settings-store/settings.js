@@ -166,10 +166,7 @@ const actions = {
 				registry
 					.dispatch( noticesStore )
 					.createSuccessNotice(
-						__(
-							'Settings successfully saved.',
-							'ai-services'
-						),
+						__( 'Settings successfully saved.', 'ai-services' ),
 						{
 							id: SAVE_SETTINGS_NOTICE_ID,
 							type: 'snackbar',

@@ -56,6 +56,8 @@ function ai_services_load() /* @phpstan-ignore-line */ {
 	$class_name = 'Felix_Arntz\AI_Services\Plugin_Main';
 	$instance   = new $class_name( __FILE__ );
 	$instance->add_hooks();
+
+	require_once plugin_dir_path( __FILE__ ) . 'includes/api.php';
 }
 
 /**

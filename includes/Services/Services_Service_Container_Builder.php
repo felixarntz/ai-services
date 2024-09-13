@@ -133,7 +133,7 @@ final class Services_Service_Container_Builder {
 	 */
 	private function build_capability_services(): void {
 		$this->container['capability_container'] = static function () {
-			$capabilities                         = new Capability_Container();
+			$capabilities                        = new Capability_Container();
 			$capabilities['ais_manage_services'] = static function () {
 				return new Base_Capability(
 					'ais_manage_services',

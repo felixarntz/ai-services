@@ -8,10 +8,10 @@
 
 namespace Felix_Arntz\AI_Services\Services\Cache;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
+use InvalidArgumentException;
 
 /**
  * Class representing a cached AI service with API client through a decorator pattern.

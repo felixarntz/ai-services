@@ -8,8 +8,8 @@
 
 namespace Felix_Arntz\AI_Services\Google\Types;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use InvalidArgumentException;
 
 /**
  * Class representing a safety setting that can be sent as part of request parameters.

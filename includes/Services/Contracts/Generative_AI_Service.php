@@ -8,11 +8,11 @@
 
 namespace Felix_Arntz\AI_Services\Services\Contracts;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
+use InvalidArgumentException;
 
 /**
  * Interface for a class representing a generative AI service which provides access to models.

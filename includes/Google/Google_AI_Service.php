@@ -8,7 +8,6 @@
 
 namespace Felix_Arntz\AI_Services\Google;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -18,6 +17,7 @@ use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use InvalidArgumentException;
 
 /**
  * Class for the Google AI service.

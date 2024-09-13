@@ -8,7 +8,6 @@
 
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
@@ -19,6 +18,7 @@ use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
+use InvalidArgumentException;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;

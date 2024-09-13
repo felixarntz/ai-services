@@ -8,12 +8,12 @@
 
 namespace Felix_Arntz\AI_Services\Services\Contracts;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Chat_Session;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
+use InvalidArgumentException;
 
 /**
  * Interface for a model which allows generating text content.

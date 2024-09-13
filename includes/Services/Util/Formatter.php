@@ -8,9 +8,9 @@
 
 namespace Felix_Arntz\AI_Services\Services\Util;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
+use InvalidArgumentException;
 
 /**
  * Class providing static methods for formatting content.

@@ -8,8 +8,8 @@
 
 namespace Felix_Arntz\AI_Services\Services\Types\Parts;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Types\Contracts\Part;
+use InvalidArgumentException;
 
 /**
  * Base class for a part of content for a generative model.

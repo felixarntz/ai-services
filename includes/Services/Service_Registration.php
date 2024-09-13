@@ -8,8 +8,6 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
-use InvalidArgumentException;
-use RuntimeException;
 use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service;
 use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service_With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -18,6 +16,8 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Class representing a service registration.

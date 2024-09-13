@@ -8,7 +8,6 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
@@ -18,6 +17,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\C
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use InvalidArgumentException;
 
 /**
  * Main API class providing the entry point to the generative AI services.

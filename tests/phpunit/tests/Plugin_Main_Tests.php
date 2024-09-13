@@ -8,10 +8,10 @@
 
 namespace Felix_Arntz\AI_Services\PHPUnit\Tests;
 
-use ReflectionProperty;
 use Felix_Arntz\AI_Services\PHPUnit\Includes\Test_Case;
 use Felix_Arntz\AI_Services\Plugin_Main;
 use Felix_Arntz\AI_Services\Services\Services_API_Instance;
+use ReflectionProperty;
 
 class Plugin_Main_Tests extends Test_Case {
 

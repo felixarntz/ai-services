@@ -9,9 +9,9 @@
 namespace Felix_Arntz\AI_Services\Services\Cache;
 
 use Exception;
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use InvalidArgumentException;
 
 /**
  * Class that allows to wrap service method calls so that their return values are cached.

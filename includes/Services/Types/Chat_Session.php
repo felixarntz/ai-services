@@ -8,10 +8,10 @@
 
 namespace Felix_Arntz\AI_Services\Services\Types;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use InvalidArgumentException;
 
 /**
  * Class representing a chat session with a generative model.

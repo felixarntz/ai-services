@@ -8,7 +8,6 @@
 
 namespace Felix_Arntz\AI_Services\Google;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
@@ -17,6 +16,7 @@ use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use InvalidArgumentException;
 
 /**
  * Class representing a Google AI model.

@@ -8,8 +8,8 @@
 
 namespace Felix_Arntz\AI_Services\Services\Types;
 
-use InvalidArgumentException;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use InvalidArgumentException;
 
 /**
  * Class representing a candidate for a content response from a generative AI model.

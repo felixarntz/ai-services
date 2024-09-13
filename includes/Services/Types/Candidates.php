@@ -9,10 +9,10 @@
 namespace Felix_Arntz\AI_Services\Services\Types;
 
 use ArrayIterator;
-use InvalidArgumentException;
-use Traversable;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
+use InvalidArgumentException;
+use Traversable;
 
 /**
  * Class representing a collection of response candidates for a generative model.

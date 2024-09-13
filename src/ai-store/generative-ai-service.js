@@ -152,12 +152,11 @@ class GenerativeAiService {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {Object}                 args             Arguments for generating content.
-	 * @param {string|Object|Object[]} args.content     Content data to pass to the model, including the prompt and optional history.
-	 * @param {Object}                 args.modelParams Model parameters (including optional model slug).
+	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional history.
+	 * @param {Object}                 modelParams Optional. Model parameters (including optional model slug).
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
-	async generateText( { content, modelParams } ) {
+	async generateText( content, modelParams ) {
 		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
@@ -189,12 +188,11 @@ class GenerativeAiService {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {Object}   args             Optional arguments for starting the chat session.
-	 * @param {Object[]} args.history     Chat history.
-	 * @param {Object}   args.modelParams Model parameters.
+	 * @param {Object[]} history     Chat history.
+	 * @param {Object}   modelParams Model parameters.
 	 * @return {ChatSession} Chat session.
 	 */
-	startChat( { history, modelParams } ) {
+	startChat( history, modelParams ) {
 		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
@@ -219,12 +217,11 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {Object}                 args             Arguments for generating content.
-	 * @param {string|Object|Object[]} args.content     Content data to pass to the model, including the prompt and optional history.
-	 * @param {Object}                 args.modelParams Model parameters.
+	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional history.
+	 * @param {Object}                 modelParams Optional. Model parameters (including optional model slug).
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
-	async generateText( { content, modelParams } ) {
+	async generateText( content, modelParams ) {
 		if ( ! this.capabilities.includes( 'text_generation' ) ) {
 			throw new Error(
 				__(
@@ -328,10 +325,10 @@ export class ChatSession {
 
 		const contents = [ ...this.history, newContent ];
 
-		const candidates = await this.service.generateText( {
-			content: contents,
-			modelParams: this.modelParams,
-		} );
+		const candidates = await this.service.generateText(
+			contents,
+			this.modelParams
+		);
 
 		// TODO: Support optional candidateFilterArgs, similar to PHP implementation.
 		const responseContent = candidates[ 0 ].content;

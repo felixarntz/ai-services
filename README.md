@@ -1,36 +1,74 @@
-# WP Starter Plugin
+# AI Services
 
-This starter plugin provides a headstart for writing object-oriented WordPress plugins following best practices for both PHP and JavaScript:
-* On the PHP side, it serves as a reference and starting point for using the [WP OOP Plugin Lib library](https://github.com/felixarntz/wp-oop-plugin-lib), which facilitates best practices such as dependency injection in a WordPress context. The plugin includes the library in a way that prevents conflicts with other plugins that may include it, by prefixing the classes.
-* On the JavaScript side, it provides scaffolding for a comprehensive UI application using React and WordPress components, following established Gutenberg patterns and best practices.
+Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
-The starter plugin contains minimal functionality (adding a few options and an admin page) just to show how some of the foundational pieces of the PHP library and the JS infrastructure can be set up.
+## What?
 
-Chances are you may actually want to iterate on some of that starter code rather than removing it. However, it's also fast and easy to remove the demo functionality entirely and start from scratch.
+This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
 
-## Creating a new plugin from this starter plugin
+But enough talk, this is better showcased by example code than by explanation:
 
-In order to create a new plugin based on this foundation, perform the following steps:
+```php
+// Generate the answer to a prompt in PHP code.
+if ( ai_services()->has_available_services() ) {
+	$service = ai_services()->get_available_service();
+	try {
+		$result = $service->get_model()->generate_text( 'What can I do with WordPress?' );
+	} catch ( Exception $e ) {
+		// Handle the exception.
+	}
+}
+```
 
-1. Copy all files into your new plugin's directory.
-2. Perform the following _case-sensitive_ replacements globally across all files (using your plugin's slug and its different variants, per the examples below):
-    * Replace `wp_starter_plugin` with `my_plugin`
-    * Replace `wp-starter-plugin` with `my-plugin`
-    * Replace `WP_Starter_Plugin` with `My_Plugin`
-    * Replace `WP_STARTER_PLUGIN` with `MY_PLUGIN`
-    * Replace `WP Starter Plugin` with `My Plugin`
-    * Replace `wpStarterPlugin` with `myPlugin`
-    * Replace `wpsp_` with `myplugin_`
-    * Replace `wpsp-` with `myplugin-`
-    * Replace `Vendor_NS` with `My_Namespace`
-    * Replace `vendor-ns` with `my-github`
-    * Replace `The plugin description.` with `My plugin does something useful.`
-    * Replace `https://the-plugin.com` with `https://real-plugin-website.com`
-    * Replace `The Plugin Author` with `Real Author Name`
-    * Replace `https://the-plugin-author.com` with `https://real-author-website.com`
-3. Remove any parts of the PHP codebase that you don't need.
-4. Update the `README.md` file as needed.
-5. (Optional) If your plugin does not require any custom JavaScript, remove the `src` directory and the JavaScript-specific infrastructure files (e.g. `.github/workflows/js-lint.yml`, `.prettierignore`, `webpack.config.js`).
+```js
+// Generate the answer to a prompt in JavaScript code.
+const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
+if ( hasAvailableServices() ) {
+	const service = getAvailableService();
+	try {
+		const result = await service.generateText( 'What can I do with WordPress?' );
+	} catch ( error ) {
+		// Handle the error.
+	}
+}
+```
+
+```sh
+// Generate the answer to a prompt using WP-CLI.
+wp ai-services generate-text 'What can I do with WordPress?'
+```
+
+You can also use a specific AI service, if you have a preference, for example the `google` service:
+```php
+// Generate the answer to a prompt using a specific AI service, in PHP code.
+if ( ai_services()->is_service_available( 'google' ) ) {
+	$service = ai_services()->get_available_service( 'google' );
+	try {
+		$result = $service->get_model()->generate_text( 'What can I do with WordPress?' );
+	} catch ( Exception $e ) {
+		// Handle the exception.
+	}
+}
+```
+
+```sh
+# Generate the answer to a prompt using a specific AI service, using the REST API via cURL.
+curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' \
+  -H 'Content-Type: application/json' \
+  --data-raw '{"content":"What can I do with WordPress?"}'
+```
+
+## Why?
+
+* A centralized AI infrastructure facilitates user choice. Users may prefer certain AI services over other ones, and for many common tasks, either of the popular AI services is suitable. Having a common API regardless of the AI service allows leaving the choice to the user, rather than the plugin author.
+* Since the centralized AI infrastructure comes with a common API that works the same for every AI service, it means plugin developers don't have to spend as much time familiarizing themselves with different services, at least when it comes to simple tasks. For tasks where certain services may have advantages over others, there is still flexibility to focus on a specific AI service.
+* It also means no reinventing the wheel: Since most AI services do not provide PHP SDKs for their APIs, many times this means WordPress plugins that want to leverage AI have to implement their own layer around the service's API. Not only is that time consuming, it also distracts from working on the actual (AI driven) features that the plugin should offer to its users. In fact this directly facilitates the user choice aspect mentioned, as having APIs for various AI services already provided means you can simply make those available to your plugin users.
+* Having central AI infrastructure available unlocks AI capabilities for smaller plugins, or to implement any smaller AI enhancements in general: It may not be worth the investment to implement a whole AI API layer for a simple AI driven feature, but when you already have it available, it can lead to more plugins (and thus more users) benefitting from AI capabilities.
+* Last but not least, a central AI infrastructure means users will only have to configure the AI API once, e.g. paste their API keys only in a single WordPress administration screen. Without central AI infrastructure, every plugin has to provide its own UI for pasting API keys, making the process more tedious for site owners the more AI capabilities their site uses.
+
+## Disclaimer
+
+This plugin is still in its very early stages, with a limited feature set. Consider it early access at this point, there are lots of enhancements to add and polishing to do. That's why your feedback is much appreciated!
 
 ## Getting started
 

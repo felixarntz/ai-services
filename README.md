@@ -6,7 +6,15 @@ Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript
 
 This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
 
-But enough talk, this is better showcased by example code than by explanation:
+## Why?
+
+* A centralized AI infrastructure facilitates user choice. Users may prefer certain AI services over other ones, and for many common tasks, either of the popular AI services is suitable. Having a common API regardless of the AI service allows leaving the choice to the user, rather than the plugin author.
+* Since the centralized AI infrastructure comes with a common API that works the same for every AI service, it means plugin developers don't have to spend as much time familiarizing themselves with different services, at least when it comes to simple tasks. For tasks where certain services may have advantages over others, there is still flexibility to focus on a specific AI service.
+* It also means no reinventing the wheel: Since most AI services do not provide PHP SDKs for their APIs, many times this means WordPress plugins that want to leverage AI have to implement their own layer around the service's API. Not only is that time consuming, it also distracts from working on the actual (AI driven) features that the plugin should offer to its users. In fact this directly facilitates the user choice aspect mentioned, as having APIs for various AI services already provided means you can simply make those available to your plugin users.
+* Having central AI infrastructure available unlocks AI capabilities for smaller plugins, or to implement any smaller AI enhancements in general: It may not be worth the investment to implement a whole AI API layer for a simple AI driven feature, but when you already have it available, it can lead to more plugins (and thus more users) benefitting from AI capabilities.
+* Last but not least, a central AI infrastructure means users will only have to configure the AI API once, e.g. paste their API keys only in a single WordPress administration screen. Without central AI infrastructure, every plugin has to provide its own UI for pasting API keys, making the process more tedious for site owners the more AI capabilities their site uses.
+
+## Examples
 
 ```php
 // Generate the answer to a prompt in PHP code.
@@ -57,14 +65,6 @@ curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' 
   -H 'Content-Type: application/json' \
   --data-raw '{"content":"What can I do with WordPress?"}'
 ```
-
-## Why?
-
-* A centralized AI infrastructure facilitates user choice. Users may prefer certain AI services over other ones, and for many common tasks, either of the popular AI services is suitable. Having a common API regardless of the AI service allows leaving the choice to the user, rather than the plugin author.
-* Since the centralized AI infrastructure comes with a common API that works the same for every AI service, it means plugin developers don't have to spend as much time familiarizing themselves with different services, at least when it comes to simple tasks. For tasks where certain services may have advantages over others, there is still flexibility to focus on a specific AI service.
-* It also means no reinventing the wheel: Since most AI services do not provide PHP SDKs for their APIs, many times this means WordPress plugins that want to leverage AI have to implement their own layer around the service's API. Not only is that time consuming, it also distracts from working on the actual (AI driven) features that the plugin should offer to its users. In fact this directly facilitates the user choice aspect mentioned, as having APIs for various AI services already provided means you can simply make those available to your plugin users.
-* Having central AI infrastructure available unlocks AI capabilities for smaller plugins, or to implement any smaller AI enhancements in general: It may not be worth the investment to implement a whole AI API layer for a simple AI driven feature, but when you already have it available, it can lead to more plugins (and thus more users) benefitting from AI capabilities.
-* Last but not least, a central AI infrastructure means users will only have to configure the AI API once, e.g. paste their API keys only in a single WordPress administration screen. Without central AI infrastructure, every plugin has to provide its own UI for pasting API keys, making the process more tedious for site owners the more AI capabilities their site uses.
 
 ## Disclaimer
 

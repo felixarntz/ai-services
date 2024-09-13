@@ -3,7 +3,7 @@
  */
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
-import { store as aiStore } from '@wp-starter-plugin/ai-store';
+import { store as aiStore } from '@ai-services/ai-store';
 
 /**
  * WordPress dependencies
@@ -64,7 +64,7 @@ export default function ChatbotApp() {
 	return (
 		<>
 			<div
-				id="wp-starter-plugin-chatbot-container"
+				id="ai-services-chatbot-container"
 				className="chatbot-container"
 				hidden={ ! isVisible }
 			>
@@ -82,10 +82,10 @@ export default function ChatbotApp() {
 				variant="primary"
 				onClick={ toggleVisibility }
 				className="chatbot-button button button-primary" // Used so that we don't need to load the heavy 'wp-components' stylesheet everywhere.
-				aria-controls="wp-starter-plugin-chatbot-container"
+				aria-controls="ai-services-chatbot-container"
 				aria-expanded={ isVisible }
 			>
-				{ __( 'Need help?', 'wp-starter-plugin' ) }
+				{ __( 'Need help?', 'ai-services' ) }
 			</Button>
 		</>
 	);

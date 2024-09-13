@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@ai-services/settings-store';
 
 /**
  * WordPress dependencies
@@ -35,16 +35,16 @@ export default function SettingsStatus() {
 
 	let statusText;
 	if ( isLoading ) {
-		statusText = __( 'Loading settings…', 'wp-starter-plugin' );
+		statusText = __( 'Loading settings…', 'ai-services' );
 	} else if ( isSaving ) {
-		statusText = __( 'Saving settings…', 'wp-starter-plugin' );
+		statusText = __( 'Saving settings…', 'ai-services' );
 	} else if ( isDirty ) {
 		statusText = __(
 			'Some settings were modified and need to be saved.',
-			'wp-starter-plugin'
+			'ai-services'
 		);
 	} else {
-		statusText = __( 'All settings are up to date.', 'wp-starter-plugin' );
+		statusText = __( 'All settings are up to date.', 'ai-services' );
 	}
 
 	return <p>{ statusText }</p>;

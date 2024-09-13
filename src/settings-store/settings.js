@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
 import { STORE_NAME } from './name';
 import camelCase from '../utils/camel-case';
 
-const PLUGIN_SETTINGS_PREFIX = 'wpsp_';
+const PLUGIN_SETTINGS_PREFIX = 'ais_';
 
 const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
 const SAVE_SETTINGS_START = 'SAVE_SETTINGS_START';
@@ -126,7 +126,7 @@ const actions = {
 				options[ optionName ] = settings[ localName ];
 
 				// Record services that need to be refreshed because their API key has changed.
-				const match = optionName.match( /^wpsp_([a-z0-9-]+)_api_key$/ );
+				const match = optionName.match( /^ais_([a-z0-9-]+)_api_key$/ );
 				if ( match ) {
 					servicesToRefresh.push( match[ 1 ] );
 				}
@@ -168,7 +168,7 @@ const actions = {
 					.createSuccessNotice(
 						__(
 							'Settings successfully saved.',
-							'wp-starter-plugin'
+							'ai-services'
 						),
 						{
 							id: SAVE_SETTINGS_NOTICE_ID,
@@ -180,7 +180,7 @@ const actions = {
 				registry
 					.dispatch( noticesStore )
 					.createErrorNotice(
-						__( 'Saving settings failed.', 'wp-starter-plugin' ),
+						__( 'Saving settings failed.', 'ai-services' ),
 						{
 							id: SAVE_SETTINGS_NOTICE_ID,
 							type: 'snackbar',

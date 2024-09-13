@@ -4,7 +4,7 @@
 import {
 	DistractionFreePreferenceToggleMenuItem,
 	KeyboardShortcutsMenuItem,
-} from '@wp-starter-plugin/components';
+} from '@ai-services/components';
 
 /**
  * WordPress dependencies
@@ -31,7 +31,7 @@ export default function SettingsMoreMenu() {
 	const showIconLabels = useSelect(
 		( select ) =>
 			select( preferencesStore ).get(
-				'wp-starter-plugin',
+				'ai-services',
 				'showIconLabels'
 			),
 		[]
@@ -40,7 +40,7 @@ export default function SettingsMoreMenu() {
 	return (
 		<DropdownMenu
 			icon={ moreVertical }
-			label={ __( 'Options', 'wp-starter-plugin' ) }
+			label={ __( 'Options', 'ai-services' ) }
 			popoverProps={ {
 				placement: 'bottom-end',
 				className: 'more-menu-dropdown__content',
@@ -62,19 +62,19 @@ export default function SettingsMoreMenu() {
 						<MenuItem
 							icon={ external }
 							href={ __(
-								'https://wordpress.org/support/plugin/wp-starter-plugin/',
-								'wp-starter-plugin'
+								'https://wordpress.org/support/plugin/ai-services/',
+								'ai-services'
 							) }
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							{ __( 'Support', 'wp-starter-plugin' ) }
+							{ __( 'Support', 'ai-services' ) }
 							<VisuallyHidden as="span">
 								{
 									/* translators: accessibility text */
 									__(
 										'(opens in a new tab)',
-										'wp-starter-plugin'
+										'ai-services'
 									)
 								}
 							</VisuallyHidden>

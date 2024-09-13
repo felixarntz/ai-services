@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Abstract_Part
+ * Class Felix_Arntz\AI_Services\Services\Types\Parts\Abstract_Part
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
+namespace Felix_Arntz\AI_Services\Services\Types\Parts;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Contracts\Part;
+use Felix_Arntz\AI_Services\Services\Types\Contracts\Part;
 
 /**
  * Base class for a part of content for a generative model.

@@ -111,7 +111,7 @@ const resolvers = {
 	getServices() {
 		return async ( { dispatch } ) => {
 			const services = await apiFetch( {
-				path: '/wp-starter-plugin/v1/services',
+				path: '/ai-services/v1/services',
 			} );
 			services.push( await getBrowserServiceData() );
 			dispatch.receiveServices( services );

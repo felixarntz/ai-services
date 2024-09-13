@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities
+ * Class Felix_Arntz\AI_Services\Services\Util\AI_Capabilities
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Util;
+namespace Felix_Arntz\AI_Services\Services\Util;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Image_Generation;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 
 /**
  * Class exposing the available AI capabilities and related static utility methods.

@@ -1,1 +1,1 @@
-export const STORE_NAME = 'wp-starter-plugin/ai';
+export const STORE_NAME = 'ai-services/ai';

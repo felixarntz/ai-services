@@ -18,9 +18,9 @@ export default function SettingsShortcutsRegister() {
 	const { registerShortcut } = useDispatch( keyboardShortcutsStore );
 	useEffect( () => {
 		registerShortcut( {
-			name: 'wp-starter-plugin/save',
+			name: 'ai-services/save',
 			category: 'global',
-			description: __( 'Save your changes.', 'wp-starter-plugin' ),
+			description: __( 'Save your changes.', 'ai-services' ),
 			keyCombination: {
 				modifier: 'primary',
 				character: 's',

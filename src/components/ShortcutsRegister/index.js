@@ -18,11 +18,11 @@ export default function ShortcutsRegister() {
 	const { registerShortcut } = useDispatch( keyboardShortcutsStore );
 	useEffect( () => {
 		registerShortcut( {
-			name: 'wp-starter-plugin/keyboard-shortcuts',
+			name: 'ai-services/keyboard-shortcuts',
 			category: 'main',
 			description: __(
 				'Display these keyboard shortcuts.',
-				'wp-starter-plugin'
+				'ai-services'
 			),
 			keyCombination: {
 				modifier: 'access',
@@ -31,11 +31,11 @@ export default function ShortcutsRegister() {
 		} );
 
 		registerShortcut( {
-			name: 'wp-starter-plugin/next-region',
+			name: 'ai-services/next-region',
 			category: 'global',
 			description: __(
 				'Navigate to the next part of the screen.',
-				'wp-starter-plugin'
+				'ai-services'
 			),
 			keyCombination: {
 				modifier: 'ctrl',
@@ -50,11 +50,11 @@ export default function ShortcutsRegister() {
 		} );
 
 		registerShortcut( {
-			name: 'wp-starter-plugin/previous-region',
+			name: 'ai-services/previous-region',
 			category: 'global',
 			description: __(
 				'Navigate to the previous part of the screen.',
-				'wp-starter-plugin'
+				'ai-services'
 			),
 			keyCombination: {
 				modifier: 'ctrlShift',
@@ -73,11 +73,11 @@ export default function ShortcutsRegister() {
 		} );
 
 		registerShortcut( {
-			name: 'wp-starter-plugin/toggle-distraction-free',
+			name: 'ai-services/toggle-distraction-free',
 			category: 'global',
 			description: __(
 				'Toggle distraction free mode.',
-				'wp-starter-plugin'
+				'ai-services'
 			),
 			keyCombination: {
 				modifier: 'primaryShift',

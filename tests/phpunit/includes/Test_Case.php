@@ -1,11 +1,11 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes\Test_Case
+ * Class Felix_Arntz\AI_Services\PHPUnit\Includes\Test_Case
  *
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes;
+namespace Felix_Arntz\AI_Services\PHPUnit\Includes;
 
 use WP_UnitTestCase;
 

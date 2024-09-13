@@ -1,17 +1,17 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Chat_Session
+ * Class Felix_Arntz\AI_Services\Services\Types\Chat_Session
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\Types;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Util\Formatter;
 
 /**
  * Class representing a chat session with a generative model.
@@ -92,7 +92,7 @@ final class Chat_Session {
 
 		if ( count( $candidates ) === 0 ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response did not include any relevant candidates.', 'wp-starter-plugin' )
+				esc_html__( 'The response did not include any relevant candidates.', 'ai-services' )
 			);
 		}
 
@@ -118,19 +118,19 @@ final class Chat_Session {
 		foreach ( $history as $content ) {
 			if ( ! $content instanceof Content ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The history must contain Content instances.', 'wp-starter-plugin' )
+					esc_html__( 'The history must contain Content instances.', 'ai-services' )
 				);
 			}
 
 			if ( $first && Content::ROLE_USER !== $content->get_role() ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The first Content instance in the history must be user content.', 'wp-starter-plugin' )
+					esc_html__( 'The first Content instance in the history must be user content.', 'ai-services' )
 				);
 			}
 
 			if ( $content->get_parts()->count() < 1 ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'Each Content instance must have at least one part.', 'wp-starter-plugin' )
+					esc_html__( 'Each Content instance must have at least one part.', 'ai-services' )
 				);
 			}
 

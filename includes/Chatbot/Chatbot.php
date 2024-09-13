@@ -1,20 +1,20 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot
+ * Class Felix_Arntz\AI_Services\Chatbot\Chatbot
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
+namespace Felix_Arntz\AI_Services\Chatbot;
 
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
 
 /**
  * Class controlling the AI-powered chatbot.
@@ -102,7 +102,7 @@ class Chatbot implements With_Hooks {
 		}
 
 		add_filter(
-			'wp_starter_plugin_rest_model_params',
+			'ai_services_rest_model_params',
 			array( $this, 'filter_rest_model_params' )
 		);
 	}
@@ -127,7 +127,7 @@ class Chatbot implements With_Hooks {
 	 */
 	public function register_assets(): void {
 		$this->script_registry->register(
-			'wpsp_chatbot',
+			'ais_chatbot',
 			array(
 				'src'      => $this->plugin_env->url( 'build/chatbot/index.js' ),
 				'manifest' => $this->plugin_env->path( 'build/chatbot/index.asset.php' ),
@@ -144,7 +144,7 @@ class Chatbot implements With_Hooks {
 			)
 		);
 		$this->style_registry->register(
-			'wpsp_chatbot',
+			'ais_chatbot',
 			array(
 				'src'          => $this->plugin_env->url( 'build/chatbot/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/chatbot/style-index.css' ),
@@ -161,8 +161,8 @@ class Chatbot implements With_Hooks {
 	 * @since n.e.x.t
 	 */
 	public function enqueue_assets(): void {
-		$this->script_registry->enqueue( 'wpsp_chatbot' );
-		$this->style_registry->enqueue( 'wpsp_chatbot' );
+		$this->script_registry->enqueue( 'ais_chatbot' );
+		$this->style_registry->enqueue( 'ais_chatbot' );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class Chatbot implements With_Hooks {
 	 */
 	public function render_app_root(): void {
 		?>
-		<div id="wp-starter-plugin-chatbot-root" class="chatbot-root"></div>
+		<div id="ai-services-chatbot-root" class="chatbot-root"></div>
 		<?php
 	}
 

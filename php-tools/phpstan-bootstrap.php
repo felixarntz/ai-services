@@ -3,7 +3,7 @@
  * File with definitions needed for PHPStan.
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
 define( 'WPINC', 'wp-includes' );

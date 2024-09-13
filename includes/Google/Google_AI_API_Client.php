@@ -1,20 +1,20 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Google\Google_AI_API_Client
+ * Class Felix_Arntz\AI_Services\Google\Google_AI_API_Client
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Google;
+namespace Felix_Arntz\AI_Services\Google;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Get_Request;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Get_Request;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
 
 /**
  * Class to interact directly with the Google Generative Language API.
@@ -73,7 +73,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: original error message */
-						__( 'Error while making request to the Google Generative Language API: %s ', 'wp-starter-plugin' ),
+						__( 'Error while making request to the Google Generative Language API: %s ', 'ai-services' ),
 						$e->getMessage()
 					)
 				)
@@ -87,7 +87,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 			} else {
 				$error_message = sprintf(
 					/* translators: %d: HTTP status code */
-					__( 'Bad status code: %d', 'wp-starter-plugin' ),
+					__( 'Bad status code: %d', 'ai-services' ),
 					$response->get_status()
 				);
 			}
@@ -95,7 +95,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: error message */
-						__( 'Error while making request to the Google Generative Language API: %s ', 'wp-starter-plugin' ),
+						__( 'Error while making request to the Google Generative Language API: %s ', 'ai-services' ),
 						$error_message
 					)
 				)
@@ -108,8 +108,8 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 				esc_html(
 					sprintf(
 						/* translators: %s: error message */
-						__( 'Error while making request to the Google Generative Language API: %s ', 'wp-starter-plugin' ),
-						__( 'JSON response could not be decoded.', 'wp-starter-plugin' )
+						__( 'Error while making request to the Google Generative Language API: %s ', 'ai-services' ),
+						__( 'JSON response could not be decoded.', 'ai-services' )
 					)
 				)
 			);
@@ -213,7 +213,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 		if ( ! isset( $request_options['headers'] ) ) {
 			$request_options['headers'] = array();
 		}
-		$request_options['headers']['X-Goog-Api-Client'] = 'wp-starter-plugin/' . WP_STARTER_PLUGIN_VERSION;
+		$request_options['headers']['X-Goog-Api-Client'] = 'ai-services/' . AI_SERVICES_VERSION;
 		$request_options['headers']['X-Goog-Api-Key']    = $this->api_key;
 		return $request_options;
 	}

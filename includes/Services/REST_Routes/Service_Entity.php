@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Entity
+ * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Entity
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
+namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Contracts\Entity;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Contracts\Entity;
 
 /**
  * Class representing a service entity for the REST API.
@@ -161,7 +161,7 @@ class Service_Entity implements Entity {
 	 * @return bool True if the service has a forced API key, false otherwise.
 	 */
 	private function has_forced_api_key() {
-		$option = sprintf( 'wpsp_%s_api_key', $this->slug );
+		$option = sprintf( 'ais_%s_api_key', $this->slug );
 
 		// These filters are part of get_option() and allow plugins to short-circuit the option retrieval.
 		$pre = apply_filters( "pre_option_{$option}", false, $option, '' );

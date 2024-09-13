@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter
+ * Class Felix_Arntz\AI_Services\Services\Util\Formatter
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Util;
+namespace Felix_Arntz\AI_Services\Services\Util;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Parts;
 
 /**
  * Class providing static methods for formatting content.
@@ -68,7 +68,7 @@ final class Formatter {
 
 		if ( ! $input instanceof Content ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The value must be a string, a Parts instance, or a Content instance.', 'wp-starter-plugin' )
+				esc_html__( 'The value must be a string, a Parts instance, or a Content instance.', 'ai-services' )
 			);
 		}
 

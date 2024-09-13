@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Dependencies\Services_Script_Style_Loader
+ * Class Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Dependencies;
+namespace Felix_Arntz\AI_Services\Services\Dependencies;
 
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 
 /**
  * Class responsible for registering the available AI service related scripts and styles.
@@ -65,7 +65,7 @@ class Services_Script_Style_Loader {
 	 */
 	public function register_scripts_and_styles(): void {
 		$this->script_registry->register(
-			'wpsp-ai-store',
+			'ais-ai-store',
 			array(
 				'src'      => $this->plugin_env->url( 'build/ai-store/index.js' ),
 				'manifest' => $this->plugin_env->path( 'build/ai-store/index.asset.php' ),
@@ -74,7 +74,7 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->script_registry->register(
-			'wpsp-settings-store',
+			'ais-settings-store',
 			array(
 				'src'      => $this->plugin_env->url( 'build/settings-store/index.js' ),
 				'manifest' => $this->plugin_env->path( 'build/settings-store/index.asset.php' ),
@@ -83,7 +83,7 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->script_registry->register(
-			'wpsp-components',
+			'ais-components',
 			array(
 				'src'      => $this->plugin_env->url( 'build/components/index.js' ),
 				'manifest' => $this->plugin_env->path( 'build/components/index.asset.php' ),
@@ -92,7 +92,7 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->script_registry->register(
-			'wpsp-services-page',
+			'ais-services-page',
 			array(
 				'src'      => $this->plugin_env->url( 'build/services-page/index.js' ),
 				'manifest' => $this->plugin_env->path( 'build/services-page/index.asset.php' ),
@@ -101,7 +101,7 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->style_registry->register(
-			'wpsp-components',
+			'ais-components',
 			array(
 				'src'          => $this->plugin_env->url( 'build/components/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/components/style-index.css' ),
@@ -111,12 +111,12 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->style_registry->register(
-			'wpsp-services-page',
+			'ais-services-page',
 			array(
 				'src'          => $this->plugin_env->url( 'build/services-page/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/services-page/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/services-page/index.asset.php' ),
-				'dependencies' => array( 'wp-components', 'wpsp-components' ),
+				'dependencies' => array( 'wp-components', 'ais-components' ),
 			)
 		);
 	}

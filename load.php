@@ -1,18 +1,18 @@
 <?php
 /**
- * Plugin Name: WP Starter Plugin
- * Plugin URI: https://the-plugin.com
- * Description: The plugin description.
+ * Plugin Name: AI Services
+ * Plugin URI: https://wordpress.org/plugins/ai-services/
+ * Description: Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
  * Requires at least: 6.0
  * Requires PHP: 7.2
  * Version: 1.0.0
- * Author: The Plugin Author
- * Author URI: https://the-plugin-author.com
+ * Author: Felix Arntz
+ * Author URI: https://felix-arntz.me
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * Text Domain: wp-starter-plugin
+ * Text Domain: ai-services
  *
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
 // This loader file should remain compatible with PHP 5.2.
@@ -28,21 +28,21 @@ require_once plugin_dir_path( __FILE__ ) . 'constants.php';
  *
  * @since n.e.x.t
  */
-function wp_starter_plugin_load() /* @phpstan-ignore-line */ {
+function ai_services_load() /* @phpstan-ignore-line */ {
 	static $loaded = false;
 
 	// Check for supported PHP version.
 	if (
-		version_compare( phpversion(), WP_STARTER_PLUGIN_MINIMUM_PHP, '<' )
-		|| version_compare( get_bloginfo( 'version' ), WP_STARTER_PLUGIN_MINIMUM_WP, '<' )
+		version_compare( phpversion(), AI_SERVICES_MINIMUM_PHP, '<' )
+		|| version_compare( get_bloginfo( 'version' ), AI_SERVICES_MINIMUM_WP, '<' )
 	) {
-		add_action( 'admin_notices', 'wp_starter_plugin_display_version_requirements_notice' );
+		add_action( 'admin_notices', 'ai_services_display_version_requirements_notice' );
 		return;
 	}
 
 	// Register the autoloader.
-	if ( ! wp_starter_plugin_register_autoloader() ) {
-		add_action( 'admin_notices', 'wp_starter_plugin_display_composer_autoload_notice' );
+	if ( ! ai_services_register_autoloader() ) {
+		add_action( 'admin_notices', 'ai_services_display_composer_autoload_notice' );
 		return;
 	}
 
@@ -53,7 +53,7 @@ function wp_starter_plugin_load() /* @phpstan-ignore-line */ {
 	$loaded = true;
 
 	// Load the plugin.
-	$class_name = 'Vendor_NS\WP_Starter_Plugin\Plugin_Main';
+	$class_name = 'Felix_Arntz\AI_Services\Plugin_Main';
 	$instance   = new $class_name( __FILE__ );
 	$instance->add_hooks();
 }
@@ -63,15 +63,15 @@ function wp_starter_plugin_load() /* @phpstan-ignore-line */ {
  *
  * @since n.e.x.t
  */
-function wp_starter_plugin_display_version_requirements_notice() /* @phpstan-ignore-line */ {
+function ai_services_display_version_requirements_notice() /* @phpstan-ignore-line */ {
 	echo '<div class="notice notice-error"><p>';
 	echo esc_html(
 		sprintf(
 			/* translators: 1: required PHP version, 2: required WP version, 3: current PHP version, 4: current WP version */
-			__( 'WP Starter Plugin requires at least PHP version %1$s and WordPress version %2$s. Your site is currently using PHP %3$s and WordPress %4$s.', 'wp-starter-plugin' ),
-			WP_STARTER_PLUGIN_MINIMUM_PHP,
+			__( 'AI Services requires at least PHP version %1$s and WordPress version %2$s. Your site is currently using PHP %3$s and WordPress %4$s.', 'ai-services' ),
+			AI_SERVICES_MINIMUM_PHP,
 			phpversion(),
-			WP_STARTER_PLUGIN_MINIMUM_WP,
+			AI_SERVICES_MINIMUM_WP,
 			get_bloginfo( 'version' )
 		)
 	);
@@ -83,14 +83,14 @@ function wp_starter_plugin_display_version_requirements_notice() /* @phpstan-ign
  *
  * @since n.e.x.t
  */
-function wp_starter_plugin_display_composer_autoload_notice() /* @phpstan-ignore-line */ {
+function ai_services_display_composer_autoload_notice() /* @phpstan-ignore-line */ {
 	echo '<div class="notice notice-error"><p>';
 	printf(
 		/* translators: %s: composer install command */
-		esc_html__( 'Your installation of WP Starter Plugin is incomplete. Please run %s.', 'wp-starter-plugin' ),
+		esc_html__( 'Your installation of AI Services is incomplete. Please run %s.', 'ai-services' ),
 		'<code>composer install</code>'
 	);
 	echo '</p></div>';
 }
 
-wp_starter_plugin_load();
+ai_services_load();

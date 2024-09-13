@@ -1,21 +1,21 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Plugin_Main
+ * Class Felix_Arntz\AI_Services\Plugin_Main
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin;
+namespace Felix_Arntz\AI_Services;
 
-use Vendor_NS\WP_Starter_Plugin\Google\Google_AI_Service;
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
-use Vendor_NS\WP_Starter_Plugin\Services\Services_Loader;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
+use Felix_Arntz\AI_Services\Google\Google_AI_Service;
+use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services\Services\Services_API_Instance;
+use Felix_Arntz\AI_Services\Services\Services_Loader;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
 /**
  * Plugin main class.

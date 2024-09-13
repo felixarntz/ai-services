@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate
+ * Class Felix_Arntz\AI_Services\Services\Types\Candidate
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\Types;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**
  * Class representing a candidate for a content response from a generative AI model.

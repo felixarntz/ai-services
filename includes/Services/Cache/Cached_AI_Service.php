@@ -1,18 +1,18 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Cache\Cached_AI_Service
+ * Class Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Cache;
+namespace Felix_Arntz\AI_Services\Services\Cache;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 
 /**
  * Class representing a cached AI service through a decorator pattern.

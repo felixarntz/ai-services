@@ -22,7 +22,7 @@ function validateChatHistory( history ) {
 			throw new Error(
 				__(
 					'The content object must have a role and parts properties.',
-					'wp-starter-plugin'
+					'ai-services'
 				)
 			);
 		}
@@ -31,7 +31,7 @@ function validateChatHistory( history ) {
 			throw new Error(
 				__(
 					'The first content object in the history must be user content.',
-					'wp-starter-plugin'
+					'ai-services'
 				)
 			);
 		}
@@ -40,7 +40,7 @@ function validateChatHistory( history ) {
 			throw new Error(
 				__(
 					'Each Content instance must have at least one part.',
-					'wp-starter-plugin'
+					'ai-services'
 				)
 			);
 		}
@@ -59,7 +59,7 @@ function validateContent( content ) {
 		throw new Error(
 			__(
 				'The content argument is required to generate content.',
-				'wp-starter-plugin'
+				'ai-services'
 			)
 		);
 	}
@@ -69,7 +69,7 @@ function validateContent( content ) {
 				throw new Error(
 					__(
 						'The content object must have a role and parts properties.',
-						'wp-starter-plugin'
+						'ai-services'
 					)
 				);
 			}
@@ -77,7 +77,7 @@ function validateContent( content ) {
 			throw new Error(
 				__(
 					'The content argument must be a string, an object, or an array of objects.',
-					'wp-starter-plugin'
+					'ai-services'
 				)
 			);
 		}
@@ -162,7 +162,7 @@ class GenerativeAiService {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
-					'wp-starter-plugin'
+					'ai-services'
 				)
 			);
 		}
@@ -172,7 +172,7 @@ class GenerativeAiService {
 
 		try {
 			return await apiFetch( {
-				path: `/wp-starter-plugin/v1/services/${ this.slug }:generate-text`,
+				path: `/ai-services/v1/services/${ this.slug }:generate-text`,
 				method: 'POST',
 				data: {
 					content,
@@ -199,7 +199,7 @@ class GenerativeAiService {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
-					'wp-starter-plugin'
+					'ai-services'
 				)
 			);
 		}
@@ -229,7 +229,7 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
-					'wp-starter-plugin'
+					'ai-services'
 				)
 			);
 		}

@@ -3,7 +3,7 @@
  * Plugin constants.
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
 // This loader file should remain compatible with PHP 5.2.
@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'WP_STARTER_PLUGIN_VERSION', '1.0.0' );
-define( 'WP_STARTER_PLUGIN_MINIMUM_PHP', '7.2' );
-define( 'WP_STARTER_PLUGIN_MINIMUM_WP', '6.0' );
+define( 'AI_SERVICES_VERSION', '1.0.0' );
+define( 'AI_SERVICES_MINIMUM_PHP', '7.2' );
+define( 'AI_SERVICES_MINIMUM_WP', '6.0' );
 
 /**
  * Registers the plugin autoloader.
@@ -23,7 +23,7 @@ define( 'WP_STARTER_PLUGIN_MINIMUM_WP', '6.0' );
  *
  * @return bool True on success, false on failure.
  */
-function wp_starter_plugin_register_autoloader() {
+function ai_services_register_autoloader() {
 	static $registered = null;
 
 	// Prevent multiple executions.
@@ -37,12 +37,12 @@ function wp_starter_plugin_register_autoloader() {
 	if ( file_exists( $autoload_file ) && file_exists( $third_party_autoload_file ) ) {
 		require_once plugin_dir_path( __FILE__ ) . 'includes/Plugin_Autoloader.php';
 
-		$class_name = 'Vendor_NS\WP_Starter_Plugin\Plugin_Autoloader';
+		$class_name = 'Felix_Arntz\AI_Services\Plugin_Autoloader';
 
-		$instance = new $class_name( 'Vendor_NS\WP_Starter_Plugin', $autoload_file );
+		$instance = new $class_name( 'Felix_Arntz\AI_Services', $autoload_file );
 		spl_autoload_register( array( $instance, 'autoload' ), true, true );
 
-		$third_party_instance = new $class_name( 'Vendor_NS\WP_Starter_Plugin_Dependencies', $third_party_autoload_file );
+		$third_party_instance = new $class_name( 'Felix_Arntz\AI_Services_Dependencies', $third_party_autoload_file );
 		spl_autoload_register( array( $third_party_instance, 'autoload' ), true, true );
 
 		$registered = true;

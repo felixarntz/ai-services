@@ -1,18 +1,18 @@
 <?php
 /**
- * Interface Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service
+ * Interface Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
+namespace Felix_Arntz\AI_Services\Services\Contracts;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 
 /**
  * Interface for a class representing a generative AI service which provides access to models.

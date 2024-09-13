@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Services_Loader
+ * Class Felix_Arntz\AI_Services\Services\Services_Loader
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services;
+namespace Felix_Arntz\AI_Services\Services;
 
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 
 /**
  * Loader class responsible for initializing the AI services functionality, including its public API.
@@ -68,16 +68,16 @@ final class Services_Loader implements With_Hooks {
 				 *
 				 * This hook allows you to modify the rules for how these capabilities are granted. The capabilities
 				 * available in the controller are:
-				 * - 'wpsp_manage_services' (base capability)
-				 * - 'wpsp_access_services' (base capability)
-				 * - 'wpsp_access_service' (meta capability, called with the specific service slug as parameter)
+				 * - 'ais_manage_services' (base capability)
+				 * - 'ais_access_services' (base capability)
+				 * - 'ais_access_service' (meta capability, called with the specific service slug as parameter)
 				 *
 				 * @since n.e.x.t
 				 *
 				 * @param Capability_Controller $controller The capability controller, which can be used to modify the
 				 *                                          rules for how capabilities are granted.
 				 */
-				do_action( 'wpsp_load_services_capabilities', $controller );
+				do_action( 'ais_load_services_capabilities', $controller );
 
 				$this->container['capability_filters']->add_hooks();
 			},

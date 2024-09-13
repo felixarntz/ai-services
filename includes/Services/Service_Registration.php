@@ -1,23 +1,23 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Service_Registration
+ * Class Felix_Arntz\AI_Services\Services\Service_Registration
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services;
+namespace Felix_Arntz\AI_Services\Services;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Vendor_NS\WP_Starter_Plugin\Services\Cache\Cached_AI_Service;
-use Vendor_NS\WP_Starter_Plugin\Services\Cache\Cached_AI_Service_With_API_Client;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service;
+use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service_With_API_Client;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
 
 /**
  * Class representing a service registration.
@@ -91,7 +91,7 @@ final class Service_Registration {
 		$this->creator = $creator;
 		$this->args    = $this->parse_args( $args );
 
-		$this->api_key_option_slug                                    = sprintf( 'wpsp_%s_api_key', $slug );
+		$this->api_key_option_slug                                    = sprintf( 'ais_%s_api_key', $slug );
 		$this->args['option_container'][ $this->api_key_option_slug ] = function () {
 			return new Option(
 				$this->args['option_repository'],
@@ -157,7 +157,7 @@ final class Service_Registration {
 				esc_html(
 					sprintf(
 						/* translators: %s: service slug */
-						__( 'Cannot instantiate service %s without an API key.', 'wp-starter-plugin' ),
+						__( 'Cannot instantiate service %s without an API key.', 'ai-services' ),
 						$this->slug
 					)
 				)
@@ -170,7 +170,7 @@ final class Service_Registration {
 				esc_html(
 					sprintf(
 						/* translators: %s: service slug */
-						__( 'The service creator for %s must return an instance of Generative_AI_Service.', 'wp-starter-plugin' ),
+						__( 'The service creator for %s must return an instance of Generative_AI_Service.', 'ai-services' ),
 						$this->slug
 					)
 				)
@@ -181,7 +181,7 @@ final class Service_Registration {
 				esc_html(
 					sprintf(
 						/* translators: 1: service slug registered, 2: service slug returned by the class */
-						__( 'The service creator for %1$s must return an instance of Generative_AI_Service with the same slug, but instead it returned another slug %2$s.', 'wp-starter-plugin' ),
+						__( 'The service creator for %1$s must return an instance of Generative_AI_Service with the same slug, but instead it returned another slug %2$s.', 'ai-services' ),
 						$this->slug,
 						$instance->get_service_slug()
 					)
@@ -233,7 +233,7 @@ final class Service_Registration {
 	private function validate_slug( string $slug ): void {
 		if ( ! preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The service slug must only contain lowercase letters, numbers, and hyphens.', 'wp-starter-plugin' )
+				esc_html__( 'The service slug must only contain lowercase letters, numbers, and hyphens.', 'ai-services' )
 			);
 		}
 	}
@@ -264,7 +264,7 @@ final class Service_Registration {
 		if ( isset( $args['option_container'] ) ) {
 			if ( ! $args['option_container'] instanceof Option_Container ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The option_container argument must be an instance of Option_Container.', 'wp-starter-plugin' )
+					esc_html__( 'The option_container argument must be an instance of Option_Container.', 'ai-services' )
 				);
 			}
 		} else {
@@ -274,7 +274,7 @@ final class Service_Registration {
 		if ( isset( $args['option_repository'] ) ) {
 			if ( ! $args['option_repository'] instanceof Option_Repository ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The option_repository argument must be an instance of Option_Repository.', 'wp-starter-plugin' )
+					esc_html__( 'The option_repository argument must be an instance of Option_Repository.', 'ai-services' )
 				);
 			}
 		} else {
@@ -284,7 +284,7 @@ final class Service_Registration {
 		if ( isset( $args['http'] ) ) {
 			if ( ! $args['http'] instanceof HTTP ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The http argument must be an instance of HTTP.', 'wp-starter-plugin' )
+					esc_html__( 'The http argument must be an instance of HTTP.', 'ai-services' )
 				);
 			}
 		} else {

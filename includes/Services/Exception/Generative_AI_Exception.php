@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception
+ * Class Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Exception;
+namespace Felix_Arntz\AI_Services\Services\Exception;
 
 use RuntimeException;
 

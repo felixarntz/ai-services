@@ -2,7 +2,7 @@
  * External dependencies
  */
 import Markdown from 'markdown-to-jsx';
-import { store as aiStore } from '@wp-starter-plugin/ai-store';
+import { store as aiStore } from '@ai-services/ai-store';
 
 /**
  * WordPress dependencies

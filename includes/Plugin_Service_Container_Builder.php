@@ -1,31 +1,31 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Plugin_Service_Container_Builder
+ * Class Felix_Arntz\AI_Services\Plugin_Service_Container_Builder
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin;
+namespace Felix_Arntz\AI_Services;
 
-use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot;
-use Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_Loader;
-use Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer;
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Validation\General_Validation_Rule_Builder;
+use Felix_Arntz\AI_Services\Chatbot\Chatbot;
+use Felix_Arntz\AI_Services\Chatbot\Chatbot_Loader;
+use Felix_Arntz\AI_Services\Installation\Plugin_Installer;
+use Felix_Arntz\AI_Services\Services\Services_API_Instance;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Validation\General_Validation_Rule_Builder;
 
 /**
  * Plugin service container builder.
@@ -72,7 +72,7 @@ final class Plugin_Service_Container_Builder {
 	 */
 	public function build_env( string $main_file ): self {
 		$this->container['plugin_env'] = function () use ( $main_file ) {
-			return new Plugin_Env( $main_file, WP_STARTER_PLUGIN_VERSION );
+			return new Plugin_Env( $main_file, AI_SERVICES_VERSION );
 		};
 
 		return $this;
@@ -131,8 +131,8 @@ final class Plugin_Service_Container_Builder {
 		$this->container['plugin_installer'] = static function ( $cont ) {
 			return new Plugin_Installer(
 				$cont['plugin_env'],
-				$cont['option_container']['wpsp_version'],
-				$cont['option_container']['wpsp_delete_data']
+				$cont['option_container']['ais_version'],
+				$cont['option_container']['ais_delete_data']
 			);
 		};
 	}
@@ -166,7 +166,7 @@ final class Plugin_Service_Container_Builder {
 			return $options;
 		};
 		$this->container['option_registry']   = static function () {
-			return new Option_Registry( 'wp_starter_plugin' );
+			return new Option_Registry( 'ai_services' );
 		};
 	}
 
@@ -190,7 +190,7 @@ final class Plugin_Service_Container_Builder {
 	 */
 	private function add_options_to_container( Option_Container $options ): void {
 		// Option to control plugin version.
-		$options['wpsp_version'] = function () {
+		$options['ais_version'] = function () {
 			$sanitize_callback = ( new General_Validation_Rule_Builder() )
 				->require_string()
 				->format_version()
@@ -198,7 +198,7 @@ final class Plugin_Service_Container_Builder {
 
 			return new Option(
 				$this->container['option_repository'],
-				'wpsp_version',
+				'ais_version',
 				array(
 					'type'              => 'string',
 					'sanitize_callback' => $sanitize_callback,
@@ -209,14 +209,14 @@ final class Plugin_Service_Container_Builder {
 		};
 
 		// Option for whether to delete data on uninstall.
-		$options['wpsp_delete_data'] = function () {
+		$options['ais_delete_data'] = function () {
 			$sanitize_callback = ( new General_Validation_Rule_Builder() )
 				->require_boolean()
 				->get_option_sanitize_callback();
 
 			return new Option(
 				$this->container['option_repository'],
-				'wpsp_delete_data',
+				'ais_delete_data',
 				array(
 					'type'              => 'boolean',
 					'sanitize_callback' => $sanitize_callback,
@@ -228,10 +228,10 @@ final class Plugin_Service_Container_Builder {
 		};
 
 		// Option to store the main plugin data.
-		$options['wpsp_options'] = function () {
+		$options['ais_options'] = function () {
 			return new Option(
 				$this->container['option_repository'],
-				'wpsp_options',
+				'ais_options',
 				array(
 					'type'     => 'object',
 					'default'  => array(),

@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_REST_Resource_Schema
+ * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_REST_Resource_Schema
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
+namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Resource_Schema;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Resource_Schema;
 
 /**
  * Class representing the schema for a service resource in the REST API.
@@ -79,25 +79,25 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 			'type'       => 'object',
 			'properties' => array(
 				'slug'               => array(
-					'description' => __( 'Unique service slug.', 'wp-starter-plugin' ),
+					'description' => __( 'Unique service slug.', 'ai-services' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'name'               => array(
-					'description' => __( 'User-facing service name.', 'wp-starter-plugin' ),
+					'description' => __( 'User-facing service name.', 'ai-services' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'is_available'       => array(
-					'description' => __( 'Whether the service is fully configured and available.', 'wp-starter-plugin' ),
+					'description' => __( 'Whether the service is fully configured and available.', 'ai-services' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'capabilities'       => array(
-					'description' => __( 'List of the AI capabilities that the service supports (empty if the service is not available).', 'wp-starter-plugin' ),
+					'description' => __( 'List of the AI capabilities that the service supports (empty if the service is not available).', 'ai-services' ),
 					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
@@ -107,7 +107,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					),
 				),
 				'available_models'   => array(
-					'description' => __( 'List of the available model slugs (empty if the service is not available).', 'wp-starter-plugin' ),
+					'description' => __( 'List of the available model slugs (empty if the service is not available).', 'ai-services' ),
 					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
@@ -116,7 +116,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					),
 				),
 				'has_forced_api_key' => array(
-					'description' => __( 'Whether the service API key is force-set (i.e. not modifiable by changing the option value).', 'wp-starter-plugin' ),
+					'description' => __( 'Whether the service API key is force-set (i.e. not modifiable by changing the option value).', 'ai-services' ),
 					'type'        => 'boolean',
 					'context'     => array( 'edit' ),
 					'readonly'    => true,

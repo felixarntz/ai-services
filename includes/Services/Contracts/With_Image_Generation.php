@@ -1,17 +1,17 @@
 <?php
 /**
- * Interface Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Image_Generation
+ * Interface Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
+namespace Felix_Arntz\AI_Services\Services\Contracts;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Parts;
 
 /**
  * Interface for a model which allows generating images.

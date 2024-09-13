@@ -1,12 +1,12 @@
 <?php
 /**
- * Interface Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client
+ * Interface Felix_Arntz\AI_Services\Services\Contracts\With_API_Client
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Contracts;
+namespace Felix_Arntz\AI_Services\Services\Contracts;
 
 /**
  * Interface for a class which contains a client for a generative AI web API.

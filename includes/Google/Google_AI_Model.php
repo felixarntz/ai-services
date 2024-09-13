@@ -1,22 +1,22 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Google\Google_AI_Model
+ * Class Felix_Arntz\AI_Services\Google\Google_AI_Model
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Google;
+namespace Felix_Arntz\AI_Services\Google;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Google\Types\Safety_Setting;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Traits\With_Text_Generation_Trait;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
+use Felix_Arntz\AI_Services\Services\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Util\Formatter;
 
 /**
  * Class representing a Google AI model.
@@ -112,7 +112,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 					$model_params['safety_settings'][ $index ] = Safety_Setting::from_array( $safety_setting );
 				} elseif ( ! $safety_setting instanceof Safety_Setting ) {
 					throw new InvalidArgumentException(
-						esc_html__( 'The safety_settings parameter must contain Safety_Setting instances.', 'wp-starter-plugin' )
+						esc_html__( 'The safety_settings parameter must contain Safety_Setting instances.', 'ai-services' )
 					);
 				}
 			}
@@ -194,7 +194,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	private function get_response_candidates( array $response ): Candidates {
 		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the Google AI API is missing the "candidates" key.', 'wp-starter-plugin' )
+				esc_html__( 'The response from the Google AI API is missing the "candidates" key.', 'ai-services' )
 			);
 		}
 
@@ -212,15 +212,15 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 		}
 
 		if ( count( $candidates ) === 0 ) {
-			$message = __( 'The response from the Google AI API does not include any candidates with content.', 'wp-starter-plugin' );
+			$message = __( 'The response from the Google AI API does not include any candidates with content.', 'ai-services' );
 
 			$errors = array_unique( $errors );
 			if ( count( $errors ) > 0 ) {
 				$message .= ' ' . sprintf(
 					/* translators: %s: finish reason code */
-					__( 'Finish reason: %s', 'wp-starter-plugin' ),
+					__( 'Finish reason: %s', 'ai-services' ),
 					implode(
-						_x( ', ', 'Used between list items, there is a space after the comma.', 'wp-starter-plugin' ),
+						_x( ', ', 'Used between list items, there is a space after the comma.', 'ai-services' ),
 						$errors
 					)
 				);

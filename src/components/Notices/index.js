@@ -39,11 +39,11 @@ export default function Notices() {
 		<>
 			<NoticeList
 				notices={ nonDismissibleNotices }
-				className="wpsp-notices__pinned"
+				className="ais-notices__pinned"
 			/>
 			<NoticeList
 				notices={ dismissibleNotices }
-				className="wpsp-notices__dismissible"
+				className="ais-notices__dismissible"
 				onRemove={ removeNotice }
 			/>
 		</>

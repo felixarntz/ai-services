@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Plugin_Autoloader
+ * Class Felix_Arntz\AI_Services\Plugin_Autoloader
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin;
+namespace Felix_Arntz\AI_Services;
 
 use InvalidArgumentException;
 
@@ -49,7 +49,7 @@ class Plugin_Autoloader {
 
 		if ( ! is_array( $this->class_map ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The provided class map file does not return a class map array.', 'wp-starter-plugin' )
+				esc_html__( 'The provided class map file does not return a class map array.', 'ai-services' )
 			);
 		}
 	}

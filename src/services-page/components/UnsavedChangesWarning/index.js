@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@ai-services/settings-store';
 
 /**
  * WordPress dependencies
@@ -29,7 +29,7 @@ export default function UnsavedChangesWarning() {
 			if ( isDirty ) {
 				event.returnValue = __(
 					'You have unsaved changes. If you proceed, they will be lost.',
-					'wp-starter-plugin'
+					'ai-services'
 				);
 				return event.returnValue;
 			}

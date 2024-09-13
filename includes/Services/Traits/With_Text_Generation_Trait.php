@@ -1,20 +1,20 @@
 <?php
 /**
- * Trait Vendor_NS\WP_Starter_Plugin\Services\Traits\With_Text_Generation_Trait
+ * Trait Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Traits;
+namespace Felix_Arntz\AI_Services\Services\Traits;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Chat_Session;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\Types\Chat_Session;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\Util\Formatter;
 
 /**
  * Trait for a model which implements the With_Text_Generation interface.
@@ -47,7 +47,7 @@ trait With_Text_Generation_Trait {
 
 		if ( Content::ROLE_USER !== $contents[0]->get_role() ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'wp-starter-plugin' )
+				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'ai-services' )
 			);
 		}
 

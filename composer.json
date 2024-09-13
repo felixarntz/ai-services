@@ -1,6 +1,6 @@
 {
-  "name": "vendor-ns/wp-starter-plugin",
-  "description": "The plugin description.",
+  "name": "felixarntz/ai-services",
+  "description": "Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "require": {
@@ -19,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Vendor_NS\\WP_Starter_Plugin\\": "includes/"
+      "Felix_Arntz\\AI_Services\\": "includes/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Vendor_NS\\WP_Starter_Plugin\\PHPUnit\\Includes\\": "tests/phpunit/includes"
+      "Felix_Arntz\\AI_Services\\PHPUnit\\Includes\\": "tests/phpunit/includes"
     }
   },
   "scripts": {

@@ -1,22 +1,22 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Parts
+ * Class Felix_Arntz\AI_Services\Services\Types\Parts
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\Types;
 
 use ArrayIterator;
 use InvalidArgumentException;
 use Traversable;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Contracts\Part;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\File_Data_Part;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Inline_Data_Part;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Text_Part;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
+use Felix_Arntz\AI_Services\Services\Types\Contracts\Part;
+use Felix_Arntz\AI_Services\Services\Types\Parts\File_Data_Part;
+use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
+use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
 
 /**
  * Class representing a collection of content parts for a generative model.
@@ -171,7 +171,7 @@ final class Parts implements Collection, Arrayable {
 	public function get( int $index ): Part {
 		if ( ! isset( $this->parts[ $index ] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'Index out of bounds.', 'wp-starter-plugin' )
+				esc_html__( 'Index out of bounds.', 'ai-services' )
 			);
 		}
 		return $this->parts[ $index ];

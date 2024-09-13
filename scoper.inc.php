@@ -2,7 +2,7 @@
 /**
  * PHP-Scoper configuration file.
  *
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
 use Symfony\Component\Finder\Finder;
@@ -12,7 +12,7 @@ use Symfony\Component\Finder\Finder;
  * It will be used in all translation strings from the underlying library, to make sure they are properly translatable
  * as part of the plugin.
  */
-$plugin_textdomain = 'wp-starter-plugin';
+$plugin_textdomain = 'ai-services';
 
 /*
  * You can optionally provide specific folder names from the WP OOP Plugin Lib "src" directory here to limit the
@@ -39,7 +39,7 @@ $wp_oop_plugin_lib_folders_regex = $wp_oop_plugin_lib_folders_concat
 	: '/^[A-Za-z0-9_]\//';
 
 return array(
-	'prefix'             => 'Vendor_NS\WP_Starter_Plugin_Dependencies',
+	'prefix'             => 'Felix_Arntz\AI_Services_Dependencies',
 	'finders'            => array(
 		Finder::create()
 			->files()

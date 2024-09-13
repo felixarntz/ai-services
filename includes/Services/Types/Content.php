@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Content
+ * Class Felix_Arntz\AI_Services\Services\Types\Content
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\Types;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**
  * Class representing an entry of content for a generative AI model.
@@ -54,7 +54,7 @@ final class Content implements Arrayable {
 				esc_html(
 					sprintf(
 						/* translators: %s: invalid role encountered */
-						__( 'The role %s is invalid.', 'wp-starter-plugin' ),
+						__( 'The role %s is invalid.', 'ai-services' ),
 						$role
 					)
 				)

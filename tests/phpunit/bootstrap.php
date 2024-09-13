@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
 define( 'TESTS_PLUGIN_DIR', dirname( dirname( __DIR__ ) ) );

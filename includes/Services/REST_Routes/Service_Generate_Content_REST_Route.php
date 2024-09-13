@@ -1,24 +1,24 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Generate_Content_REST_Route
+ * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Content_REST_Route
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
+namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_Text_Generation;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Parts;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -95,10 +95,10 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @throws REST_Exception Thrown when the permissions aren't met, or when a REST error occurs.
 	 */
 	protected function check_permissions( WP_REST_Request $request ): void /* @phpstan-ignore-line */ {
-		if ( ! $this->current_user->has_cap( 'wpsp_access_service', $request['slug'] ) ) {
+		if ( ! $this->current_user->has_cap( 'ais_access_service', $request['slug'] ) ) {
 			throw REST_Exception::create(
 				'rest_cannot_view',
-				esc_html__( 'Sorry, you are not allowed to access this service.', 'wp-starter-plugin' ),
+				esc_html__( 'Sorry, you are not allowed to access this service.', 'ai-services' ),
 				$this->current_user->is_logged_in() ? 403 : 401
 			);
 		}
@@ -118,7 +118,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		if ( ! $this->services_api->is_service_registered( $request['slug'] ) ) {
 			throw REST_Exception::create(
 				'rest_service_invalid_slug',
-				esc_html__( 'Invalid service slug.', 'wp-starter-plugin' ),
+				esc_html__( 'Invalid service slug.', 'ai-services' ),
 				404
 			);
 		}
@@ -126,7 +126,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		if ( ! $this->services_api->is_service_available( $request['slug'] ) ) {
 			throw REST_Exception::create(
 				'rest_service_not_available',
-				esc_html__( 'The service is not available.', 'wp-starter-plugin' ),
+				esc_html__( 'The service is not available.', 'ai-services' ),
 				400
 			);
 		}
@@ -145,7 +145,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				'rest_generating_content_failed',
 				sprintf(
 					/* translators: 1: model slug, 2: original error message */
-					esc_html__( 'Generating content with model %1$s failed: %2$s', 'wp-starter-plugin' ),
+					esc_html__( 'Generating content with model %1$s failed: %2$s', 'ai-services' ),
 					esc_html( $model->get_model_slug() ),
 					esc_html( $e->getMessage() )
 				),
@@ -156,7 +156,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				'rest_invalid_content',
 				sprintf(
 					/* translators: 1: model slug, 2: original error message */
-					esc_html__( 'Invalid content provided to model %1$s: %2$s', 'wp-starter-plugin' ),
+					esc_html__( 'Invalid content provided to model %1$s: %2$s', 'ai-services' ),
 					esc_html( $model->get_model_slug() ),
 					esc_html( $e->getMessage() )
 				),
@@ -186,7 +186,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				'rest_cannot_get_model',
 				sprintf(
 					/* translators: %s: original error message */
-					esc_html__( 'Getting the model failed: %s', 'wp-starter-plugin' ),
+					esc_html__( 'Getting the model failed: %s', 'ai-services' ),
 					esc_html( $e->getMessage() )
 				),
 				500
@@ -196,7 +196,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				'rest_invalid_model_params',
 				sprintf(
 					/* translators: %s: original error message */
-					esc_html__( 'Invalid model slug or model params: %s', 'wp-starter-plugin' ),
+					esc_html__( 'Invalid model slug or model params: %s', 'ai-services' ),
 					esc_html( $e->getMessage() )
 				),
 				400
@@ -206,7 +206,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		if ( ! $model instanceof With_Text_Generation ) {
 			throw REST_Exception::create(
 				'rest_model_lacks_support',
-				esc_html__( 'The model does not support text generation.', 'wp-starter-plugin' ),
+				esc_html__( 'The model does not support text generation.', 'ai-services' ),
 				400
 			);
 		}
@@ -249,7 +249,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		 *                                           'generation_config' and 'system_instruction'.
 		 * @return array<string, mixed> The processed model parameters.
 		 */
-		return (array) apply_filters( 'wp_starter_plugin_rest_model_params', $model_params );
+		return (array) apply_filters( 'ai_services_rest_model_params', $model_params );
 	}
 
 	/**
@@ -262,28 +262,28 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	protected function args(): array {
 		return array(
 			'model_params' => array(
-				'description'          => __( 'Model parameters.', 'wp-starter-plugin' ),
+				'description'          => __( 'Model parameters.', 'ai-services' ),
 				'type'                 => 'object',
 				'properties'           => array(
 					'model'              => array(
-						'description' => __( 'Model slug.', 'wp-starter-plugin' ),
+						'description' => __( 'Model slug.', 'ai-services' ),
 						'type'        => 'string',
 					),
 					'generation_config'  => array(
-						'description'          => __( 'Model generation configuration options.', 'wp-starter-plugin' ),
+						'description'          => __( 'Model generation configuration options.', 'ai-services' ),
 						'type'                 => 'object',
 						'additionalProperties' => true,
 					),
 					'system_instruction' => array(
-						'description' => __( 'System instruction for the model.', 'wp-starter-plugin' ),
+						'description' => __( 'System instruction for the model.', 'ai-services' ),
 						'type'        => array( 'string', 'object', 'array' ),
 						'oneOf'       => array(
 							array(
-								'description' => __( 'Prompt text as a string.', 'wp-starter-plugin' ),
+								'description' => __( 'Prompt text as a string.', 'ai-services' ),
 								'type'        => 'string',
 							),
 							array_merge(
-								array( 'description' => __( 'Prompt content object.', 'wp-starter-plugin' ) ),
+								array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
 								$this->get_content_schema( array( Content::ROLE_SYSTEM ) )
 							),
 						),
@@ -292,23 +292,23 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				'additionalProperties' => true,
 			),
 			'content'      => array(
-				'description' => __( 'Content data to pass to the model, including the prompt and optional history.', 'wp-starter-plugin' ),
+				'description' => __( 'Content data to pass to the model, including the prompt and optional history.', 'ai-services' ),
 				'type'        => array( 'string', 'object', 'array' ),
 				'oneOf'       => array(
 					array(
-						'description' => __( 'Prompt text as a string.', 'wp-starter-plugin' ),
+						'description' => __( 'Prompt text as a string.', 'ai-services' ),
 						'type'        => 'string',
 					),
 					array_merge(
-						array( 'description' => __( 'Prompt including multi modal data such as files.', 'wp-starter-plugin' ) ),
+						array( 'description' => __( 'Prompt including multi modal data such as files.', 'ai-services' ) ),
 						$this->get_parts_schema()
 					),
 					array_merge(
-						array( 'description' => __( 'Prompt content object.', 'wp-starter-plugin' ) ),
+						array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
 						$this->get_content_schema( array( Content::ROLE_USER ) )
 					),
 					array(
-						'description' => __( 'Array of contents, including history from previous user prompts and their model answers.', 'wp-starter-plugin' ),
+						'description' => __( 'Array of contents, including history from previous user prompts and their model answers.', 'ai-services' ),
 						'type'        => 'array',
 						'minItems'    => 1,
 						'items'       => $this->get_content_schema( array( Content::ROLE_USER, Content::ROLE_MODEL ) ),
@@ -329,7 +329,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		return array(
 			'args'   => array(
 				'slug' => array(
-					'description' => __( 'Unique service slug.', 'wp-starter-plugin' ),
+					'description' => __( 'Unique service slug.', 'ai-services' ),
 					'type'        => 'string',
 				),
 			),
@@ -352,7 +352,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			'properties'           => array(
 				'content' => array_merge(
 					array(
-						'description' => __( 'Candidate content.', 'wp-starter-plugin' ),
+						'description' => __( 'Candidate content.', 'ai-services' ),
 						'readonly'    => true,
 					),
 					$this->get_content_schema(
@@ -384,7 +384,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					array(
 						'properties' => array(
 							'text' => array(
-								'description' => __( 'Prompt text content.', 'wp-starter-plugin' ),
+								'description' => __( 'Prompt text content.', 'ai-services' ),
 								'type'        => 'string',
 							),
 						),
@@ -392,15 +392,15 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					array(
 						'properties' => array(
 							'inlineData' => array(
-								'description' => __( 'Inline data as part of the prompt, such as a file.', 'wp-starter-plugin' ),
+								'description' => __( 'Inline data as part of the prompt, such as a file.', 'ai-services' ),
 								'type'        => 'object',
 								'properties'  => array(
 									'mimeType' => array(
-										'description' => __( 'MIME type of the inline data.', 'wp-starter-plugin' ),
+										'description' => __( 'MIME type of the inline data.', 'ai-services' ),
 										'type'        => 'string',
 									),
 									'data'     => array(
-										'description' => __( 'Base64-encoded data.', 'wp-starter-plugin' ),
+										'description' => __( 'Base64-encoded data.', 'ai-services' ),
 										'type'        => 'string',
 									),
 								),
@@ -410,15 +410,15 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					array(
 						'properties' => array(
 							'fileData' => array(
-								'description' => __( 'Reference to a file as part of the prompt.', 'wp-starter-plugin' ),
+								'description' => __( 'Reference to a file as part of the prompt.', 'ai-services' ),
 								'type'        => 'object',
 								'properties'  => array(
 									'mimeType' => array(
-										'description' => __( 'MIME type of the file data.', 'wp-starter-plugin' ),
+										'description' => __( 'MIME type of the file data.', 'ai-services' ),
 										'type'        => 'string',
 									),
 									'fileUri'  => array(
-										'description' => __( 'URI of the file.', 'wp-starter-plugin' ),
+										'description' => __( 'URI of the file.', 'ai-services' ),
 										'type'        => 'string',
 									),
 								),

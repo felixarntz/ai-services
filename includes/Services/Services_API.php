@@ -1,23 +1,23 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Services_API
+ * Class Felix_Arntz\AI_Services\Services\Services_API
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services;
+namespace Felix_Arntz\AI_Services\Services;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Cache\Service_Request_Cache;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
 
 /**
  * Main API class providing the entry point to the generative AI services.
@@ -149,7 +149,7 @@ final class Services_API {
 				esc_html(
 					sprintf(
 						/* translators: %s: The service slug. */
-						esc_html__( 'Service %s is reserved for in-browser AI and cannot be registered.', 'wp-starter-plugin' ),
+						esc_html__( 'Service %s is reserved for in-browser AI and cannot be registered.', 'ai-services' ),
 						$slug
 					)
 				)
@@ -161,7 +161,7 @@ final class Services_API {
 				esc_html(
 					sprintf(
 						/* translators: %s: The service slug. */
-						esc_html__( 'Service %s is already registered and cannot be overridden.', 'wp-starter-plugin' ),
+						esc_html__( 'Service %s is already registered and cannot be overridden.', 'ai-services' ),
 						$slug
 					)
 				)
@@ -221,7 +221,7 @@ final class Services_API {
 		 * In that case, the only thing left to check is whether the current user has the necessary capabilities.
 		 */
 		if ( isset( $this->service_instances[ $slug ] ) ) {
-			if ( ! $this->current_user->has_cap( 'wpsp_access_service', $slug ) ) {
+			if ( ! $this->current_user->has_cap( 'ais_access_service', $slug ) ) {
 				return false;
 			}
 			return true;
@@ -250,7 +250,7 @@ final class Services_API {
 		$this->service_instances[ $slug ] = $instance;
 
 		// Finally, check whether the current user has the necessary capabilities.
-		return $this->current_user->has_cap( 'wpsp_access_service', $slug );
+		return $this->current_user->has_cap( 'ais_access_service', $slug );
 	}
 
 	/**
@@ -304,7 +304,7 @@ final class Services_API {
 					esc_html(
 						sprintf(
 							/* translators: %s: The service slug. */
-							__( 'Service %s is either not registered or not available.', 'wp-starter-plugin' ),
+							__( 'Service %s is either not registered or not available.', 'ai-services' ),
 							$slug
 						)
 					)
@@ -317,9 +317,9 @@ final class Services_API {
 		$slug = $this->get_available_service_slug( $args );
 		if ( '' === $slug ) {
 			if ( count( $args ) > 0 ) {
-				$message = __( 'No service satisfying the given arguments is registered and available.', 'wp-starter-plugin' );
+				$message = __( 'No service satisfying the given arguments is registered and available.', 'ai-services' );
 			} else {
-				$message = __( 'No service is registered and available.', 'wp-starter-plugin' );
+				$message = __( 'No service is registered and available.', 'ai-services' );
 			}
 			throw new InvalidArgumentException( esc_html( $message ) );
 		}

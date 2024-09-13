@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@ai-services/settings-store';
 
 /**
  * WordPress dependencies
@@ -23,7 +23,7 @@ export default function SettingsShortcuts() {
 		event.preventDefault();
 		saveSettings();
 	};
-	useShortcut( 'wp-starter-plugin/save', handleSave );
+	useShortcut( 'ai-services/save', handleSave );
 
 	return null;
 }

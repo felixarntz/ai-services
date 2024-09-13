@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Entity_Query
+ * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Entity_Query
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
+namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Contracts\Entity_Query;
+use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Contracts\Entity_Query;
 
 /**
  * Class representing a service entity query for the REST API.

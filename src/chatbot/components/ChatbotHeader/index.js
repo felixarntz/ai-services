@@ -20,15 +20,15 @@ export default function ChatbotHeader() {
 	return (
 		<div className="react-chatbot-kit-chat-header">
 			<div className="chatbot-header-title">
-				{ __( 'WordPress Assistant', 'wp-starter-plugin' ) }
+				{ __( 'WordPress Assistant', 'ai-services' ) }
 			</div>
 			<button
 				className="chatbot-header-close-button"
-				aria-label={ __( 'Close chatbot', 'wp-starter-plugin' ) }
+				aria-label={ __( 'Close chatbot', 'ai-services' ) }
 			>
 				<span className="chatbot-header-close-button__icon" />
 				<span className="screen-reader-text">
-					{ __( 'Close chatbot', 'wp-starter-plugin' ) }
+					{ __( 'Close chatbot', 'ai-services' ) }
 				</span>
 			</button>
 		</div>

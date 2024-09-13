@@ -1,23 +1,23 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Google\Google_AI_Service
+ * Class Felix_Arntz\AI_Services\Google\Google_AI_Service
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Google;
+namespace Felix_Arntz\AI_Services\Google;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_API_Client;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\With_API_Client;
-use Vendor_NS\WP_Starter_Plugin\Services\Exception\Generative_AI_Exception;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Content;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
+use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 
 /**
  * Class for the Google AI service.
@@ -110,7 +110,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 
 		if ( ! isset( $response['models'] ) || ! $response['models'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the Google AI API is missing the "models" key.', 'wp-starter-plugin' )
+				esc_html__( 'The response from the Google AI API is missing the "models" key.', 'ai-services' )
 			);
 		}
 

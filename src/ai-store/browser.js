@@ -19,7 +19,7 @@ export async function getBrowserServiceData() {
 			: [];
 		browser = {
 			slug: 'browser',
-			name: __( 'Browser built-in AI', 'wp-starter-plugin' ),
+			name: __( 'Browser built-in AI', 'ai-services' ),
 			is_available: capabilities.length > 0,
 			capabilities,
 			available_models: capabilities.length > 0 ? [ 'default' ] : [],

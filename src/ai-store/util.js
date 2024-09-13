@@ -35,7 +35,7 @@ export function formatNewContent( content ) {
 		throw new Error(
 			__(
 				'The value must be a string, a parts object, or a content object.',
-				'wp-starter-plugin'
+				'ai-services'
 			)
 		);
 	}

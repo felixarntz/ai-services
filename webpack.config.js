@@ -14,9 +14,9 @@ const {
 	camelCaseDash,
 } = require( '@wordpress/dependency-extraction-webpack-plugin/lib/util' );
 
-const PACKAGE_NAMESPACE = '@wp-starter-plugin/';
-const LIBRARY_GLOBAL = 'wpStarterPlugin';
-const HANDLE_PREFIX = 'wpsp-';
+const PACKAGE_NAMESPACE = '@ai-services/';
+const LIBRARY_GLOBAL = 'aiServices';
+const HANDLE_PREFIX = 'ais-';
 
 /**
  * Gets the entry points for the webpack configuration.

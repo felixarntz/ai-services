@@ -7,7 +7,7 @@ import {
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
-} from '@wp-starter-plugin/components';
+} from '@ai-services/components';
 
 /**
  * WordPress dependencies
@@ -26,11 +26,11 @@ import SettingsCards from '../SettingsCards';
 import SettingsStatus from '../SettingsStatus';
 
 const interfaceLabels = {
-	header: __( 'Settings top bar', 'wp-starter-plugin' ),
-	body: __( 'Settings content', 'wp-starter-plugin' ),
-	sidebar: __( 'Settings sidebar', 'wp-starter-plugin' ),
-	actions: __( 'Settings actions', 'wp-starter-plugin' ),
-	footer: __( 'Settings footer', 'wp-starter-plugin' ),
+	header: __( 'Settings top bar', 'ai-services' ),
+	body: __( 'Settings content', 'ai-services' ),
+	sidebar: __( 'Settings sidebar', 'ai-services' ),
+	actions: __( 'Settings actions', 'ai-services' ),
+	footer: __( 'Settings footer', 'ai-services' ),
 };
 
 /**
@@ -47,7 +47,7 @@ export default function SettingsApp() {
 			<SettingsShortcuts />
 			<UnsavedChangesWarning />
 			<Header>
-				<h1>{ __( 'Settings', 'wp-starter-plugin' ) }</h1>
+				<h1>{ __( 'Settings', 'ai-services' ) }</h1>
 				<HeaderActions>
 					<SettingsSaveButton />
 					<PinnedSidebars />

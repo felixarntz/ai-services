@@ -14,5 +14,5 @@ import { PinnedItems } from '@wordpress/interface';
  * @return {Component} The component to be rendered.
  */
 export default function PinnedSidebars() {
-	return <PinnedItems.Slot scope="wp-starter-plugin" />;
+	return <PinnedItems.Slot scope="ai-services" />;
 }

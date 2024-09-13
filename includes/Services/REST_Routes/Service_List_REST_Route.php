@@ -1,17 +1,17 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_List_REST_Route
+ * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_List_REST_Route
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\REST_Routes;
+namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
+use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -98,18 +98,18 @@ class Service_List_REST_Route extends Abstract_REST_Route {
 	 * @throws REST_Exception Thrown when the permissions aren't met, or when a REST error occurs.
 	 */
 	protected function check_permissions( WP_REST_Request $request ): void /* @phpstan-ignore-line */ {
-		if ( 'edit' === $request['context'] && ! $this->current_user->has_cap( 'wpsp_manage_services' ) ) {
+		if ( 'edit' === $request['context'] && ! $this->current_user->has_cap( 'ais_manage_services' ) ) {
 			throw REST_Exception::create(
 				'rest_forbidden_context',
-				esc_html__( 'Sorry, you are not allowed to manage services.', 'wp-starter-plugin' ),
+				esc_html__( 'Sorry, you are not allowed to manage services.', 'ai-services' ),
 				$this->current_user->is_logged_in() ? 403 : 401
 			);
 		}
 
-		if ( ! $this->current_user->has_cap( 'wpsp_access_services' ) ) {
+		if ( ! $this->current_user->has_cap( 'ais_access_services' ) ) {
 			throw REST_Exception::create(
 				'rest_cannot_view',
-				esc_html__( 'Sorry, you are not allowed to access services.', 'wp-starter-plugin' ),
+				esc_html__( 'Sorry, you are not allowed to access services.', 'ai-services' ),
 				$this->current_user->is_logged_in() ? 403 : 401
 			);
 		}
@@ -180,13 +180,13 @@ class Service_List_REST_Route extends Abstract_REST_Route {
 		if ( null === $args ) {
 			$args = array(
 				'order'   => array(
-					'description' => __( 'Order sort attribute ascending or descending.', 'wp-starter-plugin' ),
+					'description' => __( 'Order sort attribute ascending or descending.', 'ai-services' ),
 					'type'        => 'string',
 					'default'     => 'asc',
 					'enum'        => array( 'asc', 'desc' ),
 				),
 				'orderby' => array(
-					'description' => __( 'Sort results by service attribute.', 'wp-starter-plugin' ),
+					'description' => __( 'Sort results by service attribute.', 'ai-services' ),
 					'type'        => 'string',
 					'default'     => 'slug',
 					'enum'        => array( 'slug' ),

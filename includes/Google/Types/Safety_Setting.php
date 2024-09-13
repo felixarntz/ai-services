@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Google\Types\Safety_Setting
+ * Class Felix_Arntz\AI_Services\Google\Types\Safety_Setting
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Google\Types;
+namespace Felix_Arntz\AI_Services\Google\Types;
 
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 
 /**
  * Class representing a safety setting that can be sent as part of request parameters.
@@ -60,7 +60,7 @@ class Safety_Setting implements Arrayable {
 				esc_html(
 					sprintf(
 						/* translators: %s: invalid category encountered */
-						__( 'The category %s is invalid.', 'wp-starter-plugin' ),
+						__( 'The category %s is invalid.', 'ai-services' ),
 						$category
 					)
 				)
@@ -71,7 +71,7 @@ class Safety_Setting implements Arrayable {
 				esc_html(
 					sprintf(
 						/* translators: %s: invalid threshold encountered */
-						__( 'The threshold %s is invalid.', 'wp-starter-plugin' ),
+						__( 'The threshold %s is invalid.', 'ai-services' ),
 						$threshold
 					)
 				)

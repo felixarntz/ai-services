@@ -35,7 +35,7 @@ export default function Snackbars() {
 	return (
 		<SnackbarList
 			notices={ snackbarNotices }
-			className="wpsp-notices__snackbar"
+			className="ais-notices__snackbar"
 			onRemove={ removeNotice }
 		/>
 	);

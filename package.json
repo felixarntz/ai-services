@@ -1,7 +1,7 @@
 {
-  "name": "wp-starter-plugin",
+  "name": "ai-services",
   "license": "GPL-2.0-or-later",
-  "repository": "git+https://github.com/vendor-ns/wp-starter-plugin.git",
+  "repository": "git+https://github.com/felixarntz/ai-services.git",
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
     "@wordpress/env": "^10.4.0",

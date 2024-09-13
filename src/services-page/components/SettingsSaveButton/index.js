@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@ai-services/settings-store';
 
 /**
  * WordPress dependencies
@@ -38,7 +38,7 @@ export default function SettingsSaveButton() {
 			aria-disabled={ ! isSaveable }
 			// The prop accessibleWhenDisabled should be used here, but doesn't work.
 		>
-			{ __( 'Save', 'wp-starter-plugin' ) }
+			{ __( 'Save', 'ai-services' ) }
 		</Button>
 	);
 }

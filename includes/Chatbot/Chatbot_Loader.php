@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Chatbot\Chatbot_Loader
+ * Class Felix_Arntz\AI_Services\Chatbot\Chatbot_Loader
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Chatbot;
+namespace Felix_Arntz\AI_Services\Chatbot;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\AI_Capabilities;
+use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 
 /**
  * Class responsible for loading the Google AI-powered chatbot.

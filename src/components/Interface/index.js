@@ -49,14 +49,14 @@ export default function Interface( { className, labels, children } ) {
 
 			return {
 				isDistractionFree: get(
-					'wp-starter-plugin',
+					'ai-services',
 					'distractionFree'
 				),
 				previousShortcut: getAllShortcutKeyCombinations(
-					'wp-starter-plugin/previous-region'
+					'ai-services/previous-region'
 				),
 				nextShortcut: getAllShortcutKeyCombinations(
-					'wp-starter-plugin/next-region'
+					'ai-services/next-region'
 				),
 			};
 		}
@@ -64,17 +64,17 @@ export default function Interface( { className, labels, children } ) {
 
 	const { toggle: togglePreference } = useDispatch( preferencesStore );
 
-	useShortcut( 'wp-starter-plugin/toggle-distraction-free', () => {
-		togglePreference( 'wp-starter-plugin', 'distractionFree' );
+	useShortcut( 'ai-services/toggle-distraction-free', () => {
+		togglePreference( 'ai-services', 'distractionFree' );
 	} );
 
 	const hasHeader = useHasHeader();
 	const header = hasHeader && (
-		<div className="wpsp-header">
-			<div className="wpsp-header__left">
+		<div className="ais-header">
+			<div className="ais-header__left">
 				<Header.Slot />
 			</div>
-			<div className="wpsp-header__right">
+			<div className="ais-header__right">
 				<HeaderActions.Slot />
 			</div>
 		</div>
@@ -82,7 +82,7 @@ export default function Interface( { className, labels, children } ) {
 
 	const hasFooter = useHasFooter();
 	const footer = hasFooter && (
-		<div className="wpsp-footer">
+		<div className="ais-footer">
 			<Footer.Slot />
 		</div>
 	);
@@ -94,7 +94,7 @@ export default function Interface( { className, labels, children } ) {
 		<InterfaceSkeleton
 			enableRegionNavigation={ true }
 			isDistractionFree={ isDistractionFree }
-			className={ clsx( 'wpsp-interface', className, {
+			className={ clsx( 'ais-interface', className, {
 				'is-distraction-free': isDistractionFree,
 			} ) }
 			labels={ labels }

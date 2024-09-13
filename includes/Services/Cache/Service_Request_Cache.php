@@ -1,17 +1,17 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Cache\Service_Request_Cache
+ * Class Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Cache;
+namespace Felix_Arntz\AI_Services\Services\Cache;
 
 use Exception;
 use InvalidArgumentException;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Model;
-use Vendor_NS\WP_Starter_Plugin\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 
 /**
  * Class that allows to wrap service method calls so that their return values are cached.
@@ -204,7 +204,7 @@ final class Service_Request_Cache {
 	private static function get_cache_key( callable $method, array $args = array() ): string {
 		if ( ! is_array( $method ) || ! is_object( $method[0] ) || ! is_string( $method[1] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'Only methods on service and model instances can be cached.', 'wp-starter-plugin' )
+				esc_html__( 'Only methods on service and model instances can be cached.', 'ai-services' )
 			);
 		}
 
@@ -214,7 +214,7 @@ final class Service_Request_Cache {
 			$type = 'model';
 		} else {
 			throw new InvalidArgumentException(
-				esc_html__( 'Only methods on service and model instances can be cached.', 'wp-starter-plugin' )
+				esc_html__( 'Only methods on service and model instances can be cached.', 'ai-services' )
 			);
 		}
 
@@ -252,10 +252,10 @@ final class Service_Request_Cache {
 			return wp_cache_get_last_changed( $service_slug );
 		}
 
-		$last_changed_option = (array) get_option( 'wpsp_services_last_changed', array() );
+		$last_changed_option = (array) get_option( 'ais_services_last_changed', array() );
 		if ( ! isset( $last_changed_option[ $service_slug ] ) ) {
 			$last_changed_option[ $service_slug ] = microtime();
-			update_option( 'wpsp_services_last_changed', $last_changed_option );
+			update_option( 'ais_services_last_changed', $last_changed_option );
 		}
 		return $last_changed_option[ $service_slug ];
 	}
@@ -273,8 +273,8 @@ final class Service_Request_Cache {
 			return;
 		}
 
-		$last_changed_option                  = (array) get_option( 'wpsp_services_last_changed', array() );
+		$last_changed_option                  = (array) get_option( 'ais_services_last_changed', array() );
 		$last_changed_option[ $service_slug ] = microtime();
-		update_option( 'wpsp_services_last_changed', $last_changed_option );
+		update_option( 'ais_services_last_changed', $last_changed_option );
 	}
 }

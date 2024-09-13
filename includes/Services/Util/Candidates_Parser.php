@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Util\Candidates_Parser
+ * Class Felix_Arntz\AI_Services\Services\Util\Candidates_Parser
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Util;
+namespace Felix_Arntz\AI_Services\Services\Util;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidate;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates;
-use Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\Types\Candidate;
+use Felix_Arntz\AI_Services\Services\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 
 /**
  * Class providing static methods for working with candidate responses.

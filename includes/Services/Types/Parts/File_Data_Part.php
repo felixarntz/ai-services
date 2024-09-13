@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Parts\File_Data_Part
+ * Class Felix_Arntz\AI_Services\Services\Types\Parts\File_Data_Part
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Types\Parts;
+namespace Felix_Arntz\AI_Services\Services\Types\Parts;
 
 use InvalidArgumentException;
 

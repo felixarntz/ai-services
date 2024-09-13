@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page
+ * Class Felix_Arntz\AI_Services\Services\Admin\Settings_Page
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Admin;
+namespace Felix_Arntz\AI_Services\Services\Admin;
 
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Abstract_Admin_Page;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Abstract_Admin_Page;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 
 /**
  * Class representing the plugin's admin settings page.
@@ -59,8 +59,8 @@ class Settings_Page extends Abstract_Admin_Page {
 		add_action(
 			'admin_enqueue_scripts',
 			function () {
-				$this->script_registry->enqueue( 'wpsp-services-page' );
-				$this->style_registry->enqueue( 'wpsp-services-page' );
+				$this->script_registry->enqueue( 'ais-services-page' );
+				$this->style_registry->enqueue( 'ais-services-page' );
 
 				$this->preload_rest_api_data();
 			}
@@ -90,7 +90,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	public function render(): void {
 		?>
 		<div id="settings-page-root" class="wrap">
-			<?php esc_html_e( 'Loading…', 'wp-starter-plugin' ); ?>
+			<?php esc_html_e( 'Loading…', 'ai-services' ); ?>
 		</div>
 		<?php
 	}
@@ -103,7 +103,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page slug.
 	 */
 	protected function slug(): string {
-		return 'wpsp_services';
+		return 'ais_services';
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page title.
 	 */
 	protected function title(): string {
-		return __( 'AI Services', 'wp-starter-plugin' );
+		return __( 'AI Services', 'ai-services' );
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 * @return string Admin page capability.
 	 */
 	protected function capability(): string {
-		return 'wpsp_manage_services';
+		return 'ais_manage_services';
 	}
 
 	/**
@@ -135,7 +135,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	 */
 	private function preload_rest_api_data(): void {
 		$preload_paths = array(
-			'/wp-starter-plugin/v1/services?context=edit',
+			'/ai-services/v1/services?context=edit',
 			'/wp/v2/settings',
 		);
 

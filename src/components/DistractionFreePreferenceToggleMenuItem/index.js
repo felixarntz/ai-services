@@ -19,27 +19,27 @@ import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 export default function DistractionFreePreferenceToggleMenuItem() {
 	const shortcut = useSelect( ( select ) =>
 		select( keyboardShortcutsStore ).getShortcutRepresentation(
-			'wp-starter-plugin/toggle-distraction-free',
+			'ai-services/toggle-distraction-free',
 			'display'
 		)
 	);
 
 	return (
 		<PreferenceToggleMenuItem
-			scope="wp-starter-plugin"
+			scope="ai-services"
 			name="distractionFree"
-			label={ __( 'Distraction free', 'wp-starter-plugin' ) }
+			label={ __( 'Distraction free', 'ai-services' ) }
 			info={ __(
 				'Hide secondary interface to help focus',
-				'wp-starter-plugin'
+				'ai-services'
 			) }
 			messageActivated={ __(
 				'Distraction free mode activated',
-				'wp-starter-plugin'
+				'ai-services'
 			) }
 			messageDeactivated={ __(
 				'Distraction free mode deactivated',
-				'wp-starter-plugin'
+				'ai-services'
 			) }
 			shortcut={ shortcut }
 		/>

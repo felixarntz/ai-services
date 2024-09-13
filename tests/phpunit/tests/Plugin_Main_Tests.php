@@ -1,17 +1,17 @@
 <?php
 /**
- * Tests for Vendor_NS\WP_Starter_Plugin\Plugin_Main
+ * Tests for Felix_Arntz\AI_Services\Plugin_Main
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\PHPUnit\Tests;
+namespace Felix_Arntz\AI_Services\PHPUnit\Tests;
 
 use ReflectionProperty;
-use Vendor_NS\WP_Starter_Plugin\PHPUnit\Includes\Test_Case;
-use Vendor_NS\WP_Starter_Plugin\Plugin_Main;
-use Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance;
+use Felix_Arntz\AI_Services\PHPUnit\Includes\Test_Case;
+use Felix_Arntz\AI_Services\Plugin_Main;
+use Felix_Arntz\AI_Services\Services\Services_API_Instance;
 
 class Plugin_Main_Tests extends Test_Case {
 

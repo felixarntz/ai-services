@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Util\Data_Encryption
+ * Class Felix_Arntz\AI_Services\Services\Util\Data_Encryption
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Util;
+namespace Felix_Arntz\AI_Services\Services\Util;
 
 /**
  * Class responsible for encrypting and decrypting data.
@@ -119,8 +119,8 @@ final class Data_Encryption {
 	 * @return string Default (not user-based) encryption key.
 	 */
 	private function get_default_key(): string {
-		if ( defined( 'WP_STARTER_PLUGIN_ENCRYPTION_KEY' ) && '' !== WP_STARTER_PLUGIN_ENCRYPTION_KEY ) {
-			return WP_STARTER_PLUGIN_ENCRYPTION_KEY;
+		if ( defined( 'AI_SERVICES_ENCRYPTION_KEY' ) && '' !== AI_SERVICES_ENCRYPTION_KEY ) {
+			return AI_SERVICES_ENCRYPTION_KEY;
 		}
 
 		if ( defined( 'LOGGED_IN_KEY' ) && '' !== LOGGED_IN_KEY ) {
@@ -139,8 +139,8 @@ final class Data_Encryption {
 	 * @return string Encryption salt.
 	 */
 	private function get_default_salt(): string {
-		if ( defined( 'WP_STARTER_PLUGIN_ENCRYPTION_SALT' ) && '' !== WP_STARTER_PLUGIN_ENCRYPTION_SALT ) {
-			return WP_STARTER_PLUGIN_ENCRYPTION_SALT;
+		if ( defined( 'AI_SERVICES_ENCRYPTION_SALT' ) && '' !== AI_SERVICES_ENCRYPTION_SALT ) {
+			return AI_SERVICES_ENCRYPTION_SALT;
 		}
 
 		if ( defined( 'LOGGED_IN_SALT' ) && '' !== LOGGED_IN_SALT ) {

@@ -1,15 +1,15 @@
-=== WP Starter Plugin ===
+=== AI Services ===
 
-Plugin Name:  WP Starter Plugin
-Plugin URI:   https://the-plugin.com
-Author:       The Plugin Author
-Author URI:   https://the-plugin-author.com
+Plugin Name:  AI Services
+Plugin URI:   https://wordpress.org/plugins/ai-services/
+Author:       Felix Arntz
+Author URI:   https://felix-arntz.me
 Tested up to: 6.6
 Stable tag:   1.0.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-The plugin description.
+Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
 == Description ==
 
@@ -20,14 +20,14 @@ Extended plugin description content.
 = Installation from within WordPress =
 
 1. Visit **Plugins > Add New**.
-2. Search for **WP Starter Plugin**.
-3. Install and activate the WP Starter Plugin plugin.
+2. Search for **AI Services**.
+3. Install and activate the AI Services plugin.
 
 = Manual installation =
 
-1. Upload the entire `wp-starter-plugin` folder to the `/wp-content/plugins/` directory.
+1. Upload the entire `ai-services` folder to the `/wp-content/plugins/` directory.
 2. Visit **Plugins**.
-3. Activate the WP Starter Plugin plugin.
+3. Activate the AI Services plugin.
 
 == Frequently Asked Questions ==
 

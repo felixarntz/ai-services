@@ -70,7 +70,7 @@ const actions = {
 			}
 
 			const service = await apiFetch( {
-				path: `/wp-starter-plugin/v1/services/${ slug }?context=edit`,
+				path: `/ai-services/v1/services/${ slug }?context=edit`,
 			} );
 			dispatch.receiveService( service );
 		};
@@ -124,7 +124,7 @@ const resolvers = {
 	getServices() {
 		return async ( { dispatch } ) => {
 			const services = await apiFetch( {
-				path: '/wp-starter-plugin/v1/services?context=edit',
+				path: '/ai-services/v1/services?context=edit',
 			} );
 			dispatch.receiveServices( services );
 		};

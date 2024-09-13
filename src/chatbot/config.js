@@ -17,7 +17,7 @@ import ChatbotMessage from './components/ChatbotMessage';
 const config = {
 	initialMessages: [
 		createChatBotMessage(
-			__( 'How can I help you?', 'wp-starter-plugin' )
+			__( 'How can I help you?', 'ai-services' )
 		),
 	],
 	customComponents: {

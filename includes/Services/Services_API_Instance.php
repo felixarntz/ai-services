@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Services_API_Instance
+ * Class Felix_Arntz\AI_Services\Services\Services_API_Instance
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services;
+namespace Felix_Arntz\AI_Services\Services;
 
 use RuntimeException;
 
@@ -37,7 +37,7 @@ final class Services_API_Instance {
 	public static function get(): Services_API {
 		if ( ! isset( self::$instance ) ) {
 			throw new RuntimeException(
-				esc_html__( 'Cannot get Services_API instance before it was set.', 'wp-starter-plugin' )
+				esc_html__( 'Cannot get Services_API instance before it was set.', 'ai-services' )
 			);
 		}
 
@@ -56,7 +56,7 @@ final class Services_API_Instance {
 	public static function set( Services_API $instance ): void {
 		if ( isset( self::$instance ) ) {
 			throw new RuntimeException(
-				esc_html__( 'Cannot set Services_API instance after it has already been set.', 'wp-starter-plugin' )
+				esc_html__( 'Cannot set Services_API instance after it has already been set.', 'ai-services' )
 			);
 		}
 

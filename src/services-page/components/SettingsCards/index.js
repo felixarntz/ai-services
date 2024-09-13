@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginSettingsStore } from '@wp-starter-plugin/settings-store';
+import { store as pluginSettingsStore } from '@ai-services/settings-store';
 
 /**
  * WordPress dependencies
@@ -61,11 +61,11 @@ export default function SettingsCards() {
 	const { setApiKey, setDeleteData } = useDispatch( pluginSettingsStore );
 
 	return (
-		<div className="wpsp-settings-cards">
+		<div className="ais-settings-cards">
 			<Card>
 				<CardHeader>
-					<h2 className="wpsp-settings-cards__heading">
-						{ __( 'API Keys', 'wp-starter-plugin' ) }
+					<h2 className="ais-settings-cards__heading">
+						{ __( 'API Keys', 'ai-services' ) }
 					</h2>
 				</CardHeader>
 				<CardBody>
@@ -79,7 +79,7 @@ export default function SettingsCards() {
 											/* translators: %s: service name */
 											__(
 												'The API key for %s cannot be modified as its value is enforced via filter.',
-												'wp-starter-plugin'
+												'ai-services'
 											),
 											service.name
 									  )
@@ -87,7 +87,7 @@ export default function SettingsCards() {
 											/* translators: %s: service name */
 											__(
 												'Enter the API key for %s.',
-												'wp-starter-plugin'
+												'ai-services'
 											),
 											service.name
 									  )
@@ -104,19 +104,19 @@ export default function SettingsCards() {
 			</Card>
 			<Card>
 				<CardHeader>
-					<h2 className="wpsp-settings-cards__heading">
-						{ __( 'Advanced', 'wp-starter-plugin' ) }
+					<h2 className="ais-settings-cards__heading">
+						{ __( 'Advanced', 'ai-services' ) }
 					</h2>
 				</CardHeader>
 				<CardBody>
 					<ToggleControl
 						label={ __(
 							'Delete plugin data upon uninstallation',
-							'wp-starter-plugin'
+							'ai-services'
 						) }
 						help={ __(
-							'By default no data will be deleted, should you decide to uninstall the WP Starter Plugin plugin. If you are certain that you want the data to be deleted, please enable this toggle.',
-							'wp-starter-plugin'
+							'By default no data will be deleted, should you decide to uninstall the AI Services plugin. If you are certain that you want the data to be deleted, please enable this toggle.',
+							'ai-services'
 						) }
 						disabled={ isLoadingSettings }
 						checked={ deleteData || false }

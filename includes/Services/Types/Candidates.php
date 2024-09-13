@@ -1,18 +1,18 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Types\Candidates
+ * Class Felix_Arntz\AI_Services\Services\Types\Candidates
  *
  * @since n.e.x.t
  * @package wp-plugin-starter
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\Types;
 
 use ArrayIterator;
 use InvalidArgumentException;
 use Traversable;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
 
 /**
  * Class representing a collection of response candidates for a generative model.
@@ -115,7 +115,7 @@ final class Candidates implements Collection, Arrayable {
 	public function get( int $index ): Candidate {
 		if ( ! isset( $this->candidates[ $index ] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'Index out of bounds.', 'wp-starter-plugin' )
+				esc_html__( 'Index out of bounds.', 'ai-services' )
 			);
 		}
 		return $this->candidates[ $index ];

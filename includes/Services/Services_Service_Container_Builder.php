@@ -1,39 +1,39 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Services_Service_Container_Builder
+ * Class Felix_Arntz\AI_Services\Services\Services_Service_Container_Builder
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services;
+namespace Felix_Arntz\AI_Services\Services;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Admin\Settings_Page;
-use Vendor_NS\WP_Starter_Plugin\Services\Dependencies\Services_Script_Style_Loader;
-use Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter;
-use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Generate_Content_REST_Route;
-use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_Get_REST_Route;
-use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_List_REST_Route;
-use Vendor_NS\WP_Starter_Plugin\Services\REST_Routes\Service_REST_Resource_Schema;
-use Vendor_NS\WP_Starter_Plugin\Services\Util\Data_Encryption;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Filters;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Meta_Capability;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Namespace;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Collection;
-use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Registry;
+use Felix_Arntz\AI_Services\Services\Admin\Settings_Page;
+use Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader;
+use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
+use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Content_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Get_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\Service_List_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\Service_REST_Resource_Schema;
+use Felix_Arntz\AI_Services\Services\Util\Data_Encryption;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Filters;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Meta_Capability;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Namespace;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Collection;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Registry;
 
 /**
  * Service container builder for the services loader.
@@ -80,7 +80,7 @@ final class Services_Service_Container_Builder {
 	 */
 	public function build_env( string $main_file ): self {
 		$this->container['plugin_env'] = function () use ( $main_file ) {
-			return new Plugin_Env( $main_file, WP_STARTER_PLUGIN_VERSION );
+			return new Plugin_Env( $main_file, AI_SERVICES_VERSION );
 		};
 
 		return $this;
@@ -134,24 +134,24 @@ final class Services_Service_Container_Builder {
 	private function build_capability_services(): void {
 		$this->container['capability_container'] = static function () {
 			$capabilities                         = new Capability_Container();
-			$capabilities['wpsp_manage_services'] = static function () {
+			$capabilities['ais_manage_services'] = static function () {
 				return new Base_Capability(
-					'wpsp_manage_services',
+					'ais_manage_services',
 					array( 'manage_options' )
 				);
 			};
-			$capabilities['wpsp_access_services'] = static function () {
+			$capabilities['ais_access_services'] = static function () {
 				return new Base_Capability(
-					'wpsp_access_services',
+					'ais_access_services',
 					array( 'edit_posts' )
 				);
 			};
-			$capabilities['wpsp_access_service']  = static function () {
+			$capabilities['ais_access_service']  = static function () {
 				return new Meta_Capability(
-					'wpsp_access_service',
+					'ais_access_service',
 					// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 					static function ( int $user_id, string $service_slug ) {
-						return array( 'wpsp_access_services' );
+						return array( 'ais_access_services' );
 					}
 				);
 			};
@@ -211,7 +211,7 @@ final class Services_Service_Container_Builder {
 			return new Option_Container();
 		};
 		$this->container['option_registry']   = static function () {
-			return new Option_Registry( 'wpsp_services' );
+			return new Option_Registry( 'ais_services' );
 		};
 		$this->container['option_encrypter']  = static function () {
 			return new Option_Encrypter( new Data_Encryption() );
@@ -225,7 +225,7 @@ final class Services_Service_Container_Builder {
 	 */
 	private function build_rest_services(): void {
 		$this->container['rest_namespace']        = function () {
-			return new REST_Namespace( 'wp-starter-plugin/v1' );
+			return new REST_Namespace( 'ai-services/v1' );
 		};
 		$this->container['rest_route_collection'] = function ( $cont ) {
 			$resource_schema = new Service_REST_Resource_Schema( $cont['rest_namespace'] );

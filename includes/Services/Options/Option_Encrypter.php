@@ -1,14 +1,14 @@
 <?php
 /**
- * Class Vendor_NS\WP_Starter_Plugin\Services\Options\Option_Encrypter
+ * Class Felix_Arntz\AI_Services\Services\Options\Option_Encrypter
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
-namespace Vendor_NS\WP_Starter_Plugin\Services\Options;
+namespace Felix_Arntz\AI_Services\Services\Options;
 
-use Vendor_NS\WP_Starter_Plugin\Services\Util\Data_Encryption;
+use Felix_Arntz\AI_Services\Services\Util\Data_Encryption;
 
 /**
  * Class that allows for options to be encrypted when stored in the database as well as decrypted when retrieved.
@@ -93,7 +93,7 @@ final class Option_Encrypter {
 				__METHOD__,
 				sprintf(
 					/* translators: %s: Option slug */
-					__( 'Failed to encrypt the value for the option "%s".', 'wp-starter-plugin' ),
+					__( 'Failed to encrypt the value for the option "%s".', 'ai-services' ),
 					$option_slug
 				)
 			);
@@ -126,7 +126,7 @@ final class Option_Encrypter {
 				__METHOD__,
 				sprintf(
 					/* translators: %s: Option slug */
-					__( 'Failed to decrypt the value for the option "%s".', 'wp-starter-plugin' ),
+					__( 'Failed to decrypt the value for the option "%s".', 'ai-services' ),
 					$option_slug
 				)
 			);

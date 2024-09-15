@@ -30,7 +30,7 @@ This centerpiece is the "Content" data type, which has two properties:
   * In many cases, this will be just one, but as mentioned before, more complex multi-modal prompts may require sending multiple content parts of different kinds in a single prompt.
   * Various types of parts are supported, e.g. text, inline data, or file data.
 
-#### Examples
+#### Examples (in JSON format)
 
 A simple text prompt:
 ```json

@@ -30,6 +30,8 @@ This centerpiece is the "Content" data type, which has two properties:
   * In many cases, this will be just one, but as mentioned before, more complex multi-modal prompts may require sending multiple content parts of different kinds in a single prompt.
   * Various types of parts are supported, e.g. text, inline data, or file data.
 
+When you send an AI prompt, you don't _have_ to use this verbose format if your prompt is simple. You may alternatively send just the array of parts, or simply a string, which is sufficient for the common scenario of sending a text prompt. Under the hood, the prompt will still be parsed into the "Content" data type.
+
 When receiving the response from an AI model, in most cases the "Content" object will be wrapped in an array of "Candidates". This is relevant because sometimes the model may return a few alternative responses that could be chosen from. If so, the content will be found under the "content" property of the candidate.
 
 #### Examples (in JSON format)

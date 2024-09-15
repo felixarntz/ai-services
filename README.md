@@ -72,28 +72,26 @@ curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' 
 
 This plugin is still in its very early stages, with a limited feature set. Consider it early access at this point, there are lots of enhancements to add and polishing to do. That's why your feedback is much appreciated!
 
-## Getting started
+## Installing the plugin
 
-1. `composer install`
-2. `composer prefix-dependencies`
-3. `npm install`
+Since there is no plugin release yet, at the moment you are encouraged to test the plugin by cloning the GitHub repository. Afterwards, please run the following commands to make sure the dependencies are installed and the plugin build is complete:
 
-## Useful commands
+```
+git clone https://github.com/felixarntz/ai-services.git wp-content/plugins/ai-services
+cd wp-content/plugins/ai-services
+composer install
+composer prefix-dependencies
+npm install
+npm run build
+```
 
-* `composer prefix-dependencies`: Prefixes the production dependencies and regenerates the autoloader class map. You must run this after a PHP dependency used in plugin production code has been updated.
-* `composer lint`: Checks the PHP code with PHP_CodeSniffer.
-* `composer format`: Automatically fixes PHP code problems detected by PHP_CodeSniffer, where possible.
-* `composer phpmd`: Checks the PHP code with PHPMD.
-* `composer phpstan`: Checks the PHP code with PHPStan.
-* `npm run build`: Builds the JavaScript and CSS assets.
-* `npm run wp-env start`: Starts the built-in development environment (typically available at `http://localhost:8888/`).
-* `npm run wp-env stop`: Stops the built-in development environment.
-* `npm run test-php`: Runs the PHPUnit tests for a regular (single) WordPress site using the built-in development environment.
-* `npm run test-php-multisite`: Runs the PHPUnit tests for a WordPress multisite using the built-in development environment.
-* `npm run lint-css`: Checks the CSS code.
-* `npm run format-css`: Automatically fixes CSS code detected.
-* `npm run lint-js`: Checks the JavaScript code.
-* `npm run format-js`: Automatically fixes JavaScript code detected.
+If you want to test the plugin in its own built-in development environment, please follow the instructions in the [code contributing guidelines](./CONTRIBUTING.md#getting-started-with-writing-code).
+
+## Using the plugin
+
+Once the plugin is active, you will find a new _Settings > AI Services_ submenu in the WordPress administration menu. In there, you can configure your AI service API keys. Once you have configured at least one (valid) API key, you should see a small "Need help?" button in the lower right throughout WP Admin, which exposes the built-in WordPress assistant chatbot. This is the only user-facing feature of the plugin, effectively as a simple proof of concept for the APIs that the plugin infrastructure provides.
+
+Please refer to the [documentation](./docs/README.md) for instructions on how you can actually use the AI capabilities of the plugin in your own projects.
 
 ## License
 

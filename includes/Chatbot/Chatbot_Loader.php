@@ -45,6 +45,21 @@ class Chatbot_Loader {
 	 * @return bool True if the chatbot can be loaded, false otherwise.
 	 */
 	public function can_load(): bool {
+		/**
+		 * Filters whether the chatbot is enabled.
+		 *
+		 * The chatbot is the only user-facing feature of this plugin, effectively as a small proof of concept, since
+		 * otherwise it is an infrastructure plugin. As such, this filter can be used to disable the chatbot.
+		 *
+		 * @since n.e.x.t
+		 *
+		 * @param bool $enabled Whether the chatbot feature should be enabled or not.
+		 */
+		$enabled = (bool) apply_filters( 'ai_services_chatbot_enabled', true );
+		if ( ! $enabled ) {
+			return false;
+		}
+
 		return $this->services_api->has_available_services(
 			array( 'capabilities' => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION ) )
 		);

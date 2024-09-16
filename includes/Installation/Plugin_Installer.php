@@ -59,8 +59,7 @@ class Plugin_Installer extends Abstract_Installer {
 			$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-				// TODO: Ensure that this prefix is correct.
-				'wpsp\_%'
+				'ais\_%'
 			)
 		);
 	}

@@ -54,7 +54,11 @@ class Plugin_Installer extends Abstract_Installer {
 	protected function uninstall_data(): void {
 		global $wpdb;
 
-		// Delete all options with the plugin prefix.
+		/*
+		 * Delete all options with the plugin prefix.
+		 * This is okay as a direct database query since it only runs once when uninstalling.
+		 */
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
 			$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared

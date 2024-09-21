@@ -113,7 +113,7 @@ Note: Alongside the model key in the array, you may pass other configuration arg
 
 ### Sending multimodal prompts
 
-As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services-and-processing-their-responses), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\Types\Content` class](../includes/Services/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\Types\Parts` class](../includes/Services/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
+As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\Types\Content` class](../includes/Services/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\Types\Parts` class](../includes/Services/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
 
 ```php
 $parts = new \Felix_Arntz\AI_Services\Services\Types\Parts();

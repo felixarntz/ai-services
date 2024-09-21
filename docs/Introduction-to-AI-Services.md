@@ -20,7 +20,7 @@ While the main introduction to the plugin can be found in the [plugin readme](..
 
 ## Technical concepts
 
-### Sending data to AI services and processing their responses
+### Sending data to AI services
 
 In order to provide a uniform way of communicating with AI services, this plugin defines several data types that facilitate sending and receiving content of various kinds. For instance, while a simple "send a string, get a string response" may seem intuitive at first, such an approach would not allow to leverage the advanced capabilities of some AI services, such as generating images or processing multi-modal content (e.g. sending an image as well as a text prompt asking to describe the image).
 
@@ -31,8 +31,6 @@ This centerpiece is the "Content" data type, which has two properties:
   * Various types of parts are supported, e.g. text, inline data, or file data.
 
 When you send an AI prompt, you don't _have_ to use this verbose format if your prompt is simple. You may alternatively send just the array of parts, or simply a string, which is sufficient for the common scenario of sending a text prompt. Under the hood, the prompt will still be parsed into the "Content" data type.
-
-When receiving the response from an AI model, in most cases the "Content" object will be wrapped in an array of "Candidates". This is relevant because sometimes the model may return a few alternative responses that could be chosen from. If so, the content will be found under the "content" property of the candidate.
 
 #### Examples (in JSON format)
 
@@ -63,6 +61,14 @@ A multi-modal prompt asking to describe an image:
   ]
 }
 ```
+
+### Processing AI service responses
+
+Responses from an AI service use the same "Content" object format that is used to send prompts. While for a prompt the `role` should generally be "user", model responses use a `role` of "model".
+
+When receiving the response from an AI model, in most cases the "Content" object will be wrapped in an array of "Candidates". This is relevant because sometimes the model may return a few alternative responses that could be chosen from. If so, the content will be found under the "content" property of the candidate.
+
+#### Examples (in JSON format)
 
 A simple text response from the AI model:
 ```json

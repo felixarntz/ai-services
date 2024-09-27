@@ -3,7 +3,7 @@
  * Class Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer
  *
  * @since n.e.x.t
- * @package wp-plugin-starter
+ * @package wp-starter-plugin
  */
 
 namespace Vendor_NS\WP_Starter_Plugin\Installation;

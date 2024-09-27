@@ -3,7 +3,7 @@
  * Class Felix_Arntz\AI_Services\Services\Types\Candidates
  *
  * @since n.e.x.t
- * @package wp-plugin-starter
+ * @package ai-services
  */
 
 namespace Felix_Arntz\AI_Services\Services\Types;

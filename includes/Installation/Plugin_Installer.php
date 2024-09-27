@@ -3,7 +3,7 @@
  * Class Felix_Arntz\AI_Services\Installation\Plugin_Installer
  *
  * @since n.e.x.t
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
 namespace Felix_Arntz\AI_Services\Installation;

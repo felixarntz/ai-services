@@ -3,7 +3,7 @@
  * Trait Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait
  *
  * @since n.e.x.t
- * @package wp-plugin-starter
+ * @package ai-services
  */
 
 namespace Felix_Arntz\AI_Services\Services\Traits;

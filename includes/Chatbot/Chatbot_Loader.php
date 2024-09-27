@@ -3,7 +3,7 @@
  * Class Felix_Arntz\AI_Services\Chatbot\Chatbot_Loader
  *
  * @since n.e.x.t
- * @package wp-plugin-starter
+ * @package ai-services
  */
 
 namespace Felix_Arntz\AI_Services\Chatbot;

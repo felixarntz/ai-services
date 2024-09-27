@@ -3,7 +3,7 @@
  * Interface Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation
  *
  * @since n.e.x.t
- * @package wp-plugin-starter
+ * @package ai-services
  */
 
 namespace Felix_Arntz\AI_Services\Services\Contracts;

@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Google\Google_AI_API_Client
+ * Class Felix_Arntz\AI_Services\Anthropic\Anthropic_AI_API_Client
  *
  * @since n.e.x.t
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Google;
+namespace Felix_Arntz\AI_Services\Anthropic;
 
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Traits\Generative_AI_API_Client_Trait;
@@ -16,18 +16,18 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
 
 /**
- * Class to interact directly with the Google Generative Language API.
+ * Class to interact directly with the Anthropic API.
  *
  * @since n.e.x.t
  */
-class Google_AI_API_Client implements Generative_AI_API_Client {
+class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 	use Generative_AI_API_Client_Trait;
 
-	const DEFAULT_BASE_URL    = 'https://generativelanguage.googleapis.com';
-	const DEFAULT_API_VERSION = 'v1beta';
+	const DEFAULT_BASE_URL    = 'https://api.anthropic.com';
+	const DEFAULT_API_VERSION = 'v1';
 
 	/**
-	 * The Google Generative Language API key.
+	 * The Anthropic API key.
 	 *
 	 * @since n.e.x.t
 	 * @var string
@@ -65,6 +65,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 	 * @return Request The request instance.
 	 */
 	public function create_list_models_request( array $params = array(), array $request_options = array() ): Request {
+		// TODO: This is in fact not supported by the Anthropic API. Is there any way to remotely get models?
 		return $this->create_get_request( 'models', $params, $request_options );
 	}
 
@@ -79,10 +80,8 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 	 * @return Request The request instance.
 	 */
 	public function create_generate_content_request( string $model, array $params, array $request_options = array() ): Request {
-		if ( ! str_contains( $model, '/' ) ) {
-			$model = 'models/' . $model;
-		}
-		return $this->create_post_request( "{$model}:generateContent", $params, $request_options );
+		$params['model'] = $model;
+		return $this->create_post_request( 'messages', $params, $request_options );
 	}
 
 	/**
@@ -104,7 +103,7 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 	 * @return string The API name.
 	 */
 	protected function get_api_name(): string {
-		return 'Google Generative Language';
+		return 'Anthropic';
 	}
 
 	/**
@@ -176,8 +175,8 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 		if ( ! isset( $request_options['headers'] ) ) {
 			$request_options['headers'] = array();
 		}
-		$request_options['headers']['X-Goog-Api-Client'] = 'ai-services/' . AI_SERVICES_VERSION;
-		$request_options['headers']['X-Goog-Api-Key']    = $this->api_key;
+		$request_options['headers']['x-api-key']         = $this->api_key;
+		$request_options['headers']['anthropic-version'] = '2023-06-01';
 		return $request_options;
 	}
 }

@@ -23,9 +23,9 @@ Here's a (non-comprehensive) feature list:
   * APIs are available in both PHP and in JavaScript, and WP-CLI commands are being worked on
   * Currently only supports text generation (including multi-modal support if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
 * Built-in AI service implementations
-  * [Anthropic (Claude)](https://www.anthropic.com/claude) (coming soon)
+  * [Anthropic (Claude)](https://www.anthropic.com/claude)
   * [Google (Gemini)](https://ai.google.dev/gemini-api)
-  * [OpenAI (ChatGPT)](https://openai.com/chatgpt/) (coming soon)
+  * [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
   * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 * WordPress Assistant chatbot is the single user-facing built-in feature the plugin comes with
@@ -40,6 +40,23 @@ Here's a (non-comprehensive) feature list:
 * It also means **no more reinventing the wheel**: Since most AI services do not provide PHP SDKs for their APIs, many times this means WordPress plugins that want to leverage AI have to implement their own layer around the service's API. Not only is that time consuming, it also distracts from working on the actual (AI driven) features that the plugin should offer to its users. In fact this directly facilitates the user choice aspect mentioned, as having APIs for various AI services already provided means you can simply make those available to your plugin users.
 * Having central AI infrastructure available **unlocks AI capabilities for smaller plugins or features**: It may not be worth the investment to implement a whole AI API layer for a simple AI driven feature, but when you already have it available, it can lead to more plugins (and thus more users) benefitting from AI capabilities.
 * Last but not least, a central AI infrastructure means **users will only have to configure the AI API once**, e.g. paste their API keys only in a single WordPress administration screen. Without central AI infrastructure, every plugin has to provide its own UI for pasting API keys, making the process more tedious for site owners the more AI capabilities their site uses.
+
+= Integration with third party services =
+
+While the plugin APIs allow registering custom AI services, the plugin comes with a few popular AI services built-in. These AI services rely on the respective third party API. Their use is optional and it is up to you to choose which third party service you would like to use or whether you would like to use multiple.
+
+The use of the third party AI services is subject to the respective terms of service. The following third party services are supported out of the box:
+* [Anthropic (Claude)](https://www.anthropic.com/claude)
+  * [Anthropic Consumer Terms of Service](https://www.anthropic.com/legal/consumer-terms)
+  * [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms)
+  * [Anthropic Privacy Policy](https://www.anthropic.com/legal/privacy)
+* [Google (Gemini)](https://ai.google.dev/gemini-api)
+  * [Google Terms of Service](https://policies.google.com/terms)
+  * [Google AI Terms of Service](https://policies.google.com/terms/generative-ai)
+  * [Google Privacy Policy](https://policies.google.com/privacy)
+* [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
+  * [OpenAI Terms of Use](https://openai.com/policies/row-terms-of-use/)
+  * [OpenAI Privacy Policy](https://openai.com/policies/row-privacy-policy/)
 
 = Examples =
 

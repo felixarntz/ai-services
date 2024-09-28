@@ -22,7 +22,7 @@ if ( ! function_exists( 'ai_services_uninstall' ) ) {
 	 * @since n.e.x.t
 	 */
 	function ai_services_uninstall() /* @phpstan-ignore-line */ {
-		$plugin_main_file = plugin_dir_path( __FILE__ ) . 'load.php';
+		$plugin_main_file = plugin_dir_path( __FILE__ ) . 'ai-services.php';
 
 		// Check for supported PHP version.
 		if (

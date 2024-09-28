@@ -26,14 +26,14 @@ class Plugin_Main_Tests extends Test_Case {
 		$prop->setValue( null, null );
 		$prop->setAccessible( false );
 
-		$this->plugin_main = new Plugin_Main( TESTS_PLUGIN_DIR . '/load.php' );
+		$this->plugin_main = new Plugin_Main( TESTS_PLUGIN_DIR . '/ai-services.php' );
 	}
 
 	public function test_add_hooks() {
 		$actions_to_check = array(
 			// Via Plugin_Main.
 			'init',
-			'activate_' . basename( TESTS_PLUGIN_DIR ) . '/load.php',
+			'activate_' . basename( TESTS_PLUGIN_DIR ) . '/ai-services.php',
 
 			// Via Services_Loader.
 			'plugins_loaded',

@@ -17,13 +17,13 @@ class Plugin_Main_Tests extends Test_Case {
 
 	public function set_up() {
 		parent::set_up();
-		$this->plugin_main = new Plugin_Main( TESTS_PLUGIN_DIR . '/load.php' );
+		$this->plugin_main = new Plugin_Main( TESTS_PLUGIN_DIR . '/wp-starter-plugin.php' );
 	}
 
 	public function test_add_hooks() {
 		$actions_to_check = array(
 			'init',
-			'activate_' . basename( TESTS_PLUGIN_DIR ) . '/load.php',
+			'activate_' . basename( TESTS_PLUGIN_DIR ) . '/wp-starter-plugin.php',
 			'admin_menu',
 		);
 		foreach ( $actions_to_check as $hook_name ) {

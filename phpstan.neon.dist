@@ -6,8 +6,8 @@ parameters:
 	level: 6
 	paths:
 		- includes/
+		- wp-starter-plugin.php
 		- constants.php
-		- load.php
 		- uninstall.php
 	scanDirectories:
 		- third-party

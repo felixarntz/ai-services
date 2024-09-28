@@ -24,7 +24,7 @@ if ( false !== getenv( 'WP_TESTS_DIR' ) ) {
 
 // Force plugin to be active.
 $GLOBALS['wp_tests_options'] = array(
-	'active_plugins' => array( basename( TESTS_PLUGIN_DIR ) . '/load.php' ),
+	'active_plugins' => array( basename( TESTS_PLUGIN_DIR ) . '/wp-starter-plugin.php' ),
 );
 
 // Start up the WP testing environment.

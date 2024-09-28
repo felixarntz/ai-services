@@ -28,9 +28,10 @@ In order to create a new plugin based on this foundation, perform the following 
     * Replace `https://the-plugin.com` with `https://real-plugin-website.com`
     * Replace `The Plugin Author` with `Real Author Name`
     * Replace `https://the-plugin-author.com` with `https://real-author-website.com`
-3. Remove any parts of the PHP codebase that you don't need.
-4. Update the `README.md` file as needed.
-5. (Optional) If your plugin does not require any custom JavaScript, remove the `src` directory and the JavaScript-specific infrastructure files (e.g. `.github/workflows/js-lint.yml`, `.prettierignore`, `webpack.config.js`).
+3. Rename the `wp-starter-plugin.php` file to `my-plugin.php`.
+4. Remove any parts of the PHP codebase that you don't need.
+5. Update the `README.md` file as needed.
+6. (Optional) If your plugin does not require any custom JavaScript, remove the `src` directory and the JavaScript-specific infrastructure files (e.g. `.github/workflows/js-lint.yml`, `.prettierignore`, `webpack.config.js`).
 
 ## Getting started
 

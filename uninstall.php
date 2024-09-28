@@ -22,7 +22,7 @@ if ( ! function_exists( 'wp_starter_plugin_uninstall' ) ) {
 	 * @since n.e.x.t
 	 */
 	function wp_starter_plugin_uninstall() /* @phpstan-ignore-line */ {
-		$plugin_main_file = plugin_dir_path( __FILE__ ) . 'load.php';
+		$plugin_main_file = plugin_dir_path( __FILE__ ) . 'wp-starter-plugin.php';
 
 		// Check for supported PHP version.
 		if (

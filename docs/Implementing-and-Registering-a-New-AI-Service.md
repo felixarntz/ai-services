@@ -25,7 +25,7 @@ To register the service, you need to use the `Services_API::register_service()` 
 ```php
 ai_services()->register_service(
   'demo-service',
-  static function ( Felix_Arntz\AI_Services\Services\Contracts\Authentication $authentication, HTTP $http ) {
+  static function ( $authentication, $http ) {
     return new Demo_Service_AI_Service( $authentication, $http );
   },
   array(

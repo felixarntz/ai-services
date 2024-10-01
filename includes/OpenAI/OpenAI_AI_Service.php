@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\OpenAI;
 
+use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -25,10 +26,10 @@ use InvalidArgumentException;
 class OpenAI_AI_Service implements Generative_AI_Service {
 
 	/**
-	 * The OpenAI API key.
+	 * The OpenAI API key authentication.
 	 *
 	 * @since n.e.x.t
-	 * @var string
+	 * @var Authentication
 	 */
 	private $api_key; /* @phpstan-ignore property.onlyWritten  */
 
@@ -45,10 +46,10 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $api_key The API key.
-	 * @param HTTP   $http    Optional. The HTTP instance to use for requests. Default is a new instance.
+	 * @param Authentication $api_key The API key.
+	 * @param HTTP           $http    Optional. The HTTP instance to use for requests. Default is a new instance.
 	 */
-	public function __construct( string $api_key, HTTP $http = null ) {
+	public function __construct( Authentication $api_key, HTTP $http = null ) {
 		// TODO: Implement OpenAI API client instead of storing properties here.
 		$this->api_key = $api_key;
 

@@ -128,10 +128,11 @@ final class Services_API {
 	 * @see With_API_Client
 	 *
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens. It
-	 *                                      must be unique and must match the service slug returned by the service class.
-	 * @param callable             $creator The service creator. Receives the API key (string) as first parameter, the
-	 *                                      HTTP instance as second parameter, and must return a Generative_AI_Service
-	 *                                      instance.
+	 *                                      must be unique and must match the service slug returned by the service
+	 *                                      class.
+	 * @param callable             $creator The service creator. Receives the Authentication instance as first
+	 *                                      parameter, the HTTP instance as second parameter, and must return a
+	 *                                      Generative_AI_Service instance.
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
@@ -174,19 +175,21 @@ final class Services_API {
 
 		$this->service_registrations[ $slug ] = new Service_Registration( $slug, $creator, $args );
 
-		// Ensure the API key option is encrypted.
-		$option_slug = $this->service_registrations[ $slug ]->get_api_key_option_slug();
-		if ( ! $this->option_encrypter->has_encryption( $option_slug ) ) {
-			$this->option_encrypter->add_encryption_hooks( $option_slug );
-		}
+		$option_slugs = $this->service_registrations[ $slug ]->get_authentication_option_slugs();
+		foreach ( $option_slugs as $option_slug ) {
+			// Ensure the authentication options are encrypted.
+			if ( ! $this->option_encrypter->has_encryption( $option_slug ) ) {
+				$this->option_encrypter->add_encryption_hooks( $option_slug );
+			}
 
-		// Ensure any service request caches are invalidated when the API key changes.
-		$invalid_service_caches = static function () use ( $slug ) {
-			Service_Request_Cache::invalidate_caches( $slug );
-		};
-		add_action( "add_option_{$option_slug}", $invalid_service_caches );
-		add_action( "update_option_{$option_slug}", $invalid_service_caches );
-		add_action( "delete_option_{$option_slug}", $invalid_service_caches );
+			// Ensure any service request caches are invalidated when the authentication credentials change.
+			$invalid_service_caches = static function () use ( $slug ) {
+				Service_Request_Cache::invalidate_caches( $slug );
+			};
+			add_action( "add_option_{$option_slug}", $invalid_service_caches );
+			add_action( "update_option_{$option_slug}", $invalid_service_caches );
+			add_action( "delete_option_{$option_slug}", $invalid_service_caches );
+		}
 	}
 
 	/**
@@ -232,10 +235,12 @@ final class Services_API {
 			return false;
 		}
 
-		// If no API key is set for the service, it is not available.
-		$api_key = $this->service_registrations[ $slug ]->get_api_key_option()->get_value();
-		if ( ! $api_key ) {
-			return false;
+		// If any authentication credentials are missing for the service, it is not available.
+		$authentication_options = $this->service_registrations[ $slug ]->get_authentication_options();
+		foreach ( $authentication_options as $option ) {
+			if ( ! $option->get_value() ) {
+				return false;
+			}
 		}
 
 		// Test whether the API key is valid by listing the models.

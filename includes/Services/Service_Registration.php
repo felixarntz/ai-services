@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
+use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
 use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service;
 use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service_With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -53,12 +54,12 @@ final class Service_Registration {
 	private $args;
 
 	/**
-	 * The API key option slug.
+	 * The authentication option slugs.
 	 *
 	 * @since n.e.x.t
-	 * @var string
+	 * @var string[]
 	 */
-	private $api_key_option_slug;
+	private $authentication_option_slugs;
 
 	/**
 	 * Constructor.
@@ -66,12 +67,12 @@ final class Service_Registration {
 	 * @since n.e.x.t
 	 *
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
-	 * @param callable             $creator The service creator. Receives the API key (string) as first parameter, the
-	 *                                      HTTP instance as second parameter, and must return a Generative_AI_Service
-	 *                                      instance. Optionally, the class can implement the With_API_Client
-	 *                                      interface, if the service uses an API client class. Doing so benefits
-	 *                                      performance, as it allows the infrastructure to perform batch requests
-	 *                                      across multiple services.
+	 * @param callable             $creator The service creator. Receives the Authentication instance as first
+	 *                                      parameter, the HTTP instance as second parameter, and must return a
+	 *                                      Generative_AI_Service instance. Optionally, the class can implement the
+	 *                                      With_API_Client interface, if the service uses an API client class. Doing
+	 *                                      so benefits performance, as it allows the infrastructure to perform batch
+	 *                                      requests across multiple services.
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
@@ -91,19 +92,19 @@ final class Service_Registration {
 		$this->creator = $creator;
 		$this->args    = $this->parse_args( $args );
 
-		$this->api_key_option_slug                                    = sprintf( 'ais_%s_api_key', $slug );
-		$this->args['option_container'][ $this->api_key_option_slug ] = function () {
-			return new Option(
-				$this->args['option_repository'],
-				$this->api_key_option_slug,
-				array(
-					'type'         => 'string',
-					'default'      => '',
-					'show_in_rest' => true,
-					'autoload'     => true,
-				)
-			);
-		};
+		$option_definitions = API_Key_Authentication::get_option_definitions( $slug );
+
+		$this->authentication_option_slugs = array();
+		foreach ( $option_definitions as $option_slug => $option_args ) {
+			$this->authentication_option_slugs[]            = $option_slug;
+			$this->args['option_container'][ $option_slug ] = function () use ( $option_slug, $option_args ) {
+				return new Option(
+					$this->args['option_repository'],
+					$option_slug,
+					$option_args
+				);
+			};
+		}
 	}
 
 	/**
@@ -118,25 +119,30 @@ final class Service_Registration {
 	}
 
 	/**
-	 * Gets the API key option.
+	 * Gets the authentication option instances.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return Option The API key option.
+	 * @return Option[] The authentication option instances.
 	 */
-	public function get_api_key_option(): Option {
-		return $this->args['option_container'][ $this->api_key_option_slug ];
+	public function get_authentication_options(): array {
+		return array_map(
+			function ( string $option_slug ) {
+				return $this->args['option_container'][ $option_slug ];
+			},
+			$this->authentication_option_slugs
+		);
 	}
 
 	/**
-	 * Gets the API key option slug.
+	 * Gets the authentication option slugs.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return string The API key option slug.
+	 * @return string[] The authentication option slugs.
 	 */
-	public function get_api_key_option_slug(): string {
-		return $this->api_key_option_slug;
+	public function get_authentication_option_slugs(): array {
+		return $this->authentication_option_slugs;
 	}
 
 	/**
@@ -150,8 +156,10 @@ final class Service_Registration {
 	 *                          Generative_AI_Service instance.
 	 */
 	public function create_instance(): Generative_AI_Service {
-		$api_key = $this->get_api_key_option()->get_value();
+		$authentication_options = $this->get_authentication_options();
 
+		// For now an API key is the only authentication method supported.
+		$api_key = $authentication_options[0]->get_value();
 		if ( ! $api_key ) {
 			throw new RuntimeException(
 				esc_html(
@@ -164,7 +172,9 @@ final class Service_Registration {
 			);
 		}
 
-		$instance = ( $this->creator )( $api_key, $this->args['http'] );
+		$api_key_authentication = new API_Key_Authentication( $api_key );
+
+		$instance = ( $this->creator )( $api_key_authentication, $this->args['http'] );
 		if ( ! $instance instanceof Generative_AI_Service ) {
 			throw new RuntimeException(
 				esc_html(

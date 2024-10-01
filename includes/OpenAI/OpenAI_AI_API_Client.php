@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\OpenAI;
 
+use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Traits\Generative_AI_API_Client_Trait;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
@@ -27,12 +28,12 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	const DEFAULT_API_VERSION = 'v1';
 
 	/**
-	 * The OpenAI API key.
+	 * The OpenAI API key authentication.
 	 *
 	 * @since n.e.x.t
-	 * @var string
+	 * @var Authentication
 	 */
-	private $api_key;
+	private $authentication;
 
 	/**
 	 * The HTTP instance to use for requests.
@@ -47,12 +48,12 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $api_key The API key.
-	 * @param HTTP   $http    The HTTP instance to use for requests.
+	 * @param Authentication $authentication The authentication credentials.
+	 * @param HTTP           $http           The HTTP instance to use for requests.
 	 */
-	public function __construct( string $api_key, HTTP $http ) {
-		$this->api_key = $api_key;
-		$this->http    = $http;
+	public function __construct( Authentication $authentication, HTTP $http ) {
+		$this->authentication = $authentication;
+		$this->http           = $http;
 	}
 
 	/**
@@ -119,9 +120,10 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 		$request = new Get_Request(
 			$this->get_request_url( $path, $request_options ),
 			$params,
-			$this->add_request_headers( $request_options )
+			$request_options
 		);
 		$this->add_default_options( $request );
+		$this->authentication->authenticate( $request );
 		return $request;
 	}
 
@@ -139,9 +141,10 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 		$request = new JSON_Post_Request(
 			$this->get_request_url( $path, $request_options ),
 			$params,
-			$this->add_request_headers( $request_options )
+			$request_options
 		);
 		$this->add_default_options( $request );
+		$this->authentication->authenticate( $request );
 		return $request;
 	}
 
@@ -160,21 +163,5 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 		$path        = ltrim( $path, '/' );
 
 		return "{$base_url}/{$api_version}/{$path}";
-	}
-
-	/**
-	 * Adds the required request headers to the request options.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param array<string, mixed> $request_options The request options.
-	 * @return array<string, mixed> The updated request options.
-	 */
-	private function add_request_headers( array $request_options ): array {
-		if ( ! isset( $request_options['headers'] ) ) {
-			$request_options['headers'] = array();
-		}
-		$request_options['headers']['Authorization'] = 'Bearer ' . $this->api_key;
-		return $request_options;
 	}
 }

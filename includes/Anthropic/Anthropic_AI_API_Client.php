@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Anthropic;
 
+use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Traits\Generative_AI_API_Client_Trait;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
@@ -30,9 +31,9 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 	 * The Anthropic API key.
 	 *
 	 * @since n.e.x.t
-	 * @var string
+	 * @var Authentication
 	 */
-	private $api_key;
+	private $authentication;
 
 	/**
 	 * The HTTP instance to use for requests.
@@ -47,12 +48,14 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $api_key The API key.
-	 * @param HTTP   $http    The HTTP instance to use for requests.
+	 * @param Authentication $authentication The authentication credentials.
+	 * @param HTTP           $http           The HTTP instance to use for requests.
 	 */
-	public function __construct( string $api_key, HTTP $http ) {
-		$this->api_key = $api_key;
-		$this->http    = $http;
+	public function __construct( Authentication $authentication, HTTP $http ) {
+		$this->authentication = $authentication;
+		$this->http           = $http;
+
+		$this->authentication->set_header_name( 'x-api-key' );
 	}
 
 	/**
@@ -123,6 +126,7 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 			$this->add_request_headers( $request_options )
 		);
 		$this->add_default_options( $request );
+		$this->authentication->authenticate( $request );
 		return $request;
 	}
 
@@ -143,6 +147,7 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 			$this->add_request_headers( $request_options )
 		);
 		$this->add_default_options( $request );
+		$this->authentication->authenticate( $request );
 		return $request;
 	}
 
@@ -175,7 +180,6 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 		if ( ! isset( $request_options['headers'] ) ) {
 			$request_options['headers'] = array();
 		}
-		$request_options['headers']['x-api-key']         = $this->api_key;
 		$request_options['headers']['anthropic-version'] = '2023-06-01';
 		return $request_options;
 	}

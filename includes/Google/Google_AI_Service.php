@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Google;
 
+use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -39,10 +40,10 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $api_key The API key.
-	 * @param HTTP   $http    Optional. The HTTP instance to use for requests. Default is a new instance.
+	 * @param Authentication $api_key The API key.
+	 * @param HTTP           $http    Optional. The HTTP instance to use for requests. Default is a new instance.
 	 */
-	public function __construct( string $api_key, HTTP $http = null ) {
+	public function __construct( Authentication $api_key, HTTP $http = null ) {
 		if ( ! $http ) {
 			$http = new HTTP();
 		}

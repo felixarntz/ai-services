@@ -55,7 +55,10 @@ export default function ChatbotApp() {
 			} else if ( service ) {
 				startChat( CHAT_ID, {
 					service: service.slug,
-					modelParams: { useWppsChatbot: true },
+					modelParams: {
+						feature: 'ai-services-chatbot',
+						useWppsChatbot: true,
+					},
 				} );
 			}
 		}

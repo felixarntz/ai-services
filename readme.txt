@@ -65,7 +65,9 @@ The use of the third party AI services is subject to the respective terms of ser
 if ( ai_services()->has_available_services() ) {
 	$service = ai_services()->get_available_service();
 	try {
-		$result = $service->get_model()->generate_text( 'What can I do with WordPress?' );
+		$result = $service
+			->get_model( array( 'feature' => 'my-test-feature' ) )
+			->generate_text( 'What can I do with WordPress?' );
 	} catch ( Exception $e ) {
 		// Handle the exception.
 	}
@@ -78,7 +80,10 @@ const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-servic
 if ( hasAvailableServices() ) {
 	const service = getAvailableService();
 	try {
-		const result = await service.generateText( 'What can I do with WordPress?' );
+		const result = await service.generateText(
+			'What can I do with WordPress?',
+			{ feature: 'my-test-feature' }
+		);
 	} catch ( error ) {
 		// Handle the error.
 	}
@@ -87,7 +92,7 @@ if ( hasAvailableServices() ) {
 
 `
 // Generate the answer to a prompt using WP-CLI.
-wp ai-services generate-text 'What can I do with WordPress?'
+wp ai-services generate-text 'What can I do with WordPress?' --feature=my-test-feature
 `
 
 You can also use a specific AI service, if you have a preference, for example the `google` service:
@@ -96,7 +101,9 @@ You can also use a specific AI service, if you have a preference, for example th
 if ( ai_services()->is_service_available( 'google' ) ) {
 	$service = ai_services()->get_available_service( 'google' );
 	try {
-		$result = $service->get_model()->generate_text( 'What can I do with WordPress?' );
+		$result = $service
+			->get_model( array( 'feature' => 'my-test-feature' ) )
+			->generate_text( 'What can I do with WordPress?' );
 	} catch ( Exception $e ) {
 		// Handle the exception.
 	}

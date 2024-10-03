@@ -152,8 +152,11 @@ class GenerativeAiService {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional history.
-	 * @param {Object}                 modelParams Optional. Model parameters (including optional model slug).
+	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional
+	 *                                             history.
+	 * @param {Object}                 modelParams Model parameters. At a minimum this must include the unique
+	 *                                             "feature" identifier. It can also include the model slug and other
+	 *                                             optional parameters.
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( content, modelParams ) {
@@ -161,6 +164,15 @@ class GenerativeAiService {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
+					'ai-services'
+				)
+			);
+		}
+
+		if ( ! modelParams?.feature ) {
+			throw new Error(
+				__(
+					'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.',
 					'ai-services'
 				)
 			);
@@ -217,8 +229,11 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional history.
-	 * @param {Object}                 modelParams Optional. Model parameters (including optional model slug).
+	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional
+	 *                                             history.
+	 * @param {Object}                 modelParams Model parameters. At a minimum this must include the unique
+	 *                                             "feature" identifier. It can also include the model slug and other
+	 *                                             optional parameters.
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( content, modelParams ) {
@@ -226,6 +241,15 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
+					'ai-services'
+				)
+			);
+		}
+
+		if ( ! modelParams?.feature ) {
+			throw new Error(
+				__(
+					'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.',
 					'ai-services'
 				)
 			);

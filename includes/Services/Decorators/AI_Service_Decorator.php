@@ -103,6 +103,9 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.
 	 *
+	 *     @type string               $feature            Required. Unique identifier of the feature that the model
+	 *                                                    will be used for. Must only contain lowercase letters,
+	 *                                                    numbers, hyphens.
 	 *     @type string               $model              The model slug. By default, the service's default model slug
 	 *                                                    is used.
 	 *     @type array<string, mixed> $generation_config  Model generation configuration options. Default empty array.
@@ -112,9 +115,14 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 * @return Generative_AI_Model The generative model.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model slug or parameters are invalid.
-	 * @throws Generative_AI_Exception Thrown if getting the model fails.
 	 */
 	public function get_model( array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
+		if ( ! isset( $model_params['feature'] ) || ! preg_match( '/^[a-z0-9-]+$/', $model_params['feature'] ) ) {
+			throw new InvalidArgumentException(
+				esc_html__( 'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.', 'ai-services' )
+			);
+		}
+
 		return $this->service->get_model( $model_params, $request_options );
 	}
 }

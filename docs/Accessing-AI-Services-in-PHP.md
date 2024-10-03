@@ -10,7 +10,9 @@ The canonical entry point to all of the PHP public APIs is the `ai_services()` f
 if ( ai_services()->is_service_available( 'google' ) ) {
 	$service = ai_services()->get_available_service( 'google' );
 	try {
-		$result = $service->get_model()->generate_text( 'What can I do with WordPress?' );
+		$result = $service
+      ->get_model( array( 'feature' => 'my-test-feature' ) )
+      ->generate_text( 'What can I do with WordPress?' );
 	} catch ( Exception $e ) {
 		// Handle the exception.
 	}
@@ -78,7 +80,7 @@ if ( ai_services()->has_available_services( array( 'slugs' => array( 'google', '
 
 ## Generating text content using an AI service
 
-Once you have retrieved an AI service, you can use it to get a text response to a prompt. You need to use the `get_model()` method of the service to get an instance of the model (optionally with custom configuration), and afterwards call the `generate_text()` method of the model. This method will only be available if the service implements the "text_generation" capability - which all built-in services do, but there may be further custom AI services registered some of which may only support other capabilities such as "image_generation".
+Once you have retrieved an AI service, you can use it to get a text response to a prompt. You need to use the `get_model()` method of the service to get an instance of the model (at a minimum passing a unique "feature" identifier, and optionally custom configuration), and afterwards call the `generate_text()` method of the model. This method will only be available if the service implements the "text_generation" capability - which all built-in services do, but there may be further custom AI services registered some of which may only support other capabilities such as "image_generation".
 
 ### Using the default model
 
@@ -86,7 +88,9 @@ Here is an example of how to generate the response to a simple prompt, using the
 
 ```php
 try {
-  $result = $service->get_model()->generate_text( 'What can I do with WordPress?' );
+  $result = $service
+    ->get_model( array( 'feature' => 'my-test-feature' ) )
+    ->generate_text( 'What can I do with WordPress?' );
 } catch ( Exception $e ) {
   // Handle the exception.
 }
@@ -103,7 +107,14 @@ if( $service->get_service_slug() === 'openai' ) {
   $model = 'gemini-1.5-pro';
 }
 try {
-  $result = $service->get_model( array( 'model' => $model ) )->generate_text( 'What can I do with WordPress?' );
+  $result = $service
+    ->get_model(
+      array(
+        'feature' => 'my-test-feature',
+        'model'   => $model,
+      )
+    )
+    ->generate_text( 'What can I do with WordPress?' );
 } catch ( Exception $e ) {
   // Handle the exception.
 }
@@ -121,7 +132,9 @@ $parts->add_text_part( 'Briefly describe what is displayed in the following imag
 $parts->add_file_data_part( 'image/jpeg', 'https://example.com/image.jpg' );
 $content = new \Felix_Arntz\AI_Services\Services\Types\Content( 'user', $parts );
 try {
-  $result = $service->get_model()->generate_text( $content );
+  $result = $service
+    ->get_model( array( 'feature' => 'my-test-feature' ) )
+    ->generate_text( $content );
 } catch ( Exception $e ) {
   // Handle the exception.
 }

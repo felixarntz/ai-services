@@ -137,6 +137,10 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.
 	 *
+	 *     @type string                                  $feature            Required. Unique identifier of the feature
+	 *                                                                       that the model will be used for. Must only
+	 *                                                                       contain lowercase letters, numbers,
+	 *                                                                       hyphens.
 	 *     @type string                                  $model              The model slug. By default, the service's
 	 *                                                                       default model slug is used.
 	 *     @type array<string, mixed>                    $generation_config  Model generation configuration options.

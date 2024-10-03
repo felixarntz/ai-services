@@ -11,7 +11,10 @@ const { isServiceAvailable, getAvailableService } = wp.data.select( 'ai-services
 if ( isServiceAvailable( 'google' ) ) {
 	const service = getAvailableService( 'google' );
 	try {
-		const result = await service.generateText( 'What can I do with WordPress?' );
+		const result = await service.generateText(
+      'What can I do with WordPress?',
+      { feature: 'my-test-feature' }
+    );
 	} catch ( error ) {
 		// Handle the error.
 	}
@@ -93,7 +96,10 @@ Here is an example of how to generate the response to a simple prompt, using the
 
 ```js
 try {
-  const result = await service.generateText( 'What can I do with WordPress?' );
+  const result = await service.generateText(
+    'What can I do with WordPress?',
+    { feature: 'my-test-feature' }
+  );
 } catch ( error ) {
   // Handle the error.
 }
@@ -106,7 +112,13 @@ You can also select a specific model from a service. Of course the available mod
 ```js
 const model = service.getServiceSlug() === 'openai' ? 'gpt-4o' : 'gemini-1.5-pro';
 try {
-  const result = await service.generateText( 'What can I do with WordPress?', { model } );
+  const result = await service.generateText(
+    'What can I do with WordPress?',
+    {
+      feature: 'my-test-feature',
+      model,
+    }
+  );
 } catch ( error ) {
   // Handle the error.
 }
@@ -132,7 +144,10 @@ const content = {
   ]
 };
 try {
-  const result = await service.generateText( content );
+  const result = await service.generateText(
+    content,
+    { feature: 'my-test-feature' }
+  );
 } catch ( error ) {
   // Handle the error.
 }

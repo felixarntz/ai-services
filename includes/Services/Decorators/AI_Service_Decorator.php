@@ -1,13 +1,14 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service
+ * Class Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator
  *
  * @since n.e.x.t
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Cache;
+namespace Felix_Arntz\AI_Services\Services\Decorators;
 
+use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -15,14 +16,17 @@ use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use InvalidArgumentException;
 
 /**
- * Class representing a cached AI service through a decorator pattern.
+ * Class for an AI service that wraps another AI service through a decorator pattern.
+ *
+ * This class effectively acts as middleware for the underlying AI service, allowing for additional functionality to be
+ * centrally provided.
  *
  * @since n.e.x.t
  */
-class Cached_AI_Service implements Generative_AI_Service {
+class AI_Service_Decorator implements Generative_AI_Service {
 
 	/**
-	 * The underlying AI service to cache.
+	 * The underlying AI service to wrap.
 	 *
 	 * @since n.e.x.t
 	 * @var Generative_AI_Service
@@ -34,7 +38,7 @@ class Cached_AI_Service implements Generative_AI_Service {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Generative_AI_Service $service The underlying AI service to cache.
+	 * @param Generative_AI_Service $service The underlying AI service to wrap.
 	 */
 	public function __construct( Generative_AI_Service $service ) {
 		$this->service = $service;

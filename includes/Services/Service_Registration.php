@@ -9,10 +9,10 @@
 namespace Felix_Arntz\AI_Services\Services;
 
 use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
-use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service;
-use Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service_With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
+use Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator;
+use Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator_With_API_Client;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
@@ -201,9 +201,9 @@ final class Service_Registration {
 
 		// Wrap the instance in a cache decorator.
 		if ( $instance instanceof With_API_Client ) {
-			$instance = new Cached_AI_Service_With_API_Client( $instance );
+			$instance = new AI_Service_Decorator_With_API_Client( $instance );
 		} else {
-			$instance = new Cached_AI_Service( $instance );
+			$instance = new AI_Service_Decorator( $instance );
 		}
 
 		return $instance;

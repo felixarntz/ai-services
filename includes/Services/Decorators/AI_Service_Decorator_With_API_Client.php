@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Cache\Cached_AI_Service_With_API_Client
+ * Class Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator_With_API_Client
  *
  * @since n.e.x.t
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Cache;
+namespace Felix_Arntz\AI_Services\Services\Decorators;
 
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -14,14 +14,17 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use InvalidArgumentException;
 
 /**
- * Class representing a cached AI service with API client through a decorator pattern.
+ * Class for an AI service that wraps another AI service with API client through a decorator pattern.
+ *
+ * This class effectively acts as middleware for the underlying AI service, allowing for additional functionality to be
+ * centrally provided.
  *
  * @since n.e.x.t
  */
-class Cached_AI_Service_With_API_Client extends Cached_AI_Service implements With_API_Client {
+class AI_Service_Decorator_With_API_Client extends AI_Service_Decorator implements With_API_Client {
 
 	/**
-	 * The underlying AI service to cache.
+	 * The underlying AI service to use.
 	 *
 	 * This is purely here to satisfy PHPStan requirements. The parent class has a private property with the same name,
 	 * which therefore is separate and has a different expected type.
@@ -36,7 +39,7 @@ class Cached_AI_Service_With_API_Client extends Cached_AI_Service implements Wit
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Generative_AI_Service $service The underlying AI service to cache.
+	 * @param Generative_AI_Service $service The underlying AI service to use.
 	 *
 	 * @throws InvalidArgumentException Thrown if the service does not implement the With_API_Client interface.
 	 */

@@ -1,11 +1,18 @@
 /**
+ * External dependencies
+ */
+import { store as aiStore } from '@ai-services/ai-store';
+
+/**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import { useSelect } from '@wordpress/data';
+import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
+import { useChatIdContext } from '../../context';
 import './style.scss';
 
 /**
@@ -16,11 +23,31 @@ import './style.scss';
  * @return {Component} The component to be rendered.
  */
 export default function ChatbotHeader() {
+	const chatId = useChatIdContext();
+	const serviceName = useSelect( ( select ) => {
+		const chatConfig = select( aiStore ).getChatConfig( chatId );
+		if ( ! chatConfig.service ) {
+			return undefined;
+		}
+
+		const services = select( aiStore ).getServices();
+		return services?.[ chatConfig.service ]?.name;
+	} );
+
 	// TODO: Implement functionality to close the chatbot UI.
 	return (
 		<div className="react-chatbot-kit-chat-header">
 			<div className="chatbot-header-title">
 				{ __( 'WordPress Assistant', 'ai-services' ) }
+				{ serviceName && (
+					<div className="chatbot-header-title__note">
+						{ sprintf(
+							/* translators: %s: service name */
+							__( 'Powered by %s', 'ai-services' ),
+							serviceName
+						) }
+					</div>
+				) }
 			</div>
 			<button
 				className="chatbot-header-close-button"

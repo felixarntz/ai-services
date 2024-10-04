@@ -1,17 +1,19 @@
 .react-chatbot-kit-chat-header {
 	background-color: #fff;
 	border-bottom: 1px solid #d8d8d8;
+	justify-content: space-between;
 
 	.chatbot-header-title {
+		font-weight: 700;
 		padding-right: 36px;
+
+		&__note {
+			font-size: 80%;
+			font-weight: 400;
+		}
 	}
 
 	.chatbot-header-close-button {
-		position: absolute;
-		top: 0;
-		right: 0;
-		width: 36px;
-		height: 36px;
 		margin: 0;
 		padding: 0;
 		background-color: transparent;

@@ -5,6 +5,22 @@
 	z-index: 1000;
 	border-radius: 5px;
 	margin-bottom: 3rem;
+	box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 1px;
+
+	@media (min-width: 782px) {
+
+		.react-chatbot-kit-chat-container {
+			width: 400px;
+		}
+
+		.react-chatbot-kit-chat-bot-message {
+			width: 309.5px;
+		}
+	}
+
+	.react-chatbot-kit-chat-input {
+		margin: 0;
+	}
 }
 
 .chatbot-button {

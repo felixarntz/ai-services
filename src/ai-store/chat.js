@@ -282,6 +282,13 @@ const selectors = {
 		return state.chatHistories[ chatId ];
 	},
 
+	getChatConfig: ( state, chatId ) => {
+		if ( ! state.chatConfigs[ chatId ] ) {
+			return null;
+		}
+		return state.chatConfigs[ chatId ];
+	},
+
 	isChatLoading: ( state, chatId ) => {
 		return state.chatsLoading[ chatId ];
 	},

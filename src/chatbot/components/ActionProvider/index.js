@@ -8,6 +8,7 @@ import { store as aiStore } from '@ai-services/ai-store';
  */
 import { Children, cloneElement } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -36,7 +37,11 @@ export default function ActionProvider( {
 	const respond = async ( message ) => {
 		const aiResponse = await sendMessage( chatId, message );
 		const chatResponse = createChatBotMessage(
-			aiResponse?.parts?.[ 0 ]?.text || 'I am sorry, I do not understand.'
+			aiResponse?.parts?.[ 0 ]?.text ||
+				__(
+					'It looks like something went wrong. Please check your browser console for further information.',
+					'ai-services'
+				)
 		);
 		setState( ( state ) => ( {
 			...state,

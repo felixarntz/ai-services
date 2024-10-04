@@ -34,6 +34,8 @@
 
 	<rule ref="rulesets/unusedcode.xml">
 		<exclude name="UnusedFormalParameter" />
+		<!-- This will be fixed in PHPMD 2.16.0, see https://github.com/phpmd/phpmd/pull/1068. -->
+		<exclude name="UnusedPrivateMethod" />
 	</rule>
 
 	<!-- Third-party or auto-generated code -->

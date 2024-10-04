@@ -86,7 +86,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	 *                                              parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 *
-	 * @throws InvalidArgumentException Thrown if the model parameter is missing.
+	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
 	public function __construct( Google_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		$this->api             = $api;
@@ -194,7 +194,13 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	private function get_response_candidates( array $response ): Candidates {
 		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the Google AI API is missing the "candidates" key.', 'ai-services' )
+				esc_html(
+					sprintf(
+						/* translators: %s: key name */
+						__( 'The response from the Google AI API is missing the "%s" key.', 'ai-services' ),
+						'candidates'
+					)
+				)
 			);
 		}
 
@@ -220,7 +226,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 					/* translators: %s: finish reason code */
 					__( 'Finish reason: %s', 'ai-services' ),
 					implode(
-						_x( ', ', 'Used between list items, there is a space after the comma.', 'ai-services' ),
+						wp_get_list_item_separator(),
 						$errors
 					)
 				);

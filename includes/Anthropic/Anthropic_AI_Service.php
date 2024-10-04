@@ -9,8 +9,10 @@
 namespace Felix_Arntz\AI_Services\Anthropic;
 
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
@@ -23,40 +25,29 @@ use InvalidArgumentException;
  *
  * @since n.e.x.t
  */
-class Anthropic_AI_Service implements Generative_AI_Service {
+class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 
 	/**
-	 * The Anthropic API key authentication.
+	 * The Anthropic AI API instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Authentication
+	 * @var Anthropic_AI_API_Client
 	 */
-	private $api_key; /* @phpstan-ignore property.onlyWritten  */
-
-	/**
-	 * The HTTP instance to use for requests.
-	 *
-	 * @since n.e.x.t
-	 * @var HTTP
-	 */
-	private $http; /* @phpstan-ignore property.onlyWritten  */
+	private $api;
 
 	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Authentication $api_key The API key.
-	 * @param HTTP           $http    Optional. The HTTP instance to use for requests. Default is a new instance.
+	 * @param Authentication $authentication The authentication credentials.
+	 * @param HTTP           $http           Optional. The HTTP instance to use for requests. Default is a new instance.
 	 */
-	public function __construct( Authentication $api_key, HTTP $http = null ) {
-		// TODO: Implement Anthropic API client instead of storing properties here.
-		$this->api_key = $api_key;
-
+	public function __construct( Authentication $authentication, HTTP $http = null ) {
 		if ( ! $http ) {
 			$http = new HTTP();
 		}
-		$this->http = $http;
+		$this->api = new Anthropic_AI_API_Client( $authentication, $http );
 	}
 
 	/**
@@ -83,6 +74,17 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	}
 
 	/**
+	 * Gets the API client instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Generative_AI_API_Client The API client instance.
+	 */
+	public function get_api_client(): Generative_AI_API_Client {
+		return $this->api;
+	}
+
+	/**
 	 * Gets the default model slug to use with the service when none is provided.
 	 *
 	 * @since n.e.x.t
@@ -104,8 +106,12 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		// TODO: Implement this.
-		return array();
+		return array(
+			'claude-3-opus-20240229',
+			'claude-3-sonnet-20240229',
+			'claude-3-haiku-20240307',
+			'claude-3-5-sonnet-20240620',
+		);
 	}
 
 	/**
@@ -138,6 +144,6 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 			$model = $this->get_default_model_slug();
 		}
 
-		return new Anthropic_AI_Model( $model, $model_params, $request_options );
+		return new Anthropic_AI_Model( $this->api, $model, $model_params, $request_options );
 	}
 }

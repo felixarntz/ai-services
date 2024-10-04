@@ -40,14 +40,14 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Authentication $api_key The API key.
-	 * @param HTTP           $http    Optional. The HTTP instance to use for requests. Default is a new instance.
+	 * @param Authentication $authentication The authentication credentials.
+	 * @param HTTP           $http           Optional. The HTTP instance to use for requests. Default is a new instance.
 	 */
-	public function __construct( Authentication $api_key, HTTP $http = null ) {
+	public function __construct( Authentication $authentication, HTTP $http = null ) {
 		if ( ! $http ) {
 			$http = new HTTP();
 		}
-		$this->api = new Google_AI_API_Client( $api_key, $http );
+		$this->api = new Google_AI_API_Client( $authentication, $http );
 	}
 
 	/**
@@ -74,17 +74,6 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
-	 * Gets the default model slug to use with the service when none is provided.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @return string The default model slug.
-	 */
-	public function get_default_model_slug(): string {
-		return 'gemini-1.5-flash';
-	}
-
-	/**
 	 * Gets the API client instance.
 	 *
 	 * @since n.e.x.t
@@ -93,6 +82,17 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 */
 	public function get_api_client(): Generative_AI_API_Client {
 		return $this->api;
+	}
+
+	/**
+	 * Gets the default model slug to use with the service when none is provided.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The default model slug.
+	 */
+	public function get_default_model_slug(): string {
+		return 'gemini-1.5-flash';
 	}
 
 	/**
@@ -111,7 +111,13 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 
 		if ( ! isset( $response['models'] ) || ! $response['models'] ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response from the Google AI API is missing the "models" key.', 'ai-services' )
+				esc_html(
+					sprintf(
+						/* translators: %s: key name */
+						__( 'The response from the Google AI API is missing the "%s" key.', 'ai-services' ),
+						'models'
+					)
+				)
 			);
 		}
 

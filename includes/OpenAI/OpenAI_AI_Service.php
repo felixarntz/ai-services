@@ -9,8 +9,10 @@
 namespace Felix_Arntz\AI_Services\OpenAI;
 
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
@@ -23,40 +25,29 @@ use InvalidArgumentException;
  *
  * @since n.e.x.t
  */
-class OpenAI_AI_Service implements Generative_AI_Service {
+class OpenAI_AI_Service implements Generative_AI_Service, With_API_Client {
 
 	/**
-	 * The OpenAI API key authentication.
+	 * The OpenAI AI API instance.
 	 *
 	 * @since n.e.x.t
-	 * @var Authentication
+	 * @var OpenAI_AI_API_Client
 	 */
-	private $api_key; /* @phpstan-ignore property.onlyWritten  */
-
-	/**
-	 * The HTTP instance to use for requests.
-	 *
-	 * @since n.e.x.t
-	 * @var HTTP
-	 */
-	private $http; /* @phpstan-ignore property.onlyWritten  */
+	private $api;
 
 	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Authentication $api_key The API key.
-	 * @param HTTP           $http    Optional. The HTTP instance to use for requests. Default is a new instance.
+	 * @param Authentication $authentication The authentication credentials.
+	 * @param HTTP           $http           Optional. The HTTP instance to use for requests. Default is a new instance.
 	 */
-	public function __construct( Authentication $api_key, HTTP $http = null ) {
-		// TODO: Implement OpenAI API client instead of storing properties here.
-		$this->api_key = $api_key;
-
+	public function __construct( Authentication $authentication, HTTP $http = null ) {
 		if ( ! $http ) {
 			$http = new HTTP();
 		}
-		$this->http = $http;
+		$this->api = new OpenAI_AI_API_Client( $authentication, $http );
 	}
 
 	/**
@@ -83,6 +74,17 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	}
 
 	/**
+	 * Gets the API client instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Generative_AI_API_Client The API client instance.
+	 */
+	public function get_api_client(): Generative_AI_API_Client {
+		return $this->api;
+	}
+
+	/**
 	 * Gets the default model slug to use with the service when none is provided.
 	 *
 	 * @since n.e.x.t
@@ -104,8 +106,27 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		// TODO: Implement this.
-		return array();
+		$request  = $this->api->create_list_models_request();
+		$response = $this->api->make_request( $request );
+
+		if ( ! isset( $response['data'] ) || ! $response['data'] ) {
+			throw new Generative_AI_Exception(
+				esc_html(
+					sprintf(
+						/* translators: %s: key name */
+						__( 'The response from the OpenAI API is missing the "%s" key.', 'ai-services' ),
+						'data'
+					)
+				)
+			);
+		}
+
+		return array_map(
+			static function ( array $model ) {
+				return $model['id'];
+			},
+			$response['data']
+		);
 	}
 
 	/**
@@ -138,6 +159,6 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 			$model = $this->get_default_model_slug();
 		}
 
-		return new OpenAI_AI_Model( $model, $model_params, $request_options );
+		return new OpenAI_AI_Model( $this->api, $model, $model_params, $request_options );
 	}
 }

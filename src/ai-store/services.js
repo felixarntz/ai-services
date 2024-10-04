@@ -26,14 +26,14 @@ const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
  * @return {string} The first available service slug, or empty string if no service is available.
  */
 function getAvailableServiceSlug( services, args ) {
-	const slugs = args.slugs || Object.keys( services );
+	const slugs = args?.slugs || Object.keys( services );
 
 	for ( const slug of slugs ) {
 		if ( ! services[ slug ] || ! services[ slug ].is_available ) {
 			continue;
 		}
 
-		if ( args.capabilities ) {
+		if ( args?.capabilities ) {
 			const missingCapabilities = args.capabilities.filter(
 				( capability ) =>
 					! services[ slug ].capabilities.includes( capability )

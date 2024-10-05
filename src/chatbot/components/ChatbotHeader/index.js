@@ -12,7 +12,10 @@ import { __, sprintf } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import { useChatIdContext } from '../../context';
+import {
+	useChatIdContext,
+	useChatbotToggleVisibilityContext,
+} from '../../context';
 import './style.scss';
 
 /**
@@ -24,6 +27,8 @@ import './style.scss';
  */
 export default function ChatbotHeader() {
 	const chatId = useChatIdContext();
+	const toggleVisibility = useChatbotToggleVisibilityContext();
+
 	const serviceName = useSelect( ( select ) => {
 		const chatConfig = select( aiStore ).getChatConfig( chatId );
 		if ( ! chatConfig.service ) {
@@ -52,6 +57,7 @@ export default function ChatbotHeader() {
 			<button
 				className="chatbot-header-close-button"
 				aria-label={ __( 'Close chatbot', 'ai-services' ) }
+				onClick={ toggleVisibility }
 			>
 				<span className="chatbot-header-close-button__icon" />
 				<span className="screen-reader-text">

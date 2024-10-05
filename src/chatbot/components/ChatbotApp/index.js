@@ -8,7 +8,7 @@ import { store as aiStore } from '@ai-services/ai-store';
 /**
  * WordPress dependencies
  */
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -19,7 +19,7 @@ import { __ } from '@wordpress/i18n';
 import config from '../../config';
 import MessageParser from '../MessageParser';
 import ActionProvider from '../ActionProvider';
-import { ChatIdProvider } from '../../context';
+import { ChatIdProvider, ChatbotToggleVisibilityProvider } from '../../context';
 import './style.scss';
 
 const CHAT_ID = 'wpspChatbotPrimary';
@@ -33,8 +33,18 @@ const SERVICE_ARGS = { capabilities: [ 'text_generation' ] };
  * @return {Component} The component to be rendered.
  */
 export default function ChatbotApp() {
+	const toggleButtonRef = useRef( null );
+
 	const [ isVisible, setIsVisible ] = useState( false );
-	const toggleVisibility = () => setIsVisible( ! isVisible );
+
+	const toggleVisibility = () => {
+		setIsVisible( ! isVisible );
+
+		// Focus on the toggle when the chatbot is closed.
+		if ( isVisible && toggleButtonRef.current ) {
+			toggleButtonRef.current.focus();
+		}
+	};
 
 	const { service, hasChat } = useSelect( ( select ) => {
 		return {
@@ -73,11 +83,15 @@ export default function ChatbotApp() {
 			>
 				{ isVisible && hasChat && (
 					<ChatIdProvider value={ CHAT_ID }>
-						<Chatbot
-							config={ config }
-							messageParser={ MessageParser }
-							actionProvider={ ActionProvider }
-						/>
+						<ChatbotToggleVisibilityProvider
+							value={ toggleVisibility }
+						>
+							<Chatbot
+								config={ config }
+								messageParser={ MessageParser }
+								actionProvider={ ActionProvider }
+							/>
+						</ChatbotToggleVisibilityProvider>
 					</ChatIdProvider>
 				) }
 			</div>
@@ -87,6 +101,7 @@ export default function ChatbotApp() {
 				className="chatbot-button button button-primary" // Used so that we don't need to load the heavy 'wp-components' stylesheet everywhere.
 				aria-controls="ai-services-chatbot-container"
 				aria-expanded={ isVisible }
+				ref={ toggleButtonRef }
 			>
 				{ __( 'Need help?', 'ai-services' ) }
 			</Button>

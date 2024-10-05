@@ -1,0 +1,26 @@
+.ai-services-sensitive-text-control-container {
+	display: flex;
+
+	.ai-services-input-visible-button {
+		margin-left: 4px;
+
+		.dashicons {
+			margin-right: 4px;
+		}
+	}
+
+	.components-text-control__input {
+		min-height: 36px; // Same as button.
+	}
+
+	@media (max-width: 782px) {
+
+		.components-text-control__input {
+			min-height: 40px; // Same as button.
+		}
+
+		.ai-services-input-visible-button {
+			min-height: 40px; // Same as input.
+		}
+	}
+}

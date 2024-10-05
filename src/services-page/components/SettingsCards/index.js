@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import { SensitiveTextControl } from '@ai-services/components';
 import { store as pluginSettingsStore } from '@ai-services/settings-store';
 
 /**
@@ -10,7 +11,6 @@ import {
 	Card,
 	CardHeader,
 	CardBody,
-	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
@@ -70,7 +70,7 @@ export default function SettingsCards() {
 				</CardHeader>
 				<CardBody>
 					{ services.map( ( service ) => (
-						<TextControl
+						<SensitiveTextControl
 							key={ service.slug }
 							label={ service.name }
 							help={
@@ -98,6 +98,16 @@ export default function SettingsCards() {
 							onChange={ ( value ) =>
 								setApiKey( service.slug, value )
 							}
+							buttonShowLabel={ sprintf(
+								/* translators: %s: service name */
+								__( 'Show API key for %s.', 'ai-services' ),
+								service.name
+							) }
+							buttonHideLabel={ sprintf(
+								/* translators: %s: service name */
+								__( 'Hide API key for %s.', 'ai-services' ),
+								service.name
+							) }
 						/>
 					) ) }
 				</CardBody>

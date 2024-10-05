@@ -26,7 +26,7 @@ import './style.scss';
  * @since n.e.x.t
  *
  * @param {Object} props Component props. These are identical to the props of the SensitiveTextControl component, with the
- *                       addition of 'buttonShowLabel' and 'buttonHideLabel'.
+ *                       addition of 'buttonShowLabel', 'buttonHideLabel', and 'HelpContent'.
  * @param {Object} ref   Reference to the component.
  * @return {Component} The component to be rendered.
  */
@@ -44,6 +44,7 @@ function UnforwardedSensitiveTextControl( props, ref ) {
 		type = 'text',
 		buttonShowLabel,
 		buttonHideLabel,
+		HelpContent,
 		...additionalProps
 	} = props;
 	const id = useInstanceId(
@@ -62,7 +63,7 @@ function UnforwardedSensitiveTextControl( props, ref ) {
 			label={ label }
 			hideLabelFromVision={ hideLabelFromVision }
 			id={ id }
-			help={ help }
+			help={ ! HelpContent ? help : undefined }
 			className={ className }
 		>
 			<div className="ai-services-sensitive-text-control-container">
@@ -74,7 +75,9 @@ function UnforwardedSensitiveTextControl( props, ref ) {
 					id={ id }
 					value={ value }
 					onChange={ onChangeValue }
-					aria-describedby={ !! help ? id + '__help' : undefined }
+					aria-describedby={
+						!! help || !! HelpContent ? id + '__help' : undefined
+					}
 					ref={ ref }
 					{ ...additionalProps }
 				/>
@@ -85,6 +88,14 @@ function UnforwardedSensitiveTextControl( props, ref ) {
 					hideLabel={ buttonHideLabel }
 				/>
 			</div>
+			{ !! HelpContent && (
+				<p
+					id={ id + '__help' }
+					className="components-base-control__help"
+				>
+					<HelpContent />
+				</p>
+			) }
 		</BaseControl>
 	);
 }

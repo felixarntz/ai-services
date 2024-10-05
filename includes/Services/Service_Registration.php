@@ -78,6 +78,8 @@ final class Service_Registration {
 	 *
 	 *     @type string            $name              The service name. Default is the slug with spaces and uppercase
 	 *                                                first letters.
+	 *     @type string            $credentials_url   The URL to manage credentials for the service. Default empty
+	 *                                                string.
 	 *     @type bool              $allow_override    Whether the service can be overridden by another service with the
 	 *                                                same slug. Default true.
 	 *     @type Option_Container  $option_container  The option container instance. Default is a new instance.
@@ -221,6 +223,17 @@ final class Service_Registration {
 	}
 
 	/**
+	 * Gets the service credentials URL, if specified.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The service credentials URL, or empty string if not specified.
+	 */
+	public function get_credentials_url(): string {
+		return $this->args['credentials_url'];
+	}
+
+	/**
 	 * Checks whether the service can be overridden.
 	 *
 	 * @since n.e.x.t
@@ -265,40 +278,55 @@ final class Service_Registration {
 			$args['name'] = ucwords( str_replace( array( '-', '_' ), ' ', $this->slug ) );
 		}
 
+		if ( isset( $args['credentials_url'] ) ) {
+			$args['credentials_url'] = sanitize_url( (string) $args['credentials_url'] );
+		} else {
+			$args['credentials_url'] = '';
+		}
+
 		if ( isset( $args['allow_override'] ) ) {
 			$args['allow_override'] = (bool) $args['allow_override'];
 		} else {
 			$args['allow_override'] = true;
 		}
 
-		if ( isset( $args['option_container'] ) ) {
-			if ( ! $args['option_container'] instanceof Option_Container ) {
-				throw new InvalidArgumentException(
-					esc_html__( 'The option_container argument must be an instance of Option_Container.', 'ai-services' )
-				);
-			}
-		} else {
-			$args['option_container'] = new Option_Container();
-		}
+		return $this->parse_instance_args( $args );
+	}
 
-		if ( isset( $args['option_repository'] ) ) {
-			if ( ! $args['option_repository'] instanceof Option_Repository ) {
-				throw new InvalidArgumentException(
-					esc_html__( 'The option_repository argument must be an instance of Option_Repository.', 'ai-services' )
-				);
-			}
-		} else {
-			$args['option_repository'] = new Option_Repository();
-		}
+	/**
+	 * Parses the service registration instance arguments.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $args The service registration instance arguments.
+	 * @return array<string, mixed> The parsed service registration instance arguments.
+	 *
+	 * @throws InvalidArgumentException Thrown if an invalid instance argument is provided.
+	 */
+	private function parse_instance_args( array $args ): array {
+		$requirements_map = array(
+			'option_container'  => Option_Container::class,
+			'option_repository' => Option_Repository::class,
+			'http'              => HTTP::class,
+		);
 
-		if ( isset( $args['http'] ) ) {
-			if ( ! $args['http'] instanceof HTTP ) {
-				throw new InvalidArgumentException(
-					esc_html__( 'The http argument must be an instance of HTTP.', 'ai-services' )
-				);
+		foreach ( $requirements_map as $key => $class_name ) {
+			if ( isset( $args[ $key ] ) ) {
+				if ( ! $args[ $key ] instanceof $class_name ) {
+					throw new InvalidArgumentException(
+						esc_html(
+							sprintf(
+								/* translators: 1: argument name, 2: class name */
+								__( 'The %1$s argument must be an instance of %2$s.', 'ai-services' ),
+								$key,
+								$class_name
+							)
+						)
+					);
+				}
+			} else {
+				$args[ $key ] = new $class_name();
 			}
-		} else {
-			$args['http'] = new HTTP();
 		}
 
 		return $args;

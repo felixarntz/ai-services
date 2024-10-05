@@ -184,18 +184,9 @@ class Plugin_Main implements With_Hooks {
 				return new Anthropic_AI_Service( $authentication, $http );
 			},
 			array(
-				'name'           => 'Anthropic (Claude)',
-				'allow_override' => false,
-			)
-		);
-		$this->services_api->register_service(
-			'openai',
-			static function ( Authentication $authentication, HTTP $http ) {
-				return new OpenAI_AI_Service( $authentication, $http );
-			},
-			array(
-				'name'           => 'OpenAI (ChatGPT)',
-				'allow_override' => false,
+				'name'            => 'Anthropic (Claude)',
+				'credentials_url' => 'https://console.anthropic.com/settings/keys',
+				'allow_override'  => false,
 			)
 		);
 		$this->services_api->register_service(
@@ -204,8 +195,20 @@ class Plugin_Main implements With_Hooks {
 				return new Google_AI_Service( $authentication, $http );
 			},
 			array(
-				'name'           => 'Google (Gemini)',
-				'allow_override' => false,
+				'name'            => 'Google (Gemini)',
+				'credentials_url' => 'https://aistudio.google.com/app/apikey',
+				'allow_override'  => false,
+			)
+		);
+		$this->services_api->register_service(
+			'openai',
+			static function ( Authentication $authentication, HTTP $http ) {
+				return new OpenAI_AI_Service( $authentication, $http );
+			},
+			array(
+				'name'            => 'OpenAI (ChatGPT)',
+				'credentials_url' => 'https://platform.openai.com/api-keys',
+				'allow_override'  => false,
 			)
 		);
 	}

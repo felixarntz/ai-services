@@ -106,6 +106,8 @@ class Service_Entity implements Entity {
 				return $this->slug;
 			case 'name':
 				return $this->services_api->get_service_name( $this->slug );
+			case 'credentials_url':
+				return $this->services_api->get_service_credentials_url( $this->slug );
 			case 'is_available':
 				return $this->services_api->is_service_available( $this->slug );
 			case 'capabilities':

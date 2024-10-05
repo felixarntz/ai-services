@@ -136,10 +136,11 @@ final class Services_API {
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
-	 *     @type string $name           The user-facing service name. Default is the slug with spaces and uppercase
-	 *                                  first letters.
-	 *     @type bool   $allow_override Whether the service can be overridden by another service with the same slug.
-	 *                                  Default true.
+	 *     @type string $name            The user-facing service name. Default is the slug with spaces and uppercase
+	 *                                   first letters.
+	 *     @type string $credentials_url The URL to manage credentials for the service. Default empty string.
+	 *     @type bool   $allow_override  Whether the service can be overridden by another service with the same slug.
+	 *                                   Default true.
 	 * }
 	 *
 	 * @throws InvalidArgumentException Thrown if an already registered slug or invalid arguments are provided.
@@ -346,6 +347,23 @@ final class Services_API {
 		}
 
 		return $this->service_registrations[ $slug ]->get_name();
+	}
+
+	/**
+	 * Gets the service credentials URL.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $slug The service slug.
+	 * @return string The service credentials URL, or empty string if the service is not registered or if no
+	 *                credentials URL is specified.
+	 */
+	public function get_service_credentials_url( string $slug ): string {
+		if ( ! isset( $this->service_registrations[ $slug ] ) ) {
+			return '';
+		}
+
+		return $this->service_registrations[ $slug ]->get_credentials_url();
 	}
 
 	/**

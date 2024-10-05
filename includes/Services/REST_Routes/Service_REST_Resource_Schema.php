@@ -90,6 +90,12 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'credentials_url'    => array(
+					'description' => __( 'Service credentials URL, or empty string if not specified.', 'ai-services' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
 				'is_available'       => array(
 					'description' => __( 'Whether the service is fully configured and available.', 'ai-services' ),
 					'type'        => 'boolean',

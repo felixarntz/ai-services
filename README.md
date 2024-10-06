@@ -2,6 +2,8 @@
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
+**Disclaimer:** The AI Services plugin is still in its very early stages, with a limited feature set. As long as it is in a `0.x.x` version, expect occasional breaking changes. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
+
 ## What?
 
 This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
@@ -74,10 +76,6 @@ curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' 
   -H 'Content-Type: application/json' \
   --data-raw '{"content":"What can I do with WordPress?"}'
 ```
-
-## Disclaimer
-
-This plugin is still in its very early stages, with a limited feature set. Consider it early access at this point, there are lots of enhancements to add and polishing to do. That's why your feedback is much appreciated!
 
 ## Installing the plugin
 

@@ -13,6 +13,8 @@ Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript
 
 == Description ==
 
+**Disclaimer:** The AI Services plugin is still in its very early stages, with a limited feature set. As long as it is in a `0.x.x` version, expect occasional breaking changes. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
+
 This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
 
 The plugin does intentionally _not_ come with specific AI driven features built-in, except for a simple WordPress support assistant chatbot that can be disabled if not needed. The purpose of this plugin is to facilitate use of AI by other plugins. As such, it is a perfect use-case for [plugin dependencies](https://make.wordpress.org/core/2024/03/05/introducing-plugin-dependencies-in-wordpress-6-5/).
@@ -142,6 +144,20 @@ If you want to get rid of the chatbot, you can easily disable it via filter:
 `
 add_filter( 'ai_services_chatbot_enabled', '__return_false' );
 `
+
+= Should this be in WordPress Core? =
+
+Probably not? At least not yet. While generative AI has been around for a few years, in the grand scheme of things we are still only scratching the surface of what's possible. But most importantly, the lack of standardization makes it difficult to consider built-in AI support in WordPress Core.
+
+WordPress Core rarely adds support for features that rely on third party services. An exception is oEmbed support for many popular services, however via the common oEmbed endpoint that each service implements there is a standard way to have it work correctly without having to individually maintain each integration. Doing so would be a maintenance burden and it would make it almost impossible to stay on top of everything: Imagine one of the services makes a change - not only would this require to manually update the WordPress Core integration, but it would also require to quickly ship a new release ASAP because otherwise the WordPress sites using the service would break. Unfortunately, there is no such standard for how generative AI APIs provided by third party services should work. In other words, if you implement support for a generative AI API in your plugin, that implementation is subject to the same concern, and it applies to the AI Services plugin too. However, by centralizing the implementation in one plugin, the problem surface is greatly reduced. And differently from WordPress Core, it's more straightforward and more reasonable to ship a quick hotfix for this plugin.
+
+The other reason that integrating generative AI in WordPress Core would be difficult is because (almost all) the services that make those APIs available require paid subscriptions. This is not well aligned with WordPress's FOSS philosophy. A potentially promising development that may change that situation is the introduction of browser built-in AI capabilities made available via JavaScript APIs, such as [Chrome built-in AI](https://developer.chrome.com/docs/ai) (which is also supported by the AI Services plugin).
+
+Only time will tell whether those points can be addressed in a way that make built-in AI capabilities in WordPress Core a possibility. Until then, you can use a plugin like this one. While it is for obvious reasons not a WordPress Core feature plugin, it is in many ways built to potentially become a canonical AI plugin for WordPress:
+* It is free, and always will be.
+* It follows the WordPress Core philosophies.
+* It uses WordPress UI components as much as possible.
+* It is neutral and does not favor one AI service over another.
 
 = Where should I submit my support request? =
 

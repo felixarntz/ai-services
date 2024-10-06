@@ -7,6 +7,7 @@ import {
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
+	PluginIcon,
 } from '@ai-services/components';
 
 /**
@@ -24,6 +25,7 @@ import SettingsSaveButton from '../SettingsSaveButton';
 import SettingsMoreMenu from '../SettingsMoreMenu';
 import SettingsCards from '../SettingsCards';
 import SettingsStatus from '../SettingsStatus';
+import './style.scss';
 
 const interfaceLabels = {
 	header: __( 'Settings top bar', 'ai-services' ),
@@ -47,7 +49,12 @@ export default function SettingsApp() {
 			<SettingsShortcuts />
 			<UnsavedChangesWarning />
 			<Header>
-				<h1>{ __( 'Settings', 'ai-services' ) }</h1>
+				<PluginIcon size={ 48 } />
+				<h1>
+					{ __( 'AI Services', 'ai-services' ) }
+					{ ': ' }
+					{ __( 'Settings', 'ai-services' ) }
+				</h1>
 				<HeaderActions>
 					<SettingsSaveButton />
 					<PinnedSidebars />

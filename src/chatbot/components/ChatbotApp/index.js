@@ -4,6 +4,7 @@
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
 import { store as aiStore } from '@ai-services/ai-store';
+import { PluginIcon } from '@ai-services/components';
 
 /**
  * WordPress dependencies
@@ -125,7 +126,10 @@ export default function ChatbotApp() {
 				aria-expanded={ isVisible }
 				ref={ toggleButtonRef }
 			>
-				{ __( 'Need help?', 'ai-services' ) }
+				<PluginIcon size={ 72 } hideCircle />
+				<span className="screen-reader-text">
+					{ __( 'Need help?', 'ai-services' ) }
+				</span>
 			</Button>
 		</>
 	);

@@ -7,3 +7,4 @@ export { default as Sidebar } from './Sidebar';
 export { default as KeyboardShortcutsMenuItem } from './KeyboardShortcutsMenuItem';
 export { default as DistractionFreePreferenceToggleMenuItem } from './DistractionFreePreferenceToggleMenuItem';
 export { default as SensitiveTextControl } from './SensitiveTextControl';
+export { default as PluginIcon } from './PluginIcon';

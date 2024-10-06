@@ -4,7 +4,6 @@
 	right: 2rem;
 	z-index: 1000;
 	border-radius: 5px;
-	margin-bottom: 3rem;
 	box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 1px;
 
 	@media (min-width: 782px) {
@@ -23,8 +22,13 @@
 	}
 }
 
-.chatbot-button {
-	height: 36px;
+.components-button.button.chatbot-button {
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	padding: 0;
+	margin: 0 5px 5px 0; // This is only so that the outline does not show behind the chatbot container.
+	display: flex;
 	position: fixed;
 	bottom: 2rem;
 	right: 2rem;

@@ -169,6 +169,10 @@ If you have ideas to improve the plugin or to solve a bug, feel free to raise an
 
 You can also contribute to the plugin by translating it. Simply visit [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/ai-services) to get started.
 
+== Screenshots ==
+
+1. The AI Services settings screen where end users can paste their AI service credentials
+
 == Changelog ==
 
 = 1.0.0 =

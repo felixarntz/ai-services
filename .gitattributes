@@ -4,8 +4,8 @@
 /docs export-ignore
 /node_modules export-ignore
 /php-tools export-ignore
+/src export-ignore
 /tests export-ignore
-/third-party export-ignore
 /vendor export-ignore
 
 /.editorconfig export-ignore

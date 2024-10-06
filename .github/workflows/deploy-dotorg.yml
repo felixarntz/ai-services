@@ -28,7 +28,7 @@ jobs:
 
       - name: Build plugin
         run: |
-          composer update
+          composer update --no-dev
           composer prefix-dependencies
           npm install
           npm run build

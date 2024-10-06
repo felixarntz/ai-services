@@ -8,10 +8,11 @@ import { store as aiStore } from '@ai-services/ai-store';
 /**
  * WordPress dependencies
  */
-import { useState, useEffect, useRef } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { ESCAPE } from '@wordpress/keycodes';
 
 /**
  * Internal dependencies
@@ -33,18 +34,19 @@ const SERVICE_ARGS = { capabilities: [ 'text_generation' ] };
  * @return {Component} The component to be rendered.
  */
 export default function ChatbotApp() {
+	const chatbotRef = useRef( null );
 	const toggleButtonRef = useRef( null );
 
 	const [ isVisible, setIsVisible ] = useState( false );
 
-	const toggleVisibility = () => {
+	const toggleVisibility = useCallback( () => {
 		setIsVisible( ! isVisible );
 
 		// Focus on the toggle when the chatbot is closed.
 		if ( isVisible && toggleButtonRef.current ) {
 			toggleButtonRef.current.focus();
 		}
-	};
+	}, [ isVisible, toggleButtonRef ] );
 
 	const { service, hasChat } = useSelect( ( select ) => {
 		return {
@@ -74,12 +76,32 @@ export default function ChatbotApp() {
 		}
 	}, [ isVisible, service, hasChat, startChat ] );
 
+	useEffect( () => {
+		const chatbotReference = chatbotRef.current;
+		if ( ! chatbotReference ) {
+			return;
+		}
+
+		// If focus is within the chatbot, close the chatbot when pressing ESC.
+		const handleKeyDown = ( event ) => {
+			if ( event.keyCode === ESCAPE ) {
+				toggleVisibility();
+			}
+		};
+
+		chatbotReference.addEventListener( 'keydown', handleKeyDown );
+		return () => {
+			chatbotReference.removeEventListener( 'keydown', handleKeyDown );
+		};
+	}, [ chatbotRef, toggleVisibility ] );
+
 	return (
 		<>
 			<div
 				id="ai-services-chatbot-container"
 				className="chatbot-container"
 				hidden={ ! isVisible }
+				ref={ chatbotRef }
 			>
 				{ isVisible && hasChat && (
 					<ChatIdProvider value={ CHAT_ID }>

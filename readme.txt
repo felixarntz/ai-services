@@ -145,6 +145,23 @@ If you want to get rid of the chatbot, you can easily disable it via filter:
 add_filter( 'ai_services_chatbot_enabled', '__return_false' );
 `
 
+= How can I programmatically provide service API keys? =
+
+If you prefer to not expose the sensitive controls over the AI service API keys to the site's end users, you can programmatically specify the keys by filtering the relevant service's option value.
+
+For example, to enforce an API key to use for the Google AI service, you could use a code snippet like the following:
+
+`
+add_filter(
+	'pre_option_ais_google_api_key',
+	function () {
+		return 'my-google-api-key';
+	}
+);
+`
+
+The same approach works for any other services too. Simply use the correct service slug, e.g. `openai` for the OpenAI integration and `anthropic` for the Anthropic integration.
+
 = Should this be in WordPress Core? =
 
 Probably not? At least not yet. While generative AI has been around for a few years, in the grand scheme of things we are still only scratching the surface of what's possible. But most importantly, the lack of standardization makes it difficult to consider built-in AI support in WordPress Core.

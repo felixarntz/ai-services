@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Types\Content
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,7 +14,7 @@ use InvalidArgumentException;
 /**
  * Class representing an entry of content for a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Content implements Arrayable {
 
@@ -25,7 +25,7 @@ final class Content implements Arrayable {
 	/**
 	 * The role of the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $role;
@@ -33,7 +33,7 @@ final class Content implements Arrayable {
 	/**
 	 * The parts of the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Parts
 	 */
 	private $parts;
@@ -41,7 +41,7 @@ final class Content implements Arrayable {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $role  The role of the content.
 	 * @param Parts  $parts The parts of the content.
@@ -68,7 +68,7 @@ final class Content implements Arrayable {
 	/**
 	 * Gets the role of the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The role of the content.
 	 */
@@ -79,7 +79,7 @@ final class Content implements Arrayable {
 	/**
 	 * Gets the parts of the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Parts The parts of the content.
 	 */
@@ -90,7 +90,7 @@ final class Content implements Arrayable {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -104,7 +104,7 @@ final class Content implements Arrayable {
 	/**
 	 * Creates a Content instance from an array of content data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The content data.
 	 * @return Content Content instance.
@@ -122,7 +122,7 @@ final class Content implements Arrayable {
 	/**
 	 * Checks if the given role is valid.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $role The role to check.
 	 * @return bool True if the role is valid, false otherwise.

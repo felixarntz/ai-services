@@ -15,7 +15,7 @@ export { ChatIdProvider, ChatbotToggleVisibilityProvider };
 /**
  * A hook that returns the chat ID context.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {string} The chat ID context.
  */
@@ -26,7 +26,7 @@ export function useChatIdContext() {
 /**
  * A hook that returns the chatbot visibility context.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {string} The chatbot visibility context.
  */

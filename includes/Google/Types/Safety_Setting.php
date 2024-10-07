@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Google\Types\Safety_Setting
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,7 +14,7 @@ use InvalidArgumentException;
 /**
  * Class representing a safety setting that can be sent as part of request parameters.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Safety_Setting implements Arrayable {
 
@@ -31,7 +31,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * The safety setting category.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $category;
@@ -39,7 +39,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * The safety setting threshold.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $threshold;
@@ -47,7 +47,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $category  The safety setting category.
 	 * @param string $threshold The safety setting threshold.
@@ -85,7 +85,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * Get the safety setting category.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The safety setting category.
 	 */
@@ -96,7 +96,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * Get the safety setting threshold.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The safety setting threshold.
 	 */
@@ -107,7 +107,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -121,7 +121,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * Creates a Safety_Setting instance from an array of content data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The content data.
 	 * @return Safety_Setting Safety_Setting instance.
@@ -139,7 +139,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * Checks if the given category is valid.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $category The category to check.
 	 * @return bool True if the category is valid, false otherwise.
@@ -160,7 +160,7 @@ class Safety_Setting implements Arrayable {
 	/**
 	 * Checks if the given threshold is valid.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $threshold The threshold to check.
 	 * @return bool True if the threshold is valid, false otherwise.

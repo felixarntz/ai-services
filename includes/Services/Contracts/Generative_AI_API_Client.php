@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
 /**
  * Interface for a class representing a client for a generative AI web API.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 interface Generative_AI_API_Client {
 
 	/**
 	 * Sends the given request to the API and returns the response data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Request $request The request instance.
 	 * @return array<string, mixed> The response data.
@@ -33,7 +33,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a request instance to list the available models with their information.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $params          Optional. The request parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
@@ -44,7 +44,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a request instance to generate content using the specified model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $params          The request parameters.

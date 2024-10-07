@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Plugin_Service_Container_Builder
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -30,14 +30,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Validatio
 /**
  * Plugin service container builder.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Plugin_Service_Container_Builder {
 
 	/**
 	 * Service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Service_Container
 	 */
 	private $container;
@@ -45,7 +45,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->container = new Service_Container();
@@ -54,7 +54,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Gets the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Service_Container Service container for the plugin.
 	 */
@@ -65,7 +65,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Builds the plugin environment service for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $main_file Absolute path to the plugin main file.
 	 * @return self The builder instance, for chaining.
@@ -81,7 +81,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Builds the services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return self The builder instance, for chaining.
 	 */
@@ -113,7 +113,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Builds the general services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_general_services(): void {
 		$this->container['input']            = static function () {
@@ -140,7 +140,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Builds the dependency services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_dependency_services(): void {
 		$this->container['script_registry'] = static function () {
@@ -154,7 +154,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Builds the option services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_option_services(): void {
 		$this->container['option_repository'] = static function () {
@@ -173,7 +173,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Builds the entity services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_entity_services(): void {
 		$this->container['post_repository'] = static function () {
@@ -184,7 +184,7 @@ final class Plugin_Service_Container_Builder {
 	/**
 	 * Adds the option definitions to the given option container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Option_Container $options Option container instance.
 	 */

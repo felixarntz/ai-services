@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Types\Chat_Session
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -16,14 +16,14 @@ use InvalidArgumentException;
 /**
  * Class representing a chat session with a generative model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Chat_Session {
 
 	/**
 	 * The generative AI model with support for text generation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var With_Text_Generation
 	 */
 	private $model;
@@ -31,7 +31,7 @@ final class Chat_Session {
 	/**
 	 * The chat history.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Content[]
 	 */
 	private $history;
@@ -39,7 +39,7 @@ final class Chat_Session {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param With_Text_Generation $model   The generative AI model with support for text generation.
 	 * @param Content[]            $history Optional. The chat history. Default empty array.
@@ -54,7 +54,7 @@ final class Chat_Session {
 	/**
 	 * Gets the chat history.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Content[] The chat history.
 	 */
@@ -65,7 +65,7 @@ final class Chat_Session {
 	/**
 	 * Sends a chat message to the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|Parts|Content $content         The message to send.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
@@ -107,7 +107,7 @@ final class Chat_Session {
 	/**
 	 * Validates the chat history.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content[] $history The chat history.
 	 *

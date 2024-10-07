@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Types\Parts\Abstract_Part
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Base class for a part of content for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 abstract class Abstract_Part implements Part {
 
 	/**
 	 * The part data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $data = array();
@@ -29,7 +29,7 @@ abstract class Abstract_Part implements Part {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	final public function __construct() {
 		// Empty constructor, only to prevent override.
@@ -38,7 +38,7 @@ abstract class Abstract_Part implements Part {
 	/**
 	 * Sets data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The part data.
 	 */
@@ -49,7 +49,7 @@ abstract class Abstract_Part implements Part {
 	/**
 	 * Formats the data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The part data.
 	 * @return array<string, mixed> Formatted data.
@@ -61,7 +61,7 @@ abstract class Abstract_Part implements Part {
 	/**
 	 * Gets the default data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> Default data.
 	 */
@@ -70,7 +70,7 @@ abstract class Abstract_Part implements Part {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -84,7 +84,7 @@ abstract class Abstract_Part implements Part {
 	/**
 	 * Creates a specific Part instance from an array of part data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The part data.
 	 * @return Part The Part instance.

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Get_REST_Route
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -19,7 +19,7 @@ use WP_REST_Server;
 /**
  * Class representing the REST API route for getting a service.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Service_Get_REST_Route extends Abstract_REST_Route {
 	const BASE    = '/services/(?P<slug>[\w-]+)';
@@ -28,7 +28,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * The services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -36,7 +36,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Current user service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -44,7 +44,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Relevant resource schema.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Service_REST_Resource_Schema
 	 */
 	private $resource_schema;
@@ -52,7 +52,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Services_API                 $services_api    The services API instance.
 	 * @param Current_User                 $current_user    The current user service.
@@ -69,7 +69,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route base.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Route base.
 	 */
@@ -80,7 +80,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route methods, as a comma-separated string.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Route methods, as a comma-separated string.
 	 */
@@ -91,7 +91,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Checks the required permissions for the given request and throws an exception if they aren't met.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 *
@@ -124,7 +124,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Handles the given request and returns a response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 * @return WP_REST_Response WordPress REST response object.
@@ -147,7 +147,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route specific arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> Route arguments.
 	 */
@@ -158,7 +158,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the global route arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> Global route arguments.
 	 */

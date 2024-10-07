@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Chatbot\Chatbot_Loader
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 /**
  * Class responsible for loading the Google AI-powered chatbot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Chatbot_Loader {
 
 	/**
 	 * Services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -29,7 +29,7 @@ class Chatbot_Loader {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Services_API $services_api The services API instance.
 	 */
@@ -40,7 +40,7 @@ class Chatbot_Loader {
 	/**
 	 * Checks if the chatbot can be loaded.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return bool True if the chatbot can be loaded, false otherwise.
 	 */
@@ -51,7 +51,7 @@ class Chatbot_Loader {
 		 * The chatbot is the only user-facing feature of this plugin, effectively as a small proof of concept, since
 		 * otherwise it is an infrastructure plugin. As such, this filter can be used to disable the chatbot.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.1.0
 		 *
 		 * @param bool $enabled Whether the chatbot feature should be enabled or not.
 		 */
@@ -68,7 +68,7 @@ class Chatbot_Loader {
 	/**
 	 * Loads the chatbot using the given instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Chatbot $chatbot The chatbot instance.
 	 */

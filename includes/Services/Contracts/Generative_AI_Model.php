@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -11,14 +11,14 @@ namespace Felix_Arntz\AI_Services\Services\Contracts;
 /**
  * Interface for a class representing a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 interface Generative_AI_Model {
 
 	/**
 	 * Gets the model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The model slug.
 	 */

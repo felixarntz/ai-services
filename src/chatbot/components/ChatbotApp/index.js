@@ -30,7 +30,7 @@ const SERVICE_ARGS = { capabilities: [ 'text_generation' ] };
 /**
  * Renders the chatbot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

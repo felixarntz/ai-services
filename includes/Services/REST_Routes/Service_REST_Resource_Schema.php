@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_REST_Resource_Schema
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Rout
 /**
  * Class representing the schema for a service resource in the REST API.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 
 	/**
 	 * Prepares the given resource for inclusion in a response, based on the given fields.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Service_Entity $entity The entity to prepare.
 	 * @param string[]       $fields Fields to be included in the response.
@@ -38,7 +38,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 	/**
 	 * Prepares links for the given resource.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Service_Entity $entity The entity to prepare links for.
 	 * @return array<string, array<string, mixed>> Links for the given resource.
@@ -57,7 +57,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 	/**
 	 * Returns the full URL to the resource's collection route.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Full collection route URL.
 	 */
@@ -68,7 +68,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 	/**
 	 * Returns the internal resource schema definition.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> Internal resource schema definition.
 	 */

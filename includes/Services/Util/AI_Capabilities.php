@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Util\AI_Capabilities
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,7 +14,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 /**
  * Class exposing the available AI capabilities and related static utility methods.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class AI_Capabilities {
 	const CAPABILITY_TEXT_GENERATION  = 'text_generation';
@@ -23,7 +23,7 @@ final class AI_Capabilities {
 	/**
 	 * Gets the AI capabilities that the given model class supports.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $model_class The model class name.
 	 * @return string[] The AI capabilities that the model class supports, based on the interfaces it implements.

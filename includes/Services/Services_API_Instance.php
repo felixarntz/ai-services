@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Services_API_Instance
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use RuntimeException;
 /**
  * Class to provide singleton-like access to the canonical Services_API instance.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Services_API_Instance {
 
 	/**
 	 * Retrieve the canonical Services_API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Services_API|null The canonical Services_API instance.
 	 */
 	private static $instance;
@@ -28,7 +28,7 @@ final class Services_API_Instance {
 	/**
 	 * Retrieves the canonical Services_API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Services_API The canonical Services_API instance.
 	 *
@@ -47,7 +47,7 @@ final class Services_API_Instance {
 	/**
 	 * Sets the canonical Services_API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Services_API $instance The canonical Services_API instance.
 	 *

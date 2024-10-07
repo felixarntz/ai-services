@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Service_Registration
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -25,14 +25,14 @@ use RuntimeException;
  *
  * This is an internal class and NOT the actual service.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Service_Registration {
 
 	/**
 	 * The service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $slug;
@@ -40,7 +40,7 @@ final class Service_Registration {
 	/**
 	 * The service creator.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var callable
 	 */
 	private $creator;
@@ -48,7 +48,7 @@ final class Service_Registration {
 	/**
 	 * The service arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $args;
@@ -56,7 +56,7 @@ final class Service_Registration {
 	/**
 	 * The authentication option slugs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string[]
 	 */
 	private $authentication_option_slugs;
@@ -64,7 +64,7 @@ final class Service_Registration {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
 	 * @param callable             $creator The service creator. Receives the Authentication instance as first
@@ -112,7 +112,7 @@ final class Service_Registration {
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The service slug.
 	 */
@@ -123,7 +123,7 @@ final class Service_Registration {
 	/**
 	 * Gets the authentication option instances.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Option[] The authentication option instances.
 	 */
@@ -139,7 +139,7 @@ final class Service_Registration {
 	/**
 	 * Gets the authentication option slugs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string[] The authentication option slugs.
 	 */
@@ -150,7 +150,7 @@ final class Service_Registration {
 	/**
 	 * Creates a new instance of the service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Generative_AI_Service The service instance.
 	 *
@@ -214,7 +214,7 @@ final class Service_Registration {
 	/**
 	 * Gets the service name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The service name.
 	 */
@@ -225,7 +225,7 @@ final class Service_Registration {
 	/**
 	 * Gets the service credentials URL, if specified.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The service credentials URL, or empty string if not specified.
 	 */
@@ -236,7 +236,7 @@ final class Service_Registration {
 	/**
 	 * Checks whether the service can be overridden.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return bool True if the service can be overridden, false otherwise.
 	 */
@@ -247,7 +247,7 @@ final class Service_Registration {
 	/**
 	 * Validates the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $slug The service slug.
 	 *
@@ -264,7 +264,7 @@ final class Service_Registration {
 	/**
 	 * Parses the service registration arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $args The service registration arguments.
 	 * @return array<string, mixed> The parsed service registration arguments.
@@ -296,7 +296,7 @@ final class Service_Registration {
 	/**
 	 * Parses the service registration instance arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $args The service registration instance arguments.
 	 * @return array<string, mixed> The parsed service registration instance arguments.

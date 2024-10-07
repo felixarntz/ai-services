@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Util\Formatter
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use InvalidArgumentException;
 /**
  * Class providing static methods for formatting content.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Formatter {
 
 	/**
 	 * Formats the various supported formats of new user content into a consistent Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|Parts|Content $content The content to format.
 	 * @return Content The formatted new content.
@@ -34,7 +34,7 @@ final class Formatter {
 	/**
 	 * Formats the various supported formats of a system instruction into a consistent Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|Parts|Content $input The system instruction to format.
 	 * @return Content The formatted system instruction.
@@ -46,7 +46,7 @@ final class Formatter {
 	/**
 	 * Formats the various supported formats of content into a consistent Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|Parts|Content $input The content to format.
 	 * @param string               $role  The role for the content.

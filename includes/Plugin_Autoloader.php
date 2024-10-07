@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Plugin_Autoloader
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Plugin class autoloader.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Plugin_Autoloader {
 
 	/**
 	 * Plugin root namespace.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $root_ns;
@@ -28,7 +28,7 @@ class Plugin_Autoloader {
 	/**
 	 * Plugin class map.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, string>
 	 */
 	private $class_map;
@@ -36,7 +36,7 @@ class Plugin_Autoloader {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $root_ns        Plugin root namespace.
 	 * @param string $class_map_file Absolute path to a PHP file that returns the plugin class map array.
@@ -59,7 +59,7 @@ class Plugin_Autoloader {
 	 *
 	 * This method should be registered using spl_autoload_register().
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $class_name PHP class name.
 	 */

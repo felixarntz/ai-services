@@ -16,7 +16,7 @@ const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
 /**
  * Gets the first available service slug, optionally satisfying the given criteria.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}   services          Service objects, keyed by slug.
  * @param {Object}   args              Optional. Arguments to filter the services to consider.
@@ -57,7 +57,7 @@ const actions = {
 	/**
 	 * Receives services from the server.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {Object} services Services received from the server, as key value pairs.
 	 * @return {Function} Action creator.
@@ -77,7 +77,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.
@@ -104,7 +104,7 @@ const resolvers = {
 	/**
 	 * Fetches the services from the server.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return {Function} Action creator.
 	 */

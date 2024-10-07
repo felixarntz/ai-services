@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Services_Service_Container_Builder
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -38,14 +38,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Rout
 /**
  * Service container builder for the services loader.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Services_Service_Container_Builder {
 
 	/**
 	 * Service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Service_Container
 	 */
 	private $container;
@@ -53,7 +53,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->container = new Service_Container();
@@ -62,7 +62,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Gets the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Service_Container Service container for the plugin.
 	 */
@@ -73,7 +73,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the plugin environment service for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $main_file Absolute path to the plugin main file.
 	 * @return self The builder instance, for chaining.
@@ -89,7 +89,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return self The builder instance, for chaining.
 	 */
@@ -118,7 +118,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the general services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_general_services(): void {
 		$this->container['current_user'] = static function () {
@@ -129,7 +129,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the capability services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_capability_services(): void {
 		$this->container['capability_container'] = static function () {
@@ -169,7 +169,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the dependency services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_dependency_services(): void {
 		$this->container['script_registry']              = static function () {
@@ -190,7 +190,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the HTTP services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_http_services(): void {
 		$this->container['http'] = static function () {
@@ -201,7 +201,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the option services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_option_services(): void {
 		$this->container['option_repository'] = static function () {
@@ -221,7 +221,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the REST services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_rest_services(): void {
 		$this->container['rest_namespace']        = function () {
@@ -246,7 +246,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the admin services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function build_admin_services(): void {
 		$this->container['admin_settings_menu'] = static function () {

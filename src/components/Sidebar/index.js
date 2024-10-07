@@ -20,7 +20,7 @@ import { __ } from '@wordpress/i18n';
  * Additionally, sidebars can be pinned by the user for easy access. The PinnedSidebars component can be used to render
  * icon buttons for the pinned sidebars.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}   props                   Component props.
  * @param {string}   props.identifier        Identifier for the sidebar, to use in the store.
@@ -72,7 +72,7 @@ Sidebar.Slot = () => {
 /**
  * Hook to check whether any fills are provided for the Sidebar slot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {boolean} True if there are any Sidebar fills, false otherwise.
  */

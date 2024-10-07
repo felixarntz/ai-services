@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Plugin_Main
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -23,14 +23,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\O
 /**
  * Plugin main class.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Plugin_Main implements With_Hooks {
 
 	/**
 	 * Plugin service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Service_Container
 	 */
 	private $container;
@@ -38,7 +38,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Services loader.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Services_Loader
 	 */
 	private $services_loader;
@@ -46,7 +46,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -54,7 +54,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $main_file Absolute path to the plugin main file.
 	 */
@@ -74,7 +74,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Adds relevant WordPress hooks.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function add_hooks(): void {
 		$this->services_loader->add_hooks();
@@ -87,7 +87,7 @@ class Plugin_Main implements With_Hooks {
 	 *
 	 * The installation will only happen if necessary, i.e. on most requests this will effectively do nothing.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function maybe_install_data(): void {
 		/*
@@ -128,7 +128,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Adds general service hooks on 'init' to initialize the plugin.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function add_service_hooks(): void {
 		// Register options.
@@ -159,7 +159,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Sets up the plugin container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $main_file Absolute path to the plugin main file.
 	 * @return Service_Container Plugin container.
@@ -175,7 +175,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Registers the default AI services.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function register_default_services(): void {
 		$this->services_api->register_service(

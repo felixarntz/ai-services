@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -17,14 +17,14 @@ use InvalidArgumentException;
 /**
  * Interface for a class representing a generative AI service which provides access to models.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 interface Generative_AI_Service {
 
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The service slug.
 	 */
@@ -33,7 +33,7 @@ interface Generative_AI_Service {
 	/**
 	 * Gets the list of AI capabilities that the service and its models support.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @see AI_Capabilities
 	 *
 	 * @return string[] The list of AI capabilities.
@@ -43,7 +43,7 @@ interface Generative_AI_Service {
 	/**
 	 * Gets the default model slug to use with the service when none is provided.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The default model slug.
 	 */
@@ -52,7 +52,7 @@ interface Generative_AI_Service {
 	/**
 	 * Lists the available generative model slugs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return string[] The available model slugs.
@@ -64,7 +64,7 @@ interface Generative_AI_Service {
 	/**
 	 * Gets a generative model instance for the provided model parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.

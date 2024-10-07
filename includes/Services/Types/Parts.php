@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Types\Parts
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -21,14 +21,14 @@ use Traversable;
 /**
  * Class representing a collection of content parts for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Parts implements Collection, Arrayable {
 
 	/**
 	 * The parts of the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Part[]
 	 */
 	private $parts = array();
@@ -36,7 +36,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Adds a text part to the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $text The text.
 	 */
@@ -49,7 +49,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Adds an inline data part to the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $mime_type   The MIME type of the data.
 	 * @param string $base64_data The base64-encoded data.
@@ -70,7 +70,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Adds a file data part to the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $mime_type The MIME type of the data.
 	 * @param string $file_uri  The URI of the file.
@@ -91,7 +91,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Adds a part to the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Part $part The part.
 	 */
@@ -102,7 +102,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Returns an iterator for the parts collection.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return ArrayIterator<int, Part> Collection iterator.
 	 */
@@ -113,7 +113,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Returns the size of the parts collection.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return int Collection size.
 	 */
@@ -124,7 +124,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Filters the parts collection by the given criteria.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $args {
 	 *     The filter arguments.
@@ -161,7 +161,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Returns the part at the given index.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param int $index The index.
 	 * @return Part The part.
@@ -180,7 +180,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -196,7 +196,7 @@ final class Parts implements Collection, Arrayable {
 	/**
 	 * Creates a Parts instance from an array of parts data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The parts data.
 	 * @return Parts The Parts instance.

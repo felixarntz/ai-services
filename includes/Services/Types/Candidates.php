@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Types\Candidates
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -17,14 +17,14 @@ use Traversable;
 /**
  * Class representing a collection of response candidates for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Candidates implements Collection, Arrayable {
 
 	/**
 	 * The candidates.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Candidate[]
 	 */
 	private $candidates = array();
@@ -32,7 +32,7 @@ final class Candidates implements Collection, Arrayable {
 	/**
 	 * Adds a candidate to the collection.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Candidate $candidate The candidate.
 	 */
@@ -43,7 +43,7 @@ final class Candidates implements Collection, Arrayable {
 	/**
 	 * Returns an iterator for the candidates collection.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return ArrayIterator<int, Candidate> Collection iterator.
 	 */
@@ -54,7 +54,7 @@ final class Candidates implements Collection, Arrayable {
 	/**
 	 * Returns the size of the candidates collection.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return int Collection size.
 	 */
@@ -65,7 +65,7 @@ final class Candidates implements Collection, Arrayable {
 	/**
 	 * Filters the parts collection by the given criteria.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $args {
 	 *     The filter arguments.
@@ -105,7 +105,7 @@ final class Candidates implements Collection, Arrayable {
 	/**
 	 * Returns the candidate at the given index.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param int $index The index.
 	 * @return Candidate The candidate.
@@ -124,7 +124,7 @@ final class Candidates implements Collection, Arrayable {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -140,7 +140,7 @@ final class Candidates implements Collection, Arrayable {
 	/**
 	 * Creates a Candidates instance from an array of candidates data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed>[] $data The candidates data.
 	 * @return Candidates The Candidates instance.

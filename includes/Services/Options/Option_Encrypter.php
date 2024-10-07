@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Options\Option_Encrypter
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -13,7 +13,7 @@ use Felix_Arntz\AI_Services\Services\Util\Data_Encryption;
 /**
  * Class that allows for options to be encrypted when stored in the database as well as decrypted when retrieved.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Option_Encrypter {
 
@@ -22,7 +22,7 @@ final class Option_Encrypter {
 	/**
 	 * The data encryption instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Data_Encryption
 	 */
 	private $data_encryption;
@@ -30,7 +30,7 @@ final class Option_Encrypter {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Data_Encryption $data_encryption The data encryption instance.
 	 */
@@ -41,7 +41,7 @@ final class Option_Encrypter {
 	/**
 	 * Adds relevant hooks to handle encryption and decryption of the given option.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $option_slug The option to use encryption with.
 	 */
@@ -53,7 +53,7 @@ final class Option_Encrypter {
 	/**
 	 * Checks if the given option has encryption enabled.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $option_slug The identifier/name of the option.
 	 * @return bool True if the option has encryption enabled, false otherwise.
@@ -68,7 +68,7 @@ final class Option_Encrypter {
 	/**
 	 * Encrypts the given option value.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param mixed  $value       The option value to encrypt.
 	 * @param string $option_slug The identifier/name of the option.
@@ -106,7 +106,7 @@ final class Option_Encrypter {
 	/**
 	 * Decrypts the given option value.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param mixed  $value       The option value to decrypt.
 	 * @param string $option_slug The identifier/name of the option.
@@ -139,7 +139,7 @@ final class Option_Encrypter {
 	/**
 	 * Triggers an error, if WP_DEBUG is enabled.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $function_name The name of the function that triggered the error.
 	 * @param string $message       The message explaining the error.

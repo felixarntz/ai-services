@@ -9,7 +9,7 @@ import { PinnedItems } from '@wordpress/interface';
  * Multiple sidebars can be rendered in the application, and users can pin them for easy access.
  * This component will automatically render icon buttons for all pinned sidebars.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

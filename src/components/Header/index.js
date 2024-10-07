@@ -24,7 +24,7 @@ const { Fill, Slot } = createSlotFill( 'Header' );
  *
  * Any children passed to this component will be rendered inside the header.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}  props          Component props.
  * @param {Element} props.children Child elements to render.
@@ -43,7 +43,7 @@ Header.Slot = Slot;
 /**
  * Hook to check whether any fills are provided for the Header slot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {boolean} True if there are any Header fills, false otherwise.
  */

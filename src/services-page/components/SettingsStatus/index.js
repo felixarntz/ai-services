@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Renders the settings status text in a paragraph.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

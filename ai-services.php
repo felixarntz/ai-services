@@ -5,7 +5,7 @@
  * Description: Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
  * Requires at least: 6.0
  * Requires PHP: 7.2
- * Version: 1.0.0
+ * Version: 0.1.0
  * Author: Felix Arntz
  * Author URI: https://felix-arntz.me
  * License: GPLv2 or later
@@ -26,7 +26,7 @@ require_once plugin_dir_path( __FILE__ ) . 'constants.php';
 /**
  * Checks basic requirements and loads the plugin.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 function ai_services_load() /* @phpstan-ignore-line */ {
 	static $loaded = false;
@@ -63,7 +63,7 @@ function ai_services_load() /* @phpstan-ignore-line */ {
 /**
  * Displays admin notice about unmet PHP version requirement.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 function ai_services_display_version_requirements_notice() /* @phpstan-ignore-line */ {
 	echo '<div class="notice notice-error"><p>';
@@ -83,7 +83,7 @@ function ai_services_display_version_requirements_notice() /* @phpstan-ignore-li
 /**
  * Displays admin notice about missing Composer autoload files.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 function ai_services_display_composer_autoload_notice() /* @phpstan-ignore-line */ {
 	echo '<div class="notice notice-error"><p>';

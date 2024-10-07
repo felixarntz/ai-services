@@ -11,7 +11,7 @@ import { SVG, Circle, G, Path } from '@wordpress/components';
 /**
  * Renders the plugin icon.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}  props             The component props.
  * @param {number}  props.size        The size of the icon.

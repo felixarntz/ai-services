@@ -12,7 +12,7 @@ import { useShortcut } from '@wordpress/keyboard-shortcuts';
 /**
  * Renders a utility component to add event listeners for keyboard shortcuts for the settings app.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

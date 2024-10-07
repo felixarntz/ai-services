@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Chatbot\Chatbot_AI
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\S
 /**
  * Class for the AI configuration powering the chatbot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Chatbot_AI {
 
 	/**
 	 * The site environment.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Site_Env
 	 */
 	private $site_env;
@@ -30,7 +30,7 @@ class Chatbot_AI {
 	/**
 	 * The network environment.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Network_Env
 	 */
 	private $network_env;
@@ -38,7 +38,7 @@ class Chatbot_AI {
 	/**
 	 * The current user instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -46,7 +46,7 @@ class Chatbot_AI {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Site_Env     $site_env    The site environment.
 	 * @param Network_Env  $network_env The network environment.
@@ -61,7 +61,7 @@ class Chatbot_AI {
 	/**
 	 * Gets the system instruction for the chatbot.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The system instruction.
 	 */
@@ -107,7 +107,7 @@ class Chatbot_AI {
 	/**
 	 * Gets the system details for the chatbot.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The system details.
 	 */
@@ -190,7 +190,7 @@ class Chatbot_AI {
 	/**
 	 * Get information about the active plugins on the site.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string[] List of plain text strings with information about the active plugins (name, version, and link URL).
 	 */

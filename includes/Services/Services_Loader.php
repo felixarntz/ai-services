@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Services_Loader
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\S
 /**
  * Loader class responsible for initializing the AI services functionality, including its public API.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Services_Loader implements With_Hooks {
 
 	/**
 	 * Service container for the class's dependencies.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Service_Container
 	 */
 	private $container;
@@ -30,7 +30,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $main_file Absolute path to the plugin main file.
 	 */
@@ -42,7 +42,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Adds relevant WordPress hooks.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function add_hooks(): void {
 		$this->load_capabilities();
@@ -55,7 +55,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Loads the services capabilities and sets up the relevant filters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function load_capabilities(): void {
 		add_action(
@@ -72,7 +72,7 @@ final class Services_Loader implements With_Hooks {
 				 * - 'ais_access_services' (base capability)
 				 * - 'ais_access_service' (meta capability, called with the specific service slug as parameter)
 				 *
-				 * @since n.e.x.t
+				 * @since 0.1.0
 				 *
 				 * @param Capability_Controller $controller The capability controller, which can be used to modify the
 				 *                                          rules for how capabilities are granted.
@@ -88,7 +88,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Registers the JS & CSS dependencies for the AI services.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function load_dependencies(): void {
 		add_action(
@@ -105,7 +105,7 @@ final class Services_Loader implements With_Hooks {
 	 * The option container is populated with options dynamically based on registered AI services. Each of the relevant
 	 * options will be registered here.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function load_options(): void {
 		add_action(
@@ -127,7 +127,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Loads the plugin's REST API routes..
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function load_rest_routes(): void {
 		add_action(
@@ -146,7 +146,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Loads the services settings page.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function load_settings_page(): void {
 		add_action(
@@ -160,7 +160,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Sets up the services service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $main_file Absolute path to the plugin main file.
 	 * @return Service_Container The services service container.

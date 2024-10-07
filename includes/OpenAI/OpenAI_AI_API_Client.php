@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_API_Client
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -19,7 +19,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON
 /**
  * Class to interact directly with the OpenAI API.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	use Generative_AI_API_Client_Trait;
@@ -30,7 +30,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * The OpenAI API key authentication.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Authentication
 	 */
 	private $authentication;
@@ -38,7 +38,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * The HTTP instance to use for requests.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var HTTP
 	 */
 	private $http;
@@ -46,7 +46,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Authentication $authentication The authentication credentials.
 	 * @param HTTP           $http           The HTTP instance to use for requests.
@@ -59,7 +59,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Creates a request instance to list the available models with their information.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $params          Optional. The request parameters. Default empty array.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
@@ -72,7 +72,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Creates a request instance to generate content using the specified model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $params          The request parameters.
@@ -87,7 +87,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Returns the HTTP instance to use for requests.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return HTTP The HTTP instance.
 	 */
@@ -98,7 +98,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Returns the human readable API name (without the "API" suffix).
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The API name.
 	 */
@@ -109,7 +109,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Creates a GET request instance for the given parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
 	 * @param array<string, mixed> $params          The request parameters.
@@ -130,7 +130,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Creates a POST request instance for the given parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
 	 * @param array<string, mixed> $params          The request parameters.
@@ -151,7 +151,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Gets the request URL for the specified model and task.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.

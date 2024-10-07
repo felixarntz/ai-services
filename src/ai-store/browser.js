@@ -8,7 +8,7 @@ let browser;
 /**
  * Gets the data for the client-side exclusive generative AI service 'browser'.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Promise<Object>} The browser AI service data.
  */
@@ -31,7 +31,7 @@ export async function getBrowserServiceData() {
 /**
  * Gets the AI capabilities that the browser supports.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} ai The browser AI API object.
  * @return {Promise<string[]>} The list of AI capabilities.

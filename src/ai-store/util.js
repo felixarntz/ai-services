@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Formats the various supported formats of new user content into a consistent content shape.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {string|Object|Object[]} content New content.
  * @return {Object} The formatted new content.

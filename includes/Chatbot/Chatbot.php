@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Chatbot\Chatbot
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -19,14 +19,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\S
 /**
  * Class controlling the AI-powered chatbot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Chatbot implements With_Hooks {
 
 	/**
 	 * The plugin environment.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Plugin_Env
 	 */
 	private $plugin_env;
@@ -34,7 +34,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * WordPress script registry instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Script_Registry
 	 */
 	private $script_registry;
@@ -42,7 +42,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * WordPress style registry instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Style_Registry
 	 */
 	private $style_registry;
@@ -50,7 +50,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * The AI instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Chatbot_AI
 	 */
 	private $ai;
@@ -58,7 +58,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Plugin_Env      $plugin_env      The plugin environment.
 	 * @param Site_Env        $site_env        The site environment.
@@ -84,7 +84,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * Adds relevant WordPress hooks.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function add_hooks(): void {
 		if ( doing_action( 'init' ) ) {
@@ -110,7 +110,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * Gets the model parameters to use for the chatbot.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> The model parameters, containing 'system_instruction'.
 	 */
@@ -123,7 +123,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * Registers the assets needed for the chatbot.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function register_assets(): void {
 		$this->script_registry->register(
@@ -158,7 +158,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * Enqueues the assets needed for the chatbot.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function enqueue_assets(): void {
 		$this->script_registry->enqueue( 'ais_chatbot' );
@@ -168,7 +168,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * Renders the chatbot app root.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function render_app_root(): void {
 		?>
@@ -179,7 +179,7 @@ class Chatbot implements With_Hooks {
 	/**
 	 * Filters the model parameters for the REST API.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
 	 *                                           'generation_config' and 'system_instruction'.

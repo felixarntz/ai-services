@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -21,14 +21,14 @@ use InvalidArgumentException;
  * This class effectively acts as middleware for the underlying AI service, allowing for additional functionality to be
  * centrally provided.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class AI_Service_Decorator implements Generative_AI_Service {
 
 	/**
 	 * The underlying AI service to wrap.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Generative_AI_Service
 	 */
 	private $service;
@@ -36,7 +36,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Generative_AI_Service $service The underlying AI service to wrap.
 	 */
@@ -47,7 +47,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The service slug.
 	 */
@@ -58,7 +58,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Gets the list of AI capabilities that the service and its models support.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @see AI_Capabilities
 	 *
 	 * @return string[] The list of AI capabilities.
@@ -70,7 +70,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Gets the default model slug to use with the service when none is provided.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The default model slug.
 	 */
@@ -81,7 +81,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Lists the available generative model slugs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return string[] The available model slugs.
@@ -98,7 +98,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Gets a generative model instance for the provided model parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -16,7 +16,7 @@ use InvalidArgumentException;
 /**
  * Class that allows to wrap service method calls so that their return values are cached.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Service_Request_Cache {
 
@@ -33,7 +33,7 @@ final class Service_Request_Cache {
 	 *
 	 * The transient is stored for 24 hours.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string   $service_slug Service slug.
 	 * @param callable $method       Method to cache.
@@ -75,7 +75,7 @@ final class Service_Request_Cache {
 	 *
 	 * The cached value is stored for 24 hours.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string   $service_slug Service slug.
 	 * @param callable $method       Method to cache.
@@ -109,7 +109,7 @@ final class Service_Request_Cache {
 	 * This method should be called whenever the configuration of a service changes, so that the caches are invalidated
 	 * and the next request will fetch fresh data. This encompasses both transients and the object cache.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $service_slug Service slug.
 	 */
@@ -131,7 +131,7 @@ final class Service_Request_Cache {
 	 *
 	 * If an exception is thrown, it will be returned instead of the method's return value.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param callable $method Method to call.
 	 * @param mixed[]  $args   Method arguments.
@@ -150,7 +150,7 @@ final class Service_Request_Cache {
 	 *
 	 * If the value is an exception, it is converted to an array with the exception class name and message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param mixed $value Value to sanitize.
 	 * @return mixed Sanitized value.
@@ -170,7 +170,7 @@ final class Service_Request_Cache {
 	 *
 	 * This converts any sanitized exceptions back to their original exception form.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param mixed $value Value from the cache.
 	 * @return mixed Parsed value.
@@ -193,7 +193,7 @@ final class Service_Request_Cache {
 	 * The returned key does not include the service slug, so the service slug has to be separately included as part of
 	 * the identifier for where to cache the value.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param callable $method Method to cache.
 	 * @param mixed[]  $args   Optional. Method arguments. Default empty array.
@@ -224,7 +224,7 @@ final class Service_Request_Cache {
 	/**
 	 * Gets the cache hash for a method call.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string  $method_name Method name.
 	 * @param mixed[] $args        Optional. Method arguments. Default empty array.
@@ -242,7 +242,7 @@ final class Service_Request_Cache {
 	/**
 	 * Gets the last changed value for a service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $service_slug Service slug.
 	 * @return string UNIX timestamp for when the configuration of the service was last changed.
@@ -263,7 +263,7 @@ final class Service_Request_Cache {
 	/**
 	 * Sets the last changed value for a service to the current UNIX timestamp.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $service_slug Service slug.
 	 */

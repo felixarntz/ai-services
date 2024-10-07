@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Types\Contracts\Part
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\C
 /**
  * Interface for a class representing a part of content for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 interface Part extends Arrayable {
 
 	/**
 	 * Sets data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The part data.
 	 */

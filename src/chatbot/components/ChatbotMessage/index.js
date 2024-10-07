@@ -19,7 +19,7 @@ import './style.scss';
 /**
  * Renders the chatbot message.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} props         The component props.
  * @param {string} props.message The message string.

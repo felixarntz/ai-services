@@ -2,7 +2,7 @@
 /**
  * Plugin constants.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'AI_SERVICES_VERSION', '1.0.0' );
+define( 'AI_SERVICES_VERSION', '0.1.0' );
 define( 'AI_SERVICES_MINIMUM_PHP', '7.2' );
 define( 'AI_SERVICES_MINIMUM_WP', '6.0' );
 
 /**
  * Registers the plugin autoloader.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return bool True on success, false on failure.
  */

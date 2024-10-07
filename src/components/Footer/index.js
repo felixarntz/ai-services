@@ -24,7 +24,7 @@ const { Fill, Slot } = createSlotFill( 'Footer' );
  *
  * Any children passed to this component will be rendered inside the footer.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}  props          Component props.
  * @param {Element} props.children Child elements to render.
@@ -43,7 +43,7 @@ Footer.Slot = Slot;
 /**
  * Hook to check whether any fills are provided for the Footer slot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {boolean} True if there are any Footer fills, false otherwise.
  */

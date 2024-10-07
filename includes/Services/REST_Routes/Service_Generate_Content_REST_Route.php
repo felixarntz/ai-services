@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Content_REST_Route
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -26,7 +26,7 @@ use WP_REST_Server;
 /**
  * Class representing the REST API route for getting a service.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	const BASE    = '/services/(?P<slug>[\w-]+):generate-text';
@@ -35,7 +35,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * The services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -43,7 +43,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Current user service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -51,7 +51,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Services_API $services_api    The services API instance.
 	 * @param Current_User $current_user    The current user service.
@@ -66,7 +66,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route base.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Route base.
 	 */
@@ -77,7 +77,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route methods, as a comma-separated string.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Route methods, as a comma-separated string.
 	 */
@@ -88,7 +88,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Checks the required permissions for the given request and throws an exception if they aren't met.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 *
@@ -107,7 +107,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Handles the given request and returns a response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 * @return WP_REST_Response WordPress REST response object.
@@ -170,7 +170,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Retrieves the (text-based) model with the given slug and parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Generative_AI_Service $service      The service instance to get the model from.
 	 * @param array<string, mixed>  $model_params The model parameters.
@@ -217,7 +217,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Processes the model parameters before retrieving the model with them.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 * @return array<string, mixed> The processed model parameters.
@@ -243,7 +243,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		 * This can be used, for example, to inject additional parameters via server-side logic in order to decouple
 		 * them from the client-side implementation.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.1.0
 		 *
 		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
 		 *                                           'generation_config' and 'system_instruction'.
@@ -255,7 +255,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route specific arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> Route arguments.
 	 */
@@ -321,7 +321,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the global route arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> Global route arguments.
 	 */
@@ -340,7 +340,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the response schema for the route.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> The schema for the route.
 	 */
@@ -369,7 +369,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 *
 	 * This must be in sync with the data structure of the {@see Parts} class.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @see Parts
 	 *
 	 * @return array<string, mixed> The schema for a Parts object.
@@ -435,7 +435,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 *
 	 * This must be in sync with the data structure of the {@see Content} class.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @see Content
 	 *
 	 * @param string[] $allowed_roles Which content roles to include in the schema.
@@ -459,7 +459,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 *
 	 * The implementation of this method goes hand in hand with the schema definitions for the 'content' parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @see With_Text_Generation::generate_text()
 	 *
 	 * @param mixed $content The content data.

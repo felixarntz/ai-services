@@ -20,7 +20,7 @@ import './style.scss';
 /**
  * Renders the root of the application.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}  props           Component props.
  * @param {?string} props.className Class name to add to the interface wrapper.

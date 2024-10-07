@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Class for an inline data part of content for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Inline_Data_Part extends Abstract_Part {
 
 	/**
 	 * Formats the data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The part data.
 	 * @return array<string, mixed> Formatted data.
@@ -53,7 +53,7 @@ final class Inline_Data_Part extends Abstract_Part {
 	/**
 	 * Gets the default data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> Default data.
 	 */

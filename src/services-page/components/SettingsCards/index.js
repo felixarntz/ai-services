@@ -28,7 +28,7 @@ const EMPTY_ARRAY = [];
 /**
  * Renders the cards for all the settings controls.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

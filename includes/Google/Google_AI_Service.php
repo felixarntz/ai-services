@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Google\Google_AI_Service
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -23,14 +23,14 @@ use InvalidArgumentException;
 /**
  * Class for the Google AI service.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 
 	/**
 	 * The Google AI API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Google_AI_API_Client
 	 */
 	private $api;
@@ -38,7 +38,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Authentication $authentication The authentication credentials.
 	 * @param HTTP           $http           Optional. The HTTP instance to use for requests. Default is a new instance.
@@ -53,7 +53,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The service slug.
 	 */
@@ -64,7 +64,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	/**
 	 * Gets the list of AI capabilities that the service and its models support.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @see AI_Capabilities
 	 *
 	 * @return string[] The list of AI capabilities.
@@ -76,7 +76,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	/**
 	 * Gets the API client instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Generative_AI_API_Client The API client instance.
 	 */
@@ -87,7 +87,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	/**
 	 * Gets the default model slug to use with the service when none is provided.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The default model slug.
 	 */
@@ -98,7 +98,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	/**
 	 * Lists the available generative model slugs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return string[] The available model slugs.
@@ -138,7 +138,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	/**
 	 * Gets a generative model instance for the provided model parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.

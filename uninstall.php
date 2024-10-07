@@ -2,7 +2,7 @@
 /**
  * Uninstall script for the plugin.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -19,7 +19,7 @@ if ( ! function_exists( 'ai_services_uninstall' ) ) {
 	/**
 	 * Checks basic requirements and uninstalls the plugin.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	function ai_services_uninstall() /* @phpstan-ignore-line */ {
 		$plugin_main_file = plugin_dir_path( __FILE__ ) . 'ai-services.php';

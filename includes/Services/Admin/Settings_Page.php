@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Admin\Settings_Page
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependenc
 /**
  * Class representing the plugin's admin settings page.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Settings_Page extends Abstract_Admin_Page {
 
 	/**
 	 * WordPress script registry.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Script_Registry
 	 */
 	private $script_registry;
@@ -30,7 +30,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * WordPress style registry.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Style_Registry
 	 */
 	private $style_registry;
@@ -38,7 +38,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Script_Registry $script_registry WordPress script registry.
 	 * @param Style_Registry  $style_registry  WordPress style registry.
@@ -53,7 +53,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * Initializes functionality for the admin page.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function load(): void {
 		add_action(
@@ -85,7 +85,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * Renders the admin page.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function render(): void {
 		?>
@@ -98,7 +98,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * Returns the admin page slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Admin page slug.
 	 */
@@ -109,7 +109,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * Returns the admin page title.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Admin page title.
 	 */
@@ -120,7 +120,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * Returns the admin page's required capability.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Admin page capability.
 	 */
@@ -131,7 +131,7 @@ class Settings_Page extends Abstract_Admin_Page {
 	/**
 	 * Preloads relevant REST API data for the settings page so that it is available immediately.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function preload_rest_api_data(): void {
 		$preload_paths = array(

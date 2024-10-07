@@ -18,7 +18,7 @@ import { useChatIdContext } from '../../context';
 /**
  * Utility component for the chatbot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}   props                      Component props.
  * @param {Function} props.createChatBotMessage Function to create a chat message.

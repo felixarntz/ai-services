@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Renders a utility component to conditionally trigger the browser warning about unsaved changes.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

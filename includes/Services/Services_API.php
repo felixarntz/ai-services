@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Services_API
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -22,14 +22,14 @@ use InvalidArgumentException;
 /**
  * Main API class providing the entry point to the generative AI services.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Services_API {
 
 	/**
 	 * The service registration definitions, keyed by service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, Service_Registration>
 	 */
 	private $service_registrations = array();
@@ -37,7 +37,7 @@ final class Services_API {
 	/**
 	 * The service instances, keyed by service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, Generative_AI_Service>
 	 */
 	private $service_instances = array();
@@ -45,7 +45,7 @@ final class Services_API {
 	/**
 	 * The current user instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -53,7 +53,7 @@ final class Services_API {
 	/**
 	 * The option container instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Option_Container
 	 */
 	private $option_container;
@@ -61,7 +61,7 @@ final class Services_API {
 	/**
 	 * The option repository instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Option_Repository
 	 */
 	private $option_repository;
@@ -69,7 +69,7 @@ final class Services_API {
 	/**
 	 * The option encrypter instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Option_Encrypter
 	 */
 	private $option_encrypter;
@@ -77,7 +77,7 @@ final class Services_API {
 	/**
 	 * The HTTP instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var HTTP
 	 */
 	private $http;
@@ -85,7 +85,7 @@ final class Services_API {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Current_User      $current_user      The current user instance.
 	 * @param Option_Container  $option_container  The option container instance.
@@ -122,7 +122,7 @@ final class Services_API {
 	 *
 	 * The $creator parameter of this method needs to return the instance of the service class.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @see Generative_AI_Service
 	 * @see With_API_Client
@@ -196,7 +196,7 @@ final class Services_API {
 	/**
 	 * Checks whether a service is registered.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $slug The service slug.
 	 * @return bool True if the service is registered, false otherwise.
@@ -214,7 +214,7 @@ final class Services_API {
 	 * - The API key is valid.
 	 * - The current user has the necessary capabilities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $slug The service slug.
 	 * @return bool True if the service is available, false otherwise.
@@ -266,7 +266,7 @@ final class Services_API {
 	 * whether any services are available. If so, an arbitrary available service can be retrieved using the
 	 * {@see Services_API::get_available_service()} method.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $args {
 	 *     Optional. Arguments to filter the services to consider. By default, any available service is considered.
@@ -291,7 +291,7 @@ final class Services_API {
 	 * If you intend to call this method to get any service (optionally with additional criteria to satisfy), you
 	 * should first check if any of the services are available using {@see Services_API::has_available_services()}.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|array<string, mixed> $args Optional. Either a single service slug to get that service, or
 	 *                                          arguments to get any service that satisfies the criteria from these
@@ -336,7 +336,7 @@ final class Services_API {
 	/**
 	 * Gets the service name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $slug The service slug.
 	 * @return string The service name, or empty string if the service is not registered.
@@ -352,7 +352,7 @@ final class Services_API {
 	/**
 	 * Gets the service credentials URL.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $slug The service slug.
 	 * @return string The service credentials URL, or empty string if the service is not registered or if no
@@ -369,7 +369,7 @@ final class Services_API {
 	/**
 	 * Gets the list of all registered service slugs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string[] The list of registered service slugs.
 	 */
@@ -380,7 +380,7 @@ final class Services_API {
 	/**
 	 * Gets the first available service slug, optionally satisfying the given criteria.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $args Optional. Arguments to filter the services to consider. See
 	 *                                   {@see Services_API::has_available_services()} for the possible arguments.

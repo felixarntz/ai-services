@@ -2,7 +2,7 @@
 /**
  * API functions.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -31,7 +31,7 @@ use Felix_Arntz\AI_Services\Services\Services_API_Instance;
  *   ->generate_text( 'How can you help me?' )
  * ```
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return Services_API The API instance.
  */

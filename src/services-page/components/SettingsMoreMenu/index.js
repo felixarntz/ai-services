@@ -23,7 +23,7 @@ import { store as preferencesStore } from '@wordpress/preferences';
 /**
  * Renders the More menu to display in the header of the settings app.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

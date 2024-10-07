@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\Authentication
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
 /**
  * Interface for a class representing authentication credentials of a certain kind for an API client.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 interface Authentication {
 
 	/**
 	 * Authenticates the given request with the credentials.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Request $request The request instance. Updated in place.
 	 */
@@ -29,7 +29,7 @@ interface Authentication {
 	/**
 	 * Sets the header name to use to add the credentials to a request.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $header_name The header name.
 	 */
@@ -38,7 +38,7 @@ interface Authentication {
 	/**
 	 * Returns the option definitions needed to store the credentials.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $service_slug The service slug.
 	 * @return array<string, array<string, mixed>> The option definitions.

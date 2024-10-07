@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -19,14 +19,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model which implements the With_Text_Generation interface.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 trait With_Text_Generation_Trait {
 
 	/**
 	 * Generates text content using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).
@@ -57,7 +57,7 @@ trait With_Text_Generation_Trait {
 	/**
 	 * Starts a multi-turn chat session using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content[] $history Optional. The chat history. Default empty array.
 	 * @return Chat_Session The chat session.
@@ -69,7 +69,7 @@ trait With_Text_Generation_Trait {
 	/**
 	 * Sends a request to generate text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.

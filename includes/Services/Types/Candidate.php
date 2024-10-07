@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Types\Candidate
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Class representing a candidate for a content response from a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Candidate implements Arrayable {
 
 	/**
 	 * The content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Content
 	 */
 	private $content;
@@ -29,7 +29,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Additional data for the candidate, if any.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $additional_data;
@@ -37,7 +37,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content              $content         The content.
 	 * @param array<string, mixed> $additional_data Additional data for the candidate, if any.
@@ -53,7 +53,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Gets the content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Content The content.
 	 */
@@ -64,7 +64,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Gets a field value from the additional data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $field The field name.
 	 * @return mixed|null The field value, or null if not found.
@@ -98,7 +98,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Gets the additional data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> The additional data.
 	 */
@@ -109,7 +109,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Converts the candidate to an array.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, mixed> The array representation of the candidate.
 	 */
@@ -125,7 +125,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Creates a Candidate instance from an array of content data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $data The content data.
 	 * @return Candidate Candidate instance.
@@ -154,7 +154,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Transforms a snake_case string to camelCase.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $input The snake_case string.
 	 * @return string The camelCase string.

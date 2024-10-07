@@ -23,7 +23,7 @@ import './style.scss';
  *
  * The code is almost entirely copied from the original TextControl component implementation.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} props Component props. These are identical to the props of the SensitiveTextControl component, with the
  *                       addition of 'buttonShowLabel', 'buttonHideLabel', and 'HelpContent'.

@@ -2,7 +2,6 @@
 /**
  * Tests for Felix_Arntz\AI_Services\Plugin_Main
  *
- * @since n.e.x.t
  * @package ai-services
  */
 

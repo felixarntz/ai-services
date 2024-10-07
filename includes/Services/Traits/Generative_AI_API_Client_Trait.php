@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\Generative_AI_API_Client_Trait
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -16,14 +16,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP
 /**
  * Trait for an API client class which implements the Generative_AI_API_Client interface.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 trait Generative_AI_API_Client_Trait {
 
 	/**
 	 * Sends the given request to the API and returns the response data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Request $request The request instance.
 	 * @return array<string, mixed> The response data.
@@ -65,7 +65,7 @@ trait Generative_AI_API_Client_Trait {
 	/**
 	 * Creates a new exception for an AI API request error.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $message The error message to include in the exception.
 	 * @return Generative_AI_Exception The exception instance.
@@ -86,7 +86,7 @@ trait Generative_AI_API_Client_Trait {
 	/**
 	 * Adds default options to the given request.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Request $request The request instance to add the options to.
 	 */
@@ -100,7 +100,7 @@ trait Generative_AI_API_Client_Trait {
 	/**
 	 * Returns the HTTP instance to use for requests.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return HTTP The HTTP instance.
 	 */
@@ -109,7 +109,7 @@ trait Generative_AI_API_Client_Trait {
 	/**
 	 * Returns the human readable API name (without the "API" suffix).
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The API name.
 	 */

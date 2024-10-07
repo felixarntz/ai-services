@@ -21,7 +21,7 @@ import { store as interfaceStore } from '@wordpress/interface';
 /**
  * Renders a shortcut key combination.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} props                Component props.
  * @param {Object} props.keyCombination Object containing 'modifier' and 'character' properties (both strings).
@@ -74,7 +74,7 @@ KeyCombination.propTypes = {
 /**
  * Renders a shortcut.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} props      Component props.
  * @param {string} props.name Identifier that the shortcut is registered under in the store.
@@ -124,7 +124,7 @@ Shortcut.propTypes = {
 /**
  * Renders a list of shortcuts.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}   props           Component props.
  * @param {string[]} props.shortcuts List of shortcut identifiers.
@@ -161,7 +161,7 @@ ShortcutList.propTypes = {
 /**
  * Renders a section for a group of shortcuts.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}   props           Component props.
  * @param {string[]} props.shortcuts List of shortcut identifiers.
@@ -196,7 +196,7 @@ ShortcutSection.propTypes = {
 /**
  * Renders a section for a category of shortcuts.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}  props              Component props.
  * @param {string}  props.categoryName Identifier of the shortcut category in the store.
@@ -224,7 +224,7 @@ ShortcutCategorySection.propTypes = {
 /**
  * Renders the modal displaying the available keyboard shortcuts.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

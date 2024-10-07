@@ -27,7 +27,7 @@ const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
  * For new settings that are now different from the saved settings, they will be added to the modified settings.
  * For new settings that are now equal to the saved settings, they will be removed from the modified settings.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} modifiedSettings The modified settings object, as key value pairs.
  * @param {Object} savedSettings    The saved settings object, as key value pairs.
@@ -77,7 +77,7 @@ const actions = {
 	/**
 	 * Receives settings from the server.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {Object} settings Settings received from the server, as key value pairs.
 	 * @return {Function} Action creator.
@@ -96,7 +96,7 @@ const actions = {
 	/**
 	 * Saves all settings to the server.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return {Function} Action creator.
 	 */
@@ -191,7 +191,7 @@ const actions = {
 	/**
 	 * Sets the value for a setting.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string} setting The setting name.
 	 * @param {*}      value   The new value for the setting.
@@ -207,7 +207,7 @@ const actions = {
 	/**
 	 * Sets the value for an API key setting.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string} service The service name.
 	 * @param {string} apiKey  The new API key.
@@ -220,7 +220,7 @@ const actions = {
 	/**
 	 * Sets the value for the deleteData setting.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {boolean} deleteData The new deleteData value.
 	 * @return {Object} Action object.
@@ -233,7 +233,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.
@@ -308,7 +308,7 @@ const resolvers = {
 	/**
 	 * Fetches the settings from the server.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return {Function} Action creator.
 	 */

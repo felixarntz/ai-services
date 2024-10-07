@@ -32,7 +32,7 @@ const actions = {
 	/**
 	 * Starts a chat session.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string} chatId              Identifier to use for the chat.
 	 * @param {Object} options             Chat options.
@@ -90,7 +90,7 @@ const actions = {
 	/**
 	 * Sends a message to the chat.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string}                 chatId  Identifier of the chat.
 	 * @param {string|Object|Object[]} content Chat message content.
@@ -138,7 +138,7 @@ const actions = {
 	/**
 	 * Receives a chat session.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string}      chatId              Identifier to use for the chat.
 	 * @param {Object}      options             Chat options.
@@ -158,7 +158,7 @@ const actions = {
 	/**
 	 * Receives new content to append to a chat.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string} chatId  Identifier of the chat.
 	 * @param {Object} content Chat content.
@@ -175,7 +175,7 @@ const actions = {
 	 * Reverts the last content from a chat.
 	 * This is useful for undoing the last message sent.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string} chatId Identifier of the chat.
 	 * @return {Object} Action creator.
@@ -191,7 +191,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Entity_Query
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\
 /**
  * Class representing a service entity query for the REST API.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Service_Entity_Query implements Entity_Query {
 
 	/**
 	 * The services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -29,7 +29,7 @@ class Service_Entity_Query implements Entity_Query {
 	/**
 	 * Query arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $query_args;
@@ -37,7 +37,7 @@ class Service_Entity_Query implements Entity_Query {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Services_API         $services_api The services API instance.
 	 * @param array<string, mixed> $query_args   {
@@ -55,7 +55,7 @@ class Service_Entity_Query implements Entity_Query {
 	/**
 	 * Queries services.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Service_Entity[] List of service entities.
 	 */
@@ -82,7 +82,7 @@ class Service_Entity_Query implements Entity_Query {
 	/**
 	 * Queries service IDs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return int[] Empty array, as services do not have IDs.
 	 */
@@ -93,7 +93,7 @@ class Service_Entity_Query implements Entity_Query {
 	/**
 	 * Queries the service count.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return int Service count.
 	 */
@@ -105,7 +105,7 @@ class Service_Entity_Query implements Entity_Query {
 	/**
 	 * Parses and sanitizes the given query arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $query_args Query arguments.
 	 * @return array<string, mixed> Query arguments parsed with defaults.

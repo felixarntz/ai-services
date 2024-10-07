@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
 /**
  * Class that represents an API key.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class API_Key_Authentication implements Authentication {
 
 	/**
 	 * The API key.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $api_key;
@@ -29,7 +29,7 @@ final class API_Key_Authentication implements Authentication {
 	/**
 	 * The HTTP header to use for the API key.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $header_name = 'Authorization';
@@ -37,7 +37,7 @@ final class API_Key_Authentication implements Authentication {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $api_key The API key.
 	 */
@@ -48,7 +48,7 @@ final class API_Key_Authentication implements Authentication {
 	/**
 	 * Authenticates the given request with the credentials.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Request $request The request instance. Updated in place.
 	 */
@@ -63,7 +63,7 @@ final class API_Key_Authentication implements Authentication {
 	/**
 	 * Sets the header name to use to add the credentials to a request.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $header_name The header name.
 	 */
@@ -74,7 +74,7 @@ final class API_Key_Authentication implements Authentication {
 	/**
 	 * Returns the option definitions needed to store the credentials.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $service_slug The service slug.
 	 * @return array<string, array<string, mixed>> The option definitions.

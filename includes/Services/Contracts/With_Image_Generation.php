@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -16,14 +16,14 @@ use Felix_Arntz\AI_Services\Services\Types\Parts;
 /**
  * Interface for a model which allows generating images.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 interface With_Image_Generation {
 
 	/**
 	 * Generates an image using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         Prompt for the image to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).

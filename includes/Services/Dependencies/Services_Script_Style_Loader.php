@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\P
 /**
  * Class responsible for registering the available AI service related scripts and styles.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Services_Script_Style_Loader {
 
 	/**
 	 * The plugin environment.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Plugin_Env
 	 */
 	private $plugin_env;
@@ -30,7 +30,7 @@ class Services_Script_Style_Loader {
 	/**
 	 * WordPress script registry.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Script_Registry
 	 */
 	private $script_registry;
@@ -38,7 +38,7 @@ class Services_Script_Style_Loader {
 	/**
 	 * WordPress style registry.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Style_Registry
 	 */
 	private $style_registry;
@@ -46,7 +46,7 @@ class Services_Script_Style_Loader {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Plugin_Env      $plugin_env      The plugin environment.
 	 * @param Script_Registry $script_registry WordPress script registry.
@@ -61,7 +61,7 @@ class Services_Script_Style_Loader {
 	/**
 	 * Registers the plugin's available scripts and styles.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function register_scripts_and_styles(): void {
 		$this->script_registry->register(

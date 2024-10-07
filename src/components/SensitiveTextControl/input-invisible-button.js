@@ -14,7 +14,7 @@ import { _x } from '@wordpress/i18n';
  *
  * Any children passed to this component will be rendered inside the header actions area.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}   props            Component props.
  * @param {boolean}  props.visible    Whether the input is visible.

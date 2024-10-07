@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Google\Google_AI_Model
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -21,7 +21,7 @@ use InvalidArgumentException;
 /**
  * Class representing a Google AI model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	use With_Text_Generation_Trait;
@@ -29,7 +29,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The Google AI API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Google_AI_API_Client
 	 */
 	private $api;
@@ -37,7 +37,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $model;
@@ -45,7 +45,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $generation_config;
@@ -53,7 +53,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The safety settings.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Safety_Setting[]
 	 */
 	private $safety_settings;
@@ -61,7 +61,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Content|null
 	 */
 	private $system_instruction;
@@ -69,7 +69,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The request options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $request_options;
@@ -77,7 +77,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Google_AI_API_Client $api             The Google AI API instance.
 	 * @param string               $model           The model slug.
@@ -125,7 +125,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Gets the model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The model slug.
 	 */
@@ -139,7 +139,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Sends a request to generate text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -184,7 +184,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Extracts the candidates with content from the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $response The response data.
 	 * @return Candidates The candidates with content parts.

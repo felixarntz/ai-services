@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator_With_API_Client
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -19,7 +19,7 @@ use InvalidArgumentException;
  * This class effectively acts as middleware for the underlying AI service, allowing for additional functionality to be
  * centrally provided.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class AI_Service_Decorator_With_API_Client extends AI_Service_Decorator implements With_API_Client {
 
@@ -29,7 +29,7 @@ class AI_Service_Decorator_With_API_Client extends AI_Service_Decorator implemen
 	 * This is purely here to satisfy PHPStan requirements. The parent class has a private property with the same name,
 	 * which therefore is separate and has a different expected type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Generative_AI_Service&With_API_Client
 	 */
 	private $service;
@@ -37,7 +37,7 @@ class AI_Service_Decorator_With_API_Client extends AI_Service_Decorator implemen
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Generative_AI_Service $service The underlying AI service to use.
 	 *
@@ -57,7 +57,7 @@ class AI_Service_Decorator_With_API_Client extends AI_Service_Decorator implemen
 	/**
 	 * Gets the API client instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return Generative_AI_API_Client The API client instance.
 	 */

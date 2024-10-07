@@ -5,7 +5,7 @@ Plugin URI:   https://wordpress.org/plugins/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Tested up to: 6.6
-Stable tag:   1.0.0
+Stable tag:   0.1.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -192,6 +192,6 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 
 == Changelog ==
 
-= 1.0.0 =
+= 0.1.0 =
 
-* First stable version.
+* Initial early access release. [See announcement post.](https://felix-arntz.me/blog/introducing-the-ai-services-plugin-for-wordpress/)

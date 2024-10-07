@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Util\Candidates_Parser
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 /**
  * Class providing static methods for working with candidate responses.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 final class Candidates_Parser {
 
 	/**
 	 * Gets the text content from the first suitable candidate in the given list of candidates.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Candidates $candidates The candidates.
 	 * @return string The text content. May contain line breaks.
@@ -40,7 +40,7 @@ final class Candidates_Parser {
 	/**
 	 * Gets the text content from the given candidate.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Candidate $candidate The candidate.
 	 * @return string The text content. May contain line breaks.

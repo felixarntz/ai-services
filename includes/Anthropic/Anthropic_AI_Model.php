@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Anthropic\Anthropic_AI_Model
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -23,7 +23,7 @@ use InvalidArgumentException;
 /**
  * Class representing an Anthropic AI model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	use With_Text_Generation_Trait;
@@ -31,7 +31,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The Anthropic AI API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Anthropic_AI_API_Client
 	 */
 	private $api;
@@ -39,7 +39,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $model;
@@ -47,7 +47,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $generation_config;
@@ -55,7 +55,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var Content|null
 	 */
 	private $system_instruction;
@@ -63,7 +63,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * The request options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
 	private $request_options;
@@ -71,7 +71,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Anthropic_AI_API_Client $api             The Anthropic AI API instance.
 	 * @param string                  $model           The model slug.
@@ -98,7 +98,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Gets the model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string The model slug.
 	 */
@@ -109,7 +109,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Sends a request to generate text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -164,7 +164,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Transforms a given Content instance into the format required for the API request.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content $content The content instance.
 	 * @return array<string, mixed> The content data for the API request.
@@ -217,7 +217,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Text_Generation {
 	/**
 	 * Transforms a given API response into a Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $response The API response.
 	 * @return Content The Content instance.

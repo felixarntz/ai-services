@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Util\Data_Encryption
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -11,7 +11,7 @@ namespace Felix_Arntz\AI_Services\Services\Util;
 /**
  * Class responsible for encrypting and decrypting data.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @see https://felix-arntz.me/blog/storing-confidential-data-in-wordpress/
  */
 final class Data_Encryption {
@@ -19,7 +19,7 @@ final class Data_Encryption {
 	/**
 	 * Key to use for encryption.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $key;
@@ -27,7 +27,7 @@ final class Data_Encryption {
 	/**
 	 * Salt to use for encryption.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private $salt;
@@ -35,7 +35,7 @@ final class Data_Encryption {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|null $key  Optional. Key to use for encryption. If not passed, the default key determined by
 	 *                          constants will be used.
@@ -52,7 +52,7 @@ final class Data_Encryption {
 	 *
 	 * If a user-based key is set, that key is used. Otherwise the default key is used.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $value Value to encrypt.
 	 * @return string Encrypted value, or empty string on failure.
@@ -80,7 +80,7 @@ final class Data_Encryption {
 	 *
 	 * If a user-based key is set, that key is used. Otherwise the default key is used.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $raw_value Value to decrypt.
 	 * @return string Decrypted value, or empty string on failure.
@@ -114,7 +114,7 @@ final class Data_Encryption {
 	/**
 	 * Gets the default encryption key to use.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Default (not user-based) encryption key.
 	 */
@@ -134,7 +134,7 @@ final class Data_Encryption {
 	/**
 	 * Gets the default encryption salt to use.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string Encryption salt.
 	 */

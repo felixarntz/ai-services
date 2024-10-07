@@ -6,7 +6,7 @@ import { Children, cloneElement } from '@wordpress/element';
 /**
  * Utility component for the chatbot.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}  props          Component props.
  * @param {Element} props.children The children of the component.

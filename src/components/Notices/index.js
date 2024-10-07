@@ -16,7 +16,7 @@ import './style.scss';
  * This only includes notices added with the type 'default'.
  * Non-dismissible notices are rendered in a separate list from dismissible notices.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @return {Component} The component to be rendered.
  */

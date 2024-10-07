@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -18,14 +18,14 @@ use InvalidArgumentException;
 /**
  * Interface for a model which allows generating text content.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 interface With_Text_Generation {
 
 	/**
 	 * Generates text content using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).
@@ -40,7 +40,7 @@ interface With_Text_Generation {
 	/**
 	 * Starts a multi-turn chat session using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Content[] $history Optional. The chat history. Default empty array.
 	 * @return Chat_Session The chat session.

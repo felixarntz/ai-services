@@ -12,7 +12,7 @@ import { formatNewContent } from './util';
 /**
  * Validates the chat history.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object[]} history Chat history.
  */
@@ -50,7 +50,7 @@ function validateChatHistory( history ) {
 /**
  * Performs some very basic client-side validation for the content argument.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional history.
  */
@@ -87,13 +87,13 @@ function validateContent( content ) {
 /**
  * Service class.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class GenerativeAiService {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {Object}   service                  Service object.
 	 * @param {string}   service.slug             Service slug.
@@ -117,7 +117,7 @@ class GenerativeAiService {
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return {string} Service name.
 	 */
@@ -128,7 +128,7 @@ class GenerativeAiService {
 	/**
 	 * Gets the list of AI capabilities that the service and its models support.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return {string[]} The list of AI capabilities.
 	 */
@@ -139,7 +139,7 @@ class GenerativeAiService {
 	/**
 	 * Lists the available generative model slugs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return {string[]} The available model slugs.
 	 */
@@ -150,7 +150,7 @@ class GenerativeAiService {
 	/**
 	 * Generates text content using the service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional
 	 *                                             history.
@@ -198,7 +198,7 @@ class GenerativeAiService {
 	/**
 	 * Starts a multi-turn chat session using the service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {Object[]} history     Chat history.
 	 * @param {Object}   modelParams Model parameters.
@@ -221,13 +221,13 @@ class GenerativeAiService {
 /**
  * Special service class only used for the 'browser' service.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class BrowserGenerativeAiService extends GenerativeAiService {
 	/**
 	 * Generates text content using the service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional
 	 *                                             history.
@@ -300,13 +300,13 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 /**
  * Class representing a chat session with a generative model.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 export class ChatSession {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {GenerativeAiService} service             Generative AI service.
 	 * @param {Object}              options             Chat options.
@@ -328,7 +328,7 @@ export class ChatSession {
 	/**
 	 * Gets the chat history.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return {Object[]} Chat history.
 	 */
@@ -339,7 +339,7 @@ export class ChatSession {
 	/**
 	 * Sends a chat message to the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param {string|Object|Object[]} content Chat message content.
 	 * @return {Promise<Object>} The response content.
@@ -370,7 +370,7 @@ const services = {};
  *
  * The service data must be an object received from the services REST endpoint.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @param {Object}   serviceData                  Service data.
  * @param {string}   serviceData.slug             Service slug.

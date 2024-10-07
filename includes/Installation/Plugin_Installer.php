@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Installation\Plugin_Installer
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Installat
 /**
  * Plugin installer (and uninstaller).
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class Plugin_Installer extends Abstract_Installer {
 
 	/**
 	 * Installs the full data for the plugin.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @throws Exception Thrown when installing fails.
 	 */
@@ -32,7 +32,7 @@ class Plugin_Installer extends Abstract_Installer {
 	/**
 	 * Upgrades data for the plugin based on an old version used.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $old_version Old version number that is currently installed on the site.
 	 *
@@ -47,7 +47,7 @@ class Plugin_Installer extends Abstract_Installer {
 	 *
 	 * If this method is called, the administrator has explicitly opted in to deleting all plugin data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @throws Exception Thrown when uninstalling fails.
 	 */

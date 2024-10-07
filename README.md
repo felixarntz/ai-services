@@ -2,7 +2,7 @@
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
-**Disclaimer:** The AI Services plugin is still in its very early stages, with a limited feature set. As long as it is in a `0.x.x` version, expect occasional breaking changes. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
+**Disclaimer:** The AI Services plugin is still in its very early stages, with a limited feature set. As long as it is in a `0.x.y` version, expect occasional breaking changes. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
 
 ## What?
 
@@ -77,9 +77,11 @@ curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' 
   --data-raw '{"content":"What can I do with WordPress?"}'
 ```
 
-## Installing the plugin
+## Installation and usage
 
-Since there is no plugin release yet, at the moment you are encouraged to test the plugin by cloning the GitHub repository. Afterwards, please run the following commands to make sure the dependencies are installed and the plugin build is complete:
+You can install [the latest built release from the WordPress plugin directory](https://wordpress.org/plugins/ai-services/), which in the long term will be the recommended way to use the plugin. Keep in mind that any `0.x.y` releases are considered early access and may contain breaking changes.
+
+Alternatively, especially in this early development stage of the plugin, feel free to test the plugin by cloning the GitHub repository. Afterwards, please run the following commands to make sure the dependencies are installed and the plugin build is complete:
 
 ```
 git clone https://github.com/felixarntz/ai-services.git wp-content/plugins/ai-services
@@ -91,6 +93,8 @@ npm run build
 ```
 
 If you want to test the plugin in its own built-in development environment, please follow the instructions in the [code contributing guidelines](./CONTRIBUTING.md#getting-started-with-writing-code).
+
+Once the AI Services plugin is installed and activated, you can configure the plugin with your AI service credentials using the _Settings > AI Services_ screen in the WP Admin menu.
 
 ## Using the plugin
 

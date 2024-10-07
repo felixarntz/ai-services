@@ -2,6 +2,8 @@
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
+![AI Services settings screen showing text input fields for API credentials](https://github.com/user-attachments/assets/da7ba9e2-b9bd-4d03-aebc-1a42c33689be)
+
 **Disclaimer:** The AI Services plugin is still in its very early stages, with a limited feature set. As long as it is in a `0.x.y` version, expect occasional breaking changes. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
 
 ## What?

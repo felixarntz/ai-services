@@ -129,7 +129,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Adds cleanup hooks related to plugin deactivation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function add_cleanup_hooks(): void {
 		// This function is only available in WordPress 6.4+.
@@ -214,7 +214,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Gets the plugin option names that are autoloaded.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return string[] List of autoloaded plugin options.
 	 */

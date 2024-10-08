@@ -45,6 +45,7 @@ class Plugin_Main implements With_Hooks {
 	 */
 	public function add_hooks(): void {
 		$this->maybe_install_data();
+		$this->add_cleanup_hooks();
 		$this->add_service_hooks();
 
 		// Testing.
@@ -108,6 +109,60 @@ class Plugin_Main implements With_Hooks {
 	}
 
 	/**
+	 * Adds cleanup hooks related to plugin deactivation.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function add_cleanup_hooks(): void {
+		// This function is only available in WordPress 6.4+.
+		if ( ! function_exists( 'wp_set_options_autoload' ) ) {
+			return;
+		}
+
+		// Disable autoloading of plugin options on deactivation.
+		register_deactivation_hook(
+			$this->container['plugin_env']->main_file(),
+			function ( $network_wide ) {
+				// For network-wide deactivation, this cleanup cannot be reliably implemented.
+				if ( $network_wide ) {
+					return;
+				}
+
+				$autoloaded_options = $this->get_autoloaded_options();
+				if ( ! $autoloaded_options ) {
+					return;
+				}
+
+				wp_set_options_autoload(
+					$autoloaded_options,
+					false
+				);
+			}
+		);
+
+		// Reinstate original autoload settings on (re-)activation.
+		register_activation_hook(
+			$this->container['plugin_env']->main_file(),
+			function ( $network_wide ) {
+				// See deactivation hook for network-wide cleanup limitations.
+				if ( $network_wide ) {
+					return;
+				}
+
+				$autoloaded_options = $this->get_autoloaded_options();
+				if ( ! $autoloaded_options ) {
+					return;
+				}
+
+				wp_set_options_autoload(
+					$autoloaded_options,
+					true
+				);
+			}
+		);
+	}
+
+	/**
 	 * Adds general service hooks on 'init' to initialize the plugin.
 	 *
 	 * @since n.e.x.t
@@ -142,6 +197,31 @@ class Plugin_Main implements With_Hooks {
 				$this->container['admin_settings_menu']->add_page( $this->container['admin_settings_page'] );
 			}
 		);
+	}
+
+	/**
+	 * Gets the plugin option names that are autoloaded.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string[] List of autoloaded plugin options.
+	 */
+	private function get_autoloaded_options(): array {
+		$autoloaded_options = array();
+
+		foreach ( $this->container['option_container']->get_keys() as $key ) {
+			// Trigger option instantiation so that the autoload config is populated.
+			$this->container['option_container']->get( $key );
+
+			$autoload = $this->container['option_repository']->get_autoload_config( $key );
+
+			// WordPress autoloads options by default, so we need to also include `null`.
+			if ( true === $autoload || null === $autoload ) {
+				$autoloaded_options[] = $key;
+			}
+		}
+
+		return $autoloaded_options;
 	}
 
 	/**

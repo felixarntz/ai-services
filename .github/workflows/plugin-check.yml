@@ -28,7 +28,7 @@ jobs:
         - '8.3' # Currently the wordpress/plugin-check-action always uses the latest PHP version anyway.
         wordpress: [ 'latest' ] # Currently the wordpress/plugin-check-action only supports 'latest' or 'trunk'.
     steps:
-      #- uses: styfle/cancel-workflow-action@0.12.1
+      - uses: styfle/cancel-workflow-action@0.12.1
 
       - uses: actions/checkout@v4
 

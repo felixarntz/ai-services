@@ -227,8 +227,7 @@ class Plugin_Main implements With_Hooks {
 
 			$autoload = $this->container['option_repository']->get_autoload_config( $key );
 
-			// WordPress autoloads options by default, so we need to also include `null`.
-			if ( true === $autoload || null === $autoload ) {
+			if ( true === $autoload ) {
 				$autoloaded_options[] = $key;
 			}
 		}

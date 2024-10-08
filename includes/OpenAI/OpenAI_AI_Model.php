@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\OpenAI;
 
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
@@ -26,7 +27,7 @@ use InvalidArgumentException;
  *
  * @since 0.1.0
  */
-class OpenAI_AI_Model implements Generative_AI_Model, With_Text_Generation {
+class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, With_Text_Generation {
 	use With_Text_Generation_Trait;
 
 	/**

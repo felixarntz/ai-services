@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services\Util;
 
 use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 
 /**
@@ -17,8 +18,9 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
  * @since 0.1.0
  */
 final class AI_Capabilities {
-	const CAPABILITY_TEXT_GENERATION  = 'text_generation';
 	const CAPABILITY_IMAGE_GENERATION = 'image_generation';
+	const CAPABILITY_MULTIMODAL_INPUT = 'multimodal_input';
+	const CAPABILITY_TEXT_GENERATION  = 'text_generation';
 
 	/**
 	 * Gets the AI capabilities that the given model class supports.
@@ -32,11 +34,14 @@ final class AI_Capabilities {
 		$interfaces = class_implements( $model_class );
 
 		$capabilities = array();
-		if ( isset( $interfaces[ With_Text_Generation::class ] ) ) {
-			$capabilities[] = self::CAPABILITY_TEXT_GENERATION;
-		}
 		if ( isset( $interfaces[ With_Image_Generation::class ] ) ) {
 			$capabilities[] = self::CAPABILITY_IMAGE_GENERATION;
+		}
+		if ( isset( $interfaces[ With_Multimodal_Input::class ] ) ) {
+			$capabilities[] = self::CAPABILITY_MULTIMODAL_INPUT;
+		}
+		if ( isset( $interfaces[ With_Text_Generation::class ] ) ) {
+			$capabilities[] = self::CAPABILITY_TEXT_GENERATION;
 		}
 		return $capabilities;
 	}

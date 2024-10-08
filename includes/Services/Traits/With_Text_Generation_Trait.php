@@ -8,11 +8,13 @@
 
 namespace Felix_Arntz\AI_Services\Services\Traits;
 
+use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Chat_Session;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use InvalidArgumentException;
 
@@ -49,6 +51,18 @@ trait With_Text_Generation_Trait {
 			throw new InvalidArgumentException(
 				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'ai-services' )
 			);
+		}
+
+		if ( ! $this instanceof With_Multimodal_Input ) {
+			// For performance reasons, only check the last content prompt, which likely is the only new one.
+			$last_content         = array_pop( $contents );
+			$last_parts           = $last_content->get_parts();
+			$last_parts_text_only = $last_parts->filter( array( 'class_name' => Text_Part::class ) );
+			if ( count( $last_parts_text_only ) < count( $last_parts ) ) {
+				throw new InvalidArgumentException(
+					esc_html__( 'The model does not support multimodal input. Only text parts must be provided.', 'ai-services' )
+				);
+			}
 		}
 
 		return $this->send_generate_text_request( $contents, $request_options );

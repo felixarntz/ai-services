@@ -40,9 +40,9 @@ export async function getBrowserServiceData() {
 async function getBrowserAiCapabilities( ai ) {
 	const capabilities = [];
 
-	if ( ai.canCreateTextSession ) {
-		const supportsTextGeneration = await ai.canCreateTextSession();
-		if ( supportsTextGeneration && supportsTextGeneration === 'readily' ) {
+	if ( 'ai' in self && 'assistant' in self.ai) {
+		const supportsTextGeneration = await self.ai.assistant.capabilities();
+		if ( supportsTextGeneration && supportsTextGeneration.available === 'readily' ) {
 			capabilities.push( 'text_generation' );
 		}
 	}

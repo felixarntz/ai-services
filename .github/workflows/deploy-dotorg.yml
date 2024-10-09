@@ -35,9 +35,16 @@ jobs:
 
       - name: Get plugin version
         id: get-version
-        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: |
-          echo "version=$(awk '/Stable tag:   /{print $NF}' readme.txt)" >> $GITHUB_OUTPUT
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "version=$(awk '/Stable tag:   /{print $NF}' readme.txt)" >> $GITHUB_OUTPUT
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+            VERSION="${VERSION#v}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          fi
 
       - name: WordPress plugin deploy
         id: wporg-deployment
@@ -49,7 +56,7 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SLUG: ${{ github.event.repository.name }}
-          VERSION: ${{ github.event_name == 'workflow_dispatch' && steps.get-version.outputs.version }}
+          VERSION: ${{ steps.get-version.outputs.version }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

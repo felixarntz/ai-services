@@ -96,12 +96,12 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
-	 * Lists the available generative model slugs.
+	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return string[] The available model slugs.
+	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
@@ -121,17 +121,27 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 			);
 		}
 
-		return array_map(
-			static function ( array $model ) {
-				if ( isset( $model['baseModelId'] ) ) {
-					return $model['baseModelId'];
+		return array_reduce(
+			$response['models'],
+			static function ( array $models, array $model ) {
+				$model_slug = $model['baseModelId'] ?? $model['name'];
+				if ( str_starts_with( $model_slug, 'models/' ) ) {
+					$model_slug = substr( $model_slug, 7 );
 				}
-				if ( str_starts_with( $model['name'], 'models/' ) ) {
-					return substr( $model['name'], 7 );
+
+				if (
+					isset( $model['supportedGenerationMethods'] ) &&
+					in_array( 'generateContent', $model['supportedGenerationMethods'], true )
+				) {
+					$model_caps = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+				} else {
+					$model_caps = array();
 				}
-				return $model['name'];
+
+				$models[ $model_slug ] = $model_caps;
+				return $models;
 			},
-			$response['models']
+			array()
 		);
 	}
 

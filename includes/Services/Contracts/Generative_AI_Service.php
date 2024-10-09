@@ -50,12 +50,12 @@ interface Generative_AI_Service {
 	public function get_default_model_slug(): string;
 
 	/**
-	 * Lists the available generative model slugs.
+	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return string[] The available model slugs.
+	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */

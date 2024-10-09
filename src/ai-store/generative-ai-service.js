@@ -99,10 +99,10 @@ class GenerativeAiService {
 	 * @param {string}   service.slug             Service slug.
 	 * @param {string}   service.name             Service name.
 	 * @param {string[]} service.capabilities     AI capabilities that the service supports.
-	 * @param {string[]} service.available_models Available models.
+	 * @param {Object}   service.available_models Map of the available model slugs and their capabilities.
 	 */
 	constructor( { slug, name, capabilities, available_models: models } ) {
-		if ( ! models || ! models.length ) {
+		if ( ! models || ! Object.keys( models ).length ) {
 			throw new Error(
 				`No models available for the service ${ slug }. Is it available?`
 			);
@@ -137,11 +137,11 @@ class GenerativeAiService {
 	}
 
 	/**
-	 * Lists the available generative model slugs.
+	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return {string[]} The available model slugs.
+	 * @return {Object} Map of the available model slugs and their capabilities.
 	 */
 	listModels() {
 		return this.models;
@@ -372,10 +372,10 @@ const services = {};
  *
  * @since 0.1.0
  *
- * @param {Object}   serviceData                  Service data.
- * @param {string}   serviceData.slug             Service slug.
- * @param {string}   serviceData.name             Service name.
- * @param {string[]} serviceData.available_models Available models.
+ * @param {Object} serviceData                  Service data.
+ * @param {string} serviceData.slug             Service slug.
+ * @param {string} serviceData.name             Service name.
+ * @param {Object} serviceData.available_models Map of the available model slugs and their capabilities.
  * @return {GenerativeAiService} Generative AI service instance.
  */
 export function getGenerativeAiService( serviceData ) {

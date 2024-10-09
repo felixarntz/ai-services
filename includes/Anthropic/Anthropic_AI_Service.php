@@ -96,21 +96,27 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
-	 * Lists the available generative model slugs.
+	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return string[] The available model slugs.
+	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		return array(
-			'claude-3-opus-20240229',
-			'claude-3-sonnet-20240229',
-			'claude-3-haiku-20240307',
-			'claude-3-5-sonnet-20240620',
+		// Unfortunately the Anthropic API does not return models, so we have to hardcode them here.
+		$anthropic_capabilities = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+
+		return array_fill_keys(
+			array(
+				'claude-3-opus-20240229',
+				'claude-3-sonnet-20240229',
+				'claude-3-haiku-20240307',
+				'claude-3-5-sonnet-20240620',
+			),
+			$anthropic_capabilities
 		);
 	}
 

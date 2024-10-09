@@ -22,7 +22,8 @@ export async function getBrowserServiceData() {
 			name: __( 'Browser built-in AI', 'ai-services' ),
 			is_available: capabilities.length > 0,
 			capabilities,
-			available_models: capabilities.length > 0 ? [ 'default' ] : [],
+			available_models:
+				capabilities.length > 0 ? { default: capabilities } : {},
 		};
 	}
 	return browser;

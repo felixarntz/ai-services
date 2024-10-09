@@ -140,7 +140,8 @@ class Service_Entity implements Entity {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return string[] The available model slugs, or empty array if the service is not available.
+	 * @return array<string, string[]> Map of the available model slugs and their capabilities, or empty array if the
+	 *                                 service is not available.
 	 */
 	private function get_available_models(): array {
 		if ( ! $this->services_api->is_service_available( $this->slug ) ) {

@@ -96,12 +96,12 @@ class OpenAI_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
-	 * Lists the available generative model slugs.
+	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return string[] The available model slugs.
+	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
@@ -121,11 +121,31 @@ class OpenAI_AI_Service implements Generative_AI_Service, With_API_Client {
 			);
 		}
 
-		return array_map(
+		$model_slugs = array_map(
 			static function ( array $model ) {
 				return $model['id'];
 			},
 			$response['data']
+		);
+
+		// Unfortunately, the OpenAI API does not return model capabilities, so we have to hardcode them here.
+		$openai_gpt_capabilities = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+
+		return array_reduce(
+			$model_slugs,
+			static function ( array $model_caps, string $model_slug ) use ( $openai_gpt_capabilities ) {
+				if ( str_starts_with( $model_slug, 'gpt-' ) ) {
+					$model_caps[ $model_slug ] = $openai_gpt_capabilities;
+				} else {
+					/*
+					 * TODO: Support other models once capabilities are added.
+					 * For example, dall-e models for image generation, tts models for text-to-speech.
+					 */
+					$model_caps[ $model_slug ] = array();
+				}
+				return $model_caps;
+			},
+			array()
 		);
 	}
 

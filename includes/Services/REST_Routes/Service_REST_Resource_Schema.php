@@ -113,12 +113,16 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					),
 				),
 				'available_models'   => array(
-					'description' => __( 'List of the available model slugs (empty if the service is not available).', 'ai-services' ),
-					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-					'items'       => array(
-						'type' => 'string',
+					'description'          => __( 'Map of the available model slugs and their capabilities (or empty if the service is not available).', 'ai-services' ),
+					'type'                 => 'object',
+					'context'              => array( 'view', 'edit' ),
+					'readonly'             => true,
+					'properties'           => array(),
+					'additionalProperties' => array(
+						'type'  => 'array',
+						'items' => array(
+							'type' => 'string',
+						),
 					),
 				),
 				'has_forced_api_key' => array(

@@ -41,15 +41,6 @@ interface Generative_AI_Service {
 	public function get_capabilities(): array;
 
 	/**
-	 * Gets the default model slug to use with the service when none is provided.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string The default model slug.
-	 */
-	public function get_default_model_slug(): string;
-
-	/**
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
@@ -72,8 +63,11 @@ interface Generative_AI_Service {
 	 *     @type string               $feature            Required. Unique identifier of the feature that the model
 	 *                                                    will be used for. Must only contain lowercase letters,
 	 *                                                    numbers, hyphens.
-	 *     @type string               $model              The model slug. By default, the service's default model slug
-	 *                                                    is used.
+	 *     @type string               $model              The model slug. By default, the model will be determined
+	 *                                                    based on heuristics such as the requested capabilities.
+	 *     @type string[]             $capabilities       Capabilities requested for the model to support. It is
+	 *                                                    recommended to specify this if you do not explicitly specify
+	 *                                                    a model slug.
 	 *     @type array<string, mixed> $generation_config  Model generation configuration options. Default empty array.
 	 *     @type string|Parts|Content $system_instruction The system instruction for the model. Default none.
 	 * }

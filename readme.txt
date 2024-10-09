@@ -68,7 +68,12 @@ if ( ai_services()->has_available_services() ) {
 	$service = ai_services()->get_available_service();
 	try {
 		$result = $service
-			->get_model( array( 'feature' => 'my-test-feature' ) )
+			->get_model(
+				array(
+					'feature'      => 'my-test-feature',
+					'capabilities' => array( 'text_generation' ),
+				)
+			)
 			->generate_text( 'What can I do with WordPress?' );
 	} catch ( Exception $e ) {
 		// Handle the exception.
@@ -104,7 +109,12 @@ if ( ai_services()->is_service_available( 'google' ) ) {
 	$service = ai_services()->get_available_service( 'google' );
 	try {
 		$result = $service
-			->get_model( array( 'feature' => 'my-test-feature' ) )
+			->get_model(
+				array(
+					'feature'      => 'my-test-feature',
+					'capabilities' => array( 'text_generation' ),
+				)
+			)
 			->generate_text( 'What can I do with WordPress?' );
 	} catch ( Exception $e ) {
 		// Handle the exception.

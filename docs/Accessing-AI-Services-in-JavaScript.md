@@ -90,20 +90,25 @@ if ( hasAvailableServices( SERVICE_ARGS ) ) {
 
 Once you have retrieved an AI service, you can use it to get a text response to a prompt. You need to call the `generateText` method of the service. This method will only function if the service implements the "text_generation" capability - which all built-in services do, but there may be further custom AI services registered some of which may only support other capabilities such as "image_generation".
 
-### Using the default model
+### Using the preferred model for certain capabilities
 
-Here is an example of how to generate the response to a simple prompt, using the default model. Assume that the `service` variable contains an available service instance that supports "text_generation" (e.g. based on the previous examples):
+Here is an example of how to generate the response to a simple prompt, using the preferred model for text generation. Assume that the `service` variable contains an available service instance that supports "text_generation" (e.g. based on the previous examples):
 
 ```js
 try {
   const result = await service.generateText(
     'What can I do with WordPress?',
-    { feature: 'my-test-feature' }
+    {
+      feature: 'my-test-feature',
+      capabilities: [ 'text_generation' ],
+    }
   );
 } catch ( error ) {
   // Handle the error.
 }
 ```
+
+Note: When calling the `generateText()` method, specifying the `text_generation` capability is optional, as that is implied by calling that particular method.
 
 ### Using a custom model
 
@@ -146,7 +151,10 @@ const content = {
 try {
   const result = await service.generateText(
     content,
-    { feature: 'my-test-feature' }
+    {
+      feature: 'my-test-feature'
+      capabilities: [ 'text_generation', 'multimodal_input' ],
+    }
   );
 } catch ( error ) {
   // Handle the error.

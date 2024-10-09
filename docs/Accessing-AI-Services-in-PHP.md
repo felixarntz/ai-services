@@ -11,7 +11,12 @@ if ( ai_services()->is_service_available( 'google' ) ) {
 	$service = ai_services()->get_available_service( 'google' );
 	try {
 		$result = $service
-      ->get_model( array( 'feature' => 'my-test-feature' ) )
+      ->get_model(
+        array(
+          'feature'      => 'my-test-feature',
+          'capabilities' => array( 'text_generation' ),
+        )
+      )
       ->generate_text( 'What can I do with WordPress?' );
 	} catch ( Exception $e ) {
 		// Handle the exception.
@@ -82,14 +87,19 @@ if ( ai_services()->has_available_services( array( 'slugs' => array( 'google', '
 
 Once you have retrieved an AI service, you can use it to get a text response to a prompt. You need to use the `get_model()` method of the service to get an instance of the model (at a minimum passing a unique "feature" identifier, and optionally custom configuration), and afterwards call the `generate_text()` method of the model. This method will only be available if the service implements the "text_generation" capability - which all built-in services do, but there may be further custom AI services registered some of which may only support other capabilities such as "image_generation".
 
-### Using the default model
+### Using the preferred model for certain capabilities
 
-Here is an example of how to generate the response to a simple prompt, using the default model. Assume that the `$service` variable contains an available service instance that supports "text_generation" (e.g. based on the previous examples):
+Here is an example of how to generate the response to a simple prompt, using the preferred model for text generation. Assume that the `$service` variable contains an available service instance that supports "text_generation" (e.g. based on the previous examples):
 
 ```php
 try {
   $result = $service
-    ->get_model( array( 'feature' => 'my-test-feature' ) )
+    ->get_model(
+      array(
+        'feature'      => 'my-test-feature',
+        'capabilities' => array( 'text_generation' ),
+      )
+    )
     ->generate_text( 'What can I do with WordPress?' );
 } catch ( Exception $e ) {
   // Handle the exception.
@@ -133,7 +143,12 @@ $parts->add_file_data_part( 'image/jpeg', 'https://example.com/image.jpg' );
 $content = new \Felix_Arntz\AI_Services\Services\Types\Content( 'user', $parts );
 try {
   $result = $service
-    ->get_model( array( 'feature' => 'my-test-feature' ) )
+    ->get_model(
+      array(
+        'feature'      => 'my-test-feature',
+        'capabilities' => array( 'text_generation', 'multimodal_input' ),
+      )
+    )
     ->generate_text( $content );
 } catch ( Exception $e ) {
   // Handle the exception.

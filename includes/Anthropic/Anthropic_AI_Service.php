@@ -85,17 +85,6 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
-	 * Gets the default model slug to use with the service when none is provided.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string The default model slug.
-	 */
-	public function get_default_model_slug(): string {
-		return 'claude-3-sonnet-20240229';
-	}
-
-	/**
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
@@ -131,8 +120,11 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 	 *     @type string               $feature            Required. Unique identifier of the feature that the model
 	 *                                                    will be used for. Must only contain lowercase letters,
 	 *                                                    numbers, hyphens.
-	 *     @type string               $model              The model slug. By default, the service's default model slug
-	 *                                                    is used.
+	 *     @type string               $model              The model slug. By default, the model will be determined
+	 *                                                    based on heuristics such as the requested capabilities.
+	 *     @type string[]             $capabilities       Capabilities requested for the model to support. It is
+	 *                                                    recommended to specify this if you do not explicitly specify
+	 *                                                    a model slug.
 	 *     @type array<string, mixed> $generation_config  Model generation configuration options. Default empty array.
 	 *     @type string|Parts|Content $system_instruction The system instruction for the model. Default none.
 	 * }
@@ -147,9 +139,51 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 			$model = $model_params['model'];
 			unset( $model_params['model'] );
 		} else {
-			$model = $this->get_default_model_slug();
+			if ( isset( $model_params['capabilities'] ) ) {
+				$model_slugs = AI_Capabilities::get_model_slugs_for_capabilities(
+					$this->list_models( $request_options ),
+					$model_params['capabilities']
+				);
+			} else {
+				$model_slugs = array_keys( $this->list_models( $request_options ) );
+			}
+			$model = $this->sort_models_by_preference( $model_slugs )[0];
 		}
 
 		return new Anthropic_AI_Model( $this->api, $model, $model_params, $request_options );
+	}
+
+	/**
+	 * Sorts model slugs by preference.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string[] $model_slugs The model slugs to sort.
+	 * @return string[] The model slugs, sorted by preference.
+	 */
+	private function sort_models_by_preference( array $model_slugs ): array {
+		$get_preference_group = static function ( $model_slug ) {
+			if ( str_starts_with( $model_slug, 'claude-3' ) ) {
+				if ( str_contains( $model_slug, '-sonnet' ) ) {
+					return 0;
+				}
+				return 1;
+			}
+			if ( str_starts_with( $model_slug, 'claude-' ) ) {
+				if ( str_contains( $model_slug, '-sonnet' ) ) {
+					return 2;
+				}
+				return 3;
+			}
+			return 4;
+		};
+
+		$preference_groups = array_fill( 0, 5, array() );
+		foreach ( $model_slugs as $model_slug ) {
+			$group                         = $get_preference_group( $model_slug );
+			$preference_groups[ $group ][] = $model_slug;
+		}
+
+		return array_merge( ...$preference_groups );
 	}
 }

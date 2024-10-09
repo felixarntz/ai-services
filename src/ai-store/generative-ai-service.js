@@ -178,6 +178,14 @@ class GenerativeAiService {
 			);
 		}
 
+		// The 'text_generation' capability is naturally implied to generate text.
+		if ( ! modelParams?.capabilities ) {
+			modelParams = {
+				...modelParams,
+				capabilities: [ 'text_generation' ],
+			};
+		}
+
 		// Do some very basic validation.
 		validateContent( content );
 

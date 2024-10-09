@@ -15,6 +15,7 @@ use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
@@ -223,6 +224,14 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @return array<string, mixed> The processed model parameters.
 	 */
 	protected function process_model_params( array $model_params ): array {
+		/*
+		 * At the moment, only text generation is supported.
+		 * As such, at the very least, text generation capabilities need to be supported by the model.
+		 */
+		if ( ! isset( $model_params['capabilities'] ) ) {
+			$model_params['capabilities'] = array( AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+		}
+
 		// Transforms common model parameters from camelCase to snake_case.
 		$snake_case_map = array(
 			'generationConfig'  => 'generation_config',
@@ -268,6 +277,13 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					'model'              => array(
 						'description' => __( 'Model slug.', 'ai-services' ),
 						'type'        => 'string',
+					),
+					'capabilities'       => array(
+						'description' => __( 'Capabilities requested for the model to support.', 'ai-services' ),
+						'type'        => 'array',
+						'items'       => array(
+							'type' => 'string',
+						),
 					),
 					'generation_config'  => array(
 						'description'          => __( 'Model generation configuration options.', 'ai-services' ),

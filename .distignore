@@ -2,6 +2,7 @@
 /.github
 /.wordpress-org
 /docs
+/examples
 /node_modules
 /php-tools
 /src

@@ -48,6 +48,7 @@ Here's a (non-comprehensive) feature list:
 While the plugin APIs allow registering custom AI services, the plugin comes with a few popular AI services built-in. These AI services rely on the respective third party API. Their use is optional and it is up to you to choose which third party service you would like to use or whether you would like to use multiple.
 
 The use of the third party AI services is subject to the respective terms of service. The following third party services are supported out of the box:
+
 * [Anthropic (Claude)](https://www.anthropic.com/claude)
   * [Anthropic Consumer Terms of Service](https://www.anthropic.com/legal/consumer-terms)
   * [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms)
@@ -185,6 +186,7 @@ WordPress Core rarely adds support for features that rely on third party service
 The other reason that integrating generative AI in WordPress Core would be difficult is because (almost all) the services that make those APIs available require paid subscriptions. This is not well aligned with WordPress's FOSS philosophy. A potentially promising development that may change that situation is the introduction of browser built-in AI capabilities made available via JavaScript APIs, such as [Chrome built-in AI](https://developer.chrome.com/docs/ai) (which is also supported by the AI Services plugin).
 
 Only time will tell whether those points can be addressed in a way that make built-in AI capabilities in WordPress Core a possibility. Until then, you can use a plugin like this one. While it is for obvious reasons not a WordPress Core feature plugin, it is in many ways built to potentially become a canonical AI plugin for WordPress:
+
 * It is free, and always will be.
 * It follows the WordPress Core philosophies.
 * It uses WordPress UI components as much as possible.

@@ -8,6 +8,7 @@
 /tests
 /vendor
 
+/.distignore
 /.editorconfig
 /.eslintrc.js
 /.gitattributes

@@ -123,7 +123,7 @@ class OpenAI_AI_Service implements Generative_AI_Service, With_API_Client {
 		return array_reduce(
 			$model_slugs,
 			static function ( array $model_caps, string $model_slug ) use ( $openai_gpt_capabilities ) {
-				if ( str_starts_with( $model_slug, 'gpt-' ) ) {
+				if ( str_starts_with( $model_slug, 'gpt-' ) && ! str_contains( $model_slug, '-instruct' ) ) {
 					$model_caps[ $model_slug ] = $openai_gpt_capabilities;
 				} else {
 					/*
@@ -193,21 +193,24 @@ class OpenAI_AI_Service implements Generative_AI_Service, With_API_Client {
 	private function sort_models_by_preference( array $model_slugs ): array {
 		$get_preference_group = static function ( $model_slug ) {
 			if ( str_starts_with( $model_slug, 'gpt-3.5' ) ) {
-				if ( str_contains( $model_slug, '-turbo' ) ) {
+				if ( str_ends_with( $model_slug, '-turbo' ) ) {
 					return 0;
 				}
-				return 1;
+				if ( str_contains( $model_slug, '-turbo' ) ) {
+					return 1;
+				}
+				return 2;
 			}
 			if ( str_starts_with( $model_slug, 'gpt-' ) ) {
 				if ( str_contains( $model_slug, '-turbo' ) ) {
-					return 2;
+					return 3;
 				}
-				return 3;
+				return 4;
 			}
-			return 4;
+			return 5;
 		};
 
-		$preference_groups = array_fill( 0, 5, array() );
+		$preference_groups = array_fill( 0, 6, array() );
 		foreach ( $model_slugs as $model_slug ) {
 			$group                         = $get_preference_group( $model_slug );
 			$preference_groups[ $group ][] = $model_slug;

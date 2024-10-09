@@ -42,7 +42,6 @@ jobs:
       - name: WordPress plugin deploy
         id: wporg-deployment
         uses: 10up/action-wordpress-plugin-deploy@stable
-        if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           generate-zip: true
           dry-run: ${{ github.event_name == 'workflow_dispatch' }}
@@ -51,18 +50,6 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SLUG: ${{ github.event.repository.name }}
           VERSION: ${{ github.event_name == 'workflow_dispatch' && steps.get-version.outputs.version }}
-
-      - name: WordPress plugin deploy
-        id: wporg-deployment
-        uses: 10up/action-wordpress-plugin-deploy@stable
-        if: ${{ github.event_name != 'workflow_dispatch' }}
-        with:
-          generate-zip: true
-          dry-run: ${{ github.event_name == 'workflow_dispatch' }}
-        env:
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SLUG: ${{ github.event.repository.name }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

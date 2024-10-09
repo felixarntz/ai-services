@@ -62,6 +62,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}
+          # This will unfortunately become a ZIP of the ZIP. See https://github.com/actions/upload-artifact/issues/39.
           path: ${{ steps.wporg-deployment.outputs.zip-path }}
 
       - name: Upload release assets

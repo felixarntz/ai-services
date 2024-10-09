@@ -37,7 +37,7 @@ jobs:
         id: get-version
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          echo "version=$(awk '/Stable tag:        /{print $NF}' readme.txt)" >> $GITHUB_OUTPUT
+          echo "version=$(awk '/Stable tag:   /{print $NF}' readme.txt)" >> $GITHUB_OUTPUT
 
       - name: WordPress plugin deploy
         id: wporg-deployment

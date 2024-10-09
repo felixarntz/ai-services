@@ -2,7 +2,6 @@
 /**
  * Tests for Vendor_NS\WP_Starter_Plugin\Plugin_Main
  *
- * @since n.e.x.t
  * @package wp-starter-plugin
  */
 

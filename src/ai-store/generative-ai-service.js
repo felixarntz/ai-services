@@ -290,7 +290,7 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 			}
 		}
 
-		const session = await self.ai.assistant.prompt( modelParams );
+		const session = await self.ai.assistant.create( modelParams );
 		const resultText = await session.prompt( content );
 
 		// Normalize result shape to match candidates API syntax from other services.

@@ -42,7 +42,10 @@ async function getBrowserAiCapabilities( ai ) {
 
 	if ( ai.assistant ) {
 		const supportsTextGeneration = await ai.assistant.capabilities();
-		if ( supportsTextGeneration && supportsTextGeneration.available === 'readily' ) {
+		if (
+			supportsTextGeneration &&
+			supportsTextGeneration.available === 'readily'
+		) {
 			capabilities.push( 'text_generation' );
 		}
 	}

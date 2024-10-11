@@ -60,4 +60,8 @@ jobs:
         uses: wordpress/plugin-check-action@v1
         with:
           wp-version: ${{ matrix.wordpress }}
-          exclude-checks: 'file_type' # Exclude file_type because of the dev files present in the repository.
+          # Exclude file_type because of the dev files present in the repository.
+          # Exclude i18n_usage temporarily because of https://github.com/WordPress/plugin-check/issues/713.
+          exclude-checks: |
+            file_type
+            i18n_usage

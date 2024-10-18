@@ -152,9 +152,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
 			'contents'         => array_map(
-				static function ( Content $content ) {
-					return $content->to_array();
-				},
+				array( $this, 'prepare_content_for_api_request' ),
 				$contents
 			),
 			'generationConfig' => $this->generation_config,
@@ -238,5 +236,32 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		}
 
 		return Candidates::from_array( $candidates );
+	}
+
+	/**
+	 * Transforms a given Content instance into the format required for the API request.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param Content $content The content instance.
+	 * @return array<string, mixed> The content data for the API request.
+	 *
+	 * @throws InvalidArgumentException Thrown if the content is invalid.
+	 */
+	private function prepare_content_for_api_request( Content $content ): array {
+		$content = $content->to_array();
+
+		// The Google AI API expects inlineData blobs to be without the prefix.
+		foreach ( $content['parts'] as $index => $part ) {
+			if ( isset( $part['inlineData']['data'] ) ) {
+				$content['parts'][ $index ]['inlineData']['data'] = preg_replace(
+					'/^data:image\/[a-z]+;base64,/',
+					'',
+					$part['inlineData']['data']
+				);
+			}
+		}
+
+		return $content;
 	}
 }

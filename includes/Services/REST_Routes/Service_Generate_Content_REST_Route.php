@@ -404,6 +404,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 								'type'        => 'string',
 							),
 						),
+						'additionalProperties' => false,
 					),
 					array(
 						'properties' => array(
@@ -422,6 +423,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 								),
 							),
 						),
+						'additionalProperties' => false,
 					),
 					array(
 						'properties' => array(
@@ -440,6 +442,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 								),
 							),
 						),
+						'additionalProperties' => false,
 					),
 				),
 			),

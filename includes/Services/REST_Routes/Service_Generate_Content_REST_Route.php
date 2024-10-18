@@ -398,7 +398,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				'type'  => 'object',
 				'oneOf' => array(
 					array(
-						'properties' => array(
+						'properties'           => array(
 							'text' => array(
 								'description' => __( 'Prompt text content.', 'ai-services' ),
 								'type'        => 'string',
@@ -407,7 +407,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 						'additionalProperties' => false,
 					),
 					array(
-						'properties' => array(
+						'properties'           => array(
 							'inlineData' => array(
 								'description' => __( 'Inline data as part of the prompt, such as a file.', 'ai-services' ),
 								'type'        => 'object',
@@ -426,7 +426,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 						'additionalProperties' => false,
 					),
 					array(
-						'properties' => array(
+						'properties'           => array(
 							'fileData' => array(
 								'description' => __( 'Reference to a file as part of the prompt.', 'ai-services' ),
 								'type'        => 'object',

@@ -118,13 +118,18 @@ class OpenAI_AI_Service implements Generative_AI_Service, With_API_Client {
 		);
 
 		// Unfortunately, the OpenAI API does not return model capabilities, so we have to hardcode them here.
-		$openai_gpt_capabilities = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+		$gpt_capabilities            = array( AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+		$gpt_multimodal_capabilities = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
 
 		return array_reduce(
 			$model_slugs,
-			static function ( array $model_caps, string $model_slug ) use ( $openai_gpt_capabilities ) {
+			static function ( array $model_caps, string $model_slug ) use ( $gpt_capabilities, $gpt_multimodal_capabilities ) {
 				if ( str_starts_with( $model_slug, 'gpt-' ) && ! str_contains( $model_slug, '-instruct' ) ) {
-					$model_caps[ $model_slug ] = $openai_gpt_capabilities;
+					if ( str_starts_with( $model_slug, 'gpt-4' ) ) {
+						$model_caps[ $model_slug ] = $gpt_multimodal_capabilities;
+					} else {
+						$model_caps[ $model_slug ] = $gpt_capabilities;
+					}
 				} else {
 					/*
 					 * TODO: Support other models once capabilities are added.

@@ -241,7 +241,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Transforms a given Content instance into the format required for the API request.
 	 *
-	 * @since 0.1.0
+	 * @since 0.1.1
 	 *
 	 * @param Content $content The content instance.
 	 * @return array<string, mixed> The content data for the API request.

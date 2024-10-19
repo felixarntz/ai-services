@@ -5,7 +5,7 @@
  * Description: Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
  * Requires at least: 6.0
  * Requires PHP: 7.2
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Felix Arntz
  * Author URI: https://felix-arntz.me
  * License: GPLv2 or later

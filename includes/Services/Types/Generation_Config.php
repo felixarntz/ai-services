@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Types;
 
+use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services\Services\Util\Strings;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use InvalidArgumentException;
@@ -17,7 +18,7 @@ use InvalidArgumentException;
  *
  * @since n.e.x.t
  */
-final class Generation_Config implements Arrayable {
+final class Generation_Config implements Arrayable, With_JSON_Schema {
 
 	/**
 	 * The sanitized configuration arguments.
@@ -241,6 +242,78 @@ final class Generation_Config implements Arrayable {
 	}
 
 	/**
+	 * Returns the JSON schema for the expected input.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The JSON schema.
+	 */
+	public static function get_json_schema(): array {
+		return array(
+			'type'                 => 'object',
+			'properties'           => array(
+				'stopSequences'    => array(
+					'description' => __( 'Set of character sequences that will stop output generation.', 'ai-services' ),
+					'type'        => 'array',
+					'items'       => array( 'type' => 'string' ),
+				),
+				'responseMimeType' => array(
+					'description' => __( 'MIME type of the generated candidate text.', 'ai-services' ),
+					'type'        => 'string',
+					'enum'        => array( 'text/plain', 'application/json' ),
+				),
+				'responseSchema'   => array(
+					'description'          => __( 'Output schema of the generated candidate text (only relevant if responseMimeType is application/json).', 'ai-services' ),
+					'type'                 => 'object',
+					'properties'           => array(),
+					'additionalProperties' => true,
+				),
+				'candidateCount'   => array(
+					'description' => __( 'Number of generated responses to return.', 'ai-services' ),
+					'type'        => 'integer',
+					'minimum'     => 1,
+				),
+				'maxOutputTokens'  => array(
+					'description' => __( 'The maximum number of tokens to include in a response candidate.', 'ai-services' ),
+					'type'        => 'integer',
+					'minimum'     => 1,
+				),
+				'temperature'      => array(
+					'description' => __( 'Floating point value to control the randomness of the output.', 'ai-services' ),
+					'type'        => 'number',
+					'minimum'     => 0.0,
+					'maximum'     => 2.0,
+				),
+				'topP'             => array(
+					'description' => __( 'The maximum cumulative probability of tokens to consider when sampling.', 'ai-services' ),
+					'type'        => 'number',
+				),
+				'topK'             => array(
+					'description' => __( 'The maximum number of tokens to consider when sampling.', 'ai-services' ),
+					'type'        => 'integer',
+				),
+				'presencePenalty'  => array(
+					'description' => __( 'Presence penalty applied to the next token’s logprobs if the token has already been seen in the response.', 'ai-services' ),
+					'type'        => 'number',
+				),
+				'frequencyPenalty' => array(
+					'description' => __( 'Frequency penalty applied to the next token’s logprobs, multiplied by the number of times each token has been seen in the respponse so far.', 'ai-services' ),
+					'type'        => 'number',
+				),
+				'responseLogprobs' => array(
+					'description' => __( 'Whether to return log probabilities of the output tokens in the response or not.', 'ai-services' ),
+					'type'        => 'boolean',
+				),
+				'logprobs'         => array(
+					'description' => __( 'The number of top logprobs to return at each decoding step.', 'ai-services' ),
+					'type'        => 'integer',
+				),
+			),
+			'additionalProperties' => true,
+		);
+	}
+
+	/**
 	 * Sanitizes the given arguments.
 	 *
 	 * @since n.e.x.t
@@ -258,14 +331,14 @@ final class Generation_Config implements Arrayable {
 
 		foreach ( $args as $key => $value ) {
 			if ( isset( $this->supported_args[ $key ] ) ) {
-				$sanitized[ $key ] = $this->sanitize_arg( $value, $this->supported_args[ $key ] );
+				$sanitized[ $key ] = $this->sanitize_arg( $value, $this->supported_args[ $key ], $key );
 				continue;
 			}
 
 			if ( str_contains( $key, '_' ) ) {
 				$camelcase_key = Strings::snake_case_to_camel_case( $key );
 				if ( isset( $this->supported_args[ $camelcase_key ] ) ) {
-					$sanitized[ $camelcase_key ] = $this->sanitize_arg( $value, $this->supported_args[ $camelcase_key ] );
+					$sanitized[ $camelcase_key ] = $this->sanitize_arg( $value, $this->supported_args[ $camelcase_key ], $camelcase_key );
 					continue;
 				}
 			}
@@ -284,14 +357,19 @@ final class Generation_Config implements Arrayable {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param mixed  $value The value to sanitize.
-	 * @param string $type  The type to sanitize the value to. Must be one of 'array', 'string', 'object', 'integer',
-	 *                      'float', or 'boolean'.
+	 * @param mixed  $value    The value to sanitize.
+	 * @param string $type     The type to sanitize the value to. Must be one of 'array', 'string', 'object',
+	 *                         'integer', 'float', or 'boolean'.
+	 * @param string $arg_name The name of the argument being sanitized.
 	 * @return mixed The sanitized value.
 	 *
 	 * @throws InvalidArgumentException Thrown if the type is not supported.
 	 */
-	private function sanitize_arg( $value, string $type ) {
+	private function sanitize_arg( $value, string $type, string $arg_name ) {
+		if ( 'temperature' === $arg_name && ( (float) $value < 0.0 || (float) $value > 2.0 ) ) {
+			throw new InvalidArgumentException( 'Temperature must be between 0.0 and 2.0.' );
+		}
+
 		switch ( $type ) {
 			case 'array':
 				if ( ! is_array( $value ) ) {

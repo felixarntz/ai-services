@@ -264,7 +264,8 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		 * @since 0.1.0
 		 *
 		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
-		 *                                           'generationConfig' and 'systemInstruction'.
+		 *                                           'feature', 'capabilities', 'generationConfig' and
+		 *                                           'systemInstruction'.
 		 * @return array<string, mixed> The processed model parameters.
 		 */
 		return (array) apply_filters( 'ai_services_rest_model_params', $model_params );
@@ -306,10 +307,9 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 							'type' => 'string',
 						),
 					),
-					'generationConfig'  => array(
-						'description'          => __( 'Model generation configuration options.', 'ai-services' ),
-						'type'                 => 'object',
-						'additionalProperties' => true,
+					'generationConfig'  => array_merge(
+						array( 'description' => __( 'Model generation configuration options.', 'ai-services' ) ),
+						Generation_Config::get_json_schema()
 					),
 					'systemInstruction' => array(
 						'description' => __( 'System instruction for the model.', 'ai-services' ),

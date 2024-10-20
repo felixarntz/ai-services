@@ -182,7 +182,7 @@ class Chatbot implements With_Hooks {
 	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
-	 *                                           'generation_config' and 'system_instruction'.
+		 *                                       'feature', 'capabilities', 'generationConfig' and 'systemInstruction'.
 	 * @return array<string, mixed> The filtered model parameters.
 	 */
 	public function filter_rest_model_params( array $model_params ): array {

@@ -18,6 +18,7 @@ use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Content;
 use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use InvalidArgumentException;
 
 /**
@@ -156,22 +157,28 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
-			'contents'       => array_map(
+			'contents' => array_map(
 				array( $this, 'prepare_content_for_api_request' ),
 				$contents
 			),
-			'safetySettings' => array_map(
+		);
+		if ( $this->generation_config ) {
+			$params['generationConfig'] = Transformer::transform_generation_config_params(
+				array(),
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
+		}
+		if ( $this->system_instruction ) {
+			$params['systemInstruction'] = $this->system_instruction->to_array();
+		}
+		if ( $this->safety_settings ) {
+			$params['safetySettings'] = array_map(
 				static function ( Safety_Setting $safety_setting ) {
 					return $safety_setting->to_array();
 				},
 				$this->safety_settings
-			),
-		);
-		if ( $this->generation_config ) {
-			$params['generationConfig'] = $this->generation_config->to_array();
-		}
-		if ( $this->system_instruction ) {
-			$params['systemInstruction'] = $this->system_instruction->to_array();
+			);
 		}
 
 		$request  = $this->api->create_generate_content_request(
@@ -270,5 +277,56 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Gets the generation configuration transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The generation configuration transformers.
+	 */
+	private static function get_generation_config_transformers(): array {
+		return array(
+			'stopSequences'    => static function ( Generation_Config $config ) {
+				return $config->get_stop_sequences();
+			},
+			'responseMimeType' => static function ( Generation_Config $config ) {
+				return $config->get_response_mime_type();
+			},
+			'responseSchema'   => static function ( Generation_Config $config ) {
+				if ( $config->get_response_mime_type() === 'application/json' ) {
+					return $config->get_response_schema();
+				}
+				return array();
+			},
+			'candidateCount'   => static function ( Generation_Config $config ) {
+				return $config->get_candidate_count();
+			},
+			'maxOutputTokens'  => static function ( Generation_Config $config ) {
+				return $config->get_max_output_tokens();
+			},
+			'temperature'      => static function ( Generation_Config $config ) {
+				return $config->get_temperature();
+			},
+			'topP'             => static function ( Generation_Config $config ) {
+				return $config->get_top_p();
+			},
+			'topK'             => static function ( Generation_Config $config ) {
+				return $config->get_top_k();
+			},
+			'presencePenalty'  => static function ( Generation_Config $config ) {
+				return $config->get_presence_penalty();
+			},
+			'frequencyPenalty' => static function ( Generation_Config $config ) {
+				return $config->get_frequency_penalty();
+			},
+			'responseLogprobs' => static function ( Generation_Config $config ) {
+				return $config->get_response_logprobs();
+			},
+			'logprobs'         => static function ( Generation_Config $config ) {
+				return $config->get_logprobs();
+			},
+		);
 	}
 }

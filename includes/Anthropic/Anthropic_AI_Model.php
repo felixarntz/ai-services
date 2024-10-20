@@ -20,6 +20,7 @@ use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use InvalidArgumentException;
 
 /**
@@ -128,29 +129,24 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
-			'messages'   => array_map(
+			'messages' => array_map(
 				array( $this, 'prepare_content_for_api_request' ),
 				$contents
 			),
-			'max_tokens' => 4096,
 		);
-		if ( $this->generation_config ) {
-			if ( $this->generation_config->get_max_output_tokens() ) {
-				$params['max_tokens'] = $this->generation_config->get_max_output_tokens();
-			}
-			if ( $this->generation_config->get_temperature() !== null ) {
-				$params['temperature'] = $this->generation_config->get_temperature();
-			}
-			if ( $this->generation_config->get_stop_sequences() !== null ) {
-				$params['stop_sequences'] = $this->generation_config->get_stop_sequences();
-			}
-		}
 		if ( $this->system_instruction ) {
 			$params['system'] = $this->system_instruction
 				->get_parts()
 				->filter( array( 'class_name' => Text_Part::class ) )
 				->get( 0 )
 				->to_array()['text'];
+		}
+		if ( $this->generation_config ) {
+			$params = Transformer::transform_generation_config_params(
+				$params,
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
 		}
 
 		$request  = $this->api->create_generate_content_request(
@@ -271,6 +267,43 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 				'role'  => $role,
 				'parts' => $parts,
 			)
+		);
+	}
+
+	/**
+	 * Gets the generation configuration transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The generation configuration transformers.
+	 */
+	private static function get_generation_config_transformers(): array {
+		return array(
+			'stop_sequences' => static function ( Generation_Config $config ) {
+				return $config->get_stop_sequences();
+			},
+			'max_tokens'     => static function ( Generation_Config $config ) {
+				$max_tokens = $config->get_max_output_tokens();
+				if ( ! $max_tokens ) {
+					// The 'max_tokens' parameter is required in the Anthropic API, so we need a default.
+					return 4096;
+				}
+				return $max_tokens;
+			},
+			'temperature'    => static function ( Generation_Config $config ) {
+				$temperature = $config->get_temperature();
+				if ( $temperature > 1.0 ) {
+					// The Anthropic API only supports a temperature of up to 1.0, so we need to cap it.
+					return 1.0;
+				}
+				return $temperature;
+			},
+			'top_p'          => static function ( Generation_Config $config ) {
+				return $config->get_top_p();
+			},
+			'top_k'          => static function ( Generation_Config $config ) {
+				return $config->get_top_k();
+			},
 		);
 	}
 }

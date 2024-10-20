@@ -78,10 +78,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return string[] The stop sequences.
+	 * @return string[] The stop sequences, or empty array if not set.
 	 */
 	public function get_stop_sequences(): array {
-		return $this->sanitized_args['stopSequences'] ?? null;
+		return $this->sanitized_args['stopSequences'] ?? array();
 	}
 
 	/**
@@ -89,10 +89,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return string The response MIME type.
+	 * @return string The response MIME type, or empty string if not set.
 	 */
 	public function get_response_mime_type(): string {
-		return $this->sanitized_args['responseMimeType'] ?? null;
+		return $this->sanitized_args['responseMimeType'] ?? '';
 	}
 
 	/**
@@ -100,10 +100,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return array<string, mixed> The response schema.
+	 * @return array<string, mixed> The response schema, or empty array if not set.
 	 */
 	public function get_response_schema(): array {
-		return $this->sanitized_args['responseSchema'] ?? null;
+		return $this->sanitized_args['responseSchema'] ?? array();
 	}
 
 	/**
@@ -111,10 +111,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return int The candidate count.
+	 * @return int The candidate count, or 0 if not set.
 	 */
 	public function get_candidate_count(): int {
-		return $this->sanitized_args['candidateCount'] ?? null;
+		return $this->sanitized_args['candidateCount'] ?? 0;
 	}
 
 	/**
@@ -122,10 +122,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return int The maximum output tokens.
+	 * @return int The maximum output tokens, or 0 if not set.
 	 */
 	public function get_max_output_tokens(): int {
-		return $this->sanitized_args['maxOutputTokens'] ?? null;
+		return $this->sanitized_args['maxOutputTokens'] ?? 0;
 	}
 
 	/**
@@ -133,10 +133,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return float The temperature.
+	 * @return float The temperature (between 0.0 and 2.0), or 0.0 if not set.
 	 */
 	public function get_temperature(): float {
-		return $this->sanitized_args['temperature'] ?? null;
+		return $this->sanitized_args['temperature'] ?? 0.0;
 	}
 
 	/**
@@ -144,10 +144,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return float The top P.
+	 * @return float The top P, or 0.0 if not set.
 	 */
 	public function get_top_p(): float {
-		return $this->sanitized_args['topP'] ?? null;
+		return $this->sanitized_args['topP'] ?? 0.0;
 	}
 
 	/**
@@ -155,10 +155,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return int The top K.
+	 * @return int The top K, or 0 if not set.
 	 */
 	public function get_top_k(): int {
-		return $this->sanitized_args['topK'] ?? null;
+		return $this->sanitized_args['topK'] ?? 0;
 	}
 
 	/**
@@ -166,10 +166,10 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return float The presence penalty.
+	 * @return float The presence penalty, or 0.0 if not set.
 	 */
 	public function get_presence_penalty(): float {
-		return $this->sanitized_args['presencePenalty'] ?? null;
+		return $this->sanitized_args['presencePenalty'] ?? 0.0;
 	}
 
 	/**
@@ -177,32 +177,32 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return float The frequency penalty.
+	 * @return float The frequency penalty, or 0.0 if not set.
 	 */
 	public function get_frequency_penalty(): float {
-		return $this->sanitized_args['frequencyPenalty'] ?? null;
+		return $this->sanitized_args['frequencyPenalty'] ?? 0.0;
 	}
 
 	/**
-	 * Returns the response logprobs.
+	 * Returns whether to include the response logprobs.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return bool The response logprobs.
+	 * @return bool Whether to include the response logprobs.
 	 */
 	public function get_response_logprobs(): bool {
-		return $this->sanitized_args['responseLogprobs'] ?? null;
+		return $this->sanitized_args['responseLogprobs'] ?? false;
 	}
 
 	/**
-	 * Returns the logprobs.
+	 * Returns the top logprobs.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return int The logprobs.
+	 * @return int The top logprobs, or 0 if not set.
 	 */
 	public function get_logprobs(): int {
-		return $this->sanitized_args['logprobs'] ?? null;
+		return $this->sanitized_args['logprobs'] ?? 0;
 	}
 
 	/**

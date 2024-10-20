@@ -295,7 +295,13 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			'modelParams' => array(
 				'description'          => __( 'Model parameters.', 'ai-services' ),
 				'type'                 => 'object',
+				'required'             => true,
 				'properties'           => array(
+					'feature'           => array(
+						'description' => __( 'Unique identifier of the feature that the model will be used for.', 'ai-services' ),
+						'type'        => 'string',
+						'required'    => true,
+					),
 					'model'             => array(
 						'description' => __( 'Model slug.', 'ai-services' ),
 						'type'        => 'string',
@@ -328,6 +334,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			'content'     => array(
 				'description' => __( 'Content data to pass to the model, including the prompt and optional history.', 'ai-services' ),
 				'type'        => array( 'string', 'object', 'array' ),
+				'required'    => true,
 				'oneOf'       => array(
 					array(
 						'description' => __( 'Prompt text as a string.', 'ai-services' ),

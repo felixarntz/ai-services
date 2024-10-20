@@ -49,4 +49,24 @@ final class Text_Part extends Abstract_Part {
 			'text' => '',
 		);
 	}
+
+	/**
+	 * Returns the JSON schema for the expected input.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The JSON schema.
+	 */
+	public static function get_json_schema(): array {
+		return array(
+			'type'                 => 'object',
+			'properties'           => array(
+				'text' => array(
+					'description' => __( 'Prompt text content.', 'ai-services' ),
+					'type'        => 'string',
+				),
+			),
+			'additionalProperties' => false,
+		);
+	}
 }

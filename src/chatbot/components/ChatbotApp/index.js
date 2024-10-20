@@ -70,7 +70,6 @@ export default function ChatbotApp() {
 					service: service.slug,
 					modelParams: {
 						feature: 'ai-services-chatbot',
-						useWppsChatbot: true,
 					},
 				} );
 			}

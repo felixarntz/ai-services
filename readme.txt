@@ -5,7 +5,7 @@ Plugin URI:   https://wordpress.org/plugins/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Tested up to: 6.6
-Stable tag:   0.1.0
+Stable tag:   0.1.1
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -207,6 +207,15 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 1. The AI Services settings screen where end users can paste their AI service credentials
 
 == Changelog ==
+
+= 0.1.1 =
+
+**Bug Fixes:**
+
+* Update Prompt API to latest shape. Props [tomayac](https://github.com/tomayac). See [#11](https://github.com/felixarntz/ai-services/pull/11).
+* Fix bug preventing inline data to be processed by Google AI API. See [cf57baf](https://github.com/felixarntz/ai-services/commit/cf57baf8822a5c2a9a13760c4d7fa6a6def45558).
+* Fix OpenAI model configuration to only provide multimodal capabilities for GPT-4 models. See [42ba79b](https://github.com/felixarntz/ai-services/commit/42ba79bf45b063279fc714fade604b6a3aafb894).
+* Fix bug where REST endpoint to generate content did not accept content in its complex shape. See [2e0687f](https://github.com/felixarntz/ai-services/commit/2e0687f5620e6a2d4a4ea28527eef64d2f32adb1).
 
 = 0.1.0 =
 

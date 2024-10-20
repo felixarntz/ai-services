@@ -8,12 +8,14 @@
 
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
+use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
@@ -133,7 +135,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		}
 
 		$service      = $this->services_api->get_available_service( $request['slug'] );
-		$model_params = $this->process_model_params( $request['model_params'] ?? array() );
+		$model_params = $this->process_model_params( $request['modelParams'] ?? array() );
 		$model        = $this->get_model( $service, $model_params );
 
 		// Parse content data into one of the supported formats.
@@ -232,17 +234,24 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			$model_params['capabilities'] = array( AI_Capabilities::CAPABILITY_TEXT_GENERATION );
 		}
 
-		// Transforms common model parameters from camelCase to snake_case.
-		$snake_case_map = array(
-			'generationConfig'  => 'generation_config',
-			'systemInstruction' => 'system_instruction',
-		);
-		foreach ( $snake_case_map as $camel_case => $snake_case ) {
-			if ( isset( $model_params[ $camel_case ] ) ) {
-				if ( ! isset( $model_params[ $snake_case ] ) ) {
-					$model_params[ $snake_case ] = $model_params[ $camel_case ];
+		// Parse associative arrays into their relevant data structures.
+		if ( isset( $model_params['generationConfig'] ) && is_array( $model_params['generationConfig'] ) ) {
+			$model_params['generationConfig'] = Generation_Config::from_array( $model_params['generationConfig'] );
+		}
+		if ( isset( $model_params['systemInstruction'] ) && is_array( $model_params['systemInstruction'] ) ) {
+			if ( isset( $model_params['systemInstruction']['role'] ) ) {
+				$model_params['systemInstruction'] = Content::from_array( $model_params['systemInstruction'] );
+			} else {
+				$model_params['systemInstruction'] = Parts::from_array( $model_params['systemInstruction'] );
+			}
+		}
+
+		// This is Google specific. TODO: Handle this via filter callback or similar.
+		if ( isset( $model_params['safetySettings'] ) && is_array( $model_params['safetySettings'] ) ) {
+			foreach ( $model_params['safetySettings'] as $index => $safety_setting ) {
+				if ( is_array( $safety_setting ) ) {
+					$model_params['safetySettings'][ $index ] = Safety_Setting::from_array( $safety_setting );
 				}
-				unset( $model_params[ $camel_case ] );
 			}
 		}
 
@@ -255,7 +264,8 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		 * @since 0.1.0
 		 *
 		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
-		 *                                           'generation_config' and 'system_instruction'.
+		 *                                           'feature', 'capabilities', 'generationConfig' and
+		 *                                           'systemInstruction'.
 		 * @return array<string, mixed> The processed model parameters.
 		 */
 		return (array) apply_filters( 'ai_services_rest_model_params', $model_params );
@@ -269,28 +279,45 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @return array<string, mixed> Route arguments.
 	 */
 	protected function args(): array {
+		$content_schema = array_merge(
+			array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
+			Content::get_json_schema()
+		);
+
+		$system_content_schema                                = $content_schema;
+		$system_content_schema['properties']['role']['enum']  = array( Content::ROLE_SYSTEM );
+		$user_content_schema                                  = $content_schema;
+		$user_content_schema['properties']['role']['enum']    = array( Content::ROLE_USER );
+		$history_content_schema                               = $content_schema;
+		$history_content_schema['properties']['role']['enum'] = array( Content::ROLE_USER, Content::ROLE_MODEL );
+
 		return array(
-			'model_params' => array(
+			'modelParams' => array(
 				'description'          => __( 'Model parameters.', 'ai-services' ),
 				'type'                 => 'object',
+				'required'             => true,
 				'properties'           => array(
-					'model'              => array(
+					'feature'           => array(
+						'description' => __( 'Unique identifier of the feature that the model will be used for.', 'ai-services' ),
+						'type'        => 'string',
+						'required'    => true,
+					),
+					'model'             => array(
 						'description' => __( 'Model slug.', 'ai-services' ),
 						'type'        => 'string',
 					),
-					'capabilities'       => array(
+					'capabilities'      => array(
 						'description' => __( 'Capabilities requested for the model to support.', 'ai-services' ),
 						'type'        => 'array',
 						'items'       => array(
 							'type' => 'string',
 						),
 					),
-					'generation_config'  => array(
-						'description'          => __( 'Model generation configuration options.', 'ai-services' ),
-						'type'                 => 'object',
-						'additionalProperties' => true,
+					'generationConfig'  => array_merge(
+						array( 'description' => __( 'Model generation configuration options.', 'ai-services' ) ),
+						Generation_Config::get_json_schema()
 					),
-					'system_instruction' => array(
+					'systemInstruction' => array(
 						'description' => __( 'System instruction for the model.', 'ai-services' ),
 						'type'        => array( 'string', 'object', 'array' ),
 						'oneOf'       => array(
@@ -298,18 +325,16 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 								'description' => __( 'Prompt text as a string.', 'ai-services' ),
 								'type'        => 'string',
 							),
-							array_merge(
-								array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
-								$this->get_content_schema( array( Content::ROLE_SYSTEM ) )
-							),
+							$system_content_schema,
 						),
 					),
 				),
 				'additionalProperties' => true,
 			),
-			'content'      => array(
+			'content'     => array(
 				'description' => __( 'Content data to pass to the model, including the prompt and optional history.', 'ai-services' ),
 				'type'        => array( 'string', 'object', 'array' ),
+				'required'    => true,
 				'oneOf'       => array(
 					array(
 						'description' => __( 'Prompt text as a string.', 'ai-services' ),
@@ -317,17 +342,14 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					),
 					array_merge(
 						array( 'description' => __( 'Prompt including multi modal data such as files.', 'ai-services' ) ),
-						$this->get_parts_schema()
+						Parts::get_json_schema()
 					),
-					array_merge(
-						array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
-						$this->get_content_schema( array( Content::ROLE_USER ) )
-					),
+					$user_content_schema,
 					array(
 						'description' => __( 'Array of contents, including history from previous user prompts and their model answers.', 'ai-services' ),
 						'type'        => 'array',
 						'minItems'    => 1,
-						'items'       => $this->get_content_schema( array( Content::ROLE_USER, Content::ROLE_MODEL ) ),
+						'items'       => $history_content_schema,
 					),
 				),
 			),
@@ -371,105 +393,10 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 						'description' => __( 'Candidate content.', 'ai-services' ),
 						'readonly'    => true,
 					),
-					$this->get_content_schema(
-						array( Content::ROLE_USER, Content::ROLE_MODEL, Content::ROLE_SYSTEM )
-					)
+					Content::get_json_schema()
 				),
 			),
 			'additionalProperties' => true,
-		);
-	}
-
-	/**
-	 * Gets the REST schema that corresponds to a content Parts object.
-	 *
-	 * This must be in sync with the data structure of the {@see Parts} class.
-	 *
-	 * @since 0.1.0
-	 * @see Parts
-	 *
-	 * @return array<string, mixed> The schema for a Parts object.
-	 */
-	private function get_parts_schema(): array {
-		return array(
-			'type'     => 'array',
-			'minItems' => 1,
-			'items'    => array(
-				'type'  => 'object',
-				'oneOf' => array(
-					array(
-						'properties'           => array(
-							'text' => array(
-								'description' => __( 'Prompt text content.', 'ai-services' ),
-								'type'        => 'string',
-							),
-						),
-						'additionalProperties' => false,
-					),
-					array(
-						'properties'           => array(
-							'inlineData' => array(
-								'description' => __( 'Inline data as part of the prompt, such as a file.', 'ai-services' ),
-								'type'        => 'object',
-								'properties'  => array(
-									'mimeType' => array(
-										'description' => __( 'MIME type of the inline data.', 'ai-services' ),
-										'type'        => 'string',
-									),
-									'data'     => array(
-										'description' => __( 'Base64-encoded data.', 'ai-services' ),
-										'type'        => 'string',
-									),
-								),
-							),
-						),
-						'additionalProperties' => false,
-					),
-					array(
-						'properties'           => array(
-							'fileData' => array(
-								'description' => __( 'Reference to a file as part of the prompt.', 'ai-services' ),
-								'type'        => 'object',
-								'properties'  => array(
-									'mimeType' => array(
-										'description' => __( 'MIME type of the file data.', 'ai-services' ),
-										'type'        => 'string',
-									),
-									'fileUri'  => array(
-										'description' => __( 'URI of the file.', 'ai-services' ),
-										'type'        => 'string',
-									),
-								),
-							),
-						),
-						'additionalProperties' => false,
-					),
-				),
-			),
-		);
-	}
-
-	/**
-	 * Gets the REST schema that corresponds to a Content object.
-	 *
-	 * This must be in sync with the data structure of the {@see Content} class.
-	 *
-	 * @since 0.1.0
-	 * @see Content
-	 *
-	 * @param string[] $allowed_roles Which content roles to include in the schema.
-	 * @return array<string, mixed> The schema for a Content object.
-	 */
-	private function get_content_schema( array $allowed_roles ): array {
-		return array(
-			'type'       => 'object',
-			'properties' => array(
-				'role'  => array(
-					'type' => 'string',
-					'enum' => $allowed_roles,
-				),
-				'parts' => $this->get_parts_schema(),
-			),
 		);
 	}
 

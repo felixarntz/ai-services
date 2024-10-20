@@ -16,9 +16,11 @@ use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use InvalidArgumentException;
 
 /**
@@ -49,7 +51,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var array<string, mixed>
+	 * @var Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -89,10 +91,16 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 
 		$this->model = $model;
 
-		$this->generation_config = $model_params['generation_config'] ?? array();
+		if ( isset( $model_params['generationConfig'] ) ) {
+			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
+				$this->generation_config = $model_params['generationConfig'];
+			} else {
+				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
+			}
+		}
 
-		if ( isset( $model_params['system_instruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
+		if ( isset( $model_params['systemInstruction'] ) ) {
+			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
 		}
 	}
 
@@ -119,26 +127,30 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
+		$transformers = self::get_content_transformers();
+
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
-			'messages'   => array_map(
-				array( $this, 'prepare_content_for_api_request' ),
+			'messages' => array_map(
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
 				$contents
 			),
-			'max_tokens' => $this->generation_config['maxOutputTokens'] ?? 4096,
 		);
-		if ( isset( $this->generation_config['temperature'] ) ) {
-			$params['temperature'] = $this->generation_config['temperature'];
-		}
-		if ( isset( $this->generation_config['stopSequences'] ) ) {
-			$params['stop_sequences'] = $this->generation_config['stopSequences'];
-		}
 		if ( $this->system_instruction ) {
 			$params['system'] = $this->system_instruction
 				->get_parts()
 				->filter( array( 'class_name' => Text_Part::class ) )
 				->get( 0 )
 				->to_array()['text'];
+		}
+		if ( $this->generation_config ) {
+			$params = Transformer::transform_generation_config_params(
+				array_merge( $this->generation_config->get_additional_args(), $params ),
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
 		}
 
 		$request  = $this->api->create_generate_content_request(
@@ -160,59 +172,6 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 		);
 
 		return $candidates;
-	}
-
-	/**
-	 * Transforms a given Content instance into the format required for the API request.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Content $content The content instance.
-	 * @return array<string, mixed> The content data for the API request.
-	 *
-	 * @throws InvalidArgumentException Thrown if the content is invalid.
-	 */
-	private function prepare_content_for_api_request( Content $content ): array {
-		if ( $content->get_role() === Content::ROLE_MODEL ) {
-			$role = 'assistant';
-		} else {
-			$role = 'user';
-		}
-
-		$parts = array();
-		foreach ( $content->get_parts() as $part ) {
-			if ( $part instanceof Text_Part ) {
-				$data    = $part->to_array();
-				$parts[] = array(
-					'type' => 'text',
-					'text' => $data['text'],
-				);
-			} elseif ( $part instanceof Inline_Data_Part ) {
-				$data = $part->to_array();
-				if ( ! str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
-					throw new InvalidArgumentException(
-						esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
-					);
-				}
-				$parts[] = array(
-					'type'   => 'image',
-					'source' => array(
-						'type'       => 'base64',
-						'media_type' => $data['inlineData']['mimeType'],
-						'data'       => $data['inlineData']['data'],
-					),
-				);
-			} else {
-				throw new InvalidArgumentException(
-					esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
-				);
-			}
-		}
-
-		return array(
-			'role'    => $role,
-			'content' => $parts,
-		);
 	}
 
 	/**
@@ -259,6 +218,93 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 				'role'  => $role,
 				'parts' => $parts,
 			)
+		);
+	}
+
+	/**
+	 * Gets the content transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The content transformers.
+	 */
+	private static function get_content_transformers(): array {
+		return array(
+			'role'    => static function ( Content $content ) {
+				if ( $content->get_role() === Content::ROLE_MODEL ) {
+					return 'assistant';
+				}
+				return 'user';
+			},
+			'content' => static function ( Content $content ) {
+				$parts = array();
+				foreach ( $content->get_parts() as $part ) {
+					if ( $part instanceof Text_Part ) {
+						$data    = $part->to_array();
+						$parts[] = array(
+							'type' => 'text',
+							'text' => $data['text'],
+						);
+					} elseif ( $part instanceof Inline_Data_Part ) {
+						$data = $part->to_array();
+						if ( ! str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
+							throw new InvalidArgumentException(
+								esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
+							);
+						}
+						$parts[] = array(
+							'type'   => 'image',
+							'source' => array(
+								'type'       => 'base64',
+								'media_type' => $data['inlineData']['mimeType'],
+								'data'       => $data['inlineData']['data'],
+							),
+						);
+					} else {
+						throw new InvalidArgumentException(
+							esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
+						);
+					}
+				}
+				return $parts;
+			},
+		);
+	}
+
+	/**
+	 * Gets the generation configuration transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The generation configuration transformers.
+	 */
+	private static function get_generation_config_transformers(): array {
+		return array(
+			'stop_sequences' => static function ( Generation_Config $config ) {
+				return $config->get_stop_sequences();
+			},
+			'max_tokens'     => static function ( Generation_Config $config ) {
+				$max_tokens = $config->get_max_output_tokens();
+				if ( ! $max_tokens ) {
+					// The 'max_tokens' parameter is required in the Anthropic API, so we need a default.
+					return 4096;
+				}
+				return $max_tokens;
+			},
+			'temperature'    => static function ( Generation_Config $config ) {
+				$temperature = $config->get_temperature();
+				if ( $temperature > 1.0 ) {
+					// The Anthropic API only supports a temperature of up to 1.0, so we need to cap it.
+					return 1.0;
+				}
+				return $temperature;
+			},
+			'top_p'          => static function ( Generation_Config $config ) {
+				return $config->get_top_p();
+			},
+			'top_k'          => static function ( Generation_Config $config ) {
+				return $config->get_top_k();
+			},
 		);
 	}
 }

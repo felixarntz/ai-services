@@ -16,10 +16,12 @@ use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts\File_Data_Part;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use InvalidArgumentException;
 
 /**
@@ -50,7 +52,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var array<string, mixed>
+	 * @var Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -90,10 +92,16 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 
 		$this->model = $model;
 
-		$this->generation_config = $model_params['generation_config'] ?? array();
+		if ( isset( $model_params['generationConfig'] ) ) {
+			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
+				$this->generation_config = $model_params['generationConfig'];
+			} else {
+				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
+			}
+		}
 
-		if ( isset( $model_params['system_instruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
+		if ( isset( $model_params['systemInstruction'] ) ) {
+			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
 		}
 	}
 
@@ -124,21 +132,23 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			$contents = array_merge( array( $this->system_instruction ), $contents );
 		}
 
+		$transformers = self::get_content_transformers();
+
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
 			'messages' => array_map(
-				array( $this, 'prepare_content_for_api_request' ),
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
 				$contents
 			),
 		);
-		if ( isset( $this->generation_config['maxOutputTokens'] ) ) {
-			$params['max_completion_tokens'] = $this->generation_config['maxOutputTokens'];
-		}
-		if ( isset( $this->generation_config['temperature'] ) ) {
-			$params['temperature'] = $this->generation_config['temperature'];
-		}
-		if ( isset( $this->generation_config['stopSequences'] ) ) {
-			$params['stop'] = $this->generation_config['stopSequences'];
+		if ( $this->generation_config ) {
+			$params = Transformer::transform_generation_config_params(
+				array_merge( $this->generation_config->get_additional_args(), $params ),
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
 		}
 
 		$request  = $this->api->create_generate_content_request(
@@ -223,72 +233,6 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	}
 
 	/**
-	 * Transforms a given Content instance into the format required for the API request.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Content $content The content instance.
-	 * @return array<string, mixed> The content data for the API request.
-	 *
-	 * @throws InvalidArgumentException Thrown if the content is invalid.
-	 */
-	private function prepare_content_for_api_request( Content $content ): array {
-		if ( $content->get_role() === Content::ROLE_MODEL ) {
-			$role = 'assistant';
-		} elseif ( $content->get_role() === Content::ROLE_SYSTEM ) {
-			$role = 'system';
-		} else {
-			$role = 'user';
-		}
-
-		$parts = array();
-		foreach ( $content->get_parts() as $part ) {
-			if ( $part instanceof Text_Part ) {
-				$data    = $part->to_array();
-				$parts[] = array(
-					'type' => 'text',
-					'text' => $data['text'],
-				);
-			} elseif ( $part instanceof Inline_Data_Part ) {
-				$data = $part->to_array();
-				if ( ! str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
-					throw new InvalidArgumentException(
-						esc_html__( 'Invalid content part: The OpenAI API only supports text and image parts.', 'ai-services' )
-					);
-				}
-				$parts[] = array(
-					'type'      => 'image_url',
-					'image_url' => array(
-						'url' => $data['inlineData']['data'],
-					),
-				);
-			} elseif ( $part instanceof File_Data_Part ) {
-				$data = $part->to_array();
-				if ( ! str_starts_with( $data['fileData']['mimeType'], 'image/' ) ) {
-					throw new InvalidArgumentException(
-						esc_html__( 'Invalid content part: The OpenAI API only supports text and image parts.', 'ai-services' )
-					);
-				}
-				$parts[] = array(
-					'type'      => 'image_url',
-					'image_url' => array(
-						'url' => $data['fileData']['fileUri'],
-					),
-				);
-			} else {
-				throw new InvalidArgumentException(
-					esc_html__( 'Invalid content part: The OpenAI API only supports text and image parts.', 'ai-services' )
-				);
-			}
-		}
-
-		return array(
-			'role'    => $role,
-			'content' => $parts,
-		);
-	}
-
-	/**
 	 * Transforms a given API response into a Content instance.
 	 *
 	 * @since 0.1.0
@@ -327,6 +271,131 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				'role'  => $role,
 				'parts' => $parts,
 			)
+		);
+	}
+
+	/**
+	 * Gets the content transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The content transformers.
+	 */
+	private static function get_content_transformers(): array {
+		return array(
+			'role'    => static function ( Content $content ) {
+				if ( $content->get_role() === Content::ROLE_MODEL ) {
+					return 'assistant';
+				}
+				if ( $content->get_role() === Content::ROLE_SYSTEM ) {
+					return 'system';
+				}
+				return 'user';
+			},
+			'content' => static function ( Content $content ) {
+				$parts = array();
+				foreach ( $content->get_parts() as $part ) {
+					if ( $part instanceof Text_Part ) {
+						$data    = $part->to_array();
+						$parts[] = array(
+							'type' => 'text',
+							'text' => $data['text'],
+						);
+					} elseif ( $part instanceof Inline_Data_Part ) {
+						$data = $part->to_array();
+						if ( str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
+							$parts[] = array(
+								'type'      => 'image_url',
+								'image_url' => array(
+									'url' => $data['inlineData']['data'],
+								),
+							);
+						} elseif ( str_starts_with( $data['inlineData']['mimeType'], 'audio/' ) ) {
+							$parts[] = array(
+								'type'        => 'input_audio',
+								'input_audio' => array(
+									'data'   => $data['inlineData']['data'],
+									'format' => wp_get_default_extension_for_mime_type( $data['inlineData']['mimeType'] ),
+								),
+							);
+						} else {
+							throw new InvalidArgumentException(
+								esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+							);
+						}
+					} elseif ( $part instanceof File_Data_Part ) {
+						$data = $part->to_array();
+						if ( ! str_starts_with( $data['fileData']['mimeType'], 'image/' ) ) {
+							throw new InvalidArgumentException(
+								esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+							);
+						}
+						$parts[] = array(
+							'type'      => 'image_url',
+							'image_url' => array(
+								'url' => $data['fileData']['fileUri'],
+							),
+						);
+					} else {
+						throw new InvalidArgumentException(
+							esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+						);
+					}
+				}
+				return $parts;
+			},
+		);
+	}
+
+	/**
+	 * Gets the generation configuration transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The generation configuration transformers.
+	 */
+	private static function get_generation_config_transformers(): array {
+		return array(
+			'stop'                  => static function ( Generation_Config $config ) {
+				return $config->get_stop_sequences();
+			},
+			'response_format'       => static function ( Generation_Config $config ) {
+				if ( $config->get_response_mime_type() === 'application/json' ) {
+					$schema = $config->get_response_schema();
+					if ( $schema ) {
+						return array(
+							'type'        => 'json_schema',
+							'json_schema' => $schema,
+						);
+					}
+					return array( 'type' => 'json_object' );
+				}
+				return array();
+			},
+			'n'                     => static function ( Generation_Config $config ) {
+				return $config->get_candidate_count();
+			},
+			'max_completion_tokens' => static function ( Generation_Config $config ) {
+				return $config->get_max_output_tokens();
+			},
+			'temperature'           => static function ( Generation_Config $config ) {
+				return $config->get_temperature();
+			},
+			'top_p'                 => static function ( Generation_Config $config ) {
+				return $config->get_top_p();
+			},
+			'presence_penalty'      => static function ( Generation_Config $config ) {
+				return $config->get_presence_penalty();
+			},
+			'frequency_penalty'     => static function ( Generation_Config $config ) {
+				return $config->get_frequency_penalty();
+			},
+			'logprobs'              => static function ( Generation_Config $config ) {
+				return $config->get_response_logprobs();
+			},
+			'top_logprobs'          => static function ( Generation_Config $config ) {
+				return $config->get_logprobs();
+			},
 		);
 	}
 }

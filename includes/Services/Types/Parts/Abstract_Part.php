@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Types\Parts;
 
+use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services\Services\Types\Contracts\Part;
 use InvalidArgumentException;
 
@@ -16,7 +17,7 @@ use InvalidArgumentException;
  *
  * @since 0.1.0
  */
-abstract class Abstract_Part implements Part {
+abstract class Abstract_Part implements Part, With_JSON_Schema {
 
 	/**
 	 * The part data.

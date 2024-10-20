@@ -65,4 +65,34 @@ final class File_Data_Part extends Abstract_Part {
 			),
 		);
 	}
+
+	/**
+	 * Returns the JSON schema for the expected input.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The JSON schema.
+	 */
+	public static function get_json_schema(): array {
+		return array(
+			'type'                 => 'object',
+			'properties'           => array(
+				'fileData' => array(
+					'description' => __( 'Reference to a file as part of the prompt.', 'ai-services' ),
+					'type'        => 'object',
+					'properties'  => array(
+						'mimeType' => array(
+							'description' => __( 'MIME type of the file data.', 'ai-services' ),
+							'type'        => 'string',
+						),
+						'fileUri'  => array(
+							'description' => __( 'URI of the file.', 'ai-services' ),
+							'type'        => 'string',
+						),
+					),
+				),
+			),
+			'additionalProperties' => false,
+		);
+	}
 }

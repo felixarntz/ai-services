@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services\Types;
 
 use ArrayIterator;
+use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services\Services\Types\Contracts\Part;
 use Felix_Arntz\AI_Services\Services\Types\Parts\File_Data_Part;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
@@ -23,7 +24,7 @@ use Traversable;
  *
  * @since 0.1.0
  */
-final class Parts implements Collection, Arrayable {
+final class Parts implements Collection, Arrayable, With_JSON_Schema {
 
 	/**
 	 * The parts of the content.
@@ -198,7 +199,7 @@ final class Parts implements Collection, Arrayable {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array<string, mixed> $data The parts data.
+	 * @param mixed[] $data The parts data.
 	 * @return Parts The Parts instance.
 	 *
 	 * @throws InvalidArgumentException Thrown if the parts data is invalid.
@@ -223,5 +224,36 @@ final class Parts implements Collection, Arrayable {
 		}
 
 		return $parts;
+	}
+
+	/**
+	 * Returns the JSON schema for the expected input.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The JSON schema.
+	 */
+	public static function get_json_schema(): array {
+		$text_part_schema        = Text_Part::get_json_schema();
+		$inline_data_part_schema = Inline_Data_Part::get_json_schema();
+		$file_data_part_schema   = File_Data_Part::get_json_schema();
+		unset(
+			$text_part_schema['type'],
+			$inline_data_part_schema['type'],
+			$file_data_part_schema['type']
+		);
+
+		return array(
+			'type'     => 'array',
+			'minItems' => 1,
+			'items'    => array(
+				'type'  => 'object',
+				'oneOf' => array(
+					$text_part_schema,
+					$inline_data_part_schema,
+					$file_data_part_schema,
+				),
+			),
+		);
 	}
 }

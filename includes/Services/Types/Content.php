@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Types;
 
+use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use InvalidArgumentException;
 
@@ -16,7 +17,7 @@ use InvalidArgumentException;
  *
  * @since 0.1.0
  */
-final class Content implements Arrayable {
+final class Content implements Arrayable, With_JSON_Schema {
 
 	const ROLE_USER   = 'user';
 	const ROLE_MODEL  = 'model';
@@ -117,6 +118,34 @@ final class Content implements Arrayable {
 		}
 
 		return new Content( $data['role'], Parts::from_array( $data['parts'] ) );
+	}
+
+	/**
+	 * Returns the JSON schema for the expected input.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The JSON schema.
+	 */
+	public static function get_json_schema(): array {
+		return array(
+			'type'       => 'object',
+			'properties' => array(
+				'role'  => array(
+					'description' => __( 'The role of the content, i.e. which source it comes from.', 'ai-services' ),
+					'type'        => 'string',
+					'enum'        => array(
+						self::ROLE_USER,
+						self::ROLE_MODEL,
+						self::ROLE_SYSTEM,
+					),
+				),
+				'parts' => array_merge(
+					array( 'description' => __( 'Content parts, including optional multimodal input.', 'ai-services' ) ),
+					Parts::get_json_schema()
+				),
+			),
+		);
 	}
 
 	/**

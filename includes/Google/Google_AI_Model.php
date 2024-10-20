@@ -16,7 +16,12 @@ use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\Types\Parts\File_Data_Part;
+use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
+use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use InvalidArgumentException;
 
 /**
@@ -47,7 +52,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var array<string, mixed>
+	 * @var Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -99,25 +104,29 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			$this->model = 'models/' . $model;
 		}
 
-		$this->generation_config = $model_params['generation_config'] ?? array();
+		if ( isset( $model_params['generationConfig'] ) ) {
+			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
+				$this->generation_config = $model_params['generationConfig'];
+			} else {
+				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
+			}
+		}
 
 		// TODO: Add support for tools and tool config, to support code generation.
 
-		if ( isset( $model_params['system_instruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
+		if ( isset( $model_params['systemInstruction'] ) ) {
+			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
 		}
 
-		if ( isset( $model_params['safety_settings'] ) ) {
-			foreach ( $model_params['safety_settings'] as $index => $safety_setting ) {
-				if ( is_array( $safety_setting ) ) {
-					$model_params['safety_settings'][ $index ] = Safety_Setting::from_array( $safety_setting );
-				} elseif ( ! $safety_setting instanceof Safety_Setting ) {
+		if ( isset( $model_params['safetySettings'] ) ) {
+			foreach ( $model_params['safetySettings'] as $safety_setting ) {
+				if ( ! $safety_setting instanceof Safety_Setting ) {
 					throw new InvalidArgumentException(
-						esc_html__( 'The safety_settings parameter must contain Safety_Setting instances.', 'ai-services' )
+						esc_html__( 'The safetySettings parameter must contain Safety_Setting instances.', 'ai-services' )
 					);
 				}
 			}
-			$this->safety_settings = $model_params['safety_settings'];
+			$this->safety_settings = $model_params['safetySettings'];
 		} else {
 			$this->safety_settings = array();
 		}
@@ -149,22 +158,35 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
+		$transformers = self::get_content_transformers();
+
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
-			'contents'         => array_map(
-				array( $this, 'prepare_content_for_api_request' ),
+			'contents' => array_map(
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
 				$contents
 			),
-			'generationConfig' => $this->generation_config,
-			'safetySettings'   => array_map(
+		);
+		if ( $this->generation_config ) {
+			$params                     = array_merge( $this->generation_config->get_additional_args(), $params );
+			$params['generationConfig'] = Transformer::transform_generation_config_params(
+				array(),
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
+		}
+		if ( $this->system_instruction ) {
+			$params['systemInstruction'] = $this->system_instruction->to_array();
+		}
+		if ( $this->safety_settings ) {
+			$params['safetySettings'] = array_map(
 				static function ( Safety_Setting $safety_setting ) {
 					return $safety_setting->to_array();
 				},
 				$this->safety_settings
-			),
-		);
-		if ( $this->system_instruction ) {
-			$params['systemInstruction'] = $this->system_instruction->to_array();
+			);
 		}
 
 		$request  = $this->api->create_generate_content_request(
@@ -239,29 +261,121 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	}
 
 	/**
-	 * Transforms a given Content instance into the format required for the API request.
+	 * Gets the content transformers.
 	 *
-	 * @since 0.1.0
+	 * @since n.e.x.t
 	 *
-	 * @param Content $content The content instance.
-	 * @return array<string, mixed> The content data for the API request.
-	 *
-	 * @throws InvalidArgumentException Thrown if the content is invalid.
+	 * @return array<string, callable> The content transformers.
 	 */
-	private function prepare_content_for_api_request( Content $content ): array {
-		$content = $content->to_array();
+	private static function get_content_transformers(): array {
+		return array(
+			'role'  => static function ( Content $content ) {
+				return $content->get_role();
+			},
+			'parts' => static function ( Content $content ) {
+				$parts = array();
+				foreach ( $content->get_parts() as $part ) {
+					if ( $part instanceof Text_Part ) {
+						$data    = $part->to_array();
+						$parts[] = array( 'text' => $data['text'] );
+					} elseif ( $part instanceof Inline_Data_Part ) {
+						$data = $part->to_array();
+						if (
+							str_starts_with( $data['inlineData']['mimeType'], 'image/' )
+							|| str_starts_with( $data['inlineData']['mimeType'], 'audio/' )
+						) {
+							$parts[] = array(
+								'inlineData' => array(
+									'mimeType' => $data['inlineData']['mimeType'],
+									// The Google AI API expects inlineData blobs to be without the prefix.
+									'data'     => preg_replace(
+										'/^data:[a-z]+\/[a-z]+;base64,/',
+										'',
+										$data['inlineData']['data']
+									),
+								),
+							);
+						} else {
+							throw new Generative_AI_Exception(
+								esc_html__( 'The Google AI API only supports text, image, and audio parts.', 'ai-services' )
+							);
+						}
+					} elseif ( $part instanceof File_Data_Part ) {
+						$data = $part->to_array();
+						if (
+							str_starts_with( $data['fileData']['mimeType'], 'image/' )
+							|| str_starts_with( $data['fileData']['mimeType'], 'audio/' )
+						) {
+							$parts[] = array(
+								'fileData' => array(
+									'mimeType' => $data['fileData']['mimeType'],
+									'fileUri'  => $data['fileData']['fileUri'],
+								),
+							);
+						} else {
+							throw new Generative_AI_Exception(
+								esc_html__( 'The Google AI API only supports text, image, and audio parts.', 'ai-services' )
+							);
+						}
+					} else {
+						throw new Generative_AI_Exception(
+							esc_html__( 'The Google AI API only supports text, image, and audio parts.', 'ai-services' )
+						);
+					}
+				}
+				return $parts;
+			},
+		);
+	}
 
-		// The Google AI API expects inlineData blobs to be without the prefix.
-		foreach ( $content['parts'] as $index => $part ) {
-			if ( isset( $part['inlineData']['data'] ) ) {
-				$content['parts'][ $index ]['inlineData']['data'] = preg_replace(
-					'/^data:image\/[a-z]+;base64,/',
-					'',
-					$part['inlineData']['data']
-				);
-			}
-		}
-
-		return $content;
+	/**
+	 * Gets the generation configuration transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The generation configuration transformers.
+	 */
+	private static function get_generation_config_transformers(): array {
+		return array(
+			'stopSequences'    => static function ( Generation_Config $config ) {
+				return $config->get_stop_sequences();
+			},
+			'responseMimeType' => static function ( Generation_Config $config ) {
+				return $config->get_response_mime_type();
+			},
+			'responseSchema'   => static function ( Generation_Config $config ) {
+				if ( $config->get_response_mime_type() === 'application/json' ) {
+					return $config->get_response_schema();
+				}
+				return array();
+			},
+			'candidateCount'   => static function ( Generation_Config $config ) {
+				return $config->get_candidate_count();
+			},
+			'maxOutputTokens'  => static function ( Generation_Config $config ) {
+				return $config->get_max_output_tokens();
+			},
+			'temperature'      => static function ( Generation_Config $config ) {
+				return $config->get_temperature();
+			},
+			'topP'             => static function ( Generation_Config $config ) {
+				return $config->get_top_p();
+			},
+			'topK'             => static function ( Generation_Config $config ) {
+				return $config->get_top_k();
+			},
+			'presencePenalty'  => static function ( Generation_Config $config ) {
+				return $config->get_presence_penalty();
+			},
+			'frequencyPenalty' => static function ( Generation_Config $config ) {
+				return $config->get_frequency_penalty();
+			},
+			'responseLogprobs' => static function ( Generation_Config $config ) {
+				return $config->get_response_logprobs();
+			},
+			'logprobs'         => static function ( Generation_Config $config ) {
+				return $config->get_logprobs();
+			},
+		);
 	}
 }

@@ -163,6 +163,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			),
 		);
 		if ( $this->generation_config ) {
+			$params                     = array_merge( $this->generation_config->get_additional_args(), $params );
 			$params['generationConfig'] = Transformer::transform_generation_config_params(
 				array(),
 				$this->generation_config,

@@ -143,7 +143,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 		}
 		if ( $this->generation_config ) {
 			$params = Transformer::transform_generation_config_params(
-				$params,
+				array_merge( $this->generation_config->get_additional_args(), $params ),
 				$this->generation_config,
 				self::get_generation_config_transformers()
 			);

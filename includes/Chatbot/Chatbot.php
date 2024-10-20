@@ -182,13 +182,12 @@ class Chatbot implements With_Hooks {
 	 * @since 0.1.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
-		 *                                       'feature', 'capabilities', 'generationConfig' and 'systemInstruction'.
+	 *                                           'feature', 'capabilities', 'generationConfig' and 'systemInstruction'.
 	 * @return array<string, mixed> The filtered model parameters.
 	 */
 	public function filter_rest_model_params( array $model_params ): array {
-		if ( isset( $model_params['useWppsChatbot'] ) ) {
+		if ( isset( $model_params['feature'] ) && 'ai-services-chatbot' === $model_params['feature'] ) {
 			$model_params = array_merge( $model_params, $this->get_model_params() );
-			unset( $model_params['useWppsChatbot'] );
 		}
 		return $model_params;
 	}

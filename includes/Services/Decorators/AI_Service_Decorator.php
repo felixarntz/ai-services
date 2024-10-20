@@ -12,6 +12,9 @@ use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use InvalidArgumentException;
 
@@ -100,7 +103,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 *     @type string[]             $capabilities       Capabilities requested for the model to support. It is
 	 *                                                    recommended to specify this if you do not explicitly specify
 	 *                                                    a model slug.
-	 *     @type array<string, mixed> $generation_config  Model generation configuration options. Default empty array.
+	 *     @type Generation_Config?   $generation_config  Model generation configuration options. Default none.
 	 *     @type string|Parts|Content $system_instruction The system instruction for the model. Default none.
 	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
@@ -112,6 +115,36 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		if ( ! isset( $model_params['feature'] ) || ! preg_match( '/^[a-z0-9-]+$/', $model_params['feature'] ) ) {
 			throw new InvalidArgumentException(
 				esc_html__( 'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.', 'ai-services' )
+			);
+		}
+
+		// Perform basic validation so that the model classes don't have to.
+		if (
+			isset( $model_params['generation_config'] )
+			&& ! $model_params['generation_config'] instanceof Generation_Config
+		) {
+			throw new InvalidArgumentException(
+				sprintf(
+					/* translators: %s: class name */
+					esc_html__( 'The generation config argument must be an instance of %s.', 'ai-services' ),
+					'Generation_Config'
+				)
+			);
+		}
+
+		if (
+			isset( $model_params['system_instruction'] )
+			&& ! is_string( $model_params['system_instruction'] )
+			&& ! $model_params['system_instruction'] instanceof Parts
+			&& ! $model_params['system_instruction'] instanceof Content
+		) {
+			throw new InvalidArgumentException(
+				sprintf(
+					/* translators: 1: class name, 2: another class name */
+					esc_html__( 'The system instruction argument must be either a string, or an instance of %1$s, or an instance of %2$s.', 'ai-services' ),
+					'Parts',
+					'Content'
+				)
 			);
 		}
 

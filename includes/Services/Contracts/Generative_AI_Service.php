@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Services\Contracts;
 
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use InvalidArgumentException;
@@ -68,7 +69,7 @@ interface Generative_AI_Service {
 	 *     @type string[]             $capabilities       Capabilities requested for the model to support. It is
 	 *                                                    recommended to specify this if you do not explicitly specify
 	 *                                                    a model slug.
-	 *     @type array<string, mixed> $generation_config  Model generation configuration options. Default empty array.
+	 *     @type Generation_Config?   $generation_config  Model generation configuration options. Default none.
 	 *     @type string|Parts|Content $system_instruction The system instruction for the model. Default none.
 	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.

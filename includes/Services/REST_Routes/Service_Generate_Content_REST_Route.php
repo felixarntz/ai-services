@@ -14,6 +14,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
@@ -244,6 +245,10 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				}
 				unset( $model_params[ $camel_case ] );
 			}
+		}
+
+		if ( isset( $model_params['generation_config'] ) && is_array( $model_params['generation_config'] ) ) {
+			$model_params['generation_config'] = Generation_Config::from_array( $model_params['generation_config'] );
 		}
 
 		/**

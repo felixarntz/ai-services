@@ -16,6 +16,7 @@ use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use InvalidArgumentException;
 
@@ -47,7 +48,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var array<string, mixed>
+	 * @var Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -99,7 +100,13 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			$this->model = 'models/' . $model;
 		}
 
-		$this->generation_config = $model_params['generation_config'] ?? array();
+		if ( isset( $model_params['generation_config'] ) ) {
+			if ( $model_params['generation_config'] instanceof Generation_Config ) {
+				$this->generation_config = $model_params['generation_config'];
+			} else {
+				$this->generation_config = Generation_Config::from_array( $model_params['generation_config'] );
+			}
+		}
 
 		// TODO: Add support for tools and tool config, to support code generation.
 
@@ -151,18 +158,20 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
-			'contents'         => array_map(
+			'contents'       => array_map(
 				array( $this, 'prepare_content_for_api_request' ),
 				$contents
 			),
-			'generationConfig' => $this->generation_config,
-			'safetySettings'   => array_map(
+			'safetySettings' => array_map(
 				static function ( Safety_Setting $safety_setting ) {
 					return $safety_setting->to_array();
 				},
 				$this->safety_settings
 			),
 		);
+		if ( $this->generation_config ) {
+			$params['generationConfig'] = $this->generation_config->to_array();
+		}
 		if ( $this->system_instruction ) {
 			$params['systemInstruction'] = $this->system_instruction->to_array();
 		}

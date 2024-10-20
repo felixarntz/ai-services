@@ -16,6 +16,7 @@ use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
@@ -49,7 +50,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var array<string, mixed>
+	 * @var Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -89,7 +90,13 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 
 		$this->model = $model;
 
-		$this->generation_config = $model_params['generation_config'] ?? array();
+		if ( isset( $model_params['generation_config'] ) ) {
+			if ( $model_params['generation_config'] instanceof Generation_Config ) {
+				$this->generation_config = $model_params['generation_config'];
+			} else {
+				$this->generation_config = Generation_Config::from_array( $model_params['generation_config'] );
+			}
+		}
 
 		if ( isset( $model_params['system_instruction'] ) ) {
 			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
@@ -125,13 +132,18 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 				array( $this, 'prepare_content_for_api_request' ),
 				$contents
 			),
-			'max_tokens' => $this->generation_config['maxOutputTokens'] ?? 4096,
+			'max_tokens' => 4096,
 		);
-		if ( isset( $this->generation_config['temperature'] ) ) {
-			$params['temperature'] = $this->generation_config['temperature'];
-		}
-		if ( isset( $this->generation_config['stopSequences'] ) ) {
-			$params['stop_sequences'] = $this->generation_config['stopSequences'];
+		if ( $this->generation_config ) {
+			if ( $this->generation_config->get_max_output_tokens() ) {
+				$params['max_tokens'] = $this->generation_config->get_max_output_tokens();
+			}
+			if ( $this->generation_config->get_temperature() !== null ) {
+				$params['temperature'] = $this->generation_config->get_temperature();
+			}
+			if ( $this->generation_config->get_stop_sequences() !== null ) {
+				$params['stop_sequences'] = $this->generation_config->get_stop_sequences();
+			}
 		}
 		if ( $this->system_instruction ) {
 			$params['system'] = $this->system_instruction

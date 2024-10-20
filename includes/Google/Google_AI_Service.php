@@ -15,6 +15,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
@@ -153,8 +154,8 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	 *                                                                       support. It is recommended to specify this
 	 *                                                                       if you do not explicitly specify a model
 	 *                                                                       slug.
-	 *     @type array<string, mixed>                    $generation_config  Model generation configuration options.
-	 *                                                                       Default empty array.
+	 *     @type Generation_Config?                      $generation_config  Model generation configuration options.
+	 *                                                                       Default none.
 	 *     @type string|Parts|Content                    $system_instruction The system instruction for the model.
 	 *                                                                       Default none.
 	 *     @type Safety_Setting[]|array<string, mixed>[] $safety_settings    Optional. The safety settings for the

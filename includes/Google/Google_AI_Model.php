@@ -115,10 +115,8 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		}
 
 		if ( isset( $model_params['safetySettings'] ) ) {
-			foreach ( $model_params['safetySettings'] as $index => $safety_setting ) {
-				if ( is_array( $safety_setting ) ) {
-					$model_params['safetySettings'][ $index ] = Safety_Setting::from_array( $safety_setting );
-				} elseif ( ! $safety_setting instanceof Safety_Setting ) {
+			foreach ( $model_params['safetySettings'] as $safety_setting ) {
+				if ( ! $safety_setting instanceof Safety_Setting ) {
 					throw new InvalidArgumentException(
 						esc_html__( 'The safetySettings parameter must contain Safety_Setting instances.', 'ai-services' )
 					);

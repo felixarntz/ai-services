@@ -134,7 +134,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		}
 
 		$service      = $this->services_api->get_available_service( $request['slug'] );
-		$model_params = $this->process_model_params( $request['model_params'] ?? array() );
+		$model_params = $this->process_model_params( $request['modelParams'] ?? array() );
 		$model        = $this->get_model( $service, $model_params );
 
 		// Parse content data into one of the supported formats.
@@ -233,22 +233,8 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			$model_params['capabilities'] = array( AI_Capabilities::CAPABILITY_TEXT_GENERATION );
 		}
 
-		// Transforms common model parameters from camelCase to snake_case.
-		$snake_case_map = array(
-			'generationConfig'  => 'generation_config',
-			'systemInstruction' => 'system_instruction',
-		);
-		foreach ( $snake_case_map as $camel_case => $snake_case ) {
-			if ( isset( $model_params[ $camel_case ] ) ) {
-				if ( ! isset( $model_params[ $snake_case ] ) ) {
-					$model_params[ $snake_case ] = $model_params[ $camel_case ];
-				}
-				unset( $model_params[ $camel_case ] );
-			}
-		}
-
-		if ( isset( $model_params['generation_config'] ) && is_array( $model_params['generation_config'] ) ) {
-			$model_params['generation_config'] = Generation_Config::from_array( $model_params['generation_config'] );
+		if ( isset( $model_params['generationConfig'] ) && is_array( $model_params['generationConfig'] ) ) {
+			$model_params['generationConfig'] = Generation_Config::from_array( $model_params['generationConfig'] );
 		}
 
 		/**
@@ -260,7 +246,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		 * @since 0.1.0
 		 *
 		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
-		 *                                           'generation_config' and 'system_instruction'.
+		 *                                           'generationConfig' and 'systemInstruction'.
 		 * @return array<string, mixed> The processed model parameters.
 		 */
 		return (array) apply_filters( 'ai_services_rest_model_params', $model_params );
@@ -275,27 +261,27 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 */
 	protected function args(): array {
 		return array(
-			'model_params' => array(
+			'modelParams' => array(
 				'description'          => __( 'Model parameters.', 'ai-services' ),
 				'type'                 => 'object',
 				'properties'           => array(
-					'model'              => array(
+					'model'             => array(
 						'description' => __( 'Model slug.', 'ai-services' ),
 						'type'        => 'string',
 					),
-					'capabilities'       => array(
+					'capabilities'      => array(
 						'description' => __( 'Capabilities requested for the model to support.', 'ai-services' ),
 						'type'        => 'array',
 						'items'       => array(
 							'type' => 'string',
 						),
 					),
-					'generation_config'  => array(
+					'generationConfig'  => array(
 						'description'          => __( 'Model generation configuration options.', 'ai-services' ),
 						'type'                 => 'object',
 						'additionalProperties' => true,
 					),
-					'system_instruction' => array(
+					'systemInstruction' => array(
 						'description' => __( 'System instruction for the model.', 'ai-services' ),
 						'type'        => array( 'string', 'object', 'array' ),
 						'oneOf'       => array(
@@ -312,7 +298,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				),
 				'additionalProperties' => true,
 			),
-			'content'      => array(
+			'content'     => array(
 				'description' => __( 'Content data to pass to the model, including the prompt and optional history.', 'ai-services' ),
 				'type'        => array( 'string', 'object', 'array' ),
 				'oneOf'       => array(

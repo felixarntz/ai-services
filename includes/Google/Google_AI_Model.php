@@ -100,31 +100,31 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			$this->model = 'models/' . $model;
 		}
 
-		if ( isset( $model_params['generation_config'] ) ) {
-			if ( $model_params['generation_config'] instanceof Generation_Config ) {
-				$this->generation_config = $model_params['generation_config'];
+		if ( isset( $model_params['generationConfig'] ) ) {
+			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
+				$this->generation_config = $model_params['generationConfig'];
 			} else {
-				$this->generation_config = Generation_Config::from_array( $model_params['generation_config'] );
+				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
 			}
 		}
 
 		// TODO: Add support for tools and tool config, to support code generation.
 
-		if ( isset( $model_params['system_instruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
+		if ( isset( $model_params['systemInstruction'] ) ) {
+			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
 		}
 
-		if ( isset( $model_params['safety_settings'] ) ) {
-			foreach ( $model_params['safety_settings'] as $index => $safety_setting ) {
+		if ( isset( $model_params['safetySettings'] ) ) {
+			foreach ( $model_params['safetySettings'] as $index => $safety_setting ) {
 				if ( is_array( $safety_setting ) ) {
-					$model_params['safety_settings'][ $index ] = Safety_Setting::from_array( $safety_setting );
+					$model_params['safetySettings'][ $index ] = Safety_Setting::from_array( $safety_setting );
 				} elseif ( ! $safety_setting instanceof Safety_Setting ) {
 					throw new InvalidArgumentException(
-						esc_html__( 'The safety_settings parameter must contain Safety_Setting instances.', 'ai-services' )
+						esc_html__( 'The safetySettings parameter must contain Safety_Setting instances.', 'ai-services' )
 					);
 				}
 			}
-			$this->safety_settings = $model_params['safety_settings'];
+			$this->safety_settings = $model_params['safetySettings'];
 		} else {
 			$this->safety_settings = array();
 		}

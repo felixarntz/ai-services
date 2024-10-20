@@ -116,7 +116,7 @@ class Chatbot implements With_Hooks {
 	 */
 	public function get_model_params(): array {
 		return array(
-			'system_instruction' => $this->ai->get_system_instruction(),
+			'systemInstruction' => $this->ai->get_system_instruction(),
 		);
 	}
 
@@ -186,9 +186,9 @@ class Chatbot implements With_Hooks {
 	 * @return array<string, mixed> The filtered model parameters.
 	 */
 	public function filter_rest_model_params( array $model_params ): array {
-		if ( isset( $model_params['use_wpps_chatbot'] ) || isset( $model_params['useWppsChatbot'] ) ) {
+		if ( isset( $model_params['useWppsChatbot'] ) ) {
 			$model_params = array_merge( $model_params, $this->get_model_params() );
-			unset( $model_params['use_wpps_chatbot'], $model_params['useWppsChatbot'] );
+			unset( $model_params['useWppsChatbot'] );
 		}
 		return $model_params;
 	}

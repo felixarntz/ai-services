@@ -95,16 +95,16 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.
 	 *
-	 *     @type string               $feature            Required. Unique identifier of the feature that the model
-	 *                                                    will be used for. Must only contain lowercase letters,
-	 *                                                    numbers, hyphens.
-	 *     @type string               $model              The model slug. By default, the model will be determined
-	 *                                                    based on heuristics such as the requested capabilities.
-	 *     @type string[]             $capabilities       Capabilities requested for the model to support. It is
-	 *                                                    recommended to specify this if you do not explicitly specify
-	 *                                                    a model slug.
-	 *     @type Generation_Config?   $generation_config  Model generation configuration options. Default none.
-	 *     @type string|Parts|Content $system_instruction The system instruction for the model. Default none.
+	 *     @type string               $feature           Required. Unique identifier of the feature that the model
+	 *                                                   will be used for. Must only contain lowercase letters,
+	 *                                                   numbers, hyphens.
+	 *     @type string               $model             The model slug. By default, the model will be determined
+	 *                                                   based on heuristics such as the requested capabilities.
+	 *     @type string[]             $capabilities      Capabilities requested for the model to support. It is
+	 *                                                   recommended to specify this if you do not explicitly specify a
+	 *                                                   model slug.
+	 *     @type Generation_Config?   $generationConfig  Model generation configuration options. Default none.
+	 *     @type string|Parts|Content $systemInstruction The system instruction for the model. Default none.
 	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Generative_AI_Model The generative model.
@@ -120,8 +120,8 @@ class AI_Service_Decorator implements Generative_AI_Service {
 
 		// Perform basic validation so that the model classes don't have to.
 		if (
-			isset( $model_params['generation_config'] )
-			&& ! $model_params['generation_config'] instanceof Generation_Config
+			isset( $model_params['generationConfig'] )
+			&& ! $model_params['generationConfig'] instanceof Generation_Config
 		) {
 			throw new InvalidArgumentException(
 				sprintf(
@@ -133,10 +133,10 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		}
 
 		if (
-			isset( $model_params['system_instruction'] )
-			&& ! is_string( $model_params['system_instruction'] )
-			&& ! $model_params['system_instruction'] instanceof Parts
-			&& ! $model_params['system_instruction'] instanceof Content
+			isset( $model_params['systemInstruction'] )
+			&& ! is_string( $model_params['systemInstruction'] )
+			&& ! $model_params['systemInstruction'] instanceof Parts
+			&& ! $model_params['systemInstruction'] instanceof Content
 		) {
 			throw new InvalidArgumentException(
 				sprintf(

@@ -195,7 +195,7 @@ class GenerativeAiService {
 				method: 'POST',
 				data: {
 					content,
-					model_params: modelParams || {},
+					modelParams: modelParams || {},
 				},
 			} );
 		} catch ( error ) {

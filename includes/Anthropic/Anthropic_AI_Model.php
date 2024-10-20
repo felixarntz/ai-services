@@ -90,16 +90,16 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 
 		$this->model = $model;
 
-		if ( isset( $model_params['generation_config'] ) ) {
-			if ( $model_params['generation_config'] instanceof Generation_Config ) {
-				$this->generation_config = $model_params['generation_config'];
+		if ( isset( $model_params['generationConfig'] ) ) {
+			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
+				$this->generation_config = $model_params['generationConfig'];
 			} else {
-				$this->generation_config = Generation_Config::from_array( $model_params['generation_config'] );
+				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
 			}
 		}
 
-		if ( isset( $model_params['system_instruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['system_instruction'] );
+		if ( isset( $model_params['systemInstruction'] ) ) {
+			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
 		}
 	}
 

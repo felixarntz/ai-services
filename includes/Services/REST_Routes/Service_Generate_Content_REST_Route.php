@@ -233,8 +233,16 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			$model_params['capabilities'] = array( AI_Capabilities::CAPABILITY_TEXT_GENERATION );
 		}
 
+		// Parse associative arrays into their relevant data structures.
 		if ( isset( $model_params['generationConfig'] ) && is_array( $model_params['generationConfig'] ) ) {
 			$model_params['generationConfig'] = Generation_Config::from_array( $model_params['generationConfig'] );
+		}
+		if ( isset( $model_params['systemInstruction'] ) && is_array( $model_params['systemInstruction'] ) ) {
+			if ( isset( $model_params['systemInstruction']['role'] ) ) {
+				$model_params['systemInstruction'] = Content::from_array( $model_params['systemInstruction'] );
+			} else {
+				$model_params['systemInstruction'] = Parts::from_array( $model_params['systemInstruction'] );
+			}
 		}
 
 		/**

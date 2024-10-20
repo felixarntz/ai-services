@@ -132,10 +132,14 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			$contents = array_merge( array( $this->system_instruction ), $contents );
 		}
 
+		$transformers = self::get_content_transformers();
+
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
 			'messages' => array_map(
-				array( $this, 'prepare_content_for_api_request' ),
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
 				$contents
 			),
 		);
@@ -229,72 +233,6 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	}
 
 	/**
-	 * Transforms a given Content instance into the format required for the API request.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Content $content The content instance.
-	 * @return array<string, mixed> The content data for the API request.
-	 *
-	 * @throws InvalidArgumentException Thrown if the content is invalid.
-	 */
-	private function prepare_content_for_api_request( Content $content ): array {
-		if ( $content->get_role() === Content::ROLE_MODEL ) {
-			$role = 'assistant';
-		} elseif ( $content->get_role() === Content::ROLE_SYSTEM ) {
-			$role = 'system';
-		} else {
-			$role = 'user';
-		}
-
-		$parts = array();
-		foreach ( $content->get_parts() as $part ) {
-			if ( $part instanceof Text_Part ) {
-				$data    = $part->to_array();
-				$parts[] = array(
-					'type' => 'text',
-					'text' => $data['text'],
-				);
-			} elseif ( $part instanceof Inline_Data_Part ) {
-				$data = $part->to_array();
-				if ( ! str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
-					throw new InvalidArgumentException(
-						esc_html__( 'Invalid content part: The OpenAI API only supports text and image parts.', 'ai-services' )
-					);
-				}
-				$parts[] = array(
-					'type'      => 'image_url',
-					'image_url' => array(
-						'url' => $data['inlineData']['data'],
-					),
-				);
-			} elseif ( $part instanceof File_Data_Part ) {
-				$data = $part->to_array();
-				if ( ! str_starts_with( $data['fileData']['mimeType'], 'image/' ) ) {
-					throw new InvalidArgumentException(
-						esc_html__( 'Invalid content part: The OpenAI API only supports text and image parts.', 'ai-services' )
-					);
-				}
-				$parts[] = array(
-					'type'      => 'image_url',
-					'image_url' => array(
-						'url' => $data['fileData']['fileUri'],
-					),
-				);
-			} else {
-				throw new InvalidArgumentException(
-					esc_html__( 'Invalid content part: The OpenAI API only supports text and image parts.', 'ai-services' )
-				);
-			}
-		}
-
-		return array(
-			'role'    => $role,
-			'content' => $parts,
-		);
-	}
-
-	/**
 	 * Transforms a given API response into a Content instance.
 	 *
 	 * @since 0.1.0
@@ -333,6 +271,79 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				'role'  => $role,
 				'parts' => $parts,
 			)
+		);
+	}
+
+	/**
+	 * Gets the content transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The content transformers.
+	 */
+	private static function get_content_transformers(): array {
+		return array(
+			'role'    => static function ( Content $content ) {
+				if ( $content->get_role() === Content::ROLE_MODEL ) {
+					return 'assistant';
+				}
+				if ( $content->get_role() === Content::ROLE_SYSTEM ) {
+					return 'system';
+				}
+				return 'user';
+			},
+			'content' => static function ( Content $content ) {
+				$parts = array();
+				foreach ( $content->get_parts() as $part ) {
+					if ( $part instanceof Text_Part ) {
+						$data    = $part->to_array();
+						$parts[] = array(
+							'type' => 'text',
+							'text' => $data['text'],
+						);
+					} elseif ( $part instanceof Inline_Data_Part ) {
+						$data = $part->to_array();
+						if ( str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
+							$parts[] = array(
+								'type'      => 'image_url',
+								'image_url' => array(
+									'url' => $data['inlineData']['data'],
+								),
+							);
+						} elseif ( str_starts_with( $data['inlineData']['mimeType'], 'audio/' ) ) {
+							$parts[] = array(
+								'type'        => 'input_audio',
+								'input_audio' => array(
+									'data'   => $data['inlineData']['data'],
+									'format' => wp_get_default_extension_for_mime_type( $data['inlineData']['mimeType'] ),
+								),
+							);
+						} else {
+							throw new InvalidArgumentException(
+								esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+							);
+						}
+					} elseif ( $part instanceof File_Data_Part ) {
+						$data = $part->to_array();
+						if ( ! str_starts_with( $data['fileData']['mimeType'], 'image/' ) ) {
+							throw new InvalidArgumentException(
+								esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+							);
+						}
+						$parts[] = array(
+							'type'      => 'image_url',
+							'image_url' => array(
+								'url' => $data['fileData']['fileUri'],
+							),
+						);
+					} else {
+						throw new InvalidArgumentException(
+							esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+						);
+					}
+				}
+				return $parts;
+			},
 		);
 	}
 

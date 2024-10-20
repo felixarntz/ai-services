@@ -127,10 +127,14 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
+		$transformers = self::get_content_transformers();
+
 		$params = array(
 			// TODO: Add support for tools and tool config, to support code generation.
 			'messages' => array_map(
-				array( $this, 'prepare_content_for_api_request' ),
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
 				$contents
 			),
 		);
@@ -168,59 +172,6 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 		);
 
 		return $candidates;
-	}
-
-	/**
-	 * Transforms a given Content instance into the format required for the API request.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Content $content The content instance.
-	 * @return array<string, mixed> The content data for the API request.
-	 *
-	 * @throws InvalidArgumentException Thrown if the content is invalid.
-	 */
-	private function prepare_content_for_api_request( Content $content ): array {
-		if ( $content->get_role() === Content::ROLE_MODEL ) {
-			$role = 'assistant';
-		} else {
-			$role = 'user';
-		}
-
-		$parts = array();
-		foreach ( $content->get_parts() as $part ) {
-			if ( $part instanceof Text_Part ) {
-				$data    = $part->to_array();
-				$parts[] = array(
-					'type' => 'text',
-					'text' => $data['text'],
-				);
-			} elseif ( $part instanceof Inline_Data_Part ) {
-				$data = $part->to_array();
-				if ( ! str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
-					throw new InvalidArgumentException(
-						esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
-					);
-				}
-				$parts[] = array(
-					'type'   => 'image',
-					'source' => array(
-						'type'       => 'base64',
-						'media_type' => $data['inlineData']['mimeType'],
-						'data'       => $data['inlineData']['data'],
-					),
-				);
-			} else {
-				throw new InvalidArgumentException(
-					esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
-				);
-			}
-		}
-
-		return array(
-			'role'    => $role,
-			'content' => $parts,
-		);
 	}
 
 	/**
@@ -267,6 +218,56 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 				'role'  => $role,
 				'parts' => $parts,
 			)
+		);
+	}
+
+	/**
+	 * Gets the content transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The content transformers.
+	 */
+	private static function get_content_transformers(): array {
+		return array(
+			'role'    => static function ( Content $content ) {
+				if ( $content->get_role() === Content::ROLE_MODEL ) {
+					return 'assistant';
+				}
+				return 'user';
+			},
+			'content' => static function ( Content $content ) {
+				$parts = array();
+				foreach ( $content->get_parts() as $part ) {
+					if ( $part instanceof Text_Part ) {
+						$data    = $part->to_array();
+						$parts[] = array(
+							'type' => 'text',
+							'text' => $data['text'],
+						);
+					} elseif ( $part instanceof Inline_Data_Part ) {
+						$data = $part->to_array();
+						if ( ! str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
+							throw new InvalidArgumentException(
+								esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
+							);
+						}
+						$parts[] = array(
+							'type'   => 'image',
+							'source' => array(
+								'type'       => 'base64',
+								'media_type' => $data['inlineData']['mimeType'],
+								'data'       => $data['inlineData']['data'],
+							),
+						);
+					} else {
+						throw new InvalidArgumentException(
+							esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
+						);
+					}
+				}
+				return $parts;
+			},
 		);
 	}
 

@@ -199,7 +199,7 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array<string, mixed> $data The parts data.
+	 * @param mixed[] $data The parts data.
 	 * @return Parts The Parts instance.
 	 *
 	 * @throws InvalidArgumentException Thrown if the parts data is invalid.

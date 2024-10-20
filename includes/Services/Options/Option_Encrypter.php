@@ -160,6 +160,7 @@ final class Option_Encrypter {
 			return;
 		}
 
+		// @phpstan-ignore-next-line
 		wp_trigger_error( $function_name, $message, $error_level );
 	}
 }

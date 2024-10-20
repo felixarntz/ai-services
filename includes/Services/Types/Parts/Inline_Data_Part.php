@@ -65,4 +65,34 @@ final class Inline_Data_Part extends Abstract_Part {
 			),
 		);
 	}
+
+	/**
+	 * Returns the JSON schema for the expected input.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The JSON schema.
+	 */
+	public static function get_json_schema(): array {
+		return array(
+			'type'                 => 'object',
+			'properties'           => array(
+				'inlineData' => array(
+					'description' => __( 'Inline data as part of the prompt, such as a file.', 'ai-services' ),
+					'type'        => 'object',
+					'properties'  => array(
+						'mimeType' => array(
+							'description' => __( 'MIME type of the inline data.', 'ai-services' ),
+							'type'        => 'string',
+						),
+						'data'     => array(
+							'description' => __( 'Base64-encoded data.', 'ai-services' ),
+							'type'        => 'string',
+						),
+					),
+				),
+			),
+			'additionalProperties' => false,
+		);
+	}
 }

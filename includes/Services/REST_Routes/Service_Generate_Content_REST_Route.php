@@ -278,6 +278,18 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @return array<string, mixed> Route arguments.
 	 */
 	protected function args(): array {
+		$content_schema = array_merge(
+			array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
+			Content::get_json_schema()
+		);
+
+		$system_content_schema                                = $content_schema;
+		$system_content_schema['properties']['role']['enum']  = array( Content::ROLE_SYSTEM );
+		$user_content_schema                                  = $content_schema;
+		$user_content_schema['properties']['role']['enum']    = array( Content::ROLE_USER );
+		$history_content_schema                               = $content_schema;
+		$history_content_schema['properties']['role']['enum'] = array( Content::ROLE_USER, Content::ROLE_MODEL );
+
 		return array(
 			'modelParams' => array(
 				'description'          => __( 'Model parameters.', 'ai-services' ),
@@ -307,10 +319,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 								'description' => __( 'Prompt text as a string.', 'ai-services' ),
 								'type'        => 'string',
 							),
-							array_merge(
-								array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
-								$this->get_content_schema( array( Content::ROLE_SYSTEM ) )
-							),
+							$system_content_schema,
 						),
 					),
 				),
@@ -326,17 +335,14 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					),
 					array_merge(
 						array( 'description' => __( 'Prompt including multi modal data such as files.', 'ai-services' ) ),
-						$this->get_parts_schema()
+						Parts::get_json_schema()
 					),
-					array_merge(
-						array( 'description' => __( 'Prompt content object.', 'ai-services' ) ),
-						$this->get_content_schema( array( Content::ROLE_USER ) )
-					),
+					$user_content_schema,
 					array(
 						'description' => __( 'Array of contents, including history from previous user prompts and their model answers.', 'ai-services' ),
 						'type'        => 'array',
 						'minItems'    => 1,
-						'items'       => $this->get_content_schema( array( Content::ROLE_USER, Content::ROLE_MODEL ) ),
+						'items'       => $history_content_schema,
 					),
 				),
 			),
@@ -380,105 +386,10 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 						'description' => __( 'Candidate content.', 'ai-services' ),
 						'readonly'    => true,
 					),
-					$this->get_content_schema(
-						array( Content::ROLE_USER, Content::ROLE_MODEL, Content::ROLE_SYSTEM )
-					)
+					Content::get_json_schema()
 				),
 			),
 			'additionalProperties' => true,
-		);
-	}
-
-	/**
-	 * Gets the REST schema that corresponds to a content Parts object.
-	 *
-	 * This must be in sync with the data structure of the {@see Parts} class.
-	 *
-	 * @since 0.1.0
-	 * @see Parts
-	 *
-	 * @return array<string, mixed> The schema for a Parts object.
-	 */
-	private function get_parts_schema(): array {
-		return array(
-			'type'     => 'array',
-			'minItems' => 1,
-			'items'    => array(
-				'type'  => 'object',
-				'oneOf' => array(
-					array(
-						'properties'           => array(
-							'text' => array(
-								'description' => __( 'Prompt text content.', 'ai-services' ),
-								'type'        => 'string',
-							),
-						),
-						'additionalProperties' => false,
-					),
-					array(
-						'properties'           => array(
-							'inlineData' => array(
-								'description' => __( 'Inline data as part of the prompt, such as a file.', 'ai-services' ),
-								'type'        => 'object',
-								'properties'  => array(
-									'mimeType' => array(
-										'description' => __( 'MIME type of the inline data.', 'ai-services' ),
-										'type'        => 'string',
-									),
-									'data'     => array(
-										'description' => __( 'Base64-encoded data.', 'ai-services' ),
-										'type'        => 'string',
-									),
-								),
-							),
-						),
-						'additionalProperties' => false,
-					),
-					array(
-						'properties'           => array(
-							'fileData' => array(
-								'description' => __( 'Reference to a file as part of the prompt.', 'ai-services' ),
-								'type'        => 'object',
-								'properties'  => array(
-									'mimeType' => array(
-										'description' => __( 'MIME type of the file data.', 'ai-services' ),
-										'type'        => 'string',
-									),
-									'fileUri'  => array(
-										'description' => __( 'URI of the file.', 'ai-services' ),
-										'type'        => 'string',
-									),
-								),
-							),
-						),
-						'additionalProperties' => false,
-					),
-				),
-			),
-		);
-	}
-
-	/**
-	 * Gets the REST schema that corresponds to a Content object.
-	 *
-	 * This must be in sync with the data structure of the {@see Content} class.
-	 *
-	 * @since 0.1.0
-	 * @see Content
-	 *
-	 * @param string[] $allowed_roles Which content roles to include in the schema.
-	 * @return array<string, mixed> The schema for a Content object.
-	 */
-	private function get_content_schema( array $allowed_roles ): array {
-		return array(
-			'type'       => 'object',
-			'properties' => array(
-				'role'  => array(
-					'type' => 'string',
-					'enum' => $allowed_roles,
-				),
-				'parts' => $this->get_parts_schema(),
-			),
 		);
 	}
 

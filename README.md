@@ -22,8 +22,9 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 
 ## Examples
 
+**Generate the answer to a prompt in PHP code:**
+
 ```php
-// Generate the answer to a prompt in PHP code.
 if ( ai_services()->has_available_services() ) {
 	$service = ai_services()->get_available_service();
 	try {
@@ -41,8 +42,9 @@ if ( ai_services()->has_available_services() ) {
 }
 ```
 
+**Generate the answer to a prompt in JavaScript code:**
+
 ```js
-// Generate the answer to a prompt in JavaScript code.
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 if ( hasAvailableServices() ) {
 	const service = getAvailableService();
@@ -57,14 +59,17 @@ if ( hasAvailableServices() ) {
 }
 ```
 
+**Generate the answer to a prompt using WP-CLI:**
+
 ```sh
-// Generate the answer to a prompt using WP-CLI.
 wp ai-services generate-text 'What can I do with WordPress?' --feature=my-test-feature
 ```
 
-You can also use a specific AI service, if you have a preference, for example the `google` service:
+You can also use a specific AI service, if you have a preference, for example the `google` service.
+
+**Generate the answer to a prompt using a specific AI service, in PHP code:**
+
 ```php
-// Generate the answer to a prompt using a specific AI service, in PHP code.
 if ( ai_services()->is_service_available( 'google' ) ) {
 	$service = ai_services()->get_available_service( 'google' );
 	try {
@@ -82,8 +87,9 @@ if ( ai_services()->is_service_available( 'google' ) ) {
 }
 ```
 
+**Generate the answer to a prompt using a specific AI service, using the REST API via cURL:**
+
 ```sh
-# Generate the answer to a prompt using a specific AI service, using the REST API via cURL.
 curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' \
   -H 'Content-Type: application/json' \
   --data-raw '{"content":"What can I do with WordPress?"}'

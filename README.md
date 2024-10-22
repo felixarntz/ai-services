@@ -89,6 +89,8 @@ curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' 
   --data-raw '{"content":"What can I do with WordPress?"}'
 ```
 
+For complete examples such as entire plugins built on top of the AI Services infrastructure, please see the [examples directory on GitHub](https://github.com/felixarntz/ai-services/tree/main/examples).
+
 ## Installation and usage
 
 You can install [the latest built release from the WordPress plugin directory](https://wordpress.org/plugins/ai-services/), which in the long term will be the recommended way to use the plugin. Keep in mind that any `0.x.y` releases are considered early access and may contain breaking changes.

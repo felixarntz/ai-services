@@ -57,7 +57,7 @@ function ImageControls( { attributes, setAttributes } ) {
 		select( aiStore ).getAvailableService( AI_CAPABILITIES )
 	);
 	if ( ! service ) {
-		return;
+		return null;
 	}
 
 	if ( ! attributes.url ) {

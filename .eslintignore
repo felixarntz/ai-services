@@ -1,0 +1,5 @@
+build
+third-party
+vendor
+**/*.json
+**/*.yml

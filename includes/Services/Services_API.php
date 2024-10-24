@@ -11,7 +11,6 @@ namespace Felix_Arntz\AI_Services\Services;
 use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
-use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
@@ -246,9 +245,7 @@ final class Services_API {
 
 		// Test whether the API key is valid by listing the models.
 		$instance = $this->service_registrations[ $slug ]->create_instance();
-		try {
-			$instance->list_models();
-		} catch ( Generative_AI_Exception $e ) {
+		if ( ! $instance->is_connected() ) {
 			return false;
 		}
 

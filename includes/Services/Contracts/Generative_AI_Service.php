@@ -41,6 +41,17 @@ interface Generative_AI_Service {
 	public function get_capabilities(): array;
 
 	/**
+	 * Checks whether the service is connected.
+	 *
+	 * This is typically used to check whether the current service credentials are valid.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return bool True if the service is connected, false otherwise.
+	 */
+	public function is_connected(): bool;
+
+	/**
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0

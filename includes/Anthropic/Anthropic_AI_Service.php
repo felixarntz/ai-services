@@ -13,12 +13,15 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Types\Content;
+use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Class for the Anthropic AI service.
@@ -82,6 +85,47 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 	 */
 	public function get_api_client(): Generative_AI_API_Client {
 		return $this->api;
+	}
+
+	/**
+	 * Checks whether the service is connected.
+	 *
+	 * This is typically used to check whether the current service credentials are valid.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return bool True if the service is connected, false otherwise.
+	 *
+	 * @throws RuntimeException Thrown if the connection check cannot be performed.
+	 */
+	public function is_connected(): bool {
+		/*
+		 * To check the connection, the only way is to generate content.
+		 * In order to avoid unnecessary API usage, we generate a single token of text.
+		 */
+		$model = $this->get_model(
+			array(
+				'feature'          => 'connection_check',
+				'capabilities'     => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION ),
+				'generationConfig' => new Generation_Config( array( 'maxOutputTokens' => 1 ) ),
+			)
+		);
+
+		// This should never happen but needs to be here as a sanity check.
+		if ( ! $model instanceof With_Text_Generation ) {
+			throw new RuntimeException( 'No Anthropic model supports text generation.' );
+		}
+
+		try {
+			$model->generate_text( 'a' );
+			return true;
+		} catch ( Generative_AI_Exception $e ) {
+			// Only if the request failed specifically due to the API key being invalid, we return false.
+			if ( str_contains( $e->getMessage(), 'invalid x-api-key' ) ) {
+				return false;
+			}
+			return true;
+		}
 	}
 
 	/**

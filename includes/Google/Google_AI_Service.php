@@ -86,6 +86,24 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 	}
 
 	/**
+	 * Checks whether the service is connected.
+	 *
+	 * This is typically used to check whether the current service credentials are valid.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return bool True if the service is connected, false otherwise.
+	 */
+	public function is_connected(): bool {
+		try {
+			$this->list_models();
+			return true;
+		} catch ( Generative_AI_Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0

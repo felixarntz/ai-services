@@ -31,7 +31,7 @@ add_action(
 				'wp-element',
 				'wp-block-editor',
 				'wp-editor',
-				'ais-ai-store',
+				'ais-ai',
 				'wp-blocks',
 				'wp-plugins',
 				'wp-i18n',

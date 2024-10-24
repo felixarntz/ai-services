@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { SensitiveTextControl } from '@ai-services/components';
-import { store as pluginSettingsStore } from '@ai-services/settings-store';
+import { store as pluginSettingsStore } from '@ai-services/settings';
 
 /**
  * WordPress dependencies

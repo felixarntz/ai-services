@@ -10,7 +10,7 @@ const { useSelect } = wp.data;
 const { createElement, useState, Fragment } = wp.element;
 const { addFilter } = wp.hooks;
 const { BlockControls } = wp.blockEditor;
-const { store: aiStore } = window.aiServices.aiStore;
+const { store: aiStore } = window.aiServices.ai;
 const { __ } = wp.i18n;
 
 const AI_CAPABILITIES = [ 'multimodal_input', 'text_generation' ];

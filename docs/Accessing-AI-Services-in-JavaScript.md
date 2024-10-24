@@ -21,6 +21,8 @@ if ( isServiceAvailable( 'google' ) ) {
 }
 ```
 
+Alternatively to hard-coding `'ai-services/ai'` for the store name, you can reference `aiServices.ai.store` from the `aiServices` JavaScript global.
+
 Note that any of the selectors may temporarily return `undefined`, which should be interpreted as that the services are being loaded. **A return value of `undefined` does not mean that something was not found.** For that, the value `null` is used.
 
 For more specific examples with explanations, see the following sections.

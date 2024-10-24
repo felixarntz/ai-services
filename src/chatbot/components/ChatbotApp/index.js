@@ -3,7 +3,7 @@
  */
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
-import { store as aiStore } from '@ai-services/ai-store';
+import { store as aiStore } from '@ai-services/ai';
 import { PluginIcon } from '@ai-services/components';
 
 /**

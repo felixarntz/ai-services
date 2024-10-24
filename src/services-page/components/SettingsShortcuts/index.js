@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as pluginSettingsStore } from '@ai-services/settings-store';
+import { store as pluginSettingsStore } from '@ai-services/settings';
 
 /**
  * WordPress dependencies

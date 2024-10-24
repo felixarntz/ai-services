@@ -31,7 +31,7 @@ add_action(
 				'wp-element',
 				'wp-hooks',
 				'wp-block-editor',
-				'ais-ai-store',
+				'ais-ai',
 				'wp-i18n',
 			),
 			'1.0.0',

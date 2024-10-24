@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as aiStore } from '@ai-services/ai-store';
+import { store as aiStore } from '@ai-services/ai';
 
 /**
  * WordPress dependencies

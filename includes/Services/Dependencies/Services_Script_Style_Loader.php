@@ -65,19 +65,22 @@ class Services_Script_Style_Loader {
 	 */
 	public function register_scripts_and_styles(): void {
 		$this->script_registry->register(
-			'ais-ai-store',
+			'ais-ai',
 			array(
-				'src'      => $this->plugin_env->url( 'build/ai-store/index.js' ),
-				'manifest' => $this->plugin_env->path( 'build/ai-store/index.asset.php' ),
+				'src'      => $this->plugin_env->url( 'build/ai/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/ai/index.asset.php' ),
 				'strategy' => 'defer',
 			)
 		);
 
+		// For backward compatibility, keep this as an alias for 'ais-ai' (which is however deprecated). TODO: Remove.
+		wp_register_script( 'ais-ai-store', false, array( 'ais-ai' ), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
+
 		$this->script_registry->register(
-			'ais-settings-store',
+			'ais-settings',
 			array(
-				'src'      => $this->plugin_env->url( 'build/settings-store/index.js' ),
-				'manifest' => $this->plugin_env->path( 'build/settings-store/index.asset.php' ),
+				'src'      => $this->plugin_env->url( 'build/settings/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/settings/index.asset.php' ),
 				'strategy' => 'defer',
 			)
 		);

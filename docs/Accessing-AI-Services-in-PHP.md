@@ -8,9 +8,9 @@ The canonical entry point to all of the PHP public APIs is the `ai_services()` f
 
 ```php
 if ( ai_services()->is_service_available( 'google' ) ) {
-	$service = ai_services()->get_available_service( 'google' );
-	try {
-		$result = $service
+  $service = ai_services()->get_available_service( 'google' );
+  try {
+    $result = $service
       ->get_model(
         array(
           'feature'      => 'my-test-feature',
@@ -18,9 +18,9 @@ if ( ai_services()->is_service_available( 'google' ) ) {
         )
       )
       ->generate_text( 'What can I do with WordPress?' );
-	} catch ( Exception $e ) {
-		// Handle the exception.
-	}
+  } catch ( Exception $e ) {
+    // Handle the exception.
+  }
 }
 ```
 
@@ -36,8 +36,8 @@ You can pass the slug of a specific AI service to the `Services_API::get_availab
 
 ```php
 if ( ai_services()->is_service_available( 'google' ) ) {
-	$service = ai_services()->get_available_service( 'google' );
-	// Do something with the AI service.
+  $service = ai_services()->get_available_service( 'google' );
+  // Do something with the AI service.
 }
 ```
 
@@ -58,8 +58,8 @@ For many AI use-cases, relying on different AI services may be feasible. For exa
 
 ```php
 if ( ai_services()->has_available_services( array( 'capabilities' => array( 'text_generation' ) ) ) ) {
-	$service = ai_services()->get_available_service( array( 'capabilities' => array( 'text_generation' ) ) );
-	// Do something with the AI service.
+  $service = ai_services()->get_available_service( array( 'capabilities' => array( 'text_generation' ) ) );
+  // Do something with the AI service.
 }
 ```
 
@@ -78,8 +78,8 @@ In some instances, you may have a preference for a few specific AI services that
 
 ```php
 if ( ai_services()->has_available_services( array( 'slugs' => array( 'google', 'openai' ) ) ) ) {
-	$service = ai_services()->get_available_service( array( 'slugs' => array( 'google', 'openai' ) ) );
-	// Do something with the AI service.
+  $service = ai_services()->get_available_service( array( 'slugs' => array( 'google', 'openai' ) ) );
+  // Do something with the AI service.
 }
 ```
 

@@ -71,7 +71,7 @@ const SERVICE_ARGS = { capabilities: [ 'text_generation' ] };
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 const service = getAvailableService( SERVICE_ARGS );
 if ( service !== null ) {
-	// Do something with the AI service.
+  // Do something with the AI service.
 }
 ```
 
@@ -81,8 +81,8 @@ In some instances, you may have a preference for a few specific AI services that
 const SERVICE_ARGS = { slugs: [ 'google', 'openai' ] };
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 if ( hasAvailableServices( SERVICE_ARGS ) ) {
-	const service = getAvailableService( SERVICE_ARGS );
-	// Do something with the AI service.
+  const service = getAvailableService( SERVICE_ARGS );
+  // Do something with the AI service.
 }
 ```
 

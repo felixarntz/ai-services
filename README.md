@@ -26,9 +26,9 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 
 ```php
 if ( ai_services()->has_available_services() ) {
-	$service = ai_services()->get_available_service();
-	try {
-		$result = $service
+  $service = ai_services()->get_available_service();
+  try {
+    $result = $service
       ->get_model(
         array(
           'feature'      => 'my-test-feature',
@@ -36,9 +36,9 @@ if ( ai_services()->has_available_services() ) {
         )
       )
       ->generate_text( 'What can I do with WordPress?' );
-	} catch ( Exception $e ) {
-		// Handle the exception.
-	}
+  } catch ( Exception $e ) {
+    // Handle the exception.
+  }
 }
 ```
 
@@ -47,15 +47,15 @@ if ( ai_services()->has_available_services() ) {
 ```js
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 if ( hasAvailableServices() ) {
-	const service = getAvailableService();
-	try {
-		const result = await service.generateText(
+  const service = getAvailableService();
+  try {
+    const result = await service.generateText(
       'What can I do with WordPress?',
       { feature: 'my-test-feature' }
     );
-	} catch ( error ) {
-		// Handle the error.
-	}
+  } catch ( error ) {
+    // Handle the error.
+  }
 }
 ```
 
@@ -71,9 +71,9 @@ You can also use a specific AI service, if you have a preference, for example th
 
 ```php
 if ( ai_services()->is_service_available( 'google' ) ) {
-	$service = ai_services()->get_available_service( 'google' );
-	try {
-		$result = $service
+  $service = ai_services()->get_available_service( 'google' );
+  try {
+    $result = $service
       ->get_model(
         array(
           'feature'      => 'my-test-feature',
@@ -81,9 +81,9 @@ if ( ai_services()->is_service_available( 'google' ) ) {
         )
       )
       ->generate_text( 'What can I do with WordPress?' );
-	} catch ( Exception $e ) {
-		// Handle the exception.
-	}
+  } catch ( Exception $e ) {
+    // Handle the exception.
+  }
 }
 ```
 

@@ -129,8 +129,8 @@ final class Content implements Arrayable, With_JSON_Schema {
 	 */
 	public static function get_json_schema(): array {
 		return array(
-			'type'       => 'object',
-			'properties' => array(
+			'type'                 => 'object',
+			'properties'           => array(
 				'role'  => array(
 					'description' => __( 'The role of the content, i.e. which source it comes from.', 'ai-services' ),
 					'type'        => 'string',
@@ -145,6 +145,7 @@ final class Content implements Arrayable, With_JSON_Schema {
 					Parts::get_json_schema()
 				),
 			),
+			'additionalProperties' => false,
 		);
 	}
 

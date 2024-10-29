@@ -48,14 +48,16 @@ class Chatbot_Loader {
 		/**
 		 * Filters whether the chatbot is enabled.
 		 *
-		 * The chatbot is the only user-facing feature of this plugin, effectively as a small proof of concept, since
-		 * otherwise it is an infrastructure plugin. As such, this filter can be used to disable the chatbot.
+		 * The chatbot is the only user-facing feature built into this plugin, effectively as a small proof of concept,
+		 * since otherwise it is an infrastructure plugin. It is disabled by default, but can be enabled by using this
+		 * filter.
 		 *
 		 * @since 0.1.0
+		 * @since n.e.x.t The default value was changed to false.
 		 *
 		 * @param bool $enabled Whether the chatbot feature should be enabled or not.
 		 */
-		$enabled = (bool) apply_filters( 'ai_services_chatbot_enabled', true );
+		$enabled = (bool) apply_filters( 'ai_services_chatbot_enabled', false );
 		if ( ! $enabled ) {
 			return false;
 		}

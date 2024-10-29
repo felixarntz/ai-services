@@ -118,7 +118,7 @@ Once the AI Services plugin is installed and activated, you can configure the pl
 
 ## Using the plugin
 
-Once the plugin is active, you will find a new _Settings > AI Services_ submenu in the WordPress administration menu. In there, you can configure your AI service API keys. Once you have configured at least one (valid) API key, you should see a small "Need help?" button in the lower right throughout WP Admin, which exposes the built-in WordPress assistant chatbot. This is the only user-facing feature of the plugin, effectively as a simple proof of concept for the APIs that the plugin infrastructure provides.
+Once the plugin is active, you will find a new _Settings > AI Services_ submenu in the WordPress administration menu. In there, you can configure your AI service API keys. If you have enabled the WordPress assistant chatbot, the only user-facing feature of the plugin, you should see a small "Need help?" button in the lower right throughout WP Admin after you have configured at least one (valid) API key.
 
 Please refer to the [documentation](./docs/README.md) for instructions on how you can actually use the AI capabilities of the plugin in your own projects.
 

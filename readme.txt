@@ -32,8 +32,8 @@ Here's a (non-comprehensive) feature list:
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 * WordPress Assistant chatbot is the single user-facing built-in feature the plugin comes with
   * This effectively is a simple proof of concept of how the APIs the plugin provides can be used
+  * The chatbot feature is inactive by default and can easily be [enabled via filter](#how%20can%20i%20enable%20the%20wordpress%20assistant%20chatbot%20feature%3F)
   * No other user-facing features will ever be added - that's a promise - because this is first and foremost an **infrastructure plugin** that other plugins can rely on
-  * The chatbot feature can easily be disabled via filter
 
 = Why? =
 
@@ -158,14 +158,14 @@ You can configure the plugin with your AI service credentials using the _Setting
 
 == Frequently Asked Questions ==
 
-= How can I disable the WordPress Assistant chatbot feature?
+= How can I enable the WordPress Assistant chatbot feature?
 
-The WordPress Assistant chatbot is the single user-facing built-in feature the plugin comes with, effectively acting as a proof of concept. Other than that, the plugin is purely an infrastructure plugin that other plugins can use to access AI capabilities in WordPress.
+There is a single user-facing built-in feature the plugin comes with, which is a simple WordPress Assistant chatbot, effectively acting as a proof of concept. Since the plugin is purely an infrastructure plugin that other plugins can use to access AI capabilities in WordPress, that chatbot feature is disabled by default.
 
-If you want to get rid of the chatbot, you can easily disable it via filter:
+If you want to test or use the chatbot, you can easily enable it via filter:
 
 `
-add_filter( 'ai_services_chatbot_enabled', '__return_false' );
+add_filter( 'ai_services_chatbot_enabled', '__return_true' );
 `
 
 = How can I programmatically provide service API keys? =

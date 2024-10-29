@@ -15,8 +15,8 @@ While the main introduction to the plugin can be found in the [plugin readme](..
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 * WordPress Assistant chatbot is the single user-facing built-in feature the plugin comes with
   * This effectively is a simple proof of concept of how the APIs the plugin provides can be used
+  * The chatbot feature is inactive by default and can easily be [enabled via filter](./Enabling-the-Assistant-Chatbot-Feature.md)
   * No other user-facing features will ever be added - that's a promise - because this is first and foremost an **infrastructure plugin** that other plugins can rely on
-  * The chatbot feature can easily be disabled via filter
 
 ## Technical concepts
 

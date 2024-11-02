@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Entity_Query
+ * Class Felix_Arntz\AI_Services\Services\Entities\Service_Entity_Query
  *
  * @since 0.1.0
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\REST_Routes;
+namespace Felix_Arntz\AI_Services\Services\Entities;
 
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Contracts\Entity_Query;
@@ -15,6 +15,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\
  * Class representing a service entity query for the REST API.
  *
  * @since 0.1.0
+ * @since n.e.x.t Moved from Felix_Arntz\AI_Services\Services\REST_Routes namespace.
  */
 class Service_Entity_Query implements Entity_Query {
 

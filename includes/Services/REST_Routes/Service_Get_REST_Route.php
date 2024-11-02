@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
+use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;

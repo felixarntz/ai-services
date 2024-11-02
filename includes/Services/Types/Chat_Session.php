@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Services\Types;
 
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Services_API_Helpers;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use InvalidArgumentException;
 
@@ -96,7 +97,8 @@ final class Chat_Session {
 			);
 		}
 
-		$response_content = $candidates->get( 0 )->get_content();
+		$response_contents = ( new Services_API_Helpers() )->get_candidate_contents( $candidates );
+		$response_content  = $response_contents[0];
 
 		$this->history[] = $new_content;
 		$this->history[] = $response_content;

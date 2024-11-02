@@ -7,6 +7,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
+import { getCandidateContents } from './helpers';
 import { formatNewContent } from './util';
 
 /**
@@ -363,7 +364,8 @@ export class ChatSession {
 		);
 
 		// TODO: Support optional candidateFilterArgs, similar to PHP implementation.
-		const responseContent = candidates[ 0 ].content;
+		const responseContents = getCandidateContents( candidates );
+		const responseContent = responseContents[ 0 ];
 
 		this.history = [ ...this.history, newContent, responseContent ];
 

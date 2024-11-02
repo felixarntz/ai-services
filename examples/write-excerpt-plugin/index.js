@@ -9,7 +9,7 @@ const { useDispatch, useSelect } = wp.data;
 const { createElement, useState } = wp.element;
 const { store: blockEditorStore } = wp.blockEditor;
 const { store: editorStore } = wp.editor;
-const { store: aiStore } = window.aiServices.ai;
+const { helpers, store: aiStore } = window.aiServices.ai;
 const { serialize } = wp.blocks;
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
@@ -67,11 +67,11 @@ function useWriteExcerptCommandLoader() {
 					return;
 				}
 
-				const excerpt =
-					candidates[ 0 ].content.parts[ 0 ].text.replaceAll(
-						'\n\n\n\n',
-						'\n\n'
-					);
+				const excerpt = helpers
+					.getTextFromContents(
+						helpers.getCandidateContents( candidates )
+					)
+					.replaceAll( '\n\n\n\n', '\n\n' );
 				editPost( { excerpt } );
 			},
 		},

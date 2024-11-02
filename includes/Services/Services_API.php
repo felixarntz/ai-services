@@ -22,6 +22,8 @@ use InvalidArgumentException;
  * Main API class providing the entry point to the generative AI services.
  *
  * @since 0.1.0
+ *
+ * @property-read Services_API_Helpers $helpers The API helpers instance.
  */
 final class Services_API {
 
@@ -372,6 +374,47 @@ final class Services_API {
 	 */
 	public function get_registered_service_slugs(): array {
 		return array_keys( $this->service_registrations );
+	}
+
+	/**
+	 * Magic method to access the read-only helpers property.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $prop The property name.
+	 * @return bool Whether the property is set.
+	 */
+	public function __isset( $prop ) {
+		return 'helpers' === $prop;
+	}
+
+	/**
+	 * Magic method to access the read-only helpers property.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $prop The property name.
+	 * @return Services_API_Helpers The property value, which can only be the helpers instance.
+	 *
+	 * @throws InvalidArgumentException Thrown if the given property name is not 'helpers'.
+	 */
+	public function __get( $prop ) {
+		static $helpers = new Services_API_Helpers();
+
+		if ( 'helpers' === $prop ) {
+			return $helpers;
+		}
+
+		throw new InvalidArgumentException(
+			esc_html(
+				sprintf(
+					/* translators: 1: property name, 2: class name */
+					__( 'Cannot access property %1$s on %2$s.', 'ai-services' ),
+					$prop,
+					get_class( $this )
+				)
+			)
+		);
 	}
 
 	/**

@@ -12,6 +12,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Services_API_Helpers;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\Types\Candidates;
@@ -139,11 +140,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 			),
 		);
 		if ( $this->system_instruction ) {
-			$params['system'] = $this->system_instruction
-				->get_parts()
-				->filter( array( 'class_name' => Text_Part::class ) )
-				->get( 0 )
-				->to_array()['text'];
+			$params['system'] = ( new Services_API_Helpers() )->content_to_text( $this->system_instruction );
 		}
 		if ( $this->generation_config ) {
 			$params = Transformer::transform_generation_config_params(

@@ -10,7 +10,7 @@ const { useSelect } = wp.data;
 const { createElement, useState, Fragment } = wp.element;
 const { addFilter } = wp.hooks;
 const { BlockControls } = wp.blockEditor;
-const { store: aiStore } = window.aiServices.ai;
+const { helpers, store: aiStore } = window.aiServices.ai;
 const { __ } = wp.i18n;
 
 const AI_CAPABILITIES = [ 'multimodal_input', 'text_generation' ];
@@ -46,7 +46,7 @@ async function getBase64Image( url ) {
 		reader.onloadend = () => {
 			const base64data = reader.result;
 			resolve( base64data );
-		}
+		};
 	} );
 }
 
@@ -101,10 +101,9 @@ function ImageControls( { attributes, setAttributes } ) {
 			return;
 		}
 
-		const alt = candidates[ 0 ].content.parts[ 0 ].text.replaceAll(
-			'\n\n\n\n',
-			'\n\n'
-		);
+		const alt = helpers
+			.getTextFromContents( helpers.getCandidateContents( candidates ) )
+			.replaceAll( '\n\n\n\n', '\n\n' );
 
 		setAttributes( { alt } );
 		setInProgress( false );
@@ -119,7 +118,7 @@ function ImageControls( { attributes, setAttributes } ) {
 			showTooltip: true,
 			disabled: inProgress,
 			onClick: generateAltText,
-		} ),
+		} )
 	);
 }
 
@@ -130,7 +129,7 @@ const addAiControls = createHigherOrderComponent(
 				Fragment,
 				null,
 				createElement( BlockEdit, props ),
-				createElement( ImageControls, props ),
+				createElement( ImageControls, props )
 			);
 		}
 

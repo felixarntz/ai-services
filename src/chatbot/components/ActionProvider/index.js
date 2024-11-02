@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { store as aiStore } from '@ai-services/ai';
+import { helpers, store as aiStore } from '@ai-services/ai';
 
 /**
  * WordPress dependencies
@@ -36,12 +36,14 @@ export default function ActionProvider( {
 
 	const respond = async ( message ) => {
 		const aiResponse = await sendMessage( chatId, message );
+		const aiResponseText = helpers.contentToText( aiResponse );
 		const chatResponse = createChatBotMessage(
-			aiResponse?.parts?.[ 0 ]?.text ||
-				__(
-					'It looks like something went wrong. Please check your browser console for further information.',
-					'ai-services'
-				)
+			aiResponseText !== ''
+				? aiResponseText
+				: __(
+						'It looks like something went wrong. Please check your browser console for further information.',
+						'ai-services'
+				  )
 		);
 		setState( ( state ) => ( {
 			...state,

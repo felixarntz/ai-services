@@ -11,7 +11,7 @@ const { isServiceAvailable, getAvailableService } = wp.data.select( 'ai-services
 if ( isServiceAvailable( 'google' ) ) {
 	const service = getAvailableService( 'google' );
 	try {
-		const result = await service.generateText(
+		const candidates = await service.generateText(
       'What can I do with WordPress?',
       { feature: 'my-test-feature' }
     );
@@ -98,7 +98,7 @@ Here is an example of how to generate the response to a simple prompt, using the
 
 ```js
 try {
-  const result = await service.generateText(
+  const candidates = await service.generateText(
     'What can I do with WordPress?',
     {
       feature: 'my-test-feature',
@@ -119,7 +119,7 @@ You can also select a specific model from a service. Of course the available mod
 ```js
 const model = service.getServiceSlug() === 'openai' ? 'gpt-4o' : 'gemini-1.5-pro';
 try {
-  const result = await service.generateText(
+  const candidates = await service.generateText(
     'What can I do with WordPress?',
     {
       feature: 'my-test-feature',
@@ -151,7 +151,7 @@ const content = {
   ]
 };
 try {
-  const result = await service.generateText(
+  const candidates = await service.generateText(
     content,
     {
       feature: 'my-test-feature'
@@ -164,6 +164,38 @@ try {
 ```
 
 You can also pass an array of content objects. In this case, this will be interpreted as the history including previous message exchanges from the same chat.
+
+### Processing responses
+
+The `generateText()` model method returns an array of candidate objects that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
+
+Every candidate in the list is an object, which allows you to access its actual content as well as metadata about the particular response candidate.
+
+For example, you can use code as follows to retrieve the text content of the first candidate.
+
+```js
+let text = '';
+for ( const part of candidates[ 0 ].content.parts ) {
+  if ( part.text ) {
+    if ( text ) {
+      text += '\n\n';
+    }
+    text += part.text;
+  }
+}
+```
+
+This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
+
+As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods via `aiServices.ai.helpers` from the `aiServices` JavaScript global.
+
+The following example shows how you can accomplish the above in a safer, yet simpler way:
+```js
+const helpers = aiServices.ai.helpers;
+const text = helpers.getTextFromContents(
+  helpers.getCandidateContents( candidates )
+);
+```
 
 ## Generating image content using an AI service
 

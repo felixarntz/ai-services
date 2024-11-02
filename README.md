@@ -28,7 +28,7 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 if ( ai_services()->has_available_services() ) {
   $service = ai_services()->get_available_service();
   try {
-    $result = $service
+    $candidates = $service
       ->get_model(
         array(
           'feature'      => 'my-test-feature',
@@ -49,7 +49,7 @@ const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-servic
 if ( hasAvailableServices() ) {
   const service = getAvailableService();
   try {
-    const result = await service.generateText(
+    const candidates = await service.generateText(
       'What can I do with WordPress?',
       { feature: 'my-test-feature' }
     );
@@ -73,7 +73,7 @@ You can also use a specific AI service, if you have a preference, for example th
 if ( ai_services()->is_service_available( 'google' ) ) {
   $service = ai_services()->get_available_service( 'google' );
   try {
-    $result = $service
+    $candidates = $service
       ->get_model(
         array(
           'feature'      => 'my-test-feature',

@@ -10,7 +10,7 @@ The canonical entry point to all of the PHP public APIs is the `ai_services()` f
 if ( ai_services()->is_service_available( 'google' ) ) {
   $service = ai_services()->get_available_service( 'google' );
   try {
-    $result = $service
+    $candidates = $service
       ->get_model(
         array(
           'feature'      => 'my-test-feature',
@@ -93,7 +93,7 @@ Here is an example of how to generate the response to a simple prompt, using the
 
 ```php
 try {
-  $result = $service
+  $candidates = $service
     ->get_model(
       array(
         'feature'      => 'my-test-feature',
@@ -117,7 +117,7 @@ if( $service->get_service_slug() === 'openai' ) {
   $model = 'gemini-1.5-pro';
 }
 try {
-  $result = $service
+  $candidates = $service
     ->get_model(
       array(
         'feature' => 'my-test-feature',
@@ -142,7 +142,7 @@ $parts->add_text_part( 'Briefly describe what is displayed in the following imag
 $parts->add_file_data_part( 'image/jpeg', 'https://example.com/image.jpg' );
 $content = new \Felix_Arntz\AI_Services\Services\Types\Content( 'user', $parts );
 try {
-  $result = $service
+  $candidates = $service
     ->get_model(
       array(
         'feature'      => 'my-test-feature',
@@ -156,6 +156,38 @@ try {
 ```
 
 You can also pass an array of content objects. In this case, this will be interpreted as the history including previous message exchanges from the same chat.
+
+### Processing responses
+
+The `generate_text()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\Types\Candidates` class](../includes/Services/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
+
+Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\Types\Candidate` class](../includes/Services/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
+
+For example, you can use code as follows to retrieve the text content of the first candidate.
+
+```php
+$text = '';
+foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
+  if ( $part instanceof \Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part ) {
+    if ( $text !== '' ) {
+      $text .= "\n\n";
+    }
+    $text .= $part->get_text();
+  }
+}
+```
+
+This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
+
+As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods class instance via `ai_services()->helpers`.
+
+The following example shows how you can accomplish the above in a safer, yet simpler way:
+```php
+$helpers = ai_services()->helpers;
+$text    = $helpers->get_text_from_contents(
+  $helpers->get_candidate_contents( $candidates )
+);
+```
 
 ## Generating image content using an AI service
 

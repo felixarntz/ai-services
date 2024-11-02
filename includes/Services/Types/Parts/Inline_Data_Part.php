@@ -18,6 +18,28 @@ use InvalidArgumentException;
 final class Inline_Data_Part extends Abstract_Part {
 
 	/**
+	 * Gets the MIME type from the part.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The MIME type.
+	 */
+	public function get_mime_type(): string {
+		return $this->to_array()['inlineData']['mimeType'];
+	}
+
+	/**
+	 * Gets the file as base64 data from the part.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The file as base64 data.
+	 */
+	public function get_base64_data(): string {
+		return $this->to_array()['inlineData']['data'];
+	}
+
+	/**
 	 * Formats the data for the part.
 	 *
 	 * @since 0.1.0

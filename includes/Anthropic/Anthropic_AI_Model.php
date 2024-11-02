@@ -240,14 +240,13 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 				$parts = array();
 				foreach ( $content->get_parts() as $part ) {
 					if ( $part instanceof Text_Part ) {
-						$data    = $part->to_array();
 						$parts[] = array(
 							'type' => 'text',
-							'text' => $data['text'],
+							'text' => $part->get_text(),
 						);
 					} elseif ( $part instanceof Inline_Data_Part ) {
-						$data = $part->to_array();
-						if ( ! str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
+						$mime_type = $part->get_mime_type();
+						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
 							throw new InvalidArgumentException(
 								esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
 							);
@@ -256,8 +255,8 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 							'type'   => 'image',
 							'source' => array(
 								'type'       => 'base64',
-								'media_type' => $data['inlineData']['mimeType'],
-								'data'       => $data['inlineData']['data'],
+								'media_type' => $mime_type,
+								'data'       => $part->get_base64_data(),
 							),
 						);
 					} else {

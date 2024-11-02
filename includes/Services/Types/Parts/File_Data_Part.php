@@ -18,6 +18,28 @@ use InvalidArgumentException;
 final class File_Data_Part extends Abstract_Part {
 
 	/**
+	 * Gets the MIME type from the part.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The MIME type.
+	 */
+	public function get_mime_type(): string {
+		return $this->to_array()['fileData']['mimeType'];
+	}
+
+	/**
+	 * Gets the file URI from the part.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The file URI.
+	 */
+	public function get_file_uri(): string {
+		return $this->to_array()['fileData']['fileUri'];
+	}
+
+	/**
 	 * Formats the data for the part.
 	 *
 	 * @since 0.1.0

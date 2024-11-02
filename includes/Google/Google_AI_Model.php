@@ -276,22 +276,21 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				$parts = array();
 				foreach ( $content->get_parts() as $part ) {
 					if ( $part instanceof Text_Part ) {
-						$data    = $part->to_array();
-						$parts[] = array( 'text' => $data['text'] );
+						$parts[] = array( 'text' => $part->get_text() );
 					} elseif ( $part instanceof Inline_Data_Part ) {
-						$data = $part->to_array();
+						$mime_type = $part->get_mime_type();
 						if (
-							str_starts_with( $data['inlineData']['mimeType'], 'image/' )
-							|| str_starts_with( $data['inlineData']['mimeType'], 'audio/' )
+							str_starts_with( $mime_type, 'image/' )
+							|| str_starts_with( $mime_type, 'audio/' )
 						) {
 							$parts[] = array(
 								'inlineData' => array(
-									'mimeType' => $data['inlineData']['mimeType'],
+									'mimeType' => $mime_type,
 									// The Google AI API expects inlineData blobs to be without the prefix.
 									'data'     => preg_replace(
 										'/^data:[a-z]+\/[a-z]+;base64,/',
 										'',
-										$data['inlineData']['data']
+										$part->get_base64_data()
 									),
 								),
 							);
@@ -301,15 +300,15 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
-						$data = $part->to_array();
+						$mime_type = $part->get_mime_type();
 						if (
-							str_starts_with( $data['fileData']['mimeType'], 'image/' )
-							|| str_starts_with( $data['fileData']['mimeType'], 'audio/' )
+							str_starts_with( $mime_type, 'image/' )
+							|| str_starts_with( $mime_type, 'audio/' )
 						) {
 							$parts[] = array(
 								'fileData' => array(
-									'mimeType' => $data['fileData']['mimeType'],
-									'fileUri'  => $data['fileData']['fileUri'],
+									'mimeType' => $mime_type,
+									'fileUri'  => $part->get_file_uri(),
 								),
 							);
 						} else {

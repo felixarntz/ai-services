@@ -296,26 +296,25 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				$parts = array();
 				foreach ( $content->get_parts() as $part ) {
 					if ( $part instanceof Text_Part ) {
-						$data    = $part->to_array();
 						$parts[] = array(
 							'type' => 'text',
-							'text' => $data['text'],
+							'text' => $part->get_text(),
 						);
 					} elseif ( $part instanceof Inline_Data_Part ) {
-						$data = $part->to_array();
-						if ( str_starts_with( $data['inlineData']['mimeType'], 'image/' ) ) {
+						$mime_type = $part->get_mime_type();
+						if ( str_starts_with( $mime_type, 'image/' ) ) {
 							$parts[] = array(
 								'type'      => 'image_url',
 								'image_url' => array(
-									'url' => $data['inlineData']['data'],
+									'url' => $part->get_base64_data(),
 								),
 							);
-						} elseif ( str_starts_with( $data['inlineData']['mimeType'], 'audio/' ) ) {
+						} elseif ( str_starts_with( $mime_type, 'audio/' ) ) {
 							$parts[] = array(
 								'type'        => 'input_audio',
 								'input_audio' => array(
-									'data'   => $data['inlineData']['data'],
-									'format' => wp_get_default_extension_for_mime_type( $data['inlineData']['mimeType'] ),
+									'data'   => $part->get_base64_data(),
+									'format' => wp_get_default_extension_for_mime_type( $mime_type ),
 								),
 							);
 						} else {
@@ -324,8 +323,8 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
-						$data = $part->to_array();
-						if ( ! str_starts_with( $data['fileData']['mimeType'], 'image/' ) ) {
+						$mime_type = $part->get_mime_type();
+						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
 							throw new InvalidArgumentException(
 								esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
 							);
@@ -333,7 +332,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 						$parts[] = array(
 							'type'      => 'image_url',
 							'image_url' => array(
-								'url' => $data['fileData']['fileUri'],
+								'url' => $part->get_file_uri(),
 							),
 						);
 					} else {

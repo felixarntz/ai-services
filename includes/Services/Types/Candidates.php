@@ -126,7 +126,7 @@ final class Candidates implements Collection, Arrayable {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return mixed[] Array representation.
+	 * @return array<string, mixed>[] Array representation.
 	 */
 	public function to_array(): array {
 		return array_map(

@@ -18,6 +18,17 @@ use InvalidArgumentException;
 final class Text_Part extends Abstract_Part {
 
 	/**
+	 * Gets the text from the part.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The text.
+	 */
+	public function get_text(): string {
+		return $this->to_array()['text'];
+	}
+
+	/**
 	 * Formats the data for the part.
 	 *
 	 * @since 0.1.0

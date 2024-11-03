@@ -134,13 +134,13 @@ Note: Alongside the model key in the array, you may pass other configuration arg
 
 ### Sending multimodal prompts
 
-As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\Types\Content` class](../includes/Services/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\Types\Parts` class](../includes/Services/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
+As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\API\Types\Content` class](../includes/Services/API/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\API\Types\Parts` class](../includes/Services/API/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
 
 ```php
-$parts = new \Felix_Arntz\AI_Services\Services\Types\Parts();
+$parts = new \Felix_Arntz\AI_Services\Services\API\Types\Parts();
 $parts->add_text_part( 'Briefly describe what is displayed in the following image using a single sentence.' );
 $parts->add_file_data_part( 'image/jpeg', 'https://example.com/image.jpg' );
-$content = new \Felix_Arntz\AI_Services\Services\Types\Content( 'user', $parts );
+$content = new \Felix_Arntz\AI_Services\Services\API\Types\Content( 'user', $parts );
 try {
   $candidates = $service
     ->get_model(
@@ -159,16 +159,16 @@ You can also pass an array of content objects. In this case, this will be interp
 
 ### Processing responses
 
-The `generate_text()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\Types\Candidates` class](../includes/Services/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
+The `generate_text()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](../includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
 
-Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\Types\Candidate` class](../includes/Services/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
+Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidate` class](../includes/Services/API/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
 
 For example, you can use code as follows to retrieve the text content of the first candidate.
 
 ```php
 $text = '';
 foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
-  if ( $part instanceof \Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part ) {
+  if ( $part instanceof \Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part ) {
     if ( $text !== '' ) {
       $text .= "\n\n";
     }

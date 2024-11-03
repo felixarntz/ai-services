@@ -1,12 +1,12 @@
 <?php
 /**
- * Interface Felix_Arntz\AI_Services\Services\Types\Contracts\Part
+ * Interface Felix_Arntz\AI_Services\Services\API\Types\Contracts\Part
  *
  * @since 0.1.0
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Types\Contracts;
+namespace Felix_Arntz\AI_Services\Services\API\Types\Contracts;
 
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 

@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Types\Generation_Config
+ * Class Felix_Arntz\AI_Services\Services\API\Types\Generation_Config
  *
  * @since n.e.x.t
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\API\Types;
 
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services\Services\Util\Strings;

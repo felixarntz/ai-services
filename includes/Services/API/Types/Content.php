@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Types\Content
+ * Class Felix_Arntz\AI_Services\Services\API\Types\Content
  *
  * @since 0.1.0
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\API\Types;
 
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;

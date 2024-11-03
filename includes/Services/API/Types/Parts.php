@@ -1,19 +1,19 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Types\Parts
+ * Class Felix_Arntz\AI_Services\Services\API\Types\Parts
  *
  * @since 0.1.0
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\API\Types;
 
 use ArrayIterator;
+use Felix_Arntz\AI_Services\Services\API\Types\Contracts\Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
-use Felix_Arntz\AI_Services\Services\Types\Contracts\Part;
-use Felix_Arntz\AI_Services\Services\Types\Parts\File_Data_Part;
-use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
-use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
 use InvalidArgumentException;

@@ -8,6 +8,9 @@
 
 namespace Felix_Arntz\AI_Services\Anthropic;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
@@ -15,9 +18,6 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
-use Felix_Arntz\AI_Services\Services\Types\Content;
-use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
-use Felix_Arntz\AI_Services\Services\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use InvalidArgumentException;

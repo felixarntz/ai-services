@@ -8,13 +8,13 @@
 
 namespace Felix_Arntz\AI_Services\Services\Traits;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\API\Types\Chat_Session;
+use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
-use Felix_Arntz\AI_Services\Services\Types\Candidates;
-use Felix_Arntz\AI_Services\Services\Types\Chat_Session;
-use Felix_Arntz\AI_Services\Services\Types\Content;
-use Felix_Arntz\AI_Services\Services\Types\Parts;
-use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use InvalidArgumentException;
 

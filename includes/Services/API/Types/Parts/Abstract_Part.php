@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Types\Parts\Abstract_Part
+ * Class Felix_Arntz\AI_Services\Services\API\Types\Parts\Abstract_Part
  *
  * @since 0.1.0
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Types\Parts;
+namespace Felix_Arntz\AI_Services\Services\API\Types\Parts;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Contracts\Part;
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
-use Felix_Arntz\AI_Services\Services\Types\Contracts\Part;
 use InvalidArgumentException;
 
 /**

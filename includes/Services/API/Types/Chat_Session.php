@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Types\Chat_Session
+ * Class Felix_Arntz\AI_Services\Services\API\Types\Chat_Session
  *
  * @since 0.1.0
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Types;
+namespace Felix_Arntz\AI_Services\Services\API\Types;
 
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;

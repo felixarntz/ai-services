@@ -8,8 +8,8 @@
 
 namespace Felix_Arntz\AI_Services\Services\Util;
 
-use Felix_Arntz\AI_Services\Services\Types\Content;
-use Felix_Arntz\AI_Services\Services\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use InvalidArgumentException;
 
 /**

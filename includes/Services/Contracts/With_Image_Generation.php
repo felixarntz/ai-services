@@ -8,10 +8,10 @@
 
 namespace Felix_Arntz\AI_Services\Services\Contracts;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
-use Felix_Arntz\AI_Services\Services\Types\Candidates;
-use Felix_Arntz\AI_Services\Services\Types\Content;
-use Felix_Arntz\AI_Services\Services\Types\Parts;
 
 /**
  * Interface for a model which allows generating images.

@@ -9,6 +9,8 @@
 namespace Felix_Arntz\AI_Services\Services\CLI;
 
 use Felix_Arntz\AI_Services\Services\API\Helpers;
+use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
@@ -16,8 +18,6 @@ use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
 use Felix_Arntz\AI_Services\Services\Entities\Service_Entity_Query;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
-use Felix_Arntz\AI_Services\Services\Types\Candidates;
-use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use InvalidArgumentException;
 use WP_CLI;

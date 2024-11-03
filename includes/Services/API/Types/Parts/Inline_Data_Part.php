@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part
+ * Class Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part
  *
  * @since 0.1.0
  * @package ai-services
  */
 
-namespace Felix_Arntz\AI_Services\Services\Types\Parts;
+namespace Felix_Arntz\AI_Services\Services\API\Types\Parts;
 
 use InvalidArgumentException;
 

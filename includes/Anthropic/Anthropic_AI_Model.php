@@ -9,17 +9,17 @@
 namespace Felix_Arntz\AI_Services\Anthropic;
 
 use Felix_Arntz\AI_Services\Services\API\Helpers;
+use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
+use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
+use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
-use Felix_Arntz\AI_Services\Services\Types\Candidate;
-use Felix_Arntz\AI_Services\Services\Types\Candidates;
-use Felix_Arntz\AI_Services\Services\Types\Content;
-use Felix_Arntz\AI_Services\Services\Types\Generation_Config;
-use Felix_Arntz\AI_Services\Services\Types\Parts\Inline_Data_Part;
-use Felix_Arntz\AI_Services\Services\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use InvalidArgumentException;

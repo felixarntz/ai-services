@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services;
 
 use Felix_Arntz\AI_Services\Services\Admin\Settings_Page;
+use Felix_Arntz\AI_Services\Services\CLI\AI_Services_Command;
 use Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Content_REST_Route;
@@ -101,6 +102,7 @@ final class Services_Service_Container_Builder {
 		$this->build_option_services();
 		$this->build_rest_services();
 		$this->build_admin_services();
+		$this->build_cli_services();
 
 		$this->container['api'] = static function ( $cont ) {
 			return new Services_API(
@@ -257,6 +259,17 @@ final class Services_Service_Container_Builder {
 				$cont['script_registry'],
 				$cont['style_registry']
 			);
+		};
+	}
+
+	/**
+	 * Builds the CLI services for the service container.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function build_cli_services(): void {
+		$this->container['cli_command'] = static function ( $cont ) {
+			return new AI_Services_Command( $cont['api'] );
 		};
 	}
 }

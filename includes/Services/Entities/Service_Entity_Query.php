@@ -63,6 +63,10 @@ class Service_Entity_Query implements Entity_Query {
 	public function get_entities(): array {
 		$slugs = $this->services_api->get_registered_service_slugs();
 
+		if ( count( $this->query_args['slugs'] ) > 0 ) {
+			$slugs = array_intersect( $slugs, $this->query_args['slugs'] );
+		}
+
 		// For now the only supported orderby is 'slug', so we can just sort the slugs.
 		if ( 'DESC' === $this->query_args['order'] ) {
 			rsort( $slugs );
@@ -113,6 +117,7 @@ class Service_Entity_Query implements Entity_Query {
 	 */
 	private function parse_defaults( array $query_args ): array {
 		$defaults = array(
+			'slugs'   => array(),
 			'orderby' => 'slug',
 			'order'   => 'ASC',
 			'number'  => 10,

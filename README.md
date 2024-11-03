@@ -61,8 +61,8 @@ if ( hasAvailableServices() ) {
 
 **Generate the answer to a prompt using WP-CLI:**
 
-```sh
-wp ai-services generate-text 'What can I do with WordPress?' --feature=my-test-feature
+```bash
+wp ai-services generate-text "What can I do with WordPress?" --feature=my-test-feature --user=admin
 ```
 
 You can also use a specific AI service, if you have a preference, for example the `google` service.

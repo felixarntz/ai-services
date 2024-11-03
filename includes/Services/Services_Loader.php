@@ -50,6 +50,10 @@ final class Services_Loader implements With_Hooks {
 		$this->load_options();
 		$this->load_rest_routes();
 		$this->load_settings_page();
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			\WP_CLI::add_command( 'ai-services', $this->container['cli_command'] );
+		}
 	}
 
 	/**

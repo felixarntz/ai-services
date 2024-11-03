@@ -11,4 +11,9 @@ parameters:
 		- uninstall.php
 	scanDirectories:
 		- third-party
+	scanFiles:
+		- php-tools/vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+		- php-tools/vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+		- php-tools/vendor/php-stubs/wp-cli-stubs/wp-cli-commands-stubs.php
+		- php-tools/vendor/php-stubs/wp-cli-stubs/wp-cli-i18n-stubs.php
 	treatPhpDocTypesAsCertain: false

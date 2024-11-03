@@ -22,7 +22,7 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 Here's a (non-comprehensive) feature list:
 
 * Abstraction layer and APIs to communicate with any AI service in a uniform way
-  * APIs are available in both PHP and in JavaScript, and WP-CLI commands are being worked on
+  * APIs are available in both PHP and in JavaScript, as well as via WP-CLI commands
   * Currently only supports text generation (including multi-modal support if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
 * Built-in AI service implementations
   * [Anthropic (Claude)](https://www.anthropic.com/claude)

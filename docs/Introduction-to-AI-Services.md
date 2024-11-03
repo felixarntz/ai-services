@@ -5,12 +5,12 @@
 While the main introduction to the plugin can be found in the [plugin readme](../README.md), this section provides a bit more general information about the plugin and its feature set:
 
 * Abstraction layer and APIs to communicate with any AI service in a uniform way
-  * APIs are available in both PHP and in JavaScript, and WP-CLI commands are being worked on
+  * APIs are available in both PHP and in JavaScript, as well as via WP-CLI commands
   * Currently only supports text generation (including multi-modal support if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
 * Built-in AI service implementations
-  * [Anthropic (Claude)](https://www.anthropic.com/claude) (coming soon)
+  * [Anthropic (Claude)](https://www.anthropic.com/claude)
   * [Google (Gemini)](https://ai.google.dev/gemini-api)
-  * [OpenAI (ChatGPT)](https://openai.com/chatgpt/) (coming soon)
+  * [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
   * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 * WordPress Assistant chatbot is the single user-facing built-in feature the plugin comes with

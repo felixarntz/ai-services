@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\CLI;
 
+use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
@@ -487,9 +488,8 @@ final class AI_Services_Command {
 		$model      = $this->get_model( $service, $model_params );
 		$candidates = $this->generate_text_using_model( $model, $prompt );
 
-		$helpers = $this->services_api->helpers;
-		$text    = $helpers->get_text_from_contents(
-			$helpers->get_candidate_contents( $candidates )
+		$text = Helpers::get_text_from_contents(
+			Helpers::get_candidate_contents( $candidates )
 		);
 
 		WP_CLI::print_value( trim( $text ), array( 'format' => 'table' ) );

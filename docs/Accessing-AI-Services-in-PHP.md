@@ -179,13 +179,14 @@ foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
 
 This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
 
-As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods class instance via `ai_services()->helpers`.
+As this can be tedious, the AI Services API provides a class with static helper methods to make it extremely simple. You can access the helper methods via the `Felix_Arntz\AI_Services\Services\API\Helpers` class.
 
 The following example shows how you can accomplish the above in a safer, yet simpler way:
 ```php
-$helpers = ai_services()->helpers;
-$text    = $helpers->get_text_from_contents(
-  $helpers->get_candidate_contents( $candidates )
+use Felix_Arntz\AI_Services\Services\API\Helpers;
+
+$text = Helpers::get_text_from_contents(
+  Helpers::get_candidate_contents( $candidates )
 );
 ```
 

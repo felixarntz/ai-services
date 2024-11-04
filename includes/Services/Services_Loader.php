@@ -151,12 +151,27 @@ final class Services_Loader implements With_Hooks {
 	 * Loads the services settings page.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Include a link to the settings page in the plugin action links.
 	 */
 	private function load_settings_page(): void {
 		add_action(
 			'admin_menu',
 			function () {
 				$this->container['admin_settings_menu']->add_page( $this->container['admin_settings_page'] );
+			}
+		);
+
+		add_filter(
+			"plugin_action_links_{$this->container['plugin_env']->basename()}",
+			function ( array $links ): array {
+				$settings_link = $this->container['plugin_action_link'];
+				if ( $this->container['current_user']->has_cap( $settings_link->get_capability() ) ) {
+					array_unshift(
+						$links,
+						$settings_link->get_html()
+					);
+				}
+				return $links;
 			}
 		);
 	}

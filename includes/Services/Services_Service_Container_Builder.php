@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
+use Felix_Arntz\AI_Services\Services\Admin\Plugin_Action_Link;
 use Felix_Arntz\AI_Services\Services\Admin\Settings_Page;
 use Felix_Arntz\AI_Services\Services\CLI\AI_Services_Command;
 use Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader;
@@ -28,6 +29,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependenc
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
@@ -125,6 +127,9 @@ final class Services_Service_Container_Builder {
 	private function build_general_services(): void {
 		$this->container['current_user'] = static function () {
 			return new Current_User();
+		};
+		$this->container['site_env']     = static function () {
+			return new Site_Env();
 		};
 	}
 
@@ -258,6 +263,13 @@ final class Services_Service_Container_Builder {
 			return new Settings_Page(
 				$cont['script_registry'],
 				$cont['style_registry']
+			);
+		};
+		$this->container['plugin_action_link']  = static function ( $cont ) {
+			return new Plugin_Action_Link(
+				$cont['admin_settings_menu'],
+				$cont['admin_settings_page'],
+				$cont['site_env']
 			);
 		};
 	}

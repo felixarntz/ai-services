@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\API\Types;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use InvalidArgumentException;
 
@@ -142,7 +143,7 @@ final class Candidate implements Arrayable {
 		 * Given candidates are always part of a model response, we can safely assume the role is 'model'.
 		 */
 		if ( ! isset( $data['content']['role'] ) ) {
-			$data['content']['role'] = 'model';
+			$data['content']['role'] = Content_Role::MODEL;
 		}
 
 		$content = Content::from_array( $data['content'] );

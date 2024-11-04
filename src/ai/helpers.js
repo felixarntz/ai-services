@@ -1,4 +1,9 @@
 /**
+ * Internal dependencies
+ */
+import { ContentRole } from './enums';
+
+/**
  * Converts a text string to a Content object.
  *
  * @since n.e.x.t
@@ -7,7 +12,7 @@
  * @param {string} role Optional. The role to use for the content. Default 'user'.
  * @return {Object} The Content object.
  */
-export function textToContent( text, role = 'user' ) {
+export function textToContent( text, role = ContentRole.USER ) {
 	return {
 		role,
 		parts: [ { text } ],

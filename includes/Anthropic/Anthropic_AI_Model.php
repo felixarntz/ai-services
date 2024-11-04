@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Anthropic;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
@@ -195,8 +196,8 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 		}
 
 		$role = isset( $response['role'] ) && 'user' === $response['role']
-			? Content::ROLE_USER
-			: Content::ROLE_MODEL;
+			? Content_Role::USER
+			: Content_Role::MODEL;
 
 		$parts = array();
 		foreach ( $response['content'] as $part ) {
@@ -228,7 +229,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	private static function get_content_transformers(): array {
 		return array(
 			'role'    => static function ( Content $content ) {
-				if ( $content->get_role() === Content::ROLE_MODEL ) {
+				if ( $content->get_role() === Content_Role::MODEL ) {
 					return 'assistant';
 				}
 				return 'user';

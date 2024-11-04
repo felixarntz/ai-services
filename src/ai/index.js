@@ -9,6 +9,7 @@ import { createReduxStore, register } from '@wordpress/data';
 import { STORE_NAME } from './name';
 import servicesStoreConfig from './services';
 import chatStoreConfig from './chat';
+import * as enums from './enums';
 import * as helpers from './helpers';
 import combineStores from '../utils/combine-stores';
 
@@ -17,7 +18,7 @@ const storeConfig = combineStores( servicesStoreConfig, chatStoreConfig );
 export const store = createReduxStore( STORE_NAME, storeConfig );
 register( store );
 
-export { helpers };
+export { enums, helpers };
 
 /*
  * For backward compatibility, expose the store object under 'aiServices.aiStore' as it used to be, while now it is

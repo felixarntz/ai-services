@@ -3,6 +3,11 @@
  */
 import { __ } from '@wordpress/i18n';
 
+/**
+ * Internal dependencies
+ */
+import * as enums from './enums';
+
 let browser;
 
 /**
@@ -46,7 +51,7 @@ async function getBrowserAiCapabilities( ai ) {
 			supportsTextGeneration &&
 			supportsTextGeneration.available === 'readily'
 		) {
-			capabilities.push( 'text_generation' );
+			capabilities.push( enums.AiCapability.TEXT_GENERATION );
 		}
 	}
 

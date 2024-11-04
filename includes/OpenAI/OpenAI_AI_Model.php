@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\OpenAI;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
@@ -256,8 +257,8 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		}
 
 		$role = isset( $response['message']['role'] ) && 'user' === $response['role']
-			? Content::ROLE_USER
-			: Content::ROLE_MODEL;
+			? Content_Role::USER
+			: Content_Role::MODEL;
 
 		// TODO: Support decoding tool call responses (in $response['message']['tool_calls']).
 		$parts = array(
@@ -284,10 +285,10 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	private static function get_content_transformers(): array {
 		return array(
 			'role'    => static function ( Content $content ) {
-				if ( $content->get_role() === Content::ROLE_MODEL ) {
+				if ( $content->get_role() === Content_Role::MODEL ) {
 					return 'assistant';
 				}
-				if ( $content->get_role() === Content::ROLE_SYSTEM ) {
+				if ( $content->get_role() === Content_Role::SYSTEM ) {
 					return 'system';
 				}
 				return 'user';

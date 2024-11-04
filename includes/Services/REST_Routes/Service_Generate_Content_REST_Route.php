@@ -9,6 +9,8 @@
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
 use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
@@ -17,7 +19,6 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
-use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
@@ -231,7 +232,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		 * As such, at the very least, text generation capabilities need to be supported by the model.
 		 */
 		if ( ! isset( $model_params['capabilities'] ) ) {
-			$model_params['capabilities'] = array( AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+			$model_params['capabilities'] = array( AI_Capability::TEXT_GENERATION );
 		}
 
 		// Parse associative arrays into their relevant data structures.
@@ -285,11 +286,11 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		);
 
 		$system_content_schema                                = $content_schema;
-		$system_content_schema['properties']['role']['enum']  = array( Content::ROLE_SYSTEM );
+		$system_content_schema['properties']['role']['enum']  = array( Content_Role::SYSTEM );
 		$user_content_schema                                  = $content_schema;
-		$user_content_schema['properties']['role']['enum']    = array( Content::ROLE_USER );
+		$user_content_schema['properties']['role']['enum']    = array( Content_Role::USER );
 		$history_content_schema                               = $content_schema;
-		$history_content_schema['properties']['role']['enum'] = array( Content::ROLE_USER, Content::ROLE_MODEL );
+		$history_content_schema['properties']['role']['enum'] = array( Content_Role::USER, Content_Role::MODEL );
 
 		return array(
 			'modelParams' => array(

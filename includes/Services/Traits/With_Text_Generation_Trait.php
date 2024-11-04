@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Traits;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Chat_Session;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
@@ -47,7 +48,7 @@ trait With_Text_Generation_Trait {
 			$contents = array( Formatter::format_new_content( $content ) );
 		}
 
-		if ( Content::ROLE_USER !== $contents[0]->get_role() ) {
+		if ( Content_Role::USER !== $contents[0]->get_role() ) {
 			throw new InvalidArgumentException(
 				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'ai-services' )
 			);

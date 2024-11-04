@@ -58,7 +58,9 @@ if ( service !== null ) {
 For many AI use-cases, relying on different AI services may be feasible. For example, to respond to a simple text prompt, you could use _any_ AI service that supports text generation. If so, it is advised to not require usage of a _specific_ AI service, so that the end user can configure whichever service they prefer and still use the relevant AI functionality you're implementing in your plugin. You can do so by passing arguments to the `hasAvailableServices()` and `getAvailableService()` selectors for which capabilities you require for what you intend to do (for example to generate text):
 
 ```js
-const SERVICE_ARGS = { capabilities: [ 'text_generation' ] };
+const enums = aiServices.ai.enums;
+
+const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_GENERATION ] };
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 if ( hasAvailableServices( SERVICE_ARGS ) ) {
 	const service = getAvailableService( SERVICE_ARGS );
@@ -69,7 +71,9 @@ if ( hasAvailableServices( SERVICE_ARGS ) ) {
 Alternatively, if you don't want to use the `hasAvailableServices()` selector, you need to check whether the `getAvailableService()` selector does not return `null`:
 
 ```js
-const SERVICE_ARGS = { capabilities: [ 'text_generation' ] };
+const enums = aiServices.ai.enums;
+
+const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_GENERATION ] };
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 const service = getAvailableService( SERVICE_ARGS );
 if ( service !== null ) {
@@ -92,17 +96,21 @@ if ( hasAvailableServices( SERVICE_ARGS ) ) {
 
 Once you have retrieved an AI service, you can use it to get a text response to a prompt. You need to call the `generateText` method of the service. This method will only function if the service implements the "text_generation" capability - which all built-in services do, but there may be further custom AI services registered some of which may only support other capabilities such as "image_generation".
 
+The recommended way to refer to any AI capabilities is by using the available constants on `aiServices.ai.enums.AiCapability` from the `aiServices` JavaScript global.
+
 ### Using the preferred model for certain capabilities
 
-Here is an example of how to generate the response to a simple prompt, using the preferred model for text generation. Assume that the `service` variable contains an available service instance that supports "text_generation" (e.g. based on the previous examples):
+Here is an example of how to generate the response to a simple prompt, using the preferred model for text generation. Assume that the `service` variable contains an available service instance that supports `enums.AiCapability.TEXT_GENERATION` (e.g. based on the previous examples):
 
 ```js
+const enums = aiServices.ai.enums;
+
 try {
   const candidates = await service.generateText(
     'What can I do with WordPress?',
     {
       feature: 'my-test-feature',
-      capabilities: [ 'text_generation' ],
+      capabilities: [ enums.AiCapability.TEXT_GENERATION ],
     }
   );
 } catch ( error ) {
@@ -110,7 +118,7 @@ try {
 }
 ```
 
-Note: When calling the `generateText()` method, specifying the `text_generation` capability is optional, as that is implied by calling that particular method.
+Note: When calling the `generateText()` method, specifying the `enums.AiCapability.TEXT_GENERATION` capability is optional, as that is implied by calling that particular method.
 
 ### Using a custom model
 
@@ -138,8 +146,10 @@ Note: Alongside the model property in the object, you may pass other configurati
 As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generateText()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use content objects or part arrays. For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
 
 ```js
+const enums = aiServices.ai.enums;
+
 const content = {
-  role: 'user',
+  role: enums.ContentRole.USER,
   parts: [
     {
       text: 'Briefly describe what is displayed in the following image using a single sentence.'
@@ -155,7 +165,10 @@ try {
     content,
     {
       feature: 'my-test-feature'
-      capabilities: [ 'text_generation', 'multimodal_input' ],
+      capabilities: [
+        enums.AiCapability.MULTIMODAL_INPUT,
+        enums.AiCapability.TEXT_GENERATION,
+      ],
     }
   );
 } catch ( error ) {

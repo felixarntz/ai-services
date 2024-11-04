@@ -10,10 +10,10 @@ const { useSelect } = wp.data;
 const { createElement, useState, Fragment } = wp.element;
 const { addFilter } = wp.hooks;
 const { BlockControls } = wp.blockEditor;
-const { helpers, store: aiStore } = window.aiServices.ai;
+const { enums, helpers, store: aiStore } = window.aiServices.ai;
 const { __ } = wp.i18n;
 
-const AI_CAPABILITIES = [ 'multimodal_input', 'text_generation' ];
+const AI_CAPABILITIES = [ enums.AiCapability.MULTIMODAL_INPUT, enums.AiCapability.TEXT_GENERATION ];
 
 function ImageIcon() {
 	return createElement( Icon, { icon: 'format-image' } );
@@ -74,7 +74,7 @@ function ImageControls( { attributes, setAttributes } ) {
 		try {
 			candidates = await service.generateText(
 				{
-					role: 'user',
+					role: enums.ContentRole.USER,
 					parts: [
 						{
 							text: __(

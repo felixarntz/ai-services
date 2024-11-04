@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\OpenAI;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
@@ -136,8 +137,8 @@ class OpenAI_AI_Service implements Generative_AI_Service, With_API_Client {
 		);
 
 		// Unfortunately, the OpenAI API does not return model capabilities, so we have to hardcode them here.
-		$gpt_capabilities            = array( AI_Capabilities::CAPABILITY_TEXT_GENERATION );
-		$gpt_multimodal_capabilities = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+		$gpt_capabilities            = array( AI_Capability::TEXT_GENERATION );
+		$gpt_multimodal_capabilities = array( AI_Capability::MULTIMODAL_INPUT, AI_Capability::TEXT_GENERATION );
 
 		return array_reduce(
 			$model_slugs,

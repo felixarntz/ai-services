@@ -8,6 +8,7 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { getCandidateContents } from './helpers';
+import * as enums from './enums';
 import { formatNewContent } from './util';
 
 /**
@@ -28,7 +29,7 @@ function validateChatHistory( history ) {
 			);
 		}
 
-		if ( index === 0 && content.role !== 'user' ) {
+		if ( index === 0 && content.role !== enums.ContentRole.USER ) {
 			throw new Error(
 				__(
 					'The first content object in the history must be user content.',
@@ -161,7 +162,9 @@ class GenerativeAiService {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( content, modelParams ) {
-		if ( ! this.capabilities.includes( 'text_generation' ) ) {
+		if (
+			! this.capabilities.includes( enums.AiCapability.TEXT_GENERATION )
+		) {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
@@ -179,11 +182,11 @@ class GenerativeAiService {
 			);
 		}
 
-		// The 'text_generation' capability is naturally implied to generate text.
+		// The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
 		if ( ! modelParams?.capabilities ) {
 			modelParams = {
 				...modelParams,
-				capabilities: [ 'text_generation' ],
+				capabilities: [ enums.AiCapability.TEXT_GENERATION ],
 			};
 		}
 
@@ -214,7 +217,9 @@ class GenerativeAiService {
 	 * @return {ChatSession} Chat session.
 	 */
 	startChat( history, modelParams ) {
-		if ( ! this.capabilities.includes( 'text_generation' ) ) {
+		if (
+			! this.capabilities.includes( enums.AiCapability.TEXT_GENERATION )
+		) {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
@@ -246,7 +251,9 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( content, modelParams ) {
-		if ( ! this.capabilities.includes( 'text_generation' ) ) {
+		if (
+			! this.capabilities.includes( enums.AiCapability.TEXT_GENERATION )
+		) {
 			throw new Error(
 				__(
 					'The service does not support text generation.',
@@ -298,7 +305,7 @@ class BrowserGenerativeAiService extends GenerativeAiService {
 		return [
 			{
 				content: {
-					role: 'model',
+					role: enums.ContentRole.MODEL,
 					parts: [ { text: resultText } ],
 				},
 			},

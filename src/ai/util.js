@@ -4,6 +4,11 @@
 import { __ } from '@wordpress/i18n';
 
 /**
+ * Internal dependencies
+ */
+import { ContentRole } from './enums';
+
+/**
  * Formats the various supported formats of new user content into a consistent content shape.
  *
  * @since 0.1.0
@@ -14,7 +19,7 @@ import { __ } from '@wordpress/i18n';
 export function formatNewContent( content ) {
 	if ( typeof content === 'string' ) {
 		return {
-			role: 'user',
+			role: ContentRole.USER,
 			parts: [ { text: content } ],
 		};
 	}
@@ -26,7 +31,7 @@ export function formatNewContent( content ) {
 		}
 
 		return {
-			role: 'user',
+			role: ContentRole.USER,
 			parts: content,
 		};
 	}

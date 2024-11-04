@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\API\Types;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -124,7 +125,7 @@ final class Chat_Session {
 				);
 			}
 
-			if ( $first && Content::ROLE_USER !== $content->get_role() ) {
+			if ( $first && Content_Role::USER !== $content->get_role() ) {
 				throw new InvalidArgumentException(
 					esc_html__( 'The first Content instance in the history must be user content.', 'ai-services' )
 				);

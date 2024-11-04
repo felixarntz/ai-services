@@ -8,6 +8,7 @@ import { resolveSelect } from '@wordpress/data';
  */
 import { STORE_NAME } from './name';
 import { ChatSession } from './generative-ai-service';
+import * as enums from './enums';
 import { formatNewContent } from './util';
 
 const RECEIVE_CHAT = 'RECEIVE_CHAT';
@@ -17,7 +18,7 @@ const LOAD_CHAT_START = 'LOAD_CHAT_START';
 const LOAD_CHAT_FINISH = 'LOAD_CHAT_FINISH';
 
 const SERVICE_ARGS = {
-	capabilities: [ 'text_generation' ],
+	capabilities: [ enums.AiCapability.TEXT_GENERATION ],
 };
 
 const chatSessionInstances = {};

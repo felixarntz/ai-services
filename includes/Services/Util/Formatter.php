@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Util;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use InvalidArgumentException;
@@ -28,7 +29,7 @@ final class Formatter {
 	 * @return Content The formatted new content.
 	 */
 	public static function format_new_content( $content ): Content {
-		return self::format_content( $content, Content::ROLE_USER );
+		return self::format_content( $content, Content_Role::USER );
 	}
 
 	/**
@@ -40,7 +41,7 @@ final class Formatter {
 	 * @return Content The formatted system instruction.
 	 */
 	public static function format_system_instruction( $input ): Content {
-		return self::format_content( $input, Content::ROLE_SYSTEM );
+		return self::format_content( $input, Content_Role::SYSTEM );
 	}
 
 	/**

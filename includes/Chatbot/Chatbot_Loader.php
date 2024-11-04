@@ -8,8 +8,8 @@
 
 namespace Felix_Arntz\AI_Services\Chatbot;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\Services_API;
-use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 
 /**
  * Class responsible for loading the Google AI-powered chatbot.
@@ -63,7 +63,7 @@ class Chatbot_Loader {
 		}
 
 		return $this->services_api->has_available_services(
-			array( 'capabilities' => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION ) )
+			array( 'capabilities' => array( AI_Capability::TEXT_GENERATION ) )
 		);
 	}
 

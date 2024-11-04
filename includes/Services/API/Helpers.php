@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\API;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
@@ -29,7 +30,7 @@ final class Helpers {
 	 * @param string $role Optional. The role to use for the content. Default 'user'.
 	 * @return Content The content instance.
 	 */
-	public static function text_to_content( string $text, string $role = 'user' ): Content {
+	public static function text_to_content( string $text, string $role = Content_Role::USER ): Content {
 		return Formatter::format_content( $text, $role );
 	}
 

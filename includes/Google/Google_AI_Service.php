@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Google;
 
 use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
@@ -141,7 +142,7 @@ class Google_AI_Service implements Generative_AI_Service, With_API_Client {
 					isset( $model['supportedGenerationMethods'] ) &&
 					in_array( 'generateContent', $model['supportedGenerationMethods'], true )
 				) {
-					$model_caps = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+					$model_caps = array( AI_Capability::MULTIMODAL_INPUT, AI_Capability::TEXT_GENERATION );
 				} else {
 					$model_caps = array();
 				}

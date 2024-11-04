@@ -3,7 +3,7 @@
  */
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css';
-import { store as aiStore } from '@ai-services/ai';
+import { enums, store as aiStore } from '@ai-services/ai';
 import { PluginIcon } from '@ai-services/components';
 
 /**
@@ -25,7 +25,7 @@ import { ChatIdProvider, ChatbotToggleVisibilityProvider } from '../../context';
 import './style.scss';
 
 const CHAT_ID = 'wpspChatbotPrimary';
-const SERVICE_ARGS = { capabilities: [ 'text_generation' ] };
+const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_GENERATION ] };
 
 /**
  * Renders the chatbot.

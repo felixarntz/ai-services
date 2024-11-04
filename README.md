@@ -32,7 +32,7 @@ if ( ai_services()->has_available_services() ) {
       ->get_model(
         array(
           'feature'      => 'my-test-feature',
-          'capabilities' => array( 'text_generation' ),
+          'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
         )
       )
       ->generate_text( 'What can I do with WordPress?' );
@@ -77,7 +77,7 @@ if ( ai_services()->is_service_available( 'google' ) ) {
       ->get_model(
         array(
           'feature'      => 'my-test-feature',
-          'capabilities' => array( 'text_generation' ),
+          'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
         )
       )
       ->generate_text( 'What can I do with WordPress?' );

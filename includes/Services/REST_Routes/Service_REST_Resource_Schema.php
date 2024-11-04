@@ -8,8 +8,8 @@
 
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
-use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Resource_Schema;
 
 /**
@@ -110,7 +110,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'readonly'    => true,
 					'items'       => array(
 						'type' => 'string',
-						'enum' => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION, AI_Capabilities::CAPABILITY_IMAGE_GENERATION ),
+						'enum' => array( AI_Capability::TEXT_GENERATION, AI_Capability::IMAGE_GENERATION ),
 					),
 				),
 				'available_models'   => array(

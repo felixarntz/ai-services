@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Anthropic;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
@@ -106,7 +107,7 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 		$model = $this->get_model(
 			array(
 				'feature'          => 'connection_check',
-				'capabilities'     => array( AI_Capabilities::CAPABILITY_TEXT_GENERATION ),
+				'capabilities'     => array( AI_Capability::TEXT_GENERATION ),
 				'generationConfig' => new Generation_Config( array( 'maxOutputTokens' => 1 ) ),
 			)
 		);
@@ -140,7 +141,7 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 	 */
 	public function list_models( array $request_options = array() ): array {
 		// Unfortunately the Anthropic API does not return models, so we have to hardcode them here.
-		$anthropic_capabilities = array( AI_Capabilities::CAPABILITY_MULTIMODAL_INPUT, AI_Capabilities::CAPABILITY_TEXT_GENERATION );
+		$anthropic_capabilities = array( AI_Capability::MULTIMODAL_INPUT, AI_Capability::TEXT_GENERATION );
 
 		return array_fill_keys(
 			array(

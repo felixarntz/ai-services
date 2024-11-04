@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\API\Types;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use InvalidArgumentException;
@@ -18,10 +19,6 @@ use InvalidArgumentException;
  * @since 0.1.0
  */
 final class Content implements Arrayable, With_JSON_Schema {
-
-	const ROLE_USER   = 'user';
-	const ROLE_MODEL  = 'model';
-	const ROLE_SYSTEM = 'system';
 
 	/**
 	 * The role of the content.
@@ -50,7 +47,7 @@ final class Content implements Arrayable, With_JSON_Schema {
 	 * @throws InvalidArgumentException Thrown if the given role is invalid.
 	 */
 	public function __construct( string $role, Parts $parts ) {
-		if ( ! $this->is_valid_role( $role ) ) {
+		if ( ! Content_Role::is_valid_value( $role ) ) {
 			throw new InvalidArgumentException(
 				esc_html(
 					sprintf(
@@ -135,9 +132,9 @@ final class Content implements Arrayable, With_JSON_Schema {
 					'description' => __( 'The role of the content, i.e. which source it comes from.', 'ai-services' ),
 					'type'        => 'string',
 					'enum'        => array(
-						self::ROLE_USER,
-						self::ROLE_MODEL,
-						self::ROLE_SYSTEM,
+						Content_Role::USER,
+						Content_Role::MODEL,
+						Content_Role::SYSTEM,
 					),
 				),
 				'parts' => array_merge(
@@ -146,26 +143,6 @@ final class Content implements Arrayable, With_JSON_Schema {
 				),
 			),
 			'additionalProperties' => false,
-		);
-	}
-
-	/**
-	 * Checks if the given role is valid.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param string $role The role to check.
-	 * @return bool True if the role is valid, false otherwise.
-	 */
-	private function is_valid_role( string $role ): bool {
-		return in_array(
-			$role,
-			array(
-				self::ROLE_USER,
-				self::ROLE_MODEL,
-				self::ROLE_SYSTEM,
-			),
-			true
 		);
 	}
 }

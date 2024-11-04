@@ -9,12 +9,12 @@ const { useDispatch, useSelect } = wp.data;
 const { createElement, useState } = wp.element;
 const { store: blockEditorStore } = wp.blockEditor;
 const { store: editorStore } = wp.editor;
-const { helpers, store: aiStore } = window.aiServices.ai;
+const { enums, helpers, store: aiStore } = window.aiServices.ai;
 const { serialize } = wp.blocks;
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
 
-const AI_CAPABILITIES = [ 'text_generation' ];
+const AI_CAPABILITIES = [ enums.AiCapability.TEXT_GENERATION ];
 
 function useWriteExcerptCommandLoader() {
 	const { editPost } = useDispatch( editorStore );

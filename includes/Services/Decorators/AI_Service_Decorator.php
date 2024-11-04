@@ -135,6 +135,25 @@ class AI_Service_Decorator implements Generative_AI_Service {
 			);
 		}
 
+		/**
+		 * Filters the AI service model parameters before retrieving the model with them.
+		 *
+		 * This can be used, for example, to inject additional parameters via server-side logic based on the given
+		 * feature identifier.
+		 *
+		 * @since n.e.x.t
+		 *
+		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
+		 *                                           'feature', 'capabilities', 'generationConfig' and
+		 *                                           'systemInstruction'.
+		 * @return array<string, mixed> The processed model parameters.
+		 */
+		$filtered_model_params = (array) apply_filters( 'ai_services_model_params', $model_params );
+
+		// Ensure that the feature identifier cannot be changed.
+		$filtered_model_params['feature'] = $model_params['feature'];
+		$model_params                     = $filtered_model_params;
+
 		// Perform basic validation so that the model classes don't have to.
 		if (
 			isset( $model_params['generationConfig'] )

@@ -256,20 +256,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			}
 		}
 
-		/**
-		 * Filters the model parameters passed to the REST API before retrieving the model with them.
-		 *
-		 * This can be used, for example, to inject additional parameters via server-side logic in order to decouple
-		 * them from the client-side implementation.
-		 *
-		 * @since 0.1.0
-		 *
-		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
-		 *                                           'feature', 'capabilities', 'generationConfig' and
-		 *                                           'systemInstruction'.
-		 * @return array<string, mixed> The processed model parameters.
-		 */
-		return (array) apply_filters( 'ai_services_rest_model_params', $model_params );
+		return $model_params;
 	}
 
 	/**

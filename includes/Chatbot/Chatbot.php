@@ -102,8 +102,8 @@ class Chatbot implements With_Hooks {
 		}
 
 		add_filter(
-			'ai_services_rest_model_params',
-			array( $this, 'filter_rest_model_params' )
+			'ai_services_model_params',
+			array( $this, 'filter_model_params' )
 		);
 	}
 
@@ -185,7 +185,7 @@ class Chatbot implements With_Hooks {
 	 *                                           'feature', 'capabilities', 'generationConfig' and 'systemInstruction'.
 	 * @return array<string, mixed> The filtered model parameters.
 	 */
-	public function filter_rest_model_params( array $model_params ): array {
+	public function filter_model_params( array $model_params ): array {
 		if ( isset( $model_params['feature'] ) && 'ai-services-chatbot' === $model_params['feature'] ) {
 			$model_params = array_merge( $model_params, $this->get_model_params() );
 		}

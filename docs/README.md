@@ -5,4 +5,5 @@
 * [Accessing AI Services in JavaScript](./Accessing-AI-Services-in-JavaScript.md)
 * [Accessing AI Services with WP-CLI](./Accessing-AI-Services-with-WP-CLI.md)
 * [Implementing and Registering a New AI Service](./Implementing-and-Registering-a-New-AI-Service.md)
+* [Customizing AI Services Model Parameters](Customizing-AI-Services-Model-Parameters.md)
 * [Enabling the Assistant Chatbot Feature](./Enabling-the-Assistant-Chatbot-Feature.md)

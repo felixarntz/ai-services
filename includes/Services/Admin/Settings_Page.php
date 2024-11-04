@@ -46,8 +46,6 @@ class Settings_Page extends Abstract_Admin_Page {
 	public function __construct( Script_Registry $script_registry, Style_Registry $style_registry ) {
 		parent::__construct();
 
-		add_filter( 'plugin_action_links_' . AI_SERVICES_MAIN_FILE, array( $this, 'add_settings_action_link' ) );
-
 		$this->script_registry = $script_registry;
 		$this->style_registry  = $style_registry;
 	}
@@ -153,31 +151,6 @@ class Settings_Page extends Abstract_Admin_Page {
 				'wp.apiFetch.use( wp.apiFetch.createPreloadingMiddleware( %s ) );',
 				wp_json_encode( $preload_data )
 			)
-		);
-	}
-
-	/**
-	 * Adds a settings link to the plugin's action links.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param string[]|mixed $links An array of plugin action links.
-	 * @return string[]|mixed The modified list of actions.
-	 */
-	function add_settings_action_link( $links ) {
-		if ( ! is_array( $links ) ) {
-			return $links;
-		}
-
-		$settings_link = sprintf(
-			'<a href="%1$s">%2$s</a>',
-			esc_url( add_query_arg( 'page', $this->get_slug(), admin_url( 'options-general.php' ) ) ),
-			esc_html__( 'Settings', 'ai-services' )
-		);
-
-		return array_merge(
-			array( 'settings' => $settings_link ),
-			$links
 		);
 	}
 }

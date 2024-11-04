@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'AI_SERVICES_VERSION', '0.1.1' );
 define( 'AI_SERVICES_MINIMUM_PHP', '7.2' );
 define( 'AI_SERVICES_MINIMUM_WP', '6.0' );
-define( 'AI_SERVICES_MAIN_FILE', plugin_basename( __DIR__ . '/ai-services.php' ) );
 
 /**
  * Registers the plugin autoloader.

@@ -10,9 +10,7 @@ namespace Felix_Arntz\AI_Services\Services;
 
 use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
-use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator;
-use Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator_With_API_Client;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
@@ -69,10 +67,7 @@ final class Service_Registration {
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
 	 * @param callable             $creator The service creator. Receives the Authentication instance as first
 	 *                                      parameter, the HTTP instance as second parameter, and must return a
-	 *                                      Generative_AI_Service instance. Optionally, the class can implement the
-	 *                                      With_API_Client interface, if the service uses an API client class. Doing
-	 *                                      so benefits performance, as it allows the infrastructure to perform batch
-	 *                                      requests across multiple services.
+	 *                                      Generative_AI_Service instance.
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
@@ -201,14 +196,8 @@ final class Service_Registration {
 			);
 		}
 
-		// Wrap the instance in a cache decorator.
-		if ( $instance instanceof With_API_Client ) {
-			$instance = new AI_Service_Decorator_With_API_Client( $instance );
-		} else {
-			$instance = new AI_Service_Decorator( $instance );
-		}
-
-		return $instance;
+		// Wrap the instance in a decorator for centralized functionality.
+		return new AI_Service_Decorator( $instance );
 	}
 
 	/**

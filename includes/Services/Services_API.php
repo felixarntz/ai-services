@@ -10,7 +10,6 @@ namespace Felix_Arntz\AI_Services\Services;
 
 use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
-use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
@@ -110,9 +109,7 @@ final class Services_API {
 	 * Registers a generative AI service.
 	 *
 	 * An AI service consists at least of a service class that implements the Generative_AI_Service interface and a
-	 * model class that implements the Generative_AI_Model interface. Optionally, the service class can implement the
-	 * With_API_Client interface, if the service uses an API client class. Doing so benefits performance, as it allows
-	 * the infrastructure to perform batch requests across multiple services.
+	 * model class that implements the Generative_AI_Model interface.
 	 *
 	 * Consumers of the service will access the service class through a proxy wrapper class which automatically handles
 	 * caching and other infrastructure concerns. It is therefore advised to not implement any caching concerns in the
@@ -124,7 +121,6 @@ final class Services_API {
 	 * @since 0.1.0
 	 *
 	 * @see Generative_AI_Service
-	 * @see With_API_Client
 	 *
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens. It
 	 *                                      must be unique and must match the service slug returned by the service

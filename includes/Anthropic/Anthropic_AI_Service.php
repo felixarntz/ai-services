@@ -13,10 +13,8 @@ use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
-use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
-use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
@@ -29,7 +27,7 @@ use RuntimeException;
  *
  * @since 0.1.0
  */
-class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
+class Anthropic_AI_Service implements Generative_AI_Service {
 
 	/**
 	 * The Anthropic AI API instance.
@@ -75,17 +73,6 @@ class Anthropic_AI_Service implements Generative_AI_Service, With_API_Client {
 	 */
 	public function get_capabilities(): array {
 		return AI_Capabilities::get_model_class_capabilities( Anthropic_AI_Model::class );
-	}
-
-	/**
-	 * Gets the API client instance.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return Generative_AI_API_Client The API client instance.
-	 */
-	public function get_api_client(): Generative_AI_API_Client {
-		return $this->api;
 	}
 
 	/**

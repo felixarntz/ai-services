@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Admin\Plugin_Action_Link
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\S
 /**
  * Class for a plugin table action link pointing to the plugin's admin settings page.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 class Plugin_Action_Link {
 
 	/**
 	 * WordPress admin menu.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var Admin_Menu
 	 */
 	private $admin_menu;
@@ -29,7 +29,7 @@ class Plugin_Action_Link {
 	/**
 	 * The plugin's settings page.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var Settings_Page
 	 */
 	private $settings_page;
@@ -37,7 +37,7 @@ class Plugin_Action_Link {
 	/**
 	 * Site environment.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var Site_Env
 	 */
 	private $site_env;
@@ -45,7 +45,7 @@ class Plugin_Action_Link {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Admin_Menu    $admin_menu    WordPress admin menu.
 	 * @param Settings_Page $settings_page The plugin's settings page.
@@ -60,7 +60,7 @@ class Plugin_Action_Link {
 	/**
 	 * Gets the capability the current user needs to access the link.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string The capability.
 	 */
@@ -71,7 +71,7 @@ class Plugin_Action_Link {
 	/**
 	 * Gets the HTML for the action link.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string The HTML for the action link.
 	 */

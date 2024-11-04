@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Generation_Config
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package ai-services
  */
 
@@ -16,14 +16,14 @@ use InvalidArgumentException;
 /**
  * Class representing configuration options for a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 final class Generation_Config implements Arrayable, With_JSON_Schema {
 
 	/**
 	 * The sanitized configuration arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var array<string, mixed>
 	 */
 	private $sanitized_args;
@@ -33,7 +33,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * These are not used directly by the class, but are passed through to the API.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var array<string, mixed>
 	 */
 	private $additional_args;
@@ -41,7 +41,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Type definitions for the supported arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var array<string, string>
 	 */
 	private $supported_args = array(
@@ -62,7 +62,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $args The configuration arguments.
 	 */
@@ -76,7 +76,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the stop sequences.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string[] The stop sequences, or empty array if not set.
 	 */
@@ -87,7 +87,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the response MIME type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string The response MIME type, or empty string if not set.
 	 */
@@ -98,7 +98,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the response schema.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The response schema, or empty array if not set.
 	 */
@@ -109,7 +109,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the candidate count.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return int The candidate count, or 0 if not set.
 	 */
@@ -120,7 +120,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the maximum output tokens.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return int The maximum output tokens, or 0 if not set.
 	 */
@@ -131,7 +131,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the temperature.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return float The temperature (between 0.0 and 2.0), or 0.0 if not set.
 	 */
@@ -142,7 +142,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the top P.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return float The top P, or 0.0 if not set.
 	 */
@@ -153,7 +153,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the top K.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return int The top K, or 0 if not set.
 	 */
@@ -164,7 +164,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the presence penalty.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return float The presence penalty, or 0.0 if not set.
 	 */
@@ -175,7 +175,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the frequency penalty.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return float The frequency penalty, or 0.0 if not set.
 	 */
@@ -186,7 +186,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns whether to include the response logprobs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return bool Whether to include the response logprobs.
 	 */
@@ -197,7 +197,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the top logprobs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return int The top logprobs, or 0 if not set.
 	 */
@@ -208,7 +208,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the additional arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The additional arguments.
 	 */
@@ -219,7 +219,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -230,7 +230,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Creates a Generation_Config instance from an array of content data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $data The content data.
 	 * @return Generation_Config Generation_Config instance.
@@ -244,7 +244,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */
@@ -316,7 +316,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Sanitizes the given arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $args The arguments to sanitize.
 	 * @return array<string, array<string, mixed>> Associative array with keys 'sanitized' and 'additional', each
@@ -355,7 +355,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Sanitizies the given value based on the given type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param mixed  $value    The value to sanitize.
 	 * @param string $type     The type to sanitize the value to. Must be one of 'array', 'string', 'object',

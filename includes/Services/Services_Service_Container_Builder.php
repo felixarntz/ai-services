@@ -277,7 +277,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the CLI services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 */
 	private function build_cli_services(): void {
 		$this->container['cli_command'] = static function ( $cont ) {

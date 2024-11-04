@@ -151,7 +151,7 @@ final class Services_Loader implements With_Hooks {
 	 * Loads the services settings page.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t Include a link to the settings page in the plugin action links.
+	 * @since 0.2.0 Include a link to the settings page in the plugin action links.
 	 */
 	private function load_settings_page(): void {
 		add_action(

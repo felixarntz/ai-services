@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Helpers
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package ai-services
  */
 
@@ -17,14 +17,14 @@ use Felix_Arntz\AI_Services\Services\Util\Formatter;
 /**
  * Class providing static helper methods as part of the public API.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 final class Helpers {
 
 	/**
 	 * Converts a text string to a Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param string $text The text.
 	 * @param string $role Optional. The role to use for the content. Default 'user'.
@@ -41,7 +41,7 @@ final class Helpers {
 	 * Realistically, this should almost always return the text from just one part, as API responses typically do not
 	 * contain multiple text parts in a row - but it might be possible.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Content $content The content instance.
 	 * @return string The text, or an empty string if there are no text parts.
@@ -76,7 +76,7 @@ final class Helpers {
 	/**
 	 * Gets the text from the first Content instance in the given list which contains text.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Content[] $contents The list of Content instances.
 	 * @return string The text, or an empty string if no Content instance has text parts.
@@ -95,7 +95,7 @@ final class Helpers {
 	/**
 	 * Gets the Content instances for each candidate in the given list.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Candidates $candidates The list of candidates.
 	 * @return Content[] The list of Content instances.

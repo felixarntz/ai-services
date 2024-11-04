@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Util\Strings
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package ai-services
  */
 
@@ -11,14 +11,14 @@ namespace Felix_Arntz\AI_Services\Services\Util;
 /**
  * Class providing static methods for string operations.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 final class Strings {
 
 	/**
 	 * Converts a snake_case string to a camelCase string.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param string $input The snake_case string.
 	 * @return string The camelCase string.

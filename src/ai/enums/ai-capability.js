@@ -11,7 +11,7 @@ const VALUE_MAP = {
 /**
  * Checks if the given value is valid for the enum.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @param {string} value The value to check.
  * @return {boolean} True if the value is valid, false otherwise.
@@ -23,7 +23,7 @@ export function isValidValue( value ) {
 /**
  * Gets the list of valid values for the enum.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @return {string[]} The list of valid values.
  */

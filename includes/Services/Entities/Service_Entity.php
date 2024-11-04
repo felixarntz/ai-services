@@ -16,7 +16,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\
  * Class representing a service entity for the REST API.
  *
  * @since 0.1.0
- * @since n.e.x.t Moved from Felix_Arntz\AI_Services\Services\REST_Routes namespace.
+ * @since 0.2.0 Moved from Felix_Arntz\AI_Services\Services\REST_Routes namespace.
  */
 class Service_Entity implements Entity {
 

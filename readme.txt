@@ -4,8 +4,8 @@ Plugin Name:  AI Services
 Plugin URI:   https://wordpress.org/plugins/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
-Tested up to: 6.6
-Stable tag:   0.1.1
+Tested up to: 6.7
+Stable tag:   0.2.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -242,14 +242,52 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 
 == Changelog ==
 
+= 0.2.0 =
+
+**Features:**
+
+* Introduce `ai_services_model_params` filter to centrally customize AI service model parameters. ([f36f35d](https://github.com/felixarntz/ai-services/commit/f36f35d5a37b52375969b2e19d6364b5ff540072))
+* Add enums to the public APIs in PHP and JavaScript, for now covering AI capabilities and content roles. ([48dedc5](https://github.com/felixarntz/ai-services/commit/48dedc50f9a86e38bb0f1ac7dbbb0afd7beaea4b))
+* Add WP-CLI support under `ai-services` namespace with commands `list`, `get`, `list-models`, and `generate-text`. ([415edbc](https://github.com/felixarntz/ai-services/commit/415edbc0aa720c560fbef348563ebfb9c2fb494c), [#7](https://github.com/felixarntz/ai-services/issues/7))
+* Introduce helpers as object with useful functions in both PHP and JavaScript APIs. ([98ae179](https://github.com/felixarntz/ai-services/commit/98ae1797746c78f548d5f1c385a2d9ac9fbd72c4), [7cf8a4d](https://github.com/felixarntz/ai-services/commit/7cf8a4daff620877460b0a45f106006911c8866b))
+* Introduce `Generation_Config` type class for safer and more consistent handling of model generation config data. ([4e6925a](https://github.com/felixarntz/ai-services/commit/4e6925ab324089ad421a03af89191b6cf44094e1))
+
+**Enhancements:**
+
+* Add Settings link to plugin row actions. Props [westonruter](https://github.com/westonruter). ([#12](https://github.com/felixarntz/ai-services/pull/12))
+* Remove unnecessary `With_API_Client` interface and related method. ([f3dc6b4](https://github.com/felixarntz/ai-services/commit/f3dc6b42dc62f31e1d803772258f9246a59b3354))
+* Move `Felix_Arntz\AI_Services\Services\Types` namespace to `Felix_Arntz\AI_Services\Services\API\Types` to indicate it is part of the public API. ([5e34f7a](https://github.com/felixarntz/ai-services/commit/5e34f7a26e0b6b3f7b4f953b0765bbd1084d0763))
+* Enhance content part classes by providing dedicated getter functions. ([89ae723](https://github.com/felixarntz/ai-services/commit/89ae723eca7fc6ff236ca9cc1402f463c527baf3))
+* Move internal `Service_Entity` and `Service_Entity_Query` classes to their own namespace, since they are not only relevant for the REST API. ([4ce7026](https://github.com/felixarntz/ai-services/commit/4ce7026e4913870a63a0d13b3592003081471c36))
+* Change built-in assistant chatbot feature to be opt-in rather than opt-out. ([9279850](https://github.com/felixarntz/ai-services/commit/92798508d5c566f0596a46ee665e3b664649dc16), [#15](https://github.com/felixarntz/ai-services/issues/15))
+* Rename `ai-store` asset to `ai` and `settings-store` asset to `settings` and adjust JS globals accordingly, keeping old `ai-store` asset and JS global available for backward compatibility. ([fbe4916](https://github.com/felixarntz/ai-services/commit/fbe49168576230b11e2c02f107da4193a888cb7a))
+* Strengthen prompt content validation and add support for OpenAI audio input. ([350c85d](https://github.com/felixarntz/ai-services/commit/350c85ddde3c1403e746cf801a6325fdfde4be1e))
+* Allow passing through arbitrary parameters to built-in service APIs. ([81254f6](https://github.com/felixarntz/ai-services/commit/81254f62795695114da3aefbf0789c5637bb7aec))
+* Enhance generation config transformation to support equivalent arguments across the built-in service APIs for Anthropic, Google, and OpenAI. ([69a99bf](https://github.com/felixarntz/ai-services/commit/69a99bf708a39083a2e4122d877be580cd90ec08))
+* Validate feature model param in REST API and mark relevant parameters as required. ([2032690](https://github.com/felixarntz/ai-services/commit/2032690a5e825e836e46bb3dc06a38f245172ea9))
+* Enhance chatbot to rely on feature identifier instead of custom property to inject model params. ([962750b](https://github.com/felixarntz/ai-services/commit/962750b126a3e97a498d5fd4a689303e1470b054))
+* Consistently handle the Google-specific `safetySettings` model parameter, expecting an array of `Safety_Setting` instances. ([a74e51c](https://github.com/felixarntz/ai-services/commit/a74e51c70ead3fdd474861b8748c28163e403dd6))
+* Allow passing system instruction as data array to REST endpoint. ([7b4916a](https://github.com/felixarntz/ai-services/commit/7b4916a5125363ca3578b3f52a728279a96740fc))
+* Use camelCase arguments for model params for more consistency with underlying APIs. ([946c448](https://github.com/felixarntz/ai-services/commit/946c4489863a4c88887b6fb74a32f7a47136a4fc))
+
+**Bug Fixes:**
+
+* Fix conflict between REST content schemas. Props [westonruter](https://github.com/westonruter). ([e087602](https://github.com/felixarntz/ai-services/commit/e087602f8e4a75f2cfe14af22d69d49ce245ebac), [#14](https://github.com/felixarntz/ai-services/issues/14))
+* Fix early component return in example plugin. ([e7ce054](https://github.com/felixarntz/ai-services/commit/e7ce0543d899522c79525123ca448b6d7260d6a0))
+
+**Documentation:**
+
+* Update documentation to cover WP-CLI usage and latest API enhancements. ([21ab225](https://github.com/felixarntz/ai-services/commit/21ab225d68e1f00ed909556b3920a727cd33af6b))
+* Improve documentation to cover how to process generative model responses. ([c40c89d](https://github.com/felixarntz/ai-services/commit/c40c89d9154bcb126867b4640c363e20c2ddbdac))
+
 = 0.1.1 =
 
 **Bug Fixes:**
 
-* Update Prompt API to latest shape. Props [tomayac](https://github.com/tomayac). See [#11](https://github.com/felixarntz/ai-services/pull/11).
-* Fix bug preventing inline data to be processed by Google AI API. See [cf57baf](https://github.com/felixarntz/ai-services/commit/cf57baf8822a5c2a9a13760c4d7fa6a6def45558).
-* Fix OpenAI model configuration to only provide multimodal capabilities for GPT-4 models. See [42ba79b](https://github.com/felixarntz/ai-services/commit/42ba79bf45b063279fc714fade604b6a3aafb894).
-* Fix bug where REST endpoint to generate content did not accept content in its complex shape. See [2e0687f](https://github.com/felixarntz/ai-services/commit/2e0687f5620e6a2d4a4ea28527eef64d2f32adb1).
+* Update Prompt API to latest shape. Props [tomayac](https://github.com/tomayac). ([#11](https://github.com/felixarntz/ai-services/pull/11))
+* Fix bug preventing inline data to be processed by Google AI API. ([cf57baf](https://github.com/felixarntz/ai-services/commit/cf57baf8822a5c2a9a13760c4d7fa6a6def45558))
+* Fix OpenAI model configuration to only provide multimodal capabilities for GPT-4 models. ([42ba79b](https://github.com/felixarntz/ai-services/commit/42ba79bf45b063279fc714fade604b6a3aafb894))
+* Fix bug where REST endpoint to generate content did not accept content in its complex shape. ([2e0687f](https://github.com/felixarntz/ai-services/commit/2e0687f5620e6a2d4a4ea28527eef64d2f32adb1))
 
 = 0.1.0 =
 

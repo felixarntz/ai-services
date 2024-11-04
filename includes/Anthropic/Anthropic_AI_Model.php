@@ -222,7 +222,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	/**
 	 * Gets the content transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, callable> The content transformers.
 	 */
@@ -271,7 +271,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	/**
 	 * Gets the generation configuration transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

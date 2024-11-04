@@ -36,7 +36,7 @@ window.aiServices.aiStore = {
 	 */
 	get store() {
 		window.console.warn(
-			'aiServices.aiStore is deprecated as of version n.e.x.t. Use aiServices.ai instead.'
+			'aiServices.aiStore is deprecated as of version 0.2.0. Use aiServices.ai instead.'
 		);
 		return store;
 	},

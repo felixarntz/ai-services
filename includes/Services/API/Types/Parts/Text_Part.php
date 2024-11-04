@@ -20,7 +20,7 @@ final class Text_Part extends Abstract_Part {
 	/**
 	 * Gets the text from the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string The text.
 	 */
@@ -64,7 +64,7 @@ final class Text_Part extends Abstract_Part {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Enums\Abstract_Enum
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use Felix_Arntz\AI_Services\Services\API\Enums\Contracts\Enum;
 /**
  * Base class for an enum.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 abstract class Abstract_Enum implements Enum {
 
 	/**
 	 * The value map, to store in memory which values are valid.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var array<string, bool>|null
 	 */
 	private static $value_map = null;
@@ -28,7 +28,7 @@ abstract class Abstract_Enum implements Enum {
 	/**
 	 * Checks if the given value is valid for the enum.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param string $value The value to check.
 	 * @return bool True if the value is valid, false otherwise.
@@ -43,7 +43,7 @@ abstract class Abstract_Enum implements Enum {
 	/**
 	 * Gets the list of valid values for the enum.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string[] The list of valid values.
 	 */
@@ -57,7 +57,7 @@ abstract class Abstract_Enum implements Enum {
 	/**
 	 * Gets all values for the enum.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string[] The list of all values.
 	 */

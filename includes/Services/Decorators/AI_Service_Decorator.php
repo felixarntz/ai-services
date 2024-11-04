@@ -75,7 +75,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 *
 	 * This is typically used to check whether the current service credentials are valid.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return bool True if the service is connected, false otherwise.
 	 */
@@ -141,7 +141,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		 * This can be used, for example, to inject additional parameters via server-side logic based on the given
 		 * feature identifier.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.2.0
 		 *
 		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
 		 *                                           'feature', 'capabilities', 'generationConfig' and

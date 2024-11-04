@@ -229,7 +229,7 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

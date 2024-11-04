@@ -53,7 +53,7 @@ class Chatbot_Loader {
 		 * filter.
 		 *
 		 * @since 0.1.0
-		 * @since n.e.x.t The default value was changed to false.
+		 * @since 0.2.0 The default value was changed to false.
 		 *
 		 * @param bool $enabled Whether the chatbot feature should be enabled or not.
 		 */

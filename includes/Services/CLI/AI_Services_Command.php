@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\CLI\AI_Services_Command
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package ai-services
  */
 
@@ -26,14 +26,14 @@ use WP_CLI\Formatter;
 /**
  * AI Services command class for WP-CLI.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 final class AI_Services_Command {
 
 	/**
 	 * The services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -41,7 +41,7 @@ final class AI_Services_Command {
 	/**
 	 * Default fields to display for each service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var string[]
 	 */
 	private $service_default_fields = array(
@@ -54,7 +54,7 @@ final class AI_Services_Command {
 	/**
 	 * Default fields to display for each service model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var string[]
 	 */
 	private $model_default_fields = array(
@@ -65,7 +65,7 @@ final class AI_Services_Command {
 	/**
 	 * Arguments that are used for formatting.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var string[]
 	 */
 	private $formatter_args = array(
@@ -77,7 +77,7 @@ final class AI_Services_Command {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Services_API $services_api The services API instance.
 	 */
@@ -151,7 +151,7 @@ final class AI_Services_Command {
 	 *
 	 * @subcommand list
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param mixed[]              $args       List of the positional arguments.
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
@@ -246,7 +246,7 @@ final class AI_Services_Command {
 	 *
 	 *   wp ai-services get google --format=json
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param mixed[]              $args       List of the positional arguments.
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
@@ -339,7 +339,7 @@ final class AI_Services_Command {
 	 *
 	 * @subcommand list-models
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param mixed[]              $args       List of the positional arguments.
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
@@ -427,7 +427,7 @@ final class AI_Services_Command {
 	 *
 	 * @subcommand generate-text
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param mixed[]              $args       List of the positional arguments.
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
@@ -498,7 +498,7 @@ final class AI_Services_Command {
 	/**
 	 * Gets the data array for the given service entity.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Service_Entity $service_entity The service entity.
 	 * @return array<string, mixed> The service data.
@@ -519,7 +519,7 @@ final class AI_Services_Command {
 	 *
 	 * The service must be available for this to work.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param string $service_slug The service slug.
 	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
@@ -536,7 +536,7 @@ final class AI_Services_Command {
 	/**
 	 * Gets a callback to sort models by a specific field.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param string $orderby The field to order by. Only 'slug' is supported.
 	 * @param string $order   The order direction (either 'ASC' or 'DESC').
@@ -566,7 +566,7 @@ final class AI_Services_Command {
 	 *
 	 * This method transforms hyphen-case keys to camelCase keys.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $generation_config_args The generation configuration arguments.
 	 * @return array<string, mixed> The sanitized generation configuration arguments.
@@ -589,7 +589,7 @@ final class AI_Services_Command {
 	/**
 	 * Retrieves the (text-based) model with the given slug and parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Generative_AI_Service $service      The service instance to get the model from.
 	 * @param array<string, mixed>  $model_params The model parameters.
@@ -620,7 +620,7 @@ final class AI_Services_Command {
 	/**
 	 * Generates text content using the given generative model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param Generative_AI_Model $model  The model to use.
 	 * @param string              $prompt The text prompt to generate content for.
@@ -657,7 +657,7 @@ final class AI_Services_Command {
 	/**
 	 * Parses and validates the associative arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $assoc_args      Map of the associative arguments and their values.
 	 * @param array<string, mixed> $defaults        Map of the default argument values.
@@ -676,7 +676,7 @@ final class AI_Services_Command {
 	/**
 	 * Gets the formatter instance to format CLI output.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $assoc_args     Associative arguments.
 	 * @param string[]             $default_fields Default fields to display.

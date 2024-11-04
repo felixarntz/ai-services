@@ -6,7 +6,7 @@ import { ContentRole } from './enums';
 /**
  * Converts a text string to a Content object.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @param {string} text The text.
  * @param {string} role Optional. The role to use for the content. Default 'user'.
@@ -26,7 +26,7 @@ export function textToContent( text, role = ContentRole.USER ) {
  * Realistically, this should almost always return the text from just one part, as API responses typically do not
  * contain multiple text parts in a row - but it might be possible.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @param {Object} content The Content object.
  * @return {string} The text, or an empty string if there are no text parts.
@@ -60,7 +60,7 @@ export function contentToText( content ) {
 /**
  * Gets the text from the first Content object in the given list which contains text.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @param {Object[]} contents The list of Content objects.
  * @return {string} The text, or an empty string if no Content object has text parts.
@@ -79,7 +79,7 @@ export function getTextFromContents( contents ) {
 /**
  * Gets the Content objects for each candidate in the given list.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @param {Object[]} candidates The list of candidates.
  * @return {Object[]} The list of Content objects.

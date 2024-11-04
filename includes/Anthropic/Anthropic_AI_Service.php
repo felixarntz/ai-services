@@ -80,7 +80,7 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 *
 	 * This is typically used to check whether the current service credentials are valid.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return bool True if the service is connected, false otherwise.
 	 *

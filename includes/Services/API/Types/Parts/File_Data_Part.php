@@ -20,7 +20,7 @@ final class File_Data_Part extends Abstract_Part {
 	/**
 	 * Gets the MIME type from the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string The MIME type.
 	 */
@@ -31,7 +31,7 @@ final class File_Data_Part extends Abstract_Part {
 	/**
 	 * Gets the file URI from the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return string The file URI.
 	 */
@@ -91,7 +91,7 @@ final class File_Data_Part extends Abstract_Part {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

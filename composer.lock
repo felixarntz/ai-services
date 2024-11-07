@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/felixarntz/wp-oop-plugin-lib.git",
-                "reference": "43f7ab4d89f7e2ad69f5973714ce7d4e7290dbcd"
+                "reference": "35a57fa255c5afd395bcd3b147e8c599b4c5c391"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/43f7ab4d89f7e2ad69f5973714ce7d4e7290dbcd",
-                "reference": "43f7ab4d89f7e2ad69f5973714ce7d4e7290dbcd",
+                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/35a57fa255c5afd395bcd3b147e8c599b4c5c391",
+                "reference": "35a57fa255c5afd395bcd3b147e8c599b4c5c391",
                 "shasum": ""
             },
             "require": {
@@ -200,9 +200,9 @@
             "description": "A library providing classes around WordPress APIs, to be used for example in object oriented WordPress plugins.",
             "support": {
                 "issues": "https://github.com/felixarntz/wp-oop-plugin-lib/issues",
-                "source": "https://github.com/felixarntz/wp-oop-plugin-lib/tree/0.1.0"
+                "source": "https://github.com/felixarntz/wp-oop-plugin-lib/tree/main"
             },
-            "time": "2024-10-28T19:14:45+00:00"
+            "time": "2024-11-06T03:32:46+00:00"
         }
     ],
     "packages-dev": [

@@ -104,7 +104,11 @@ final class Helpers {
 		$contents = array();
 
 		foreach ( $candidates as $candidate ) {
-			$contents[] = $candidate->get_content();
+			$content = $candidate->get_content();
+			if ( ! $content ) {
+				continue;
+			}
+			$contents[] = $content;
 		}
 
 		return $contents;

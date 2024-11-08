@@ -78,7 +78,11 @@ final class Candidates implements Collection, Arrayable {
 		if ( isset( $args['part_class_name'] ) ) {
 			$part_class_name = $args['part_class_name'];
 			$map             = static function ( Candidate $candidate ) use ( $part_class_name ) {
-				$filtered_parts = $candidate->get_content()->get_parts()->filter( array( 'class_name' => $part_class_name ) );
+				$candidate_content = $candidate->get_content();
+				if ( ! $candidate_content ) {
+					return null;
+				}
+				$filtered_parts = $candidate_content->get_parts()->filter( array( 'class_name' => $part_class_name ) );
 				if ( count( $filtered_parts ) > 0 ) {
 					$candidate_data                     = $candidate->to_array();
 					$candidate_data['content']['parts'] = $filtered_parts->to_array();

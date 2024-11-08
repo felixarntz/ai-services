@@ -20,10 +20,10 @@ use InvalidArgumentException;
 final class Candidate implements Arrayable {
 
 	/**
-	 * The content.
+	 * The content, unless no content is available as part of the candidate.
 	 *
 	 * @since 0.1.0
-	 * @var Content
+	 * @var ?Content
 	 */
 	private $content;
 
@@ -40,10 +40,10 @@ final class Candidate implements Arrayable {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param Content              $content         The content.
+	 * @param ?Content             $content         The content, or null to indicate no content is available.
 	 * @param array<string, mixed> $additional_data Additional data for the candidate, if any.
 	 */
-	public function __construct( Content $content, array $additional_data = array() ) {
+	public function __construct( ?Content $content, array $additional_data = array() ) {
 		$this->content = $content;
 
 		// Remove the content from the additional data, if present, to prevent conflicts.
@@ -56,9 +56,9 @@ final class Candidate implements Arrayable {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return Content The content.
+	 * @return ?Content The content.
 	 */
-	public function get_content(): Content {
+	public function get_content(): ?Content {
 		return $this->content;
 	}
 
@@ -117,7 +117,7 @@ final class Candidate implements Arrayable {
 	public function to_array(): array {
 		return array_merge(
 			array(
-				'content' => $this->content->to_array(),
+				'content' => $this->content ? $this->content->to_array() : null,
 			),
 			$this->additional_data
 		);
@@ -135,7 +135,7 @@ final class Candidate implements Arrayable {
 	 */
 	public static function from_array( array $data ): Candidate {
 		if ( ! isset( $data['content'] ) ) {
-			throw new InvalidArgumentException( 'Candidate data must contain content.' );
+			return new Candidate( null, $data );
 		}
 
 		/*

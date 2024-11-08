@@ -28,7 +28,7 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	 * The stream to read from.
 	 *
 	 * @since n.e.x.t
-	 * @var StreamInterface
+	 * @var StreamInterface|Stream
 	 */
 	private $stream;
 
@@ -37,14 +37,24 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param int                   $status  The HTTP status code received with the response.
-	 * @param StreamInterface       $stream  The response body stream to read from.
-	 * @param array<string, string> $headers The headers received with the response.
+	 * @param int                    $status  The HTTP status code received with the response.
+	 * @param StreamInterface|Stream $stream  The response body stream to read from.
+	 * @param array<string, string>  $headers The headers received with the response.
 	 *
 	 * @throws InvalidArgumentException Thrown if the $stream parameter has an invalid type.
 	 */
-	public function __construct( int $status, StreamInterface $stream, array $headers ) {
+	public function __construct( int $status, $stream, array $headers ) {
 		parent::__construct( $status, '', $headers );
+
+		if ( ! $stream instanceof StreamInterface && ! $stream instanceof Stream ) {
+			throw new InvalidArgumentException(
+				sprintf(
+					'Stream must be an instance of %1$s or %2$s.',
+					StreamInterface::class,
+					Stream::class
+				)
+			);
+		}
 
 		$this->stream = $stream;
 	}
@@ -83,7 +93,7 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param StreamInterface $stream The stream to read from.
+	 * @param StreamInterface|Stream $stream The stream to read from.
 	 * @return string The line read from the stream.
 	 */
 	private function read_line( $stream ): string {

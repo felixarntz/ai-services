@@ -13,6 +13,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Chat_Session;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Generator;
 use InvalidArgumentException;
 
 /**
@@ -36,6 +37,22 @@ interface With_Text_Generation {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function generate_text( $content, array $request_options = array() ): Candidates;
+
+	/**
+	 * Generates text content using the model, streaming the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
+	 *                                                        can be passed for additional context (e.g. chat history).
+	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
+	 * @return Generator<Candidates> Generator that yields the chunks of response candidates with generated text
+	 *                               content - usually just one candidate.
+	 *
+	 * @throws InvalidArgumentException Thrown if the given content is invalid.
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
+	 */
+	public function stream_generate_text( $content, array $request_options = array() ): Generator;
 
 	/**
 	 * Starts a multi-turn chat session using the model.

@@ -38,6 +38,8 @@ $wp_oop_plugin_lib_folders_regex = $wp_oop_plugin_lib_folders_concat
 	? "/^($wp_oop_plugin_lib_folders_concat)\//"
 	: '/^[A-Za-z0-9_]\//';
 
+$other_dependencies_regex = '/^(guzzlehttp|psr)\/[a-z0-9-]+\/src\//';
+
 return array(
 	'prefix'             => 'Felix_Arntz\AI_Services_Dependencies',
 	'finders'            => array(
@@ -48,6 +50,13 @@ return array(
 			->exclude( array( 'docs', 'tests' ) )
 			->path( $wp_oop_plugin_lib_folders_regex )
 			->in( 'vendor/felixarntz/wp-oop-plugin-lib/src' ),
+		Finder::create()
+			->files()
+			->ignoreVCS( true )
+			->notName( '/LICENSE|.*\\.md|.*\\.json|.*\\.lock|.*\\.dist/' )
+			->exclude( array( 'docs', 'tests' ) )
+			->path( $other_dependencies_regex )
+			->in( 'vendor' ),
 	),
 	'patchers'           => array(
 		// Patcher to replace the library text domain with the plugin text domain.

@@ -102,7 +102,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 */
 	public function list_models( array $request_options = array() ): array {
 		$request  = $this->api->create_list_models_request();
-		$response = $this->api->make_request( $request );
+		$response = $this->api->make_request( $request )->get_data();
 
 		if ( ! isset( $response['data'] ) || ! $response['data'] ) {
 			throw new Generative_AI_Exception(

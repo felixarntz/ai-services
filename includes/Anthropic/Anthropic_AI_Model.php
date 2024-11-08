@@ -23,6 +23,7 @@ use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Felix_Arntz\AI_Services\Services\Util\Transformer;
+use Generator;
 use InvalidArgumentException;
 
 /**
@@ -161,15 +162,38 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 		);
 		$response = $this->api->make_request( $request );
 
-		$candidates = new Candidates();
-		$candidates->add_candidate(
-			new Candidate(
-				$this->prepare_api_response_for_content( $response ),
-				$response
-			)
-		);
+		return $this->api->process_response_data(
+			$response,
+			function ( $response_data ) {
+				$candidates = new Candidates();
+				$candidates->add_candidate(
+					new Candidate(
+						$this->prepare_api_response_for_content( $response_data ),
+						$response_data
+					)
+				);
 
-		return $candidates;
+				return $candidates;
+			}
+		);
+	}
+
+	// phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
+	/**
+	 * Sends a request to generate text content, streaming the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Content[]            $contents        Prompts for the content to generate.
+	 * @param array<string, mixed> $request_options The request options.
+	 * @return Generator<Candidates> Generator that yields the chunks of response candidates with generated text
+	 *                               content - usually just one candidate.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
+	 */
+	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
+		// TODO: Implement streaming support.
+		throw new Generative_AI_Exception( 'Not yet implemented.' );
 	}
 
 	/**

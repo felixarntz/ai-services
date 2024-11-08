@@ -17,6 +17,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Generator;
 use InvalidArgumentException;
 
 /**
@@ -39,6 +40,52 @@ trait With_Text_Generation_Trait {
 	 * @throws InvalidArgumentException Thrown if the given content is invalid.
 	 */
 	final public function generate_text( $content, array $request_options = array() ): Candidates {
+		$contents = $this->sanitize_new_content( $content );
+		return $this->send_generate_text_request( $contents, $request_options );
+	}
+
+	/**
+	 * Generates text content using the model, streaming the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
+	 *                                                        can be passed for additional context (e.g. chat history).
+	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
+	 * @return Generator<Candidates> Generator that yields the chunks of response candidates with generated text
+	 *                               content - usually just one candidate.
+	 *
+	 * @throws InvalidArgumentException Thrown if the given content is invalid.
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
+	 */
+	final public function stream_generate_text( $content, array $request_options = array() ): Generator {
+		$contents = $this->sanitize_new_content( $content );
+		return $this->send_stream_generate_text_request( $contents, $request_options );
+	}
+
+	/**
+	 * Starts a multi-turn chat session using the model.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param Content[] $history Optional. The chat history. Default empty array.
+	 * @return Chat_Session The chat session.
+	 */
+	final public function start_chat( array $history = array() ): Chat_Session {
+		return new Chat_Session( $this, $history );
+	}
+
+	/**
+	 * Sanitizes the input content for generating text.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|Parts|Content|Content[] $content The input content.
+	 * @return Content[] The sanitized content.
+	 *
+	 * @throws InvalidArgumentException Thrown if the input content is invalid.
+	 */
+	private function sanitize_new_content( $content ) {
 		if ( is_array( $content ) ) {
 			$contents = array_map(
 				array( Formatter::class, 'format_new_content' ),
@@ -66,19 +113,7 @@ trait With_Text_Generation_Trait {
 			}
 		}
 
-		return $this->send_generate_text_request( $contents, $request_options );
-	}
-
-	/**
-	 * Starts a multi-turn chat session using the model.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Content[] $history Optional. The chat history. Default empty array.
-	 * @return Chat_Session The chat session.
-	 */
-	final public function start_chat( array $history = array() ): Chat_Session {
-		return new Chat_Session( $this, $history );
+		return $contents;
 	}
 
 	/**
@@ -93,4 +128,18 @@ trait With_Text_Generation_Trait {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	abstract protected function send_generate_text_request( array $contents, array $request_options ): Candidates;
+
+	/**
+	 * Sends a request to generate text content, streaming the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Content[]            $contents        Prompts for the content to generate.
+	 * @param array<string, mixed> $request_options The request options.
+	 * @return Generator<Candidates> Generator that yields the chunks of response candidates with generated text
+	 *                               content - usually just one candidate.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
+	 */
+	abstract protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator;
 }

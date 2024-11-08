@@ -12,6 +12,7 @@ use Felix_Arntz\AI_Services\Services\Admin\Plugin_Action_Link;
 use Felix_Arntz\AI_Services\Services\Admin\Settings_Page;
 use Felix_Arntz\AI_Services\Services\CLI\AI_Services_Command;
 use Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader;
+use Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Content_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Get_REST_Route;
@@ -30,7 +31,6 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\C
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
@@ -201,7 +201,8 @@ final class Services_Service_Container_Builder {
 	 */
 	private function build_http_services(): void {
 		$this->container['http'] = static function () {
-			return new HTTP();
+			// Custom implementation with additional support for streaming responses.
+			return new HTTP_With_Streams();
 		};
 	}
 

@@ -9,9 +9,13 @@
 namespace Felix_Arntz\AI_Services\Services\Traits;
 
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\HTTP\Contracts\With_Stream;
+use Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Response;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Generator;
 
 /**
  * Trait for an API client class which implements the Generative_AI_API_Client interface.
@@ -26,16 +30,34 @@ trait Generative_AI_API_Client_Trait {
 	 * @since 0.1.0
 	 *
 	 * @param Request $request The request instance.
-	 * @return array<string, mixed> The response data.
+	 * @return Response The response instance.
 	 *
 	 * @throws Generative_AI_Exception If an error occurs while making the request.
 	 */
-	final public function make_request( Request $request ): array {
-		try {
-			$response = $this->get_http()->request( $request );
-		} catch ( Request_Exception $e ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->create_request_exception( $e->getMessage() );
+	final public function make_request( Request $request ): Response {
+		$http = $this->get_http();
+
+		$options = $request->get_options();
+		if ( isset( $options['stream'] ) && $options['stream'] ) {
+			if ( ! $http instanceof HTTP_With_Streams ) {
+				throw new Generative_AI_Exception(
+					esc_html__( 'Streaming requests are not supported by this API client.', 'ai-services' )
+				);
+			}
+
+			try {
+				$response = $http->request_stream( $request );
+			} catch ( Request_Exception $e ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				throw $this->create_request_exception( $e->getMessage() );
+			}
+		} else {
+			try {
+				$response = $this->get_http()->request( $request );
+			} catch ( Request_Exception $e ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				throw $this->create_request_exception( $e->getMessage() );
+			}
 		}
 
 		if ( $response->get_status() < 200 || $response->get_status() >= 300 ) {
@@ -53,13 +75,89 @@ trait Generative_AI_API_Client_Trait {
 			throw $this->create_request_exception( $error_message );
 		}
 
-		$data = $response->get_data();
-		if ( ! $data ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->create_request_exception( __( 'JSON response could not be decoded.', 'ai-services' ) );
+		return $response;
+	}
+
+	/**
+	 * Processes the response data from the API.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Response $response         The response instance. Must not be a stream response, i.e. not implement the
+	 *                                   With_Stream interface.
+	 * @param callable $process_callback The callback to process the response data. Receives the JSON-decoded response
+	 *                                   data as associative array and should return the processed data in the desired
+	 *                                   format.
+	 * @return mixed The processed response data.
+	 *
+	 * @throws Generative_AI_Exception If an error occurs while processing the response data.
+	 */
+	final public function process_response_data( Response $response, $process_callback ) {
+		if ( $response instanceof With_Stream ) {
+			throw new Generative_AI_Exception(
+				esc_html(
+					sprintf(
+						/* translators: %s: With_Stream interface name */
+						__( 'Response must not implement %s.', 'ai-services' ),
+						With_Stream::class
+					)
+				)
+			);
 		}
 
-		return $data;
+		$data = $response->get_data();
+		if ( ! $data ) {
+			throw new Generative_AI_Exception(
+				esc_html__( 'No data received in response.', 'ai-services' )
+			);
+		}
+
+		$processed_data = call_user_func( $process_callback, $data );
+		if ( ! $processed_data ) {
+			throw new Generative_AI_Exception(
+				esc_html__( 'No data returned by process callback.', 'ai-services' )
+			);
+		}
+
+		return $processed_data;
+	}
+
+	/**
+	 * Processes the response data stream from the API.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Response $response         The response instance. Must implement With_Stream. The response data will
+	 *                                   be processed in chunks, with each chunk of data being passed to the process
+	 *                                   callback.
+	 * @param callable $process_callback The callback to process the response data. Receives the JSON-decoded response
+	 *                                   data as associative array and should return the processed data in the desired
+	 *                                   format.
+	 * @return Generator Generator that yields the individual processed response data chunks.
+	 *
+	 * @throws Generative_AI_Exception If an error occurs while processing the response data.
+	 */
+	final public function process_response_stream( Response $response, $process_callback ): Generator {
+		if ( ! $response instanceof With_Stream ) {
+			throw new Generative_AI_Exception(
+				esc_html(
+					sprintf(
+						/* translators: %s: With_Stream interface name */
+						__( 'Response does not implement %s.', 'ai-services' ),
+						With_Stream::class
+					)
+				)
+			);
+		}
+
+		$stream_generator = $response->read_stream();
+		foreach ( $stream_generator as $data ) {
+			$processed_data = call_user_func( $process_callback, $data );
+			if ( ! $processed_data ) {
+				continue;
+			}
+			yield $processed_data;
+		}
 	}
 
 	/**

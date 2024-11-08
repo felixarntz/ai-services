@@ -64,27 +64,4 @@ interface Generative_AI_API_Client {
 	 * @throws Generative_AI_Exception If an error occurs while processing the response data.
 	 */
 	public function process_response_stream( Response $response, $process_callback ): Generator;
-
-	/**
-	 * Creates a request instance to list the available models with their information.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param array<string, mixed> $params          Optional. The request parameters. Default empty array.
-	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return Request The request instance.
-	 */
-	public function create_list_models_request( array $params = array(), array $request_options = array() ): Request;
-
-	/**
-	 * Creates a request instance to generate content using the specified model.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param string               $model           The model slug.
-	 * @param array<string, mixed> $params          The request parameters.
-	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return Request The request instance.
-	 */
-	public function create_generate_content_request( string $model, array $params, array $request_options = array() ): Request;
 }

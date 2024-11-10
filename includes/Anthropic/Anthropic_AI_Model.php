@@ -223,6 +223,9 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 				$this->generation_config,
 				self::get_generation_config_transformers()
 			);
+		} else {
+			// The 'max_tokens' parameter is required in the Anthropic API, so we need a default.
+			$params['max_tokens'] = 4096;
 		}
 
 		return $params;

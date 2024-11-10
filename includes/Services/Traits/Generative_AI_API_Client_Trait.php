@@ -131,8 +131,9 @@ trait Generative_AI_API_Client_Trait {
 	 *                                   be processed in chunks, with each chunk of data being passed to the process
 	 *                                   callback.
 	 * @param callable $process_callback The callback to process the response data. Receives the JSON-decoded response
-	 *                                   data as associative array and should return the processed data in the desired
-	 *                                   format.
+	 *                                   data (associative array) as first parameter, and the previous processed data
+	 *                                   as second parameter (or null in case this is the first chunk). It should
+	 *                                   return the processed data for the chunk in the desired format.
 	 * @return Generator Generator that yields the individual processed response data chunks.
 	 *
 	 * @throws Generative_AI_Exception If an error occurs while processing the response data.
@@ -151,11 +152,15 @@ trait Generative_AI_API_Client_Trait {
 		}
 
 		$stream_generator = $response->read_stream();
+
+		$previous_processed_data = null;
 		foreach ( $stream_generator as $data ) {
-			$processed_data = call_user_func( $process_callback, $data );
+			$processed_data = call_user_func( $process_callback, $data, $previous_processed_data );
 			if ( ! $processed_data ) {
 				continue;
 			}
+
+			$previous_processed_data = $processed_data;
 			yield $processed_data;
 		}
 	}
@@ -164,11 +169,12 @@ trait Generative_AI_API_Client_Trait {
 	 * Creates a new exception for an AI API request error.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Method made public.
 	 *
 	 * @param string $message The error message to include in the exception.
 	 * @return Generative_AI_Exception The exception instance.
 	 */
-	final protected function create_request_exception( string $message ): Generative_AI_Exception {
+	final public function create_request_exception( string $message ): Generative_AI_Exception {
 		return new Generative_AI_Exception(
 			esc_html(
 				sprintf(
@@ -177,6 +183,45 @@ trait Generative_AI_API_Client_Trait {
 					$this->get_api_name(),
 					$message
 				)
+			)
+		);
+	}
+
+	/**
+	 * Creates a new exception for an AI API response error.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $message The error message to include in the exception.
+	 * @return Generative_AI_Exception The exception instance.
+	 */
+	final public function create_response_exception( string $message ): Generative_AI_Exception {
+		return new Generative_AI_Exception(
+			esc_html(
+				sprintf(
+					/* translators: 1: API name, 2: error message */
+					__( 'Error in the response from the %1$s API: %2$s ', 'ai-services' ),
+					$this->get_api_name(),
+					$message
+				)
+			)
+		);
+	}
+
+	/**
+	 * Creates a new exception for an AI API response error for a missing key.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $key The missing key in the response data.
+	 * @return Generative_AI_Exception The exception instance.
+	 */
+	final public function create_missing_response_key_exception( string $key ): Generative_AI_Exception {
+		return $this->create_response_exception(
+			sprintf(
+				/* translators: %s: key name */
+				__( 'The response is missing the "%s" key.', 'ai-services' ),
+				$key
 			)
 		);
 	}

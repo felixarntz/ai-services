@@ -57,11 +57,42 @@ interface Generative_AI_API_Client {
 	 *                                   be processed in chunks, with each chunk of data being passed to the process
 	 *                                   callback.
 	 * @param callable $process_callback The callback to process the response data. Receives the JSON-decoded response
-	 *                                   data as associative array and should return the processed data in the desired
-	 *                                   format.
+	 *                                   data (associative array) as first parameter, and the previous processed data
+	 *                                   as second parameter (or null in case this is the first chunk). It should
+	 *                                   return the processed data for the chunk in the desired format.
 	 * @return Generator Generator that yields the individual processed response data chunks.
 	 *
 	 * @throws Generative_AI_Exception If an error occurs while processing the response data.
 	 */
 	public function process_response_stream( Response $response, $process_callback ): Generator;
+
+	/**
+	 * Creates a new exception for an AI API request error.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $message The error message to include in the exception.
+	 * @return Generative_AI_Exception The exception instance.
+	 */
+	public function create_request_exception( string $message ): Generative_AI_Exception;
+
+	/**
+	 * Creates a new exception for an AI API response error.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $message The error message to include in the exception.
+	 * @return Generative_AI_Exception The exception instance.
+	 */
+	public function create_response_exception( string $message ): Generative_AI_Exception;
+
+	/**
+	 * Creates a new exception for an AI API response error for a missing key.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $key The missing key in the response data.
+	 * @return Generative_AI_Exception The exception instance.
+	 */
+	public function create_missing_response_key_exception( string $key ): Generative_AI_Exception;
 }

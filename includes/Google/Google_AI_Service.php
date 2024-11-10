@@ -102,10 +102,10 @@ class Google_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		$request  = $this->api->create_list_models_request();
-		$response = $this->api->make_request( $request )->get_data();
+		$request       = $this->api->create_list_models_request();
+		$response_data = $this->api->make_request( $request )->get_data();
 
-		if ( ! isset( $response['models'] ) || ! $response['models'] ) {
+		if ( ! isset( $response_data['models'] ) || ! $response_data['models'] ) {
 			throw new Generative_AI_Exception(
 				esc_html(
 					sprintf(
@@ -118,7 +118,7 @@ class Google_AI_Service implements Generative_AI_Service {
 		}
 
 		return array_reduce(
-			$response['models'],
+			$response_data['models'],
 			static function ( array $models, array $model ) {
 				$model_slug = $model['baseModelId'] ?? $model['name'];
 				if ( str_starts_with( $model_slug, 'models/' ) ) {

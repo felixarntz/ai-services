@@ -130,32 +130,11 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
-		if ( $this->system_instruction ) {
-			$contents = array_merge( array( $this->system_instruction ), $contents );
-		}
-
-		$transformers = self::get_content_transformers();
-
-		$params = array(
-			// TODO: Add support for tools and tool config, to support code generation.
-			'messages' => array_map(
-				static function ( Content $content ) use ( $transformers ) {
-					return Transformer::transform_content( $content, $transformers );
-				},
-				$contents
-			),
-		);
-		if ( $this->generation_config ) {
-			$params = Transformer::transform_generation_config_params(
-				array_merge( $this->generation_config->get_additional_args(), $params ),
-				$this->generation_config,
-				self::get_generation_config_transformers()
-			);
-		}
+		$params = $this->prepare_generate_text_params( $contents );
 
 		$request  = $this->api->create_generate_content_request(
 			$this->model,
-			array_filter( $params ),
+			$params,
 			array_merge(
 				$this->request_options,
 				$request_options
@@ -171,7 +150,6 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		);
 	}
 
-	// phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
@@ -185,8 +163,60 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
-		// TODO: Implement streaming support.
-		throw new Generative_AI_Exception( 'Not yet implemented.' );
+		$params = $this->prepare_generate_text_params( $contents );
+
+		$request  = $this->api->create_stream_generate_content_request(
+			$this->model,
+			$params,
+			array_merge(
+				$this->request_options,
+				$request_options
+			)
+		);
+		$response = $this->api->make_request( $request );
+
+		return $this->api->process_response_stream(
+			$response,
+			function ( $response_data, $prev_chunk_candidates ) {
+				return $this->get_response_candidates( $response_data, $prev_chunk_candidates );
+			}
+		);
+	}
+
+	/**
+	 * Prepares the API request parameters for generating text content.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Content[] $contents The contents to generate text for.
+	 * @return array<string, mixed> The parameters for generating text content.
+	 */
+	private function prepare_generate_text_params( array $contents ): array {
+		if ( $this->system_instruction ) {
+			$contents = array_merge( array( $this->system_instruction ), $contents );
+		}
+
+		$transformers = self::get_content_transformers();
+
+		$params = array(
+			// TODO: Add support for tools and tool config, to support code generation.
+			'messages' => array_map(
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
+				$contents
+			),
+		);
+
+		if ( $this->generation_config ) {
+			$params = Transformer::transform_generation_config_params(
+				array_merge( $this->generation_config->get_additional_args(), $params ),
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
+		}
+
+		return $params;
 	}
 
 	/**
@@ -194,100 +224,119 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array<string, mixed> $response The response data.
+	 * @param array<string, mixed> $response_data         The response data.
+	 * @param ?Candidates          $prev_chunk_candidates The candidates from the previous chunk in case of a streaming
+	 *                                                    response, or null.
 	 * @return Candidates The candidates with content parts.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the response does not have any candidates with content.
 	 */
-	private function get_response_candidates( array $response ): Candidates {
-		if ( ! isset( $response['choices'] ) || ! $response['choices'] ) {
-			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: key name */
-						__( 'The response from the OpenAI API is missing the "%s" key.', 'ai-services' ),
-						'choices'
-					)
-				)
-			);
-		}
-
-		$candidates = array();
-		$errors     = array();
-		foreach ( $response['choices'] as $candidate ) {
-			if ( ! isset( $candidate['message'] ) ) {
-				if ( isset( $candidate['finish_reason'] ) ) {
-					$errors[] = $candidate['finish_reason'];
-				}
-				continue;
+	private function get_response_candidates( array $response_data, ?Candidates $prev_chunk_candidates = null ): Candidates {
+		if ( null === $prev_chunk_candidates ) {
+			// Regular (non-streaming) response, or first chunk of a streaming response.
+			if ( ! isset( $response_data['choices'] ) ) {
+				throw $this->api->create_missing_response_key_exception( 'choices' );
 			}
 
-			$candidates[] = $candidate;
-		}
+			$other_data = $response_data;
+			unset( $other_data['choices'] );
 
-		if ( count( $candidates ) === 0 ) {
-			$message = __( 'The response from the OpenAI API does not include any candidates with content.', 'ai-services' );
+			$candidates = new Candidates();
+			foreach ( $response_data['choices'] as $index => $choice_data ) {
+				if ( isset( $choice_data['delta'] ) && ! isset( $choice_data['message'] ) ) {
+					$choice_data['message'] = $choice_data['delta'];
+					unset( $choice_data['delta'] );
+				}
 
-			$errors = array_unique( $errors );
-			if ( count( $errors ) > 0 ) {
-				$message .= ' ' . sprintf(
-					/* translators: %s: finish reason code */
-					__( 'Finish reason: %s', 'ai-services' ),
-					implode(
-						wp_get_list_item_separator(),
-						$errors
+				$candidates->add_candidate(
+					new Candidate(
+						$this->prepare_choice_content( $choice_data, $index ),
+						array_merge( $choice_data, $other_data )
 					)
 				);
 			}
-			throw new Generative_AI_Exception(
-				esc_html( $message )
-			);
+
+			return $candidates;
 		}
 
-		$candidates_instance = new Candidates();
-		foreach ( $candidates as $candidate ) {
-			$candidates_instance->add_candidate(
-				new Candidate(
-					$this->prepare_api_response_for_content( $candidate ),
-					array_merge( $candidate, $response )
-				)
-			);
-		}
+		// Subsequent chunk of a streaming response.
+		$candidates_data = $this->merge_candidates_chunk(
+			$prev_chunk_candidates->to_array(),
+			$response_data
+		);
 
-		return $candidates_instance;
+		return Candidates::from_array( $candidates_data );
 	}
 
 	/**
-	 * Transforms a given API response into a Content instance.
+	 * Merges a streaming response chunk with the previous candidates data.
 	 *
-	 * @since 0.1.0
+	 * @since n.e.x.t
 	 *
-	 * @param array<string, mixed> $response The API response.
+	 * @param array<string, mixed> $candidates_data The candidates data from the previous chunk.
+	 * @param array<string, mixed> $chunk_data      The response chunk data.
+	 * @return array<string, mixed> The merged candidates data.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response is invalid.
+	 */
+	private function merge_candidates_chunk( array $candidates_data, array $chunk_data ): array {
+		if ( ! isset( $chunk_data['choices'] ) ) {
+			throw $this->api->create_missing_response_key_exception( 'choices' );
+		}
+
+		$other_data = $chunk_data;
+		unset( $other_data['choices'] );
+
+		foreach ( $chunk_data['choices'] as $index => $choice_data ) {
+			if ( isset( $choice_data['delta']['content'] ) ) {
+				$candidates_data[ $index ]['content']['parts'][0]['text'] = $choice_data['delta']['content'];
+			} else {
+				// If there was a previous content block, ensure it is ends in a double newline.
+				if (
+					isset( $choice_data['finish_reason'] ) &&
+					'stop' === $choice_data['finish_reason'] &&
+					'' !== $candidates_data[ $index ]['content']['parts'][0]['text'] &&
+					! str_ends_with( $candidates_data[ $index ]['content']['parts'][0]['text'], "\n\n" )
+				) {
+					$text_suffix = str_ends_with( $candidates_data[ $index ]['content']['parts'][0]['text'], "\n" ) ? "\n" : "\n\n";
+				} else {
+					$text_suffix = '';
+				}
+				$candidates_data[ $index ]['content']['parts'][0]['text'] = $text_suffix;
+			}
+			unset( $choice_data['delta'] );
+
+			$candidates_data[ $index ] = array_merge( $candidates_data[ $index ], $choice_data, $other_data );
+		}
+
+		return $candidates_data;
+	}
+
+	/**
+	 * Transforms a given choice from the API response into a Content instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $choice_data The API response candidate data.
+	 * @param int                  $index       The index of the choice in the response.
 	 * @return Content The Content instance.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the response is invalid.
 	 */
-	private function prepare_api_response_for_content( array $response ): Content {
-		if ( ! isset( $response['message']['content'] ) || ! $response['message']['content'] ) {
-			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: key name */
-						__( 'The response from the OpenAI API is missing the "%s" key.', 'ai-services' ),
-						'message'
-					)
-				)
-			);
+	private function prepare_choice_content( array $choice_data, int $index ): Content {
+		if ( ! isset( $choice_data['message']['content'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw $this->api->create_missing_response_key_exception( "choices.{$index}.message.content" );
 		}
 
-		$role = isset( $response['message']['role'] ) && 'user' === $response['role']
+		$role = isset( $choice_data['message']['role'] ) && 'user' === $choice_data['message']['role']
 			? Content_Role::USER
 			: Content_Role::MODEL;
 
-		// TODO: Support decoding tool call responses (in $response['message']['tool_calls']).
+		// TODO: Support decoding tool call responses (in $choice_data['message']['tool_calls']).
 		$parts = array(
 			array(
-				'text' => $response['message']['content'],
+				'text' => $choice_data['message']['content'],
 			),
 		);
 

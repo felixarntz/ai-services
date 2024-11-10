@@ -88,6 +88,23 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 	}
 
 	/**
+	 * Creates a stream request instance to generate content using the specified model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $model           The model slug.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Request The request instance.
+	 */
+	public function create_stream_generate_content_request( string $model, array $params, array $request_options = array() ): Request {
+		$params['model']           = $model;
+		$params['stream']          = true;
+		$request_options['stream'] = true;
+		return $this->create_post_request( 'messages', $params, $request_options );
+	}
+
+	/**
 	 * Returns the HTTP instance to use for requests.
 	 *
 	 * @since 0.1.0

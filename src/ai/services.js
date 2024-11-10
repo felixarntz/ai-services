@@ -9,9 +9,40 @@ import { createRegistrySelector } from '@wordpress/data';
  */
 import { STORE_NAME } from './name';
 import { getBrowserServiceData } from './browser';
-import { getGenerativeAiService } from './generative-ai-service';
+import GenerativeAiService from './classes/generative-ai-service';
+import BrowserGenerativeAiService from './classes/browser-generative-ai-service';
 
 const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
+
+const serviceInstances = {};
+
+/**
+ * Gets the generative AI service instance for the given service data.
+ *
+ * The service data must be an object received from the services REST endpoint.
+ *
+ * @since 0.1.0
+ *
+ * @param {Object} serviceData                  Service data.
+ * @param {string} serviceData.slug             Service slug.
+ * @param {string} serviceData.name             Service name.
+ * @param {Object} serviceData.available_models Map of the available model slugs and their capabilities.
+ * @return {GenerativeAiService} Generative AI service instance.
+ */
+function getGenerativeAiService( serviceData ) {
+	if ( ! serviceInstances[ serviceData.slug ] ) {
+		if ( serviceData.slug === 'browser' ) {
+			serviceInstances[ serviceData.slug ] =
+				new BrowserGenerativeAiService( serviceData );
+		} else {
+			serviceInstances[ serviceData.slug ] = new GenerativeAiService(
+				serviceData
+			);
+		}
+	}
+
+	return serviceInstances[ serviceData.slug ];
+}
 
 /**
  * Gets the first available service slug, optionally satisfying the given criteria.

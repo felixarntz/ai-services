@@ -7,7 +7,7 @@ import { resolveSelect } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import { ChatSession } from './generative-ai-service';
+import ChatSession from './classes/chat-session';
 import * as enums from './enums';
 import { formatNewContent } from './util';
 

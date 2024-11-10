@@ -13,6 +13,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Felix_Arntz\AI_Services_Dependencies\GuzzleHttp\Client;
+use Felix_Arntz\AI_Services_Dependencies\GuzzleHttp\Exception\ClientException;
 
 /**
  * Extended HTTP class with support for streaming responses.
@@ -84,11 +85,15 @@ final class HTTP_With_Streams extends HTTP {
 		}
 		$request_options['headers'] = $request_args['headers'];
 
-		$response = $this->guzzle->request(
-			$request_args['type'],
-			$request_args['url'],
-			$request_options
-		);
+		try {
+			$response = $this->guzzle->request(
+				$request_args['type'],
+				$request_args['url'],
+				$request_options
+			);
+		} catch ( ClientException $e ) {
+			throw new Request_Exception( esc_html( $e->getMessage() ) );
+		}
 
 		$headers = $this->sanitize_headers( $response->getHeaders() );
 

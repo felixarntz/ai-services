@@ -1,16 +1,12 @@
 /**
- * WordPress dependencies
- */
-import apiFetch from '@wordpress/api-fetch';
-import { __ } from '@wordpress/i18n';
-
-/**
  * Internal dependencies
  */
+import GenerativeAiModel from './generative-ai-model';
 import ChatSession from './chat-session';
 import * as enums from '../enums';
-import { validateContent } from '../util';
-import processStream from '../../utils/process-stream';
+import { findModel } from '../util';
+
+const EMPTY_OBJECT = {};
 
 /**
  * Service class.
@@ -76,7 +72,32 @@ export default class GenerativeAiService {
 	}
 
 	/**
+	 * Gets a generative model instance from the service.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {Object} modelParams Model parameters. At a minimum this must include the unique "feature" identifier. It
+	 *                             can also include the model slug and other optional parameters.
+	 * @return {GenerativeAiModel} Generative AI model instance.
+	 */
+	getModel( modelParams ) {
+		modelParams = modelParams || EMPTY_OBJECT;
+
+		const model = findModel( this.models, modelParams );
+
+		return new GenerativeAiModel(
+			{
+				serviceSlug: this.slug,
+				...model,
+			},
+			modelParams
+		);
+	}
+
+	/**
 	 * Generates text content using the service.
+	 *
+	 * This is a short-hand method for `service.getModel( modelParams ).generateText( content )`.
 	 *
 	 * @since 0.1.0
 	 *
@@ -88,26 +109,6 @@ export default class GenerativeAiService {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( content, modelParams ) {
-		if (
-			! this.capabilities.includes( enums.AiCapability.TEXT_GENERATION )
-		) {
-			throw new Error(
-				__(
-					'The service does not support text generation.',
-					'ai-services'
-				)
-			);
-		}
-
-		if ( ! modelParams?.feature ) {
-			throw new Error(
-				__(
-					'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.',
-					'ai-services'
-				)
-			);
-		}
-
 		// The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
 		if ( ! modelParams?.capabilities ) {
 			modelParams = {
@@ -116,25 +117,14 @@ export default class GenerativeAiService {
 			};
 		}
 
-		// Do some very basic validation.
-		validateContent( content );
-
-		try {
-			return await apiFetch( {
-				path: `/ai-services/v1/services/${ this.slug }:generate-text`,
-				method: 'POST',
-				data: {
-					content,
-					modelParams: modelParams || {},
-				},
-			} );
-		} catch ( error ) {
-			throw new Error( error.message || error.code || error );
-		}
+		const model = this.getModel( modelParams );
+		return model.generateText( content );
 	}
 
 	/**
 	 * Generates text content using the service, streaming the response.
+	 *
+	 * This is a short-hand method for `service.getModel( modelParams ).streamGenerateText( content )`.
 	 *
 	 * @since n.e.x.t
 	 *
@@ -147,26 +137,6 @@ export default class GenerativeAiService {
 	 *                           content.
 	 */
 	async streamGenerateText( content, modelParams ) {
-		if (
-			! this.capabilities.includes( enums.AiCapability.TEXT_GENERATION )
-		) {
-			throw new Error(
-				__(
-					'The service does not support text generation.',
-					'ai-services'
-				)
-			);
-		}
-
-		if ( ! modelParams?.feature ) {
-			throw new Error(
-				__(
-					'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.',
-					'ai-services'
-				)
-			);
-		}
-
 		// The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
 		if ( ! modelParams?.capabilities ) {
 			modelParams = {
@@ -175,27 +145,14 @@ export default class GenerativeAiService {
 			};
 		}
 
-		// Do some very basic validation.
-		validateContent( content );
-
-		const response = await apiFetch( {
-			path: `/ai-services/v1/services/${ this.slug }:stream-generate-text`,
-			method: 'POST',
-			data: {
-				content,
-				modelParams: modelParams || {},
-			},
-			headers: {
-				Accept: 'text/event-stream',
-			},
-			parse: false,
-		} );
-
-		return processStream( response );
+		const model = this.getModel( modelParams );
+		return model.streamGenerateText( content );
 	}
 
 	/**
 	 * Starts a multi-turn chat session using the service.
+	 *
+	 * This is a short-hand method for `service.getModel( modelParams ).startChat( history )`.
 	 *
 	 * @since 0.1.0
 	 *
@@ -204,17 +161,15 @@ export default class GenerativeAiService {
 	 * @return {ChatSession} Chat session.
 	 */
 	startChat( history, modelParams ) {
-		if (
-			! this.capabilities.includes( enums.AiCapability.TEXT_GENERATION )
-		) {
-			throw new Error(
-				__(
-					'The service does not support text generation.',
-					'ai-services'
-				)
-			);
+		// The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
+		if ( ! modelParams?.capabilities ) {
+			modelParams = {
+				...modelParams,
+				capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+			};
 		}
 
-		return new ChatSession( this, { history, modelParams } );
+		const model = this.getModel( modelParams );
+		return model.startChat( history );
 	}
 }

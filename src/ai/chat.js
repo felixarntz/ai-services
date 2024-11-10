@@ -72,7 +72,8 @@ const actions = {
 			// TODO: Support history persistence.
 			const history = [];
 
-			const session = await aiService.startChat( history, modelParams );
+			const model = aiService.getModel( modelParams );
+			const session = model.startChat( history );
 
 			dispatch.receiveChat( chatId, {
 				session,

@@ -12,9 +12,9 @@ if ( isServiceAvailable( 'google' ) ) {
 	const service = getAvailableService( 'google' );
 	try {
 		const candidates = await service.generateText(
-      'What can I do with WordPress?',
-      { feature: 'my-test-feature' }
-    );
+			'What can I do with WordPress?',
+			{ feature: 'my-test-feature' }
+		);
 	} catch ( error ) {
 		// Handle the error.
 	}
@@ -25,7 +25,32 @@ Alternatively to hard-coding `'ai-services/ai'` for the store name, you can refe
 
 Note that any of the selectors may temporarily return `undefined`, which should be interpreted as that the services are being loaded. **A return value of `undefined` does not mean that something was not found.** For that, the value `null` is used.
 
-For more specific examples with explanations, see the following sections.
+Additionally, calling `service.generateText` the above code example is a short-hand for retrieving the model using `service.getModel` and then calling `model.generateText`. For reference, the following code example does exactly the same as above, but more verbosely. With that approach, instead of passing the model parameters to the `generateText` method, you pass them to the `getModel` method, and the returned model will then use them for any generation tasks invoked on it. This approach can make sense if you want to reuse the same model for multiple generation tasks.
+
+```js
+const enums = aiServices.ai.enums;
+const { isServiceAvailable, getAvailableService } = wp.data.select( 'ai-services/ai' );
+if ( isServiceAvailable( 'google' ) ) {
+	const service = getAvailableService( 'google' );
+	try {
+		const model = service.getModel(
+			{
+				feature: 'my-test-feature',
+				capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+			}
+		);
+		const candidates = await model.generateText(
+			'What can I do with WordPress?'
+		);
+	} catch ( error ) {
+		// Handle the error.
+	}
+}
+```
+
+These short-hands exist for all generation methods on the model instance. You may instead call the respective method on the service instance, passing the model parameters as additional argument to it.
+
+For more specific examples with explanations, see the following sections. In those examples, the short-hand syntax will be used.
 
 ## Retrieving an available AI service
 
@@ -77,7 +102,7 @@ const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_GENERATION ] };
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 const service = getAvailableService( SERVICE_ARGS );
 if ( service !== null ) {
-  // Do something with the AI service.
+	// Do something with the AI service.
 }
 ```
 
@@ -87,8 +112,8 @@ In some instances, you may have a preference for a few specific AI services that
 const SERVICE_ARGS = { slugs: [ 'google', 'openai' ] };
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 if ( hasAvailableServices( SERVICE_ARGS ) ) {
-  const service = getAvailableService( SERVICE_ARGS );
-  // Do something with the AI service.
+	const service = getAvailableService( SERVICE_ARGS );
+	// Do something with the AI service.
 }
 ```
 
@@ -106,15 +131,15 @@ Here is an example of how to generate the response to a simple prompt, using the
 const enums = aiServices.ai.enums;
 
 try {
-  const candidates = await service.generateText(
-    'What can I do with WordPress?',
-    {
-      feature: 'my-test-feature',
-      capabilities: [ enums.AiCapability.TEXT_GENERATION ],
-    }
-  );
+	const candidates = await service.generateText(
+		'What can I do with WordPress?',
+		{
+			feature: 'my-test-feature',
+			capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+		}
+	);
 } catch ( error ) {
-  // Handle the error.
+	// Handle the error.
 }
 ```
 
@@ -127,15 +152,15 @@ You can also select a specific model from a service. Of course the available mod
 ```js
 const model = service.getServiceSlug() === 'openai' ? 'gpt-4o' : 'gemini-1.5-pro';
 try {
-  const candidates = await service.generateText(
-    'What can I do with WordPress?',
-    {
-      feature: 'my-test-feature',
-      model,
-    }
-  );
+	const candidates = await service.generateText(
+		'What can I do with WordPress?',
+		{
+			feature: 'my-test-feature',
+			model,
+		}
+	);
 } catch ( error ) {
-  // Handle the error.
+	// Handle the error.
 }
 ```
 
@@ -149,30 +174,30 @@ As mentioned in the [introduction section about sending data to AI services](./I
 const enums = aiServices.ai.enums;
 
 const content = {
-  role: enums.ContentRole.USER,
-  parts: [
-    {
-      text: 'Briefly describe what is displayed in the following image using a single sentence.'
-    },
-    {
-      mimeType: 'image/jpeg',
-      fileUri: 'https://example.com/image.jpg'
-    }
-  ]
+	role: enums.ContentRole.USER,
+	parts: [
+		{
+			text: 'Briefly describe what is displayed in the following image using a single sentence.'
+		},
+		{
+			mimeType: 'image/jpeg',
+			fileUri: 'https://example.com/image.jpg'
+		}
+	]
 };
 try {
-  const candidates = await service.generateText(
-    content,
-    {
-      feature: 'my-test-feature'
-      capabilities: [
-        enums.AiCapability.MULTIMODAL_INPUT,
-        enums.AiCapability.TEXT_GENERATION,
-      ],
-    }
-  );
+	const candidates = await service.generateText(
+		content,
+		{
+			feature: 'my-test-feature'
+			capabilities: [
+				enums.AiCapability.MULTIMODAL_INPUT,
+				enums.AiCapability.TEXT_GENERATION,
+			],
+		}
+	);
 } catch ( error ) {
-  // Handle the error.
+	// Handle the error.
 }
 ```
 
@@ -189,12 +214,12 @@ For example, you can use code as follows to retrieve the text content of the fir
 ```js
 let text = '';
 for ( const part of candidates[ 0 ].content.parts ) {
-  if ( part.text ) {
-    if ( text ) {
-      text += '\n\n';
-    }
-    text += part.text;
-  }
+	if ( part.text ) {
+		if ( text ) {
+			text += '\n\n';
+		}
+		text += part.text;
+	}
 }
 ```
 
@@ -206,7 +231,7 @@ The following example shows how you can accomplish the above in a safer, yet sim
 ```js
 const helpers = aiServices.ai.helpers;
 const text = helpers.getTextFromContents(
-  helpers.getCandidateContents( candidates )
+	helpers.getCandidateContents( candidates )
 );
 ```
 

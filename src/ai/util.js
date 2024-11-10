@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import { ContentRole } from './enums';
+import * as enums from './enums';
 
 /**
  * Formats the various supported formats of new user content into a consistent content shape.
@@ -19,7 +19,7 @@ import { ContentRole } from './enums';
 export function formatNewContent( content ) {
 	if ( typeof content === 'string' ) {
 		return {
-			role: ContentRole.USER,
+			role: enums.ContentRole.USER,
 			parts: [ { text: content } ],
 		};
 	}
@@ -31,7 +31,7 @@ export function formatNewContent( content ) {
 		}
 
 		return {
-			role: ContentRole.USER,
+			role: enums.ContentRole.USER,
 			parts: content,
 		};
 	}
@@ -103,7 +103,7 @@ export function validateChatHistory( history ) {
 			);
 		}
 
-		if ( index === 0 && content.role !== ContentRole.USER ) {
+		if ( index === 0 && content.role !== enums.ContentRole.USER ) {
 			throw new Error(
 				__(
 					'The first content object in the history must be user content.',
@@ -121,4 +121,107 @@ export function validateChatHistory( history ) {
 			);
 		}
 	} );
+}
+
+/**
+ * Validates the model parameters.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} modelParams Model parameters.
+ */
+export function validateModelParams( modelParams ) {
+	if ( ! modelParams.feature ) {
+		throw new Error(
+			__(
+				'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.',
+				'ai-services'
+			)
+		);
+	}
+}
+
+/**
+ * Validates the given available capabilities include all requested capabilities.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string[]} availableCapabilities Available capabilities.
+ * @param {string[]} requestedCapabilities Requested capabilities.
+ */
+export function validateCapabilities(
+	availableCapabilities,
+	requestedCapabilities
+) {
+	if (
+		! requestedCapabilities.every( ( capability ) =>
+			availableCapabilities.includes( capability )
+		)
+	) {
+		throw new Error(
+			__(
+				'The model does not support the requested capabilities.',
+				'ai-services'
+			)
+		);
+	}
+}
+
+/**
+ * Finds a model from the available models based on the given model parameters.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} availableModels Map of the available model slugs and their capabilities.
+ * @param {Object} modelParams     Model parameters. Should contain either a 'model' slug or requested 'capabilities'.
+ * @return {Object} Model object containing 'slug' and 'capabilities' properties.
+ */
+export function findModel( availableModels, modelParams ) {
+	// Find model by slug, if specified.
+	if ( modelParams.model ) {
+		const capabilities = availableModels[ modelParams.model ];
+
+		if ( ! capabilities ) {
+			throw new Error(
+				__(
+					'The specified model is not available for the service.',
+					'ai-services'
+				)
+			);
+		}
+
+		return {
+			slug: modelParams.model,
+			capabilities,
+		};
+	}
+
+	/*
+	 * Find model based on capabilities.
+	 * If no capabilities are specified, assume text generation as reasonable default.
+	 */
+	const requestedCapabilities = modelParams.capabilities || [
+		enums.AiCapability.TEXT_GENERATION,
+	];
+
+	for ( const model of Object.keys( availableModels ) ) {
+		const capabilities = availableModels[ model ];
+		if (
+			requestedCapabilities.every( ( capability ) =>
+				capabilities.includes( capability )
+			)
+		) {
+			return {
+				slug: model,
+				capabilities,
+			};
+		}
+	}
+
+	throw new Error(
+		__(
+			'No model is available for the specified capabilities.',
+			'ai-services'
+		)
+	);
 }

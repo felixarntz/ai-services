@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import GenerativeAiService from './generative-ai-service';
+import GenerativeAiModel from './generative-ai-model';
 import { getCandidateContents } from '../helpers';
 import { validateChatHistory, formatNewContent } from '../util';
 
@@ -16,14 +16,12 @@ export default class ChatSession {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param {GenerativeAiService} service             Generative AI service.
-	 * @param {Object}              options             Chat options.
-	 * @param {Object[]}            options.history     Chat history.
-	 * @param {Object}              options.modelParams Model parameters.
+	 * @param {GenerativeAiModel} model           Generative AI model.
+	 * @param {Object}            options         Chat options.
+	 * @param {Object[]}          options.history Chat history.
 	 */
-	constructor( service, { history, modelParams } ) {
-		this.service = service;
-		this.modelParams = modelParams;
+	constructor( model, { history } ) {
+		this.model = model;
 
 		if ( history ) {
 			validateChatHistory( history );
@@ -57,10 +55,7 @@ export default class ChatSession {
 
 		const contents = [ ...this.history, newContent ];
 
-		const candidates = await this.service.generateText(
-			contents,
-			this.modelParams
-		);
+		const candidates = await this.model.generateText( contents );
 
 		// TODO: Support optional candidateFilterArgs, similar to PHP implementation.
 		const responseContents = getCandidateContents( candidates );

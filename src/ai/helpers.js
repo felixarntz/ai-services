@@ -1,6 +1,7 @@
 /**
  * Internal dependencies
  */
+import CandidatesStreamProcessor from './classes/candidates-stream-processor';
 import { ContentRole } from './enums';
 
 /**
@@ -94,4 +95,20 @@ export function getCandidateContents( candidates ) {
 	}
 
 	return contents;
+}
+
+/**
+ * Processes a stream of candidates, aggregating the candidates chunks into a single candidates instance.
+ *
+ * This method returns a stream processor instance that can be used to read all chunks from the given candidates
+ * generator and process them with a callback. Alternatively, you can read from the generator yourself and provide
+ * all chunks to the processor manually.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} generator The generator that yields the chunks of response candidates.
+ * @return {CandidatesStreamProcessor} The stream processor instance.
+ */
+export function processCandidatesStream( generator ) {
+	return new CandidatesStreamProcessor( generator );
 }

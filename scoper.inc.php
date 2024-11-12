@@ -62,7 +62,7 @@ return array(
 		// Patcher to replace the library text domain with the plugin text domain.
 		function ( $file_path, $prefix, $content ) use ( $plugin_textdomain ) {
 			if ( $plugin_textdomain ) {
-				$content = str_replace(
+				return str_replace(
 					array(
 						"'wp-oop-plugin-lib' )",
 						"'wp-oop-plugin-lib')",
@@ -74,16 +74,7 @@ return array(
 					$content
 				);
 			}
-
-			/*
-			 * Include annotations to disable sniffing for escaping exceptions in the library classes.
-			 * This is otherwise flagged by WordPress Plugin Check, but is not really a problem.
-			 */
-			return preg_replace(
-				'/^class [^\n\{]+(\n\{|\{\n)/m',
-				"$0\n// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped\n",
-				$content
-			);
+			return $content;
 		},
 	),
 	'exclude-namespaces' => array( 'WpOrg' ),

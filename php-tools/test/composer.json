@@ -1,0 +1,6 @@
+{
+  "require-dev": {
+    "wp-phpunit/wp-phpunit": "^6.2",
+    "yoast/phpunit-polyfills": "^1.0"
+  }
+}

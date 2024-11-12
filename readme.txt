@@ -13,8 +13,6 @@ Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript
 
 == Description ==
 
-**Disclaimer:** The AI Services plugin is still in its very early stages, with a limited feature set. As long as it is in a `0.x.y` version, expect occasional breaking changes. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
-
 This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
 
 The plugin does intentionally _not_ come with specific AI driven features built-in, except for a simple WordPress support assistant chatbot that is opt-in via code. The purpose of this plugin is to facilitate use of AI by other plugins. As such, it is a perfect use-case for [plugin dependencies](https://make.wordpress.org/core/2024/03/05/introducing-plugin-dependencies-in-wordpress-6-5/).
@@ -23,6 +21,7 @@ Here's a (non-comprehensive) feature list:
 
 * Abstraction layer and APIs to communicate with any AI service in a uniform way
   * APIs are available in both PHP and in JavaScript, as well as via WP-CLI commands
+  * Supports streaming text generation for more immediate feedback to users
   * Currently only supports text generation (including multi-modal support if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
 * Built-in AI service implementations
   * [Anthropic (Claude)](https://www.anthropic.com/claude)
@@ -34,6 +33,8 @@ Here's a (non-comprehensive) feature list:
   * This effectively is a simple proof of concept of how the APIs the plugin provides can be used
   * The chatbot feature is inactive by default and can easily be [enabled via filter](#how%20can%20i%20enable%20the%20wordpress%20assistant%20chatbot%20feature%3F)
   * No other user-facing features will ever be added - that's a promise - because this is first and foremost an **infrastructure plugin** that other plugins can rely on
+
+**Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set. As long as it is in a `0.x.y` version, there may be occasional breaking changes when using lower level parts of the API. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
 
 = Why? =
 
@@ -66,6 +67,9 @@ The use of the third party AI services is subject to the respective terms of ser
 **Generate the answer to a prompt in PHP code:**
 
 `
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Helpers;
+
 if ( ai_services()->has_available_services() ) {
 	$service = ai_services()->get_available_service();
 	try {
@@ -73,10 +77,16 @@ if ( ai_services()->has_available_services() ) {
 			->get_model(
 				array(
 					'feature'      => 'my-test-feature',
-					'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
+					'capabilities' => array( AI_Capability::TEXT_GENERATION ),
 				)
 			)
 			->generate_text( 'What can I do with WordPress?' );
+
+		$text = Helpers::get_text_from_contents(
+			Helpers::get_candidate_contents( $candidates )
+		);
+
+		echo $text;
 	} catch ( Exception $e ) {
 		// Handle the exception.
 	}
@@ -86,6 +96,7 @@ if ( ai_services()->has_available_services() ) {
 **Generate the answer to a prompt in JavaScript code:**
 
 `
+const helpers = aiServices.ai.helpers;
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 if ( hasAvailableServices() ) {
 	const service = getAvailableService();
@@ -94,6 +105,12 @@ if ( hasAvailableServices() ) {
 			'What can I do with WordPress?',
 			{ feature: 'my-test-feature' }
 		);
+
+		const text = helpers.getTextFromContents(
+				helpers.getCandidateContents( candidates )
+			);
+
+		console.log( text );
 	} catch ( error ) {
 		// Handle the error.
 	}
@@ -111,6 +128,9 @@ You can also use a specific AI service, if you have a preference, for example th
 **Generate the answer to a prompt using a specific AI service, in PHP code:**
 
 `
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Helpers;
+
 if ( ai_services()->is_service_available( 'google' ) ) {
 	$service = ai_services()->get_available_service( 'google' );
 	try {
@@ -118,25 +138,25 @@ if ( ai_services()->is_service_available( 'google' ) ) {
 			->get_model(
 				array(
 					'feature'      => 'my-test-feature',
-					'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
+					'capabilities' => array( AI_Capability::TEXT_GENERATION ),
 				)
 			)
 			->generate_text( 'What can I do with WordPress?' );
+
+		$text = Helpers::get_text_from_contents(
+			Helpers::get_candidate_contents( $candidates )
+		);
+
+		echo $text;
 	} catch ( Exception $e ) {
 		// Handle the exception.
 	}
 }
 `
 
-**Generate the answer to a prompt using a specific AI service, using the REST API via cURL:**
-
-`
-curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' \
-  -H 'Content-Type: application/json' \
-  --data-raw '{"content":"What can I do with WordPress?"}'
-`
-
 For complete examples such as entire plugins built on top of the AI Services infrastructure, please see the [examples directory on GitHub](https://github.com/felixarntz/ai-services/tree/main/examples).
+
+Additionally, the [plugin documentation](https://github.com/felixarntz/ai-services/tree/main/docs/README.md) provides granular examples including explainers.
 
 == Installation ==
 
@@ -192,6 +212,14 @@ If you want to test or use the chatbot, you can easily enable it via filter:
 
 `
 add_filter( 'ai_services_chatbot_enabled', '__return_true' );
+`
+
+= How can I tweak the WP-CLI commands' behavior? =
+
+The `wp ai-services generate-text` command streams text responses by default, providing faster feedback to the user. If you prefer to show the complete text response in one go instead, you can disable streaming in WP-CLI by using the `ai_services_wp_cli_use_streaming` filter.
+
+`
+add_filter( 'ai_services_wp_cli_use_streaming', '__return_false' );
 `
 
 = How can I programmatically provide service API keys? =

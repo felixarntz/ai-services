@@ -8,19 +8,19 @@ The canonical entry point to all of the PHP public APIs is the `ai_services()` f
 
 ```php
 if ( ai_services()->is_service_available( 'google' ) ) {
-  $service = ai_services()->get_available_service( 'google' );
-  try {
-    $candidates = $service
-      ->get_model(
-        array(
-          'feature'      => 'my-test-feature',
-          'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
-        )
-      )
-      ->generate_text( 'What can I do with WordPress?' );
-  } catch ( Exception $e ) {
-    // Handle the exception.
-  }
+	$service = ai_services()->get_available_service( 'google' );
+	try {
+		$candidates = $service
+			->get_model(
+				array(
+					'feature'      => 'my-test-feature',
+					'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
+				)
+			)
+			->generate_text( 'What can I do with WordPress?' );
+	} catch ( Exception $e ) {
+		// Handle the exception.
+	}
 }
 ```
 
@@ -36,8 +36,8 @@ You can pass the slug of a specific AI service to the `Services_API::get_availab
 
 ```php
 if ( ai_services()->is_service_available( 'google' ) ) {
-  $service = ai_services()->get_available_service( 'google' );
-  // Do something with the AI service.
+	$service = ai_services()->get_available_service( 'google' );
+	// Do something with the AI service.
 }
 ```
 
@@ -45,9 +45,9 @@ Alternatively, if you don't want to use the `Services_API::is_service_available(
 
 ```php
 try {
-  $service = ai_services()->get_available_service( 'google' );
+	$service = ai_services()->get_available_service( 'google' );
 } catch ( InvalidArgumentException $e ) {
-  // Handle the exception.
+	// Handle the exception.
 }
 // Do something with the AI service.
 ```
@@ -61,8 +61,8 @@ use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 
 $required_capabilities = array( 'capabilities' => array( AI_Capability::TEXT_GENERATION ) );
 if ( ai_services()->has_available_services( $required_capabilities ) ) {
-  $service = ai_services()->get_available_service( $required_capabilities );
-  // Do something with the AI service.
+	$service = ai_services()->get_available_service( $required_capabilities );
+	// Do something with the AI service.
 }
 ```
 
@@ -72,9 +72,9 @@ Alternatively, if you don't want to use the `Services_API::has_available_service
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 
 try {
-  $service = ai_services()->get_available_service( array( 'capabilities' => array( AI_Capability::TEXT_GENERATION ) ) );
+	$service = ai_services()->get_available_service( array( 'capabilities' => array( AI_Capability::TEXT_GENERATION ) ) );
 } catch ( InvalidArgumentException $e ) {
-  // Handle the exception.
+	// Handle the exception.
 }
 // Do something with the AI service.
 ```
@@ -83,8 +83,8 @@ In some instances, you may have a preference for a few specific AI services that
 
 ```php
 if ( ai_services()->has_available_services( array( 'slugs' => array( 'google', 'openai' ) ) ) ) {
-  $service = ai_services()->get_available_service( array( 'slugs' => array( 'google', 'openai' ) ) );
-  // Do something with the AI service.
+	$service = ai_services()->get_available_service( array( 'slugs' => array( 'google', 'openai' ) ) );
+	// Do something with the AI service.
 }
 ```
 
@@ -102,16 +102,16 @@ Here is an example of how to generate the response to a simple prompt, using the
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 
 try {
-  $candidates = $service
-    ->get_model(
-      array(
-        'feature'      => 'my-test-feature',
-        'capabilities' => array( AI_Capability::TEXT_GENERATION ),
-      )
-    )
-    ->generate_text( 'What can I do with WordPress?' );
+	$candidates = $service
+		->get_model(
+			array(
+				'feature'      => 'my-test-feature',
+				'capabilities' => array( AI_Capability::TEXT_GENERATION ),
+			)
+		)
+		->generate_text( 'What can I do with WordPress?' );
 } catch ( Exception $e ) {
-  // Handle the exception.
+	// Handle the exception.
 }
 ```
 
@@ -121,21 +121,21 @@ You can also select a specific model from a service. Of course the available mod
 
 ```php
 if( $service->get_service_slug() === 'openai' ) {
-  $model = 'gpt-4o';
+	$model = 'gpt-4o';
 } else {
-  $model = 'gemini-1.5-pro';
+	$model = 'gemini-1.5-pro';
 }
 try {
-  $candidates = $service
-    ->get_model(
-      array(
-        'feature' => 'my-test-feature',
-        'model'   => $model,
-      )
-    )
-    ->generate_text( 'What can I do with WordPress?' );
+	$candidates = $service
+		->get_model(
+			array(
+				'feature' => 'my-test-feature',
+				'model'   => $model,
+			)
+		)
+		->generate_text( 'What can I do with WordPress?' );
 } catch ( Exception $e ) {
-  // Handle the exception.
+	// Handle the exception.
 }
 ```
 
@@ -156,19 +156,19 @@ $parts->add_text_part( 'Briefly describe what is displayed in the following imag
 $parts->add_file_data_part( 'image/jpeg', 'https://example.com/image.jpg' );
 $content = new Content( Content_Role::USER, $parts );
 try {
-  $candidates = $service
-    ->get_model(
-      array(
-        'feature'      => 'my-test-feature',
-        'capabilities' => array(
-          AI_Capability::MULTIMODAL_INPUT,
-          AI_Capability::TEXT_GENERATION,
-        ),
-      )
-    )
-    ->generate_text( $content );
+	$candidates = $service
+		->get_model(
+			array(
+				'feature'      => 'my-test-feature',
+				'capabilities' => array(
+					AI_Capability::MULTIMODAL_INPUT,
+					AI_Capability::TEXT_GENERATION,
+				),
+			)
+		)
+		->generate_text( $content );
 } catch ( Exception $e ) {
-  // Handle the exception.
+	// Handle the exception.
 }
 ```
 
@@ -185,12 +185,12 @@ For example, you can use code as follows to retrieve the text content of the fir
 ```php
 $text = '';
 foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
-  if ( $part instanceof \Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part ) {
-    if ( $text !== '' ) {
-      $text .= "\n\n";
-    }
-    $text .= $part->get_text();
-  }
+	if ( $part instanceof \Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part ) {
+		if ( $text !== '' ) {
+			$text .= "\n\n";
+		}
+		$text .= $part->get_text();
+	}
 }
 ```
 
@@ -203,9 +203,45 @@ The following example shows how you can accomplish the above in a safer, yet sim
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 
 $text = Helpers::get_text_from_contents(
-  Helpers::get_candidate_contents( $candidates )
+	Helpers::get_candidate_contents( $candidates )
 );
 ```
+
+### Streaming text responses
+
+Alternatively to using the `generate_text()` method, you can use the `stream_generate_text()` method so that the response is streamed. This can help provide more immediate feedback to the user, since chunks with partial response candidates will be available iteratively while the model still processes the remainder of the response. In other words, you can print the text from these chunks right away, so that it almost looks as if the generative AI model was typing it. Especially for prompts that expect a larger response (e.g. more than one paragraph), streaming the response can have major benefits on user experience.
+
+The `stream_generate_text()` method takes the same parameters as the `generate_text()` method. Instead of returning the final candidates instance though, it returns a generator that yields the partial candidates chunks. This generator can be used to iterate over the chunks as they arrive.
+
+The following example shows how you could use streaming:
+
+```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Helpers;
+
+try {
+	$candidates_generator = $service
+		->get_model(
+			array(
+				'feature'      => 'my-test-feature',
+				'capabilities' => array( AI_Capability::TEXT_GENERATION ),
+			)
+		)
+		->stream_generate_text( 'What can I do with WordPress?' );
+
+	foreach ( $candidates_generator as $candidates ) {
+		$text = Helpers::get_text_from_contents(
+			Helpers::get_candidate_contents( $candidates )
+		);
+
+		echo $text;
+	}
+} catch ( Exception $e ) {
+	// Handle the exception.
+}
+```
+
+It's worth noting that streaming is likely more useful in JavaScript than in PHP, since in PHP there are typically no opportunities to print the iterative responses to the user as they come in. That said, streaming can certainly have value in PHP as well: It is for example used in the plugin's WP-CLI command.
 
 ## Generating image content using an AI service
 

@@ -9,8 +9,8 @@
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
 use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
-use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
+use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
@@ -25,16 +25,13 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Rout
 use InvalidArgumentException;
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_REST_Server;
 
 /**
- * Class representing the REST API route for getting a service.
+ * Base class for a REST API route for generating content.
  *
  * @since 0.1.0
  */
-class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
-	const BASE    = '/services/(?P<slug>[\w-]+):generate-text';
-	const METHODS = WP_REST_Server::CREATABLE;
+abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 
 	/**
 	 * The services API instance.
@@ -42,7 +39,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @since 0.1.0
 	 * @var Services_API
 	 */
-	private $services_api;
+	protected $services_api;
 
 	/**
 	 * Current user service.
@@ -50,7 +47,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @since 0.1.0
 	 * @var Current_User
 	 */
-	private $current_user;
+	protected $current_user;
 
 	/**
 	 * Constructor.
@@ -65,28 +62,6 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		$this->current_user = $current_user;
 
 		parent::__construct();
-	}
-
-	/**
-	 * Returns the route base.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string Route base.
-	 */
-	protected function base(): string {
-		return self::BASE;
-	}
-
-	/**
-	 * Returns the route methods, as a comma-separated string.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string Route methods, as a comma-separated string.
-	 */
-	protected function methods(): string {
-		return self::METHODS;
 	}
 
 	/**
@@ -143,7 +118,7 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 		$content = $this->parse_content( $request['content'] );
 
 		try {
-			$candidates = $model->generate_text( $content );
+			$candidates = $this->generate_content( $service, $model, $content );
 		} catch ( Generative_AI_Exception $e ) {
 			throw REST_Exception::create(
 				'rest_generating_content_failed',
@@ -172,13 +147,25 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	}
 
 	/**
+	 * Generates content using the given service and model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Generative_AI_Service          $service The service instance.
+	 * @param Generative_AI_Model            $model   The model instance.
+	 * @param string|Parts|Content|Content[] $content The content prompt.
+	 * @return Candidates The generated content candidates.
+	 */
+	abstract protected function generate_content( Generative_AI_Service $service, Generative_AI_Model $model, $content ): Candidates;
+
+	/**
 	 * Retrieves the (text-based) model with the given slug and parameters.
 	 *
 	 * @since 0.1.0
 	 *
 	 * @param Generative_AI_Service $service      The service instance to get the model from.
 	 * @param array<string, mixed>  $model_params The model parameters.
-	 * @return Generative_AI_Model&With_Text_Generation The model.
+	 * @return Generative_AI_Model The model.
 	 *
 	 * @throws REST_Exception Thrown when the model cannot be retrieved or invalid parameters are provided.
 	 */
@@ -207,14 +194,6 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			);
 		}
 
-		if ( ! $model instanceof With_Text_Generation ) {
-			throw REST_Exception::create(
-				'rest_model_lacks_support',
-				esc_html__( 'The model does not support text generation.', 'ai-services' ),
-				400
-			);
-		}
-
 		return $model;
 	}
 
@@ -227,14 +206,6 @@ class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @return array<string, mixed> The processed model parameters.
 	 */
 	protected function process_model_params( array $model_params ): array {
-		/*
-		 * At the moment, only text generation is supported.
-		 * As such, at the very least, text generation capabilities need to be supported by the model.
-		 */
-		if ( ! isset( $model_params['capabilities'] ) ) {
-			$model_params['capabilities'] = array( AI_Capability::TEXT_GENERATION );
-		}
-
 		// Parse associative arrays into their relevant data structures.
 		if ( isset( $model_params['generationConfig'] ) && is_array( $model_params['generationConfig'] ) ) {
 			$model_params['generationConfig'] = Generation_Config::from_array( $model_params['generationConfig'] );

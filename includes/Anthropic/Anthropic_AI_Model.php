@@ -130,31 +130,11 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
-		$transformers = self::get_content_transformers();
-
-		$params = array(
-			// TODO: Add support for tools and tool config, to support code generation.
-			'messages' => array_map(
-				static function ( Content $content ) use ( $transformers ) {
-					return Transformer::transform_content( $content, $transformers );
-				},
-				$contents
-			),
-		);
-		if ( $this->system_instruction ) {
-			$params['system'] = Helpers::content_to_text( $this->system_instruction );
-		}
-		if ( $this->generation_config ) {
-			$params = Transformer::transform_generation_config_params(
-				array_merge( $this->generation_config->get_additional_args(), $params ),
-				$this->generation_config,
-				self::get_generation_config_transformers()
-			);
-		}
+		$params = $this->prepare_generate_text_params( $contents );
 
 		$request  = $this->api->create_generate_content_request(
 			$this->model,
-			array_filter( $params ),
+			$params,
 			array_merge(
 				$this->request_options,
 				$request_options
@@ -165,20 +145,11 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 		return $this->api->process_response_data(
 			$response,
 			function ( $response_data ) {
-				$candidates = new Candidates();
-				$candidates->add_candidate(
-					new Candidate(
-						$this->prepare_api_response_for_content( $response_data ),
-						$response_data
-					)
-				);
-
-				return $candidates;
+				return $this->get_response_candidates( $response_data );
 			}
 		);
 	}
 
-	// phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
@@ -192,8 +163,194 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
-		// TODO: Implement streaming support.
-		throw new Generative_AI_Exception( 'Not yet implemented.' );
+		$params = $this->prepare_generate_text_params( $contents );
+
+		$request  = $this->api->create_stream_generate_content_request(
+			$this->model,
+			$params,
+			array_merge(
+				$this->request_options,
+				$request_options
+			)
+		);
+		$response = $this->api->make_request( $request );
+
+		return $this->api->process_response_stream(
+			$response,
+			function ( $response_data, $prev_chunk_candidates ) {
+				if (
+					null !== $prev_chunk_candidates &&
+					isset( $response_data['type'] ) &&
+					'ping' === $response_data['type']
+				) {
+					// Nothing new in this chunk, so no need to return anything.
+					return null;
+				}
+
+				return $this->get_response_candidates( $response_data, $prev_chunk_candidates );
+			}
+		);
+	}
+
+	/**
+	 * Prepares the API request parameters for generating text content.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Content[] $contents The contents to generate text for.
+	 * @return array<string, mixed> The parameters for generating text content.
+	 */
+	private function prepare_generate_text_params( array $contents ): array {
+		$transformers = self::get_content_transformers();
+
+		$params = array(
+			// TODO: Add support for tools and tool config, to support code generation.
+			'messages' => array_map(
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
+				$contents
+			),
+		);
+
+		if ( $this->system_instruction ) {
+			$params['system'] = Helpers::content_to_text( $this->system_instruction );
+		}
+
+		if ( $this->generation_config ) {
+			$params = Transformer::transform_generation_config_params(
+				array_merge( $this->generation_config->get_additional_args(), $params ),
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
+		} else {
+			// The 'max_tokens' parameter is required in the Anthropic API, so we need a default.
+			$params['max_tokens'] = 4096;
+		}
+
+		return $params;
+	}
+
+	/**
+	 * Extracts the candidates with content from the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $response_data         The response data.
+	 * @param ?Candidates          $prev_chunk_candidates The candidates from the previous chunk in case of a streaming
+	 *                                                    response, or null.
+	 * @return Candidates The candidates with content parts.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response does not have any candidates with content.
+	 */
+	private function get_response_candidates( array $response_data, ?Candidates $prev_chunk_candidates = null ): Candidates {
+		$candidates = new Candidates();
+
+		if ( null === $prev_chunk_candidates ) {
+			if ( ! isset( $response_data['type'] ) || 'message_start' !== $response_data['type'] ) {
+				// Regular (non-streaming) response.
+				$chunk_data = $response_data;
+			} elseif ( isset( $response_data['type'] ) ) {
+				// First chunk of a streaming response.
+				if ( ! isset( $response_data['message'] ) ) {
+					throw $this->api->create_missing_response_key_exception( 'message' );
+				}
+				$chunk_data = $response_data['message'];
+			} else {
+				throw $this->api->create_response_exception(
+					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					__( 'Unexpected response missing previous stream chunk.', 'ai-services' )
+				);
+			}
+
+			$candidates->add_candidate(
+				new Candidate(
+					$this->prepare_api_response_for_content( $chunk_data ),
+					$chunk_data
+				)
+			);
+
+			return $candidates;
+		}
+
+		// Subsequent chunk of a streaming response.
+		$candidate_data = $this->merge_candidate_chunk(
+			$prev_chunk_candidates->get( 0 )->to_array(),
+			$response_data
+		);
+
+		$candidates->add_candidate(
+			Candidate::from_array( $candidate_data )
+		);
+
+		return $candidates;
+	}
+
+	/**
+	 * Merges a streaming response chunk with the previous candidate data.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $candidate_data The candidate data from the previous chunk.
+	 * @param array<string, mixed> $chunk_data     The response chunk data.
+	 * @return array<string, mixed> The merged candidate data.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response is invalid.
+	 */
+	private function merge_candidate_chunk( array $candidate_data, array $chunk_data ): array {
+		if ( ! isset( $chunk_data['type'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw $this->api->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
+		}
+
+		switch ( $chunk_data['type'] ) {
+			case 'content_block_start':
+				// First chunk of a new content part in a streaming response.
+				if ( ! isset( $chunk_data['content_block'] ) ) {
+					throw $this->api->create_missing_response_key_exception( 'content_block' );
+				}
+				$candidate_data['content']['parts'] = array(
+					array( 'text' => $chunk_data['content_block']['text'] ),
+				);
+				break;
+			case 'content_block_delta':
+				if ( ! isset( $chunk_data['delta']['text'] ) ) {
+					throw $this->api->create_missing_response_key_exception( 'delta.text' );
+				}
+				$candidate_data['content']['parts'][0]['text'] = $chunk_data['delta']['text'];
+				break;
+			case 'message_delta':
+				if ( ! isset( $chunk_data['delta'] ) ) {
+					throw $this->api->create_missing_response_key_exception( 'delta' );
+				}
+				$candidate_data['content']['parts'][0]['text'] = '';
+				$candidate_data                                = array_merge(
+					$candidate_data,
+					$chunk_data['delta'],
+					isset( $chunk_data['usage'] ) ? array( 'usage' => $chunk_data['usage'] ) : array()
+				);
+				break;
+			case 'content_block_stop':
+			case 'message_stop':
+				// If there was a previous content block, ensure it is ends in a double newline.
+				if (
+					'' !== $candidate_data['content']['parts'][0]['text'] &&
+					! str_ends_with( $candidate_data['content']['parts'][0]['text'], "\n\n" )
+				) {
+					$text_suffix = str_ends_with( $candidate_data['content']['parts'][0]['text'], "\n" ) ? "\n" : "\n\n";
+				} else {
+					$text_suffix = '';
+				}
+				$candidate_data['content']['parts'] = array(
+					array( 'text' => $text_suffix ),
+				);
+				break;
+			default:
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				throw $this->api->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
+		}
+
+		return $candidate_data;
 	}
 
 	/**
@@ -201,36 +358,29 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array<string, mixed> $response The API response.
+	 * @param array<string, mixed> $response_data The API response.
 	 * @return Content The Content instance.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the response is invalid.
 	 */
-	private function prepare_api_response_for_content( array $response ): Content {
-		if ( ! isset( $response['content'] ) || ! $response['content'] ) {
-			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: key name */
-						__( 'The response from the Anthropic API is missing the "%s" key.', 'ai-services' ),
-						'content'
-					)
-				)
-			);
+	private function prepare_api_response_for_content( array $response_data ): Content {
+		if ( ! isset( $response_data['content'] ) ) {
+			throw $this->api->create_missing_response_key_exception( 'content' );
 		}
 
-		$role = isset( $response['role'] ) && 'user' === $response['role']
+		$role = isset( $response_data['role'] ) && 'user' === $response_data['role']
 			? Content_Role::USER
 			: Content_Role::MODEL;
 
 		$parts = array();
-		foreach ( $response['content'] as $part ) {
+		foreach ( $response_data['content'] as $part ) {
 			// TODO: Support decoding tool call responses.
 			if ( 'text' === $part['type'] ) {
 				$parts[] = array( 'text' => $part['text'] );
 			} else {
-				throw new Generative_AI_Exception(
-					esc_html__( 'The response from the Anthropic API includes an unexpected content part.', 'ai-services' )
+				throw $this->api->create_response_exception(
+					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					__( 'The response includes an unexpected content part.', 'ai-services' )
 				);
 			}
 		}

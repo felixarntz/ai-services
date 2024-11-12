@@ -101,10 +101,10 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		$request  = $this->api->create_list_models_request();
-		$response = $this->api->make_request( $request )->get_data();
+		$request       = $this->api->create_list_models_request();
+		$response_data = $this->api->make_request( $request )->get_data();
 
-		if ( ! isset( $response['data'] ) || ! $response['data'] ) {
+		if ( ! isset( $response_data['data'] ) || ! $response_data['data'] ) {
 			throw new Generative_AI_Exception(
 				esc_html(
 					sprintf(
@@ -120,7 +120,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 			static function ( array $model ) {
 				return $model['id'];
 			},
-			$response['data']
+			$response_data['data']
 		);
 
 		// Unfortunately, the OpenAI API does not return model capabilities, so we have to hardcode them here.

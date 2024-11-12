@@ -10,7 +10,6 @@ namespace Felix_Arntz\AI_Services\Services\CLI;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
-use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -485,14 +484,25 @@ final class AI_Services_Command {
 			'systemInstruction' => $assoc_args['system-instruction'] ? $assoc_args['system-instruction'] : null,
 		);
 
-		$model      = $this->get_model( $service, $model_params );
-		$candidates = $this->generate_text_using_model( $model, $prompt );
+		$model = $this->get_model( $service, $model_params );
 
-		$text = Helpers::get_text_from_contents(
-			Helpers::get_candidate_contents( $candidates )
-		);
+		/**
+		 * Filters whether to use streaming for generating text content in WP-CLI.
+		 *
+		 * Streaming will print the generated text as it comes in, providing more immediate feedback, which can be
+		 * especially useful for long-running generation tasks.
+		 *
+		 * @since n.e.x.t
+		 *
+		 * @param bool $use_streaming Whether to use streaming for generating text content in WP-CLI. Default is true.
+		 */
+		$use_streaming = apply_filters( 'ai_services_wp_cli_use_streaming', true );
 
-		WP_CLI::print_value( trim( $text ), array( 'format' => 'table' ) );
+		if ( $use_streaming ) {
+			$this->stream_generate_text_using_model( $model, $prompt );
+		} else {
+			$this->generate_text_using_model( $model, $prompt );
+		}
 	}
 
 	/**
@@ -618,15 +628,14 @@ final class AI_Services_Command {
 	}
 
 	/**
-	 * Generates text content using the given generative model.
+	 * Generates text content using the given generative model and prints it.
 	 *
 	 * @since 0.2.0
 	 *
 	 * @param Generative_AI_Model $model  The model to use.
 	 * @param string              $prompt The text prompt to generate content for.
-	 * @return Candidates The generated candidates.
 	 */
-	private function generate_text_using_model( Generative_AI_Model $model, string $prompt ): Candidates {
+	private function generate_text_using_model( Generative_AI_Model $model, string $prompt ): void {
 		if ( ! $model instanceof With_Text_Generation ) {
 			WP_CLI::error( 'The model does not support text generation.' );
 		}
@@ -651,7 +660,59 @@ final class AI_Services_Command {
 			);
 		}
 
-		return $candidates;
+		$text = Helpers::get_text_from_contents(
+			Helpers::get_candidate_contents( $candidates )
+		);
+		WP_CLI::print_value( trim( $text ), array( 'format' => 'table' ) );
+	}
+
+	/**
+	 * Generates text content using the given generative model, streaming the response and printing it as it comes in.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Generative_AI_Model $model  The model to use.
+	 * @param string              $prompt The text prompt to generate content for.
+	 */
+	private function stream_generate_text_using_model( Generative_AI_Model $model, string $prompt ): void {
+		if ( ! $model instanceof With_Text_Generation ) {
+			WP_CLI::error( 'The model does not support text generation.' );
+		}
+
+		try {
+			$candidates_generator = $model->stream_generate_text( $prompt );
+		} catch ( Generative_AI_Exception $e ) {
+			WP_CLI::error(
+				sprintf(
+					'Generating content with model %1$s failed: %2$s',
+					$model->get_model_slug(),
+					html_entity_decode( $e->getMessage() )
+				)
+			);
+		} catch ( InvalidArgumentException $e ) {
+			WP_CLI::error(
+				sprintf(
+					'Invalid content provided to model %1$s: %2$s',
+					$model->get_model_slug(),
+					html_entity_decode( $e->getMessage() )
+				)
+			);
+		}
+
+		try {
+			foreach ( $candidates_generator as $candidates ) {
+				$text = Helpers::get_text_from_contents(
+					Helpers::get_candidate_contents( $candidates )
+				);
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $text;
+			}
+		} catch ( Generative_AI_Exception $e ) {
+			WP_CLI::error(
+				html_entity_decode( $e->getMessage() )
+			);
+		}
 	}
 
 	/**

@@ -5,18 +5,19 @@
 While the main introduction to the plugin can be found in the [plugin readme](../README.md), this section provides a bit more general information about the plugin and its feature set:
 
 * Abstraction layer and APIs to communicate with any AI service in a uniform way
-  * APIs are available in both PHP and in JavaScript, as well as via WP-CLI commands
-  * Currently only supports text generation (including multi-modal support if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
+	* APIs are available in both PHP and in JavaScript, as well as via WP-CLI commands
+	* Supports streaming text generation for more immediate feedback to users
+	* Currently only supports text generation (including multi-modal support if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
 * Built-in AI service implementations
-  * [Anthropic (Claude)](https://www.anthropic.com/claude)
-  * [Google (Gemini)](https://ai.google.dev/gemini-api)
-  * [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
-  * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
+	* [Anthropic (Claude)](https://www.anthropic.com/claude)
+	* [Google (Gemini)](https://ai.google.dev/gemini-api)
+	* [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
+	* Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 * WordPress Assistant chatbot is the single user-facing built-in feature the plugin comes with
-  * This effectively is a simple proof of concept of how the APIs the plugin provides can be used
-  * The chatbot feature is inactive by default and can easily be [enabled via filter](./Enabling-the-Assistant-Chatbot-Feature.md)
-  * No other user-facing features will ever be added - that's a promise - because this is first and foremost an **infrastructure plugin** that other plugins can rely on
+	* This effectively is a simple proof of concept of how the APIs the plugin provides can be used
+	* The chatbot feature is inactive by default and can easily be [enabled via filter](./Enabling-the-Assistant-Chatbot-Feature.md)
+	* No other user-facing features will ever be added - that's a promise - because this is first and foremost an **infrastructure plugin** that other plugins can rely on
 
 ## Technical concepts
 
@@ -27,8 +28,8 @@ In order to provide a uniform way of communicating with AI services, this plugin
 This centerpiece is the "Content" data type, which has two properties:
 * `role`: The role of who the content comes from (one of `user`, `model`, or `system`).
 * `parts`: The array of content parts.
-  * In many cases, this will be just one, but as mentioned before, more complex multi-modal prompts may require sending multiple content parts of different kinds in a single prompt.
-  * Various types of parts are supported, e.g. text, inline data, or file data.
+	* In many cases, this will be just one, but as mentioned before, more complex multi-modal prompts may require sending multiple content parts of different kinds in a single prompt.
+	* Various types of parts are supported, e.g. text, inline data, or file data.
 
 When you send an AI prompt, you don't _have_ to use this verbose format if your prompt is simple. You may alternatively send just the array of parts, or simply a string, which is sufficient for the common scenario of sending a text prompt. Under the hood, the prompt will still be parsed into the "Content" data type.
 
@@ -37,28 +38,28 @@ When you send an AI prompt, you don't _have_ to use this verbose format if your 
 A simple text prompt:
 ```json
 {
-  "role": "user",
-  "parts": [
-    {
-      "text": "What can I do with WordPress?"
-    }
-  ]
+	"role": "user",
+	"parts": [
+		{
+			"text": "What can I do with WordPress?"
+		}
+	]
 }
 ```
 
 A multi-modal prompt asking to describe an image:
 ```json
 {
-  "role": "user",
-  "parts": [
-    {
-      "text": "Please describe this image."
-    },
-    {
-      "mimeType": "image/jpeg",
-      "fileUri": "https://example.com/image.jpg"
-    }
-  ]
+	"role": "user",
+	"parts": [
+		{
+			"text": "Please describe this image."
+		},
+		{
+			"mimeType": "image/jpeg",
+			"fileUri": "https://example.com/image.jpg"
+		}
+	]
 }
 ```
 
@@ -73,30 +74,30 @@ When receiving the response from an AI model, in most cases the "Content" object
 A simple text response from the AI model:
 ```json
 {
-  "role": "model",
-  "parts": [
-    {
-      "text": "WordPress is the most popular content management system in the world."
-    }
-  ]
+	"role": "model",
+	"parts": [
+		{
+			"text": "WordPress is the most popular content management system in the world."
+		}
+	]
 }
 ```
 
 The same text response within a set of candidates:
 ```json
 [
-  {
-    "content": {
-      "role": "model",
-      "parts": [
-        {
-          "text": "WordPress is the most popular content management system in the world."
-        }
-      ]
-    },
-    // Other properties of the candidate.
-  },
-  // Other candidates.
+	{
+		"content": {
+			"role": "model",
+			"parts": [
+				{
+					"text": "WordPress is the most popular content management system in the world."
+				}
+			]
+		},
+		// Other properties of the candidate.
+	},
+	// Other candidates.
 ]
 ```
 

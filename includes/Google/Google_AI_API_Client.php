@@ -89,6 +89,24 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 	}
 
 	/**
+	 * Creates a stream request instance to generate content using the specified model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $model           The model slug.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Request The request instance.
+	 */
+	public function create_stream_generate_content_request( string $model, array $params, array $request_options = array() ): Request {
+		if ( ! str_contains( $model, '/' ) ) {
+			$model = 'models/' . $model;
+		}
+		$request_options['stream'] = true;
+		return $this->create_post_request( "{$model}:streamGenerateContent", $params, $request_options );
+	}
+
+	/**
 	 * Returns the HTTP instance to use for requests.
 	 *
 	 * @since 0.1.0
@@ -165,6 +183,10 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 		$base_url    = $request_options['base_url'] ?? self::DEFAULT_BASE_URL;
 		$api_version = $request_options['api_version'] ?? self::DEFAULT_API_VERSION;
 		$path        = ltrim( $path, '/' );
+
+		if ( isset( $request_options['stream'] ) && $request_options['stream'] && ! str_ends_with( $path, '?alt=sse' ) ) {
+			$path .= '?alt=sse';
+		}
 
 		return "{$base_url}/{$api_version}/{$path}";
 	}

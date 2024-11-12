@@ -7,7 +7,7 @@ import { resolveSelect } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import { ChatSession } from './generative-ai-service';
+import ChatSession from './classes/chat-session';
 import * as enums from './enums';
 import { formatNewContent } from './util';
 
@@ -72,7 +72,8 @@ const actions = {
 			// TODO: Support history persistence.
 			const history = [];
 
-			const session = await aiService.startChat( history, modelParams );
+			const model = aiService.getModel( modelParams );
+			const session = model.startChat( history );
 
 			dispatch.receiveChat( chatId, {
 				session,

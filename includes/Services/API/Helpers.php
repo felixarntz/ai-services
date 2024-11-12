@@ -13,6 +13,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Generator;
 
 /**
  * Class providing static helper methods as part of the public API.
@@ -112,5 +113,21 @@ final class Helpers {
 		}
 
 		return $contents;
+	}
+
+	/**
+	 * Processes a stream of candidates, aggregating the candidates chunks into a single candidates instance.
+	 *
+	 * This method returns a stream processor instance that can be used to read all chunks from the given candidates
+	 * generator and process them with a callback. Alternatively, you can read from the generator yourself and provide
+	 * all chunks to the processor manually.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Generator<Candidates> $generator The generator that yields the chunks of response candidates.
+	 * @return Candidates_Stream_Processor The stream processor instance.
+	 */
+	public static function process_candidates_stream( Generator $generator ): Candidates_Stream_Processor { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
+		return new Candidates_Stream_Processor( $generator );
 	}
 }

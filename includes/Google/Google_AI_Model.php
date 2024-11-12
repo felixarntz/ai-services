@@ -9,6 +9,8 @@
 namespace Felix_Arntz\AI_Services\Google;
 
 use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
+use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
+use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
@@ -159,40 +161,11 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
-		$transformers = self::get_content_transformers();
-
-		$params = array(
-			// TODO: Add support for tools and tool config, to support code generation.
-			'contents' => array_map(
-				static function ( Content $content ) use ( $transformers ) {
-					return Transformer::transform_content( $content, $transformers );
-				},
-				$contents
-			),
-		);
-		if ( $this->generation_config ) {
-			$params                     = array_merge( $this->generation_config->get_additional_args(), $params );
-			$params['generationConfig'] = Transformer::transform_generation_config_params(
-				array(),
-				$this->generation_config,
-				self::get_generation_config_transformers()
-			);
-		}
-		if ( $this->system_instruction ) {
-			$params['systemInstruction'] = $this->system_instruction->to_array();
-		}
-		if ( $this->safety_settings ) {
-			$params['safetySettings'] = array_map(
-				static function ( Safety_Setting $safety_setting ) {
-					return $safety_setting->to_array();
-				},
-				$this->safety_settings
-			);
-		}
+		$params = $this->prepare_generate_text_params( $contents );
 
 		$request  = $this->api->create_generate_content_request(
 			$this->model,
-			array_filter( $params ),
+			$params,
 			array_merge(
 				$this->request_options,
 				$request_options
@@ -208,7 +181,6 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		);
 	}
 
-	// phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
@@ -222,8 +194,70 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
-		// TODO: Implement streaming support.
-		throw new Generative_AI_Exception( 'Not yet implemented.' );
+		$params = $this->prepare_generate_text_params( $contents );
+
+		$request  = $this->api->create_stream_generate_content_request(
+			$this->model,
+			$params,
+			array_merge(
+				$this->request_options,
+				$request_options
+			)
+		);
+		$response = $this->api->make_request( $request );
+
+		return $this->api->process_response_stream(
+			$response,
+			function ( $response_data, $prev_chunk_candidates ) {
+				return $this->get_response_candidates( $response_data, $prev_chunk_candidates );
+			}
+		);
+	}
+
+	/**
+	 * Prepares the API request parameters for generating text content.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Content[] $contents The contents to generate text for.
+	 * @return array<string, mixed> The parameters for generating text content.
+	 */
+	private function prepare_generate_text_params( array $contents ): array {
+		$transformers = self::get_content_transformers();
+
+		$params = array(
+			// TODO: Add support for tools and tool config, to support code generation.
+			'contents' => array_map(
+				static function ( Content $content ) use ( $transformers ) {
+					return Transformer::transform_content( $content, $transformers );
+				},
+				$contents
+			),
+		);
+
+		if ( $this->generation_config ) {
+			$params                     = array_merge( $this->generation_config->get_additional_args(), $params );
+			$params['generationConfig'] = Transformer::transform_generation_config_params(
+				array(),
+				$this->generation_config,
+				self::get_generation_config_transformers()
+			);
+		}
+
+		if ( $this->system_instruction ) {
+			$params['systemInstruction'] = $this->system_instruction->to_array();
+		}
+
+		if ( $this->safety_settings ) {
+			$params['safetySettings'] = array_map(
+				static function ( Safety_Setting $safety_setting ) {
+					return $safety_setting->to_array();
+				},
+				$this->safety_settings
+			);
+		}
+
+		return array_filter( $params );
 	}
 
 	/**
@@ -231,41 +265,133 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array<string, mixed> $response The response data.
+	 * @param array<string, mixed> $response_data The response data.
+	 * @param ?Candidates          $prev_chunk_candidates The candidates from the previous chunk in case of a streaming
+	 *                                                    response, or null.
 	 * @return Candidates The candidates with content parts.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the response does not have any candidates with content.
 	 */
-	private function get_response_candidates( array $response ): Candidates {
-		if ( ! isset( $response['candidates'] ) || ! $response['candidates'] ) {
-			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: key name */
-						__( 'The response from the Google AI API is missing the "%s" key.', 'ai-services' ),
-						'candidates'
-					)
-				)
-			);
+	private function get_response_candidates( array $response_data, ?Candidates $prev_chunk_candidates = null ): Candidates {
+		if ( ! isset( $response_data['candidates'] ) ) {
+			throw $this->api->create_missing_response_key_exception( 'candidates' );
 		}
 
-		$candidates = array();
-		$errors     = array();
-		foreach ( $response['candidates'] as $candidate ) {
-			if ( ! isset( $candidate['content'] ) ) {
-				if ( isset( $candidate['finishReason'] ) ) {
-					$errors[] = $candidate['finishReason'];
-				}
-				continue;
+		$this->check_non_empty_candidates( $response_data['candidates'] );
+
+		if ( null === $prev_chunk_candidates ) {
+			$other_data = $response_data;
+			unset( $other_data['candidates'] );
+
+			$candidates = new Candidates();
+			foreach ( $response_data['candidates'] as $index => $candidate_data ) {
+				$candidates->add_candidate(
+					new Candidate(
+						$this->prepare_candidate_content( $candidate_data, $index ),
+						array_merge( $candidate_data, $other_data )
+					)
+				);
 			}
 
-			$candidates[] = $candidate;
+			return $candidates;
 		}
 
-		if ( count( $candidates ) === 0 ) {
-			$message = __( 'The response from the Google AI API does not include any candidates with content.', 'ai-services' );
+		// Subsequent chunk of a streaming response.
+		$candidates_data = $this->merge_candidates_chunk(
+			$prev_chunk_candidates->to_array(),
+			$response_data
+		);
 
-			$errors = array_unique( $errors );
+		return Candidates::from_array( $candidates_data );
+	}
+
+	/**
+	 * Merges a streaming response chunk with the previous candidates data.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $candidates_data The candidates data from the previous chunk.
+	 * @param array<string, mixed> $chunk_data      The response chunk data.
+	 * @return array<string, mixed> The merged candidates data.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response is invalid.
+	 */
+	private function merge_candidates_chunk( array $candidates_data, array $chunk_data ): array {
+		if ( ! isset( $chunk_data['candidates'] ) ) {
+			throw $this->api->create_missing_response_key_exception( 'candidates' );
+		}
+
+		$other_data = $chunk_data;
+		unset( $other_data['candidates'] );
+
+		foreach ( $chunk_data['candidates'] as $index => $candidate_data ) {
+			$candidates_data[ $index ] = array_merge( $candidates_data[ $index ], $candidate_data, $other_data );
+		}
+
+		return $candidates_data;
+	}
+
+	/**
+	 * Transforms a given candidate from the API response into a Content instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $candidate_data The API response candidate data.
+	 * @param int                  $index          The index of the candidate in the response.
+	 * @return Content The Content instance.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response is invalid.
+	 */
+	private function prepare_candidate_content( array $candidate_data, int $index ): Content {
+		if ( ! isset( $candidate_data['content']['parts'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw $this->api->create_missing_response_key_exception( "candidates.{$index}.content.parts" );
+		}
+
+		$role = isset( $candidate_data['content']['role'] ) && 'user' === $candidate_data['content']['role']
+			? Content_Role::USER
+			: Content_Role::MODEL;
+
+		return Content::from_array(
+			array(
+				'role'  => $role,
+				'parts' => $candidate_data['content']['parts'],
+			)
+		);
+	}
+
+	/**
+	 * Checks that the response includes candidates with content.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed>[] $candidates_data The candidates data from the response.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response does not include any candidates with content.
+	 */
+	private function check_non_empty_candidates( array $candidates_data ): void {
+		$errors = array();
+		foreach ( $candidates_data as $candidate_data ) {
+			if ( ! isset( $candidate_data['content'] ) ) {
+				if ( isset( $candidate_data['finishReason'] ) ) {
+					$errors[] = $candidate_data['finishReason'];
+				} else {
+					$errors[] = 'unknown';
+				}
+			}
+		}
+
+		if ( count( $errors ) === count( $candidates_data ) ) {
+			$message = __( 'The response does not include any candidates with content.', 'ai-services' );
+
+			$errors = array_unique(
+				array_filter(
+					$errors,
+					static function ( $error ) {
+						return 'unknown' !== $error;
+					}
+				)
+			);
 			if ( count( $errors ) > 0 ) {
 				$message .= ' ' . sprintf(
 					/* translators: %s: finish reason code */
@@ -276,12 +402,10 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 					)
 				);
 			}
-			throw new Generative_AI_Exception(
-				esc_html( $message )
-			);
-		}
 
-		return Candidates::from_array( $candidates );
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw $this->api->create_response_exception( $message );
+		}
 	}
 
 	/**

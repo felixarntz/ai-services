@@ -127,7 +127,7 @@ final class Helpers {
 	 * @param Generator<Candidates> $generator The generator that yields the chunks of response candidates.
 	 * @return Candidates_Stream_Processor The stream processor instance.
 	 */
-	public static function process_candidates_stream( Generator $generator ): Candidates_Stream_Processor {
+	public static function process_candidates_stream( Generator $generator ): Candidates_Stream_Processor { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		return new Candidates_Stream_Processor( $generator );
 	}
 }

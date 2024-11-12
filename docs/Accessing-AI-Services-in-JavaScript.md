@@ -235,6 +235,39 @@ const text = helpers.getTextFromContents(
 );
 ```
 
+### Streaming text responses
+
+Alternatively to using the `generateText()` method, you can use the `streamGenerateText()` method so that the response is streamed. This can help provide more immediate feedback to the user, since chunks with partial response candidates will be available iteratively while the model still processes the remainder of the response. In other words, you can print the text from these chunks right away, so that it almost looks as if the generative AI model was typing it. Especially for prompts that expect a larger response (e.g. more than one paragraph), streaming the response can have major benefits on user experience.
+
+The `streamGenerateText()` method takes the same parameters as the `generateText()` method. Instead of returning the final candidates instance though, it returns a generator that yields the partial candidates chunks. This generator can be used to iterate over the chunks as they arrive.
+
+The following example shows how you could use streaming:
+
+```js
+const enums = aiServices.ai.enums;
+const helpers = aiServices.ai.helpers;
+
+try {
+	const candidatesGenerator = await service.streamGenerateText(
+		'What can I do with WordPress?',
+		{
+			feature: 'my-test-feature',
+			capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+		}
+	);
+
+	for await ( const candidates of candidatesGenerator ) {
+		const text = helpers.getTextFromContents(
+			helpers.getCandidateContents( candidates )
+		);
+
+		// Append text chunk to user-facing response.
+	}
+} catch ( error ) {
+	// Handle the error.
+}
+```
+
 ## Generating image content using an AI service
 
 Coming soon.

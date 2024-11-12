@@ -43,7 +43,7 @@ final class Candidates_Stream_Processor {
 	 *
 	 * @param Generator<Candidates> $generator The generator that yields the chunks of response candidates.
 	 */
-	public function __construct( Generator $generator ) {
+	public function __construct( Generator $generator ) { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		$this->generator = $generator;
 	}
 

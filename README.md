@@ -4,13 +4,11 @@ Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript
 
 ![AI Services settings screen showing text input fields for API credentials](https://github.com/user-attachments/assets/da7ba9e2-b9bd-4d03-aebc-1a42c33689be)
 
-**Disclaimer:** The AI Services plugin is still in its very early stages, with a limited feature set. As long as it is in a `0.x.y` version, expect occasional breaking changes. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
-
-## What?
-
 This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
 
 The plugin does intentionally _not_ come with specific AI driven features built-in, except for a simple WordPress support assistant chatbot that is opt-in via code. The purpose of this plugin is to facilitate use of AI by other plugins. As such, it is a perfect use-case for [plugin dependencies](https://make.wordpress.org/core/2024/03/05/introducing-plugin-dependencies-in-wordpress-6-5/).
+
+**Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set. As long as it is in a `0.x.y` version, there may be occasional breaking changes when using lower level parts of the API. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
 
 ## Why?
 
@@ -25,37 +23,53 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 **Generate the answer to a prompt in PHP code:**
 
 ```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Helpers;
+
 if ( ai_services()->has_available_services() ) {
-  $service = ai_services()->get_available_service();
-  try {
-    $candidates = $service
-      ->get_model(
-        array(
-          'feature'      => 'my-test-feature',
-          'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
-        )
-      )
-      ->generate_text( 'What can I do with WordPress?' );
-  } catch ( Exception $e ) {
-    // Handle the exception.
-  }
+	$service = ai_services()->get_available_service();
+	try {
+		$candidates = $service
+			->get_model(
+				array(
+					'feature'      => 'my-test-feature',
+					'capabilities' => array( AI_Capability::TEXT_GENERATION ),
+				)
+			)
+			->generate_text( 'What can I do with WordPress?' );
+
+		$text = Helpers::get_text_from_contents(
+			Helpers::get_candidate_contents( $candidates )
+		);
+
+		echo $text;
+	} catch ( Exception $e ) {
+		// Handle the exception.
+	}
 }
 ```
 
 **Generate the answer to a prompt in JavaScript code:**
 
 ```js
+const helpers = aiServices.ai.helpers;
 const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
 if ( hasAvailableServices() ) {
-  const service = getAvailableService();
-  try {
-    const candidates = await service.generateText(
-      'What can I do with WordPress?',
-      { feature: 'my-test-feature' }
-    );
-  } catch ( error ) {
-    // Handle the error.
-  }
+	const service = getAvailableService();
+	try {
+		const candidates = await service.generateText(
+			'What can I do with WordPress?',
+			{ feature: 'my-test-feature' }
+		);
+
+		const text = helpers.getTextFromContents(
+			helpers.getCandidateContents( candidates )
+		);
+
+		console.log( text );
+	} catch ( error ) {
+		// Handle the error.
+	}
 }
 ```
 
@@ -70,32 +84,35 @@ You can also use a specific AI service, if you have a preference, for example th
 **Generate the answer to a prompt using a specific AI service, in PHP code:**
 
 ```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Helpers;
+
 if ( ai_services()->is_service_available( 'google' ) ) {
-  $service = ai_services()->get_available_service( 'google' );
-  try {
-    $candidates = $service
-      ->get_model(
-        array(
-          'feature'      => 'my-test-feature',
-          'capabilities' => array( \Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability::TEXT_GENERATION ),
-        )
-      )
-      ->generate_text( 'What can I do with WordPress?' );
-  } catch ( Exception $e ) {
-    // Handle the exception.
-  }
+	$service = ai_services()->get_available_service( 'google' );
+	try {
+		$candidates = $service
+			->get_model(
+				array(
+					'feature'      => 'my-test-feature',
+					'capabilities' => array( AI_Capability::TEXT_GENERATION ),
+				)
+			)
+			->generate_text( 'What can I do with WordPress?' );
+
+		$text = Helpers::get_text_from_contents(
+			Helpers::get_candidate_contents( $candidates )
+		);
+
+		echo $text;
+	} catch ( Exception $e ) {
+		// Handle the exception.
+	}
 }
 ```
 
-**Generate the answer to a prompt using a specific AI service, using the REST API via cURL:**
-
-```sh
-curl 'https://example.com/wp-json/ai-services/v1/services/google:generate-text' \
-  -H 'Content-Type: application/json' \
-  --data-raw '{"content":"What can I do with WordPress?"}'
-```
-
 For complete examples such as entire plugins built on top of the AI Services infrastructure, please see the [examples directory on GitHub](https://github.com/felixarntz/ai-services/tree/main/examples).
+
+Additionally, the [plugin documentation](./docs/README.md) provides granular examples including explainers.
 
 ## Installation and usage
 
@@ -120,7 +137,7 @@ Once the AI Services plugin is installed and activated, you can configure the pl
 
 Once the plugin is active, you will find a new _Settings > AI Services_ submenu in the WordPress administration menu. In there, you can configure your AI service API keys. If you have enabled the WordPress assistant chatbot, the only user-facing feature of the plugin, you should see a small "Need help?" button in the lower right throughout WP Admin after you have configured at least one (valid) API key.
 
-Please refer to the [documentation](./docs/README.md) for instructions on how you can actually use the AI capabilities of the plugin in your own projects.
+Please refer to the [plugin documentation](./docs/README.md) for instructions on how you can actually use the AI capabilities of the plugin in your own projects.
 
 ## License
 

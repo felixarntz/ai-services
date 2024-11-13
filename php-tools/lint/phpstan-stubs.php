@@ -17,3 +17,25 @@ if ( ! function_exists( 'str_starts_with' ) ) {
 		return 0 === strpos( $haystack, $needle );
 	}
 }
+
+if ( ! function_exists( 'str_ends_with' ) ) {
+	function str_ends_with( $haystack, $needle ) {
+		if ( '' === $haystack ) {
+			return '' === $needle;
+		}
+
+		$len = strlen( $needle );
+
+		return substr( $haystack, -$len, $len ) === $needle;
+	}
+}
+
+if ( ! function_exists( 'str_contains' ) ) {
+	function str_contains( $haystack, $needle ) {
+		if ( '' === $needle ) {
+			return true;
+		}
+
+		return false !== strpos( $haystack, $needle );
+	}
+}

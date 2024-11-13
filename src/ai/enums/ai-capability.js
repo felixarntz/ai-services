@@ -1,8 +1,10 @@
+export const CHAT_HISTORY = 'chat_history';
 export const IMAGE_GENERATION = 'image_generation';
 export const MULTIMODAL_INPUT = 'multimodal_input';
 export const TEXT_GENERATION = 'text_generation';
 
 const VALUE_MAP = {
+	[ CHAT_HISTORY ]: true,
 	[ IMAGE_GENERATION ]: true,
 	[ MULTIMODAL_INPUT ]: true,
 	[ TEXT_GENERATION ]: true,

@@ -141,6 +141,7 @@ export default class GenerativeAiModel {
 	startChat( history ) {
 		validateCapabilities( this.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
+			enums.AiCapability.CHAT_HISTORY,
 		] );
 
 		return new ChatSession( this, { history } );

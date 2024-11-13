@@ -63,7 +63,7 @@ class Chatbot_Loader {
 		}
 
 		return $this->services_api->has_available_services(
-			array( 'capabilities' => array( AI_Capability::TEXT_GENERATION ) )
+			array( 'capabilities' => array( AI_Capability::TEXT_GENERATION, AI_Capability::CHAT_HISTORY ) )
 		);
 	}
 

@@ -4,7 +4,7 @@
 import GenerativeAiModel from './generative-ai-model';
 import ChatSession from './chat-session';
 import * as enums from '../enums';
-import { findModel } from '../util';
+import { detectRequestedCapabilitiesFromContent, findModel } from '../util';
 
 const EMPTY_OBJECT = {};
 
@@ -113,7 +113,9 @@ export default class GenerativeAiService {
 		if ( ! modelParams?.capabilities ) {
 			modelParams = {
 				...modelParams,
-				capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+				capabilities: detectRequestedCapabilitiesFromContent( content, [
+					enums.AiCapability.TEXT_GENERATION,
+				] ),
 			};
 		}
 
@@ -137,11 +139,16 @@ export default class GenerativeAiService {
 	 *                           content.
 	 */
 	async streamGenerateText( content, modelParams ) {
-		// The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
+		/*
+		 * The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
+		 * And in case a history is provided, we also need `enums.AiCapability.CHAT_HISTORY`.
+		 */
 		if ( ! modelParams?.capabilities ) {
 			modelParams = {
 				...modelParams,
-				capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+				capabilities: detectRequestedCapabilitiesFromContent( content, [
+					enums.AiCapability.TEXT_GENERATION,
+				] ),
 			};
 		}
 
@@ -161,11 +168,17 @@ export default class GenerativeAiService {
 	 * @return {ChatSession} Chat session.
 	 */
 	startChat( history, modelParams ) {
-		// The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
+		/*
+		 * The `enums.AiCapability.TEXT_GENERATION` capability is naturally implied to generate text.
+		 * And for chat, we also need `enums.AiCapability.CHAT_HISTORY`.
+		 */
 		if ( ! modelParams?.capabilities ) {
 			modelParams = {
 				...modelParams,
-				capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+				capabilities: [
+					enums.AiCapability.TEXT_GENERATION,
+					enums.AiCapability.CHAT_HISTORY,
+				],
 			};
 		}
 

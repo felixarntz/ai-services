@@ -10,7 +10,6 @@ namespace Felix_Arntz\AI_Services\Services\Traits;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
-use Felix_Arntz\AI_Services\Services\API\Types\Chat_Session;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
@@ -61,18 +60,6 @@ trait With_Text_Generation_Trait {
 	final public function stream_generate_text( $content, array $request_options = array() ): Generator {
 		$contents = $this->sanitize_new_content( $content );
 		return $this->send_stream_generate_text_request( $contents, $request_options );
-	}
-
-	/**
-	 * Starts a multi-turn chat session using the model.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Content[] $history Optional. The chat history. Default empty array.
-	 * @return Chat_Session The chat session.
-	 */
-	final public function start_chat( array $history = array() ): Chat_Session {
-		return new Chat_Session( $this, $history );
 	}
 
 	/**

@@ -128,7 +128,11 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 */
 	public function list_models( array $request_options = array() ): array {
 		// Unfortunately the Anthropic API does not return models, so we have to hardcode them here.
-		$anthropic_capabilities = array( AI_Capability::MULTIMODAL_INPUT, AI_Capability::TEXT_GENERATION );
+		$anthropic_capabilities = array(
+			AI_Capability::CHAT_HISTORY,
+			AI_Capability::MULTIMODAL_INPUT,
+			AI_Capability::TEXT_GENERATION,
+		);
 
 		return array_fill_keys(
 			array(

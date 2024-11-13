@@ -18,7 +18,10 @@ const LOAD_CHAT_START = 'LOAD_CHAT_START';
 const LOAD_CHAT_FINISH = 'LOAD_CHAT_FINISH';
 
 const SERVICE_ARGS = {
-	capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+	capabilities: [
+		enums.AiCapability.TEXT_GENERATION,
+		enums.AiCapability.CHAT_HISTORY,
+	],
 };
 
 const chatSessionInstances = {};
@@ -56,7 +59,9 @@ const actions = {
 			}
 			if ( ! service && ! select.hasAvailableServices( SERVICE_ARGS ) ) {
 				// eslint-disable-next-line no-console
-				console.error( 'No AI service available for text generation.' );
+				console.error(
+					'No AI service available for text generation with chat history.'
+				);
 				return;
 			}
 

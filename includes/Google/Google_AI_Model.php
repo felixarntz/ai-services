@@ -18,9 +18,10 @@ use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
-use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Felix_Arntz\AI_Services\Services\Util\Transformer;
@@ -32,8 +33,9 @@ use InvalidArgumentException;
  *
  * @since 0.1.0
  */
-class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, With_Text_Generation {
+class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, With_Chat_History {
 	use With_Text_Generation_Trait;
+	use With_Chat_History_Trait;
 
 	/**
 	 * The Google AI API instance.

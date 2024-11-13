@@ -9,7 +9,6 @@
 namespace Felix_Arntz\AI_Services\Services\Contracts;
 
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
-use Felix_Arntz\AI_Services\Services\API\Types\Chat_Session;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -53,14 +52,4 @@ interface With_Text_Generation {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function stream_generate_text( $content, array $request_options = array() ): Generator;
-
-	/**
-	 * Starts a multi-turn chat session using the model.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Content[] $history Optional. The chat history. Default empty array.
-	 * @return Chat_Session The chat session.
-	 */
-	public function start_chat( array $history = array() ): Chat_Session;
 }

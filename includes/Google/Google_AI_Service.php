@@ -129,7 +129,11 @@ class Google_AI_Service implements Generative_AI_Service {
 					isset( $model['supportedGenerationMethods'] ) &&
 					in_array( 'generateContent', $model['supportedGenerationMethods'], true )
 				) {
-					$model_caps = array( AI_Capability::MULTIMODAL_INPUT, AI_Capability::TEXT_GENERATION );
+					$model_caps = array(
+						AI_Capability::CHAT_HISTORY,
+						AI_Capability::MULTIMODAL_INPUT,
+						AI_Capability::TEXT_GENERATION,
+					);
 				} else {
 					$model_caps = array();
 				}

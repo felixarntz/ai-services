@@ -168,6 +168,33 @@ export function validateCapabilities(
 }
 
 /**
+ * Detects the requested capabilities from the content.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string|Object|Object[]} content          Content data to pass to the model, including the prompt and
+ *                                                  optional history.
+ * @param {string[]}               baseCapabilities Optional. Base capabilities to include in the detected
+ *                                                  capabilities. Should typically be provided, as this function cannot
+ *                                                  recognize the base capability, e.g. whether to generate text or
+ *                                                  images or audio.
+ * @return {string[]} Detected capabilities.
+ */
+export function detectRequestedCapabilitiesFromContent(
+	content,
+	baseCapabilities
+) {
+	const requestedCapabilities = [ ...( baseCapabilities || [] ) ];
+
+	// Multi-turn conversation.
+	if ( Array.isArray( content ) && content.length > 1 && content[ 0 ].role ) {
+		requestedCapabilities.push( enums.AiCapability.CHAT_HISTORY );
+	}
+
+	return requestedCapabilities;
+}
+
+/**
  * Finds a model from the available models based on the given model parameters.
  *
  * @since n.e.x.t

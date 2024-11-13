@@ -15,16 +15,15 @@ import { validateContent, validateCapabilities } from '../util';
  * @since n.e.x.t
  *
  * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional history.
- * @return {string} The text content.
+ * @return {string|Object|Object[]} The content, as a string, content object, or array of content objects.
  */
-function getTextFromContent( content ) {
+function prepareContentForBrowser( content ) {
 	if ( typeof content === 'string' ) {
 		return content;
 	}
 
 	// If an array is passed, it's either parts (i.e. a single prompt) or history.
 	if ( Array.isArray( content ) ) {
-		let parts;
 		if (
 			( content[ 0 ].role || content[ 0 ].parts ) &&
 			content.length > 1
@@ -32,7 +31,10 @@ function getTextFromContent( content ) {
 			throw new Error(
 				'The browser service does not support history at this time.'
 			);
-		} else if ( content[ 0 ].role || content[ 0 ].parts ) {
+		}
+
+		let parts;
+		if ( content[ 0 ].role || content[ 0 ].parts ) {
 			parts = content[ 0 ].parts;
 		} else {
 			parts = content;
@@ -48,6 +50,39 @@ function getTextFromContent( content ) {
 }
 
 /**
+ * Creates a new session with the browser model, based on supported model params.
+ *
+ * See https://github.com/explainers-by-googlers/prompt-api#examples for supported parameters.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} modelParams Model parameters.
+ * @return {Promise<Object>} The browser session.
+ */
+async function createSession( modelParams ) {
+	const browserParams = {};
+	if ( modelParams.generationConfig ) {
+		if ( modelParams.generationConfig.temperature ) {
+			browserParams.temperature =
+				modelParams.generationConfig.temperature;
+		}
+		if ( modelParams.generationConfig.topK ) {
+			browserParams.topK = modelParams.generationConfig.topK;
+		}
+	}
+	if ( modelParams.systemInstruction ) {
+		if ( typeof modelParams.systemInstruction === 'string' ) {
+			browserParams.systemInstruction = modelParams.systemInstruction;
+		} else if ( modelParams.systemInstruction.parts?.[ 0 ]?.text ) {
+			browserParams.systemInstruction =
+				modelParams.systemInstruction.parts[ 0 ].text;
+		}
+	}
+
+	return window.ai.assistant.create( browserParams );
+}
+
+/**
  * Wraps the browser text generator to match the candidates API syntax.
  *
  * @since n.e.x.t
@@ -56,10 +91,18 @@ function getTextFromContent( content ) {
  * @return {Object} The wrapped generator.
  */
 async function* wrapBrowserTextGenerator( resultTextGenerator ) {
+	/*
+	 * The browser implementation currently yields the entire text generated so far for every chunk,
+	 * so we need to calculate the new chunk.
+	 */
+	let textProcessed = '';
 	for await ( const resultText of resultTextGenerator ) {
+		const chunk = resultText.substring( textProcessed.length );
+		textProcessed = resultText;
+
 		yield [
 			{
-				content: textToContent( resultText, enums.ContentRole.MODEL ),
+				content: textToContent( chunk, enums.ContentRole.MODEL ),
 			},
 		];
 	}
@@ -85,14 +128,11 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 			enums.AiCapability.TEXT_GENERATION,
 		] );
 
-		const modelParams = { ...this.modelParams };
-
 		// Do some very basic validation.
 		validateContent( content );
 
-		const text = getTextFromContent( content );
-
-		const session = await window.ai.assistant.create( modelParams );
+		const session = await createSession( this.modelParams );
+		const text = prepareContentForBrowser( content );
 		const resultText = await session.prompt( text );
 
 		// Normalize result shape to match candidates API syntax from other services.
@@ -118,14 +158,11 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 			enums.AiCapability.TEXT_GENERATION,
 		] );
 
-		const modelParams = { ...this.modelParams };
-
 		// Do some very basic validation.
 		validateContent( content );
 
-		const text = getTextFromContent( content );
-
-		const session = await window.ai.assistant.create( modelParams );
+		const session = await createSession( this.modelParams );
+		const text = prepareContentForBrowser( content );
 		const resultTextGenerator = await session.promptStreaming( text );
 
 		// Normalize result shape to match candidates API syntax from other services.

@@ -122,15 +122,15 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 		}
 
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.IniSet.Risky
-		@ini_set( 'zlib.output_compression', 0 );
+		@ini_set( 'zlib.output_compression', '0' );
 
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.IniSet.Risky
-		@ini_set( 'implicit_flush', 1 );
+		@ini_set( 'implicit_flush', '1' );
 
 		while ( ob_get_level() !== 0 ) {
 			ob_end_flush();
 		}
-		ob_implicit_flush( true );
+		ob_implicit_flush( 1 );
 	}
 
 	/**

@@ -142,6 +142,7 @@ export default function SettingsCards() {
 								__( 'Hide API key for %s.', 'ai-services' ),
 								service.name
 							) }
+							__nextHasNoMarginBottom
 						/>
 					) ) }
 				</CardBody>
@@ -165,6 +166,7 @@ export default function SettingsCards() {
 						disabled={ isLoadingSettings }
 						checked={ deleteData || false }
 						onChange={ setDeleteData }
+						__nextHasNoMarginBottom
 					/>
 				</CardBody>
 			</Card>

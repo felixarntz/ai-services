@@ -39,7 +39,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Composer dependencies
-        run: composer update
+        run: composer install
 
       - name: Prefix relevant dependencies
         run: composer prefix-dependencies

@@ -92,20 +92,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Validate Composer configuration
-        run: composer validate
-
       - name: Install Composer dependencies
-        run: composer update
+        run: composer install
 
       - name: Prefix relevant dependencies
         run: composer prefix-dependencies
-
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js (.nvmrc)
         uses: actions/setup-node@v4

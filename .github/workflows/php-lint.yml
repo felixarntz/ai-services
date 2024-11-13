@@ -54,7 +54,7 @@ jobs:
         run: composer validate
 
       - name: Install Composer dependencies
-        run: composer update
+        run: composer install
 
       - name: Prefix relevant dependencies
         run: composer prefix-dependencies

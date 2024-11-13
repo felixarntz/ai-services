@@ -5,7 +5,7 @@
  * These are typically for polyfills that WordPress Core provides for older PHP versions.
  * See https://github.com/WordPress/wordpress-develop/blob/trunk/src/wp-includes/compat.php.
  *
- * @package wp-starter-plugin
+ * @package ai-services
  */
 
 if ( ! function_exists( 'str_starts_with' ) ) {

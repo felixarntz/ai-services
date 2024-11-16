@@ -79,7 +79,21 @@ async function createSession( modelParams ) {
 		}
 	}
 
-	return window.ai.assistant.create( browserParams );
+	if ( Object.keys( browserParams ).length === 0 ) {
+		return window.ai.assistant.create();
+	}
+
+	try {
+		const session = await window.ai.assistant.create( browserParams );
+		return session;
+	} catch ( error ) {
+		// eslint-disable-next-line no-console
+		console.warn(
+			'Failed to create browser session with modelParams, therefore creating default session. Original error:',
+			error
+		);
+		return window.ai.assistant.create();
+	}
 }
 
 /**

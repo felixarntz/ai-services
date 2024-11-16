@@ -279,7 +279,12 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 					'minimum'     => 1,
 				),
 				'temperature'      => array(
-					'description' => __( 'Floating point value to control the randomness of the output.', 'ai-services' ),
+					'description' => sprintf(
+						/* translators: 1: Minimum value, 2: Maximum value */
+						__( 'Floating point value to control the randomness of the output, between %1$s and %2$s.', 'ai-services' ),
+						'0.0',
+						'1.0'
+					),
 					'type'        => 'number',
 					'minimum'     => 0.0,
 					'maximum'     => 1.0,

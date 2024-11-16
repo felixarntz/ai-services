@@ -268,6 +268,51 @@ try {
 }
 ```
 
+### Customizing the default model configuration
+
+When retrieving a model using the `getModel()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. The `generationConfig` key needs to contain an object with configuration arguments. These arguments are normalized in a way that works across the different AI services and their APIs.
+
+Additionally to `generationConfig`, you can pass a `systemInstruction` argument if you want to provide a custom instruction for how the model should behave. By setting a system instruction, you give the model additional context to understand its tasks, provide more customized responses, and adhere to specific guidelines over the full user interaction with the model.
+
+Here is a code example using both `generationConfig` and `systemInstruction`:
+
+```js
+const enums = aiServices.ai.enums;
+
+try {
+	const model = service.getModel(
+		{
+			feature: 'my-test-feature',
+			capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+			generationConfig: {
+				maxOutputTokens: 128,
+				temperature: 0.2,
+			},
+			systemInstruction: 'You are a WordPress expert. You should respond exclusively to prompts and questions about WordPress.',
+		}
+	);
+
+	// Generate text using the model.
+} catch ( error ) {
+	// Handle the error.
+}
+```
+
+Note that not all configuration arguments are supported by every service API. However, a good number of arguments _is_ supported consistently, so here is a list of common configuration arguments that are widely supported:
+
+* `stopSequences` _(string)_: Set of character sequences that will stop output generation.
+	* Supported by all except `browser`.
+* `maxOutputTokens` _(integer)_: The maximum number of tokens to include in a response candidate.
+	* Supported by all except `browser`.
+* `temperature` _(float)_: Floating point value to control the randomness of the output, between 0.0 and 1.0.
+	* Supported by all.
+* `topP` _(float)_: The maximum cumulative probability of tokens to consider when sampling.
+	* Supported by all except `browser`.
+* `topK` _(integer)_: The maximum number of tokens to consider when sampling.
+	* Supported by all except `openai`.
+
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Generation_Config` class](../includes/Services/API/Types/Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+
 ## Generating image content using an AI service
 
 Coming soon.

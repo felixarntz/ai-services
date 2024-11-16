@@ -125,13 +125,11 @@ const actions = {
 				response = await session.sendMessage( newContent );
 			} catch ( error ) {
 				console.error( error?.message || error ); // eslint-disable-line no-console
+				dispatch.revertContent( chatId );
+				throw error;
 			}
 
-			if ( response ) {
-				dispatch.receiveContent( chatId, response );
-			} else {
-				dispatch.revertContent( chatId );
-			}
+			dispatch.receiveContent( chatId, response );
 
 			await dispatch( {
 				type: LOAD_CHAT_FINISH,

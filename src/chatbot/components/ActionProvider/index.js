@@ -8,7 +8,7 @@ import { helpers, store as aiStore } from '@ai-services/ai';
  */
 import { Children, cloneElement } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -35,16 +35,27 @@ export default function ActionProvider( {
 	const { sendMessage } = useDispatch( aiStore );
 
 	const respond = async ( message ) => {
-		const aiResponse = await sendMessage( chatId, message );
-		const aiResponseText = helpers.contentToText( aiResponse );
-		const chatResponse = createChatBotMessage(
-			aiResponseText !== ''
-				? aiResponseText
-				: __(
-						'It looks like something went wrong. Please check your browser console for further information.',
+		let aiResponseText;
+		try {
+			const aiResponse = await sendMessage( chatId, message );
+			aiResponseText = helpers.contentToText( aiResponse );
+		} catch ( error ) {
+			aiResponseText =
+				__(
+					'I cannot respond to that due to a technical problem. Please try again.',
+					'ai-services'
+				) +
+				'\n\n' +
+				sprintf(
+					/* translators: %s: error message */
+					__(
+						'Here is the underlying error message: %s',
 						'ai-services'
-				  )
-		);
+					),
+					error?.message || error
+				);
+		}
+		const chatResponse = createChatBotMessage( aiResponseText );
 		setState( ( state ) => ( {
 			...state,
 			messages: [ ...state.messages, chatResponse ],

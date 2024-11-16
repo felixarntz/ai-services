@@ -505,7 +505,8 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				return $config->get_max_output_tokens();
 			},
 			'temperature'      => static function ( Generation_Config $config ) {
-				return $config->get_temperature();
+				// In the Google AI API temperature ranges from 0.0 to 2.0.
+				return $config->get_temperature() * 2.0;
 			},
 			'topP'             => static function ( Generation_Config $config ) {
 				return $config->get_top_p();

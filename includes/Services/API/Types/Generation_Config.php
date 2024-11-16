@@ -133,7 +133,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since 0.2.0
 	 *
-	 * @return float The temperature (between 0.0 and 2.0), or 0.0 if not set.
+	 * @return float The temperature (between 0.0 and 1.0), or 0.0 if not set.
 	 */
 	public function get_temperature(): float {
 		return $this->sanitized_args['temperature'] ?? 0.0;
@@ -282,7 +282,7 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 					'description' => __( 'Floating point value to control the randomness of the output.', 'ai-services' ),
 					'type'        => 'number',
 					'minimum'     => 0.0,
-					'maximum'     => 2.0,
+					'maximum'     => 1.0,
 				),
 				'topP'             => array(
 					'description' => __( 'The maximum cumulative probability of tokens to consider when sampling.', 'ai-services' ),
@@ -366,8 +366,8 @@ final class Generation_Config implements Arrayable, With_JSON_Schema {
 	 * @throws InvalidArgumentException Thrown if the type is not supported.
 	 */
 	private function sanitize_arg( $value, string $type, string $arg_name ) {
-		if ( 'temperature' === $arg_name && ( (float) $value < 0.0 || (float) $value > 2.0 ) ) {
-			throw new InvalidArgumentException( 'Temperature must be between 0.0 and 2.0.' );
+		if ( 'temperature' === $arg_name && ( (float) $value < 0.0 || (float) $value > 1.0 ) ) {
+			throw new InvalidArgumentException( 'Temperature must be between 0.0 and 1.0.' );
 		}
 
 		switch ( $type ) {

@@ -137,8 +137,12 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 		return array_reduce(
 			$model_slugs,
 			static function ( array $model_caps, string $model_slug ) use ( $gpt_capabilities, $gpt_multimodal_capabilities ) {
-				if ( str_starts_with( $model_slug, 'gpt-' ) && ! str_contains( $model_slug, '-instruct' ) ) {
-					if ( str_starts_with( $model_slug, 'gpt-4' ) ) {
+				if ( str_starts_with( $model_slug, 'gpt-' )
+                     && ! str_contains( $model_slug, '-instruct' )
+				     && ! str_contains( $model_slug, '-realtime' )
+				     && ! str_contains( $model_slug, '-audio' )
+                ) {
+					if ( str_starts_with( $model_slug, 'gpt-4o' ) ) {
 						$model_caps[ $model_slug ] = $gpt_multimodal_capabilities;
 					} else {
 						$model_caps[ $model_slug ] = $gpt_capabilities;

@@ -238,26 +238,33 @@
 		width: 15px;
 		margin: 0 auto;
 	}
-}
 
-.chatbot-loader-container {
-	display: flex;
-	width: 100%;
-	justify-content: center;
-}
+	&__loader-container {
+		display: flex;
+		width: 100%;
+		justify-content: flex-start;
+		align-items: center;
+	}
 
-#chatbot-loader #chatbot-loader-dot1 {
-	animation: load 1s infinite;
-}
+	&__loader {
+		fill: #2898ec;
+	}
 
-#chatbot-loader #chatbot-loader-dot2 {
-	animation: load 1s infinite;
-	animation-delay: 0.2s;
-}
+	&__loader-dot {
+		animation: load 1s infinite;
 
-#chatbot-loader #chatbot-loader-dot3 {
-	animation: load 1s infinite;
-	animation-delay: 0.4s;
+		&:first-child {
+			animation-delay: 0s;
+		}
+
+		&:not(:first-child, :last-child) {
+			animation-delay: 0.2s;
+		}
+
+		&:last-child {
+			animation-delay: 0.4s;
+		}
+	}
 }
 
 @keyframes load {

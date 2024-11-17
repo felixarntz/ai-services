@@ -8,6 +8,7 @@ import Markdown from 'markdown-to-jsx';
  * Internal dependencies
  */
 import { useChatbotConfig } from '../../config';
+import Loader from './loader';
 import UserIcon from './user-icon';
 
 const DefaultResponseRenderer = ( { text } ) => (
@@ -21,11 +22,12 @@ const DefaultResponseRenderer = ( { text } ) => (
  *
  * @since n.e.x.t
  *
- * @param {Object} props         Component props.
- * @param {Object} props.content The message content object.
+ * @param {Object}  props         Component props.
+ * @param {Object}  props.content The message content object.
+ * @param {boolean} props.loading Whether the message is loading.
  * @return {Component} The component to be rendered.
  */
-export default function ChatbotMessage( { content } ) {
+export default function ChatbotMessage( { content, loading } ) {
 	const ResponseRenderer =
 		useChatbotConfig( 'ResponseRenderer' ) || DefaultResponseRenderer;
 	const classSuffix = content.role === 'user' ? 'user' : 'assistant';
@@ -54,18 +56,24 @@ export default function ChatbotMessage( { content } ) {
 					) }
 				</div>
 			</div>
-			<div
-				className={ `ai-services-chatbot__message ai-services-chatbot__message--${ classSuffix }` }
-			>
-				{ content.parts.map( ( part, index ) =>
-					!! part.text ? (
-						<ResponseRenderer key={ index } text={ part.text } />
-					) : null
-				) }
+			{ loading && <Loader /> }
+			{ ! loading && (
 				<div
-					className={ `ai-services-chatbot__message-arrow ai-services-chatbot__message-arrow--${ classSuffix }` }
-				></div>
-			</div>
+					className={ `ai-services-chatbot__message ai-services-chatbot__message--${ classSuffix }` }
+				>
+					{ content.parts.map( ( part, index ) =>
+						!! part.text ? (
+							<ResponseRenderer
+								key={ index }
+								text={ part.text }
+							/>
+						) : null
+					) }
+					<div
+						className={ `ai-services-chatbot__message-arrow ai-services-chatbot__message-arrow--${ classSuffix }` }
+					></div>
+				</div>
+			) }
 		</div>
 	);
 }
@@ -75,4 +83,5 @@ ChatbotMessage.propTypes = {
 		role: PropTypes.string,
 		parts: PropTypes.arrayOf( PropTypes.object ),
 	} ).isRequired,
+	loading: PropTypes.bool,
 };

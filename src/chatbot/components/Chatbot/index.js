@@ -75,6 +75,9 @@ export default function Chatbot( { onClose, className } ) {
 	const messages = useSelect( ( select ) =>
 		select( aiStore ).getChat( chatId )
 	);
+	const loading = useSelect( ( select ) =>
+		select( aiStore ).isChatLoading( chatId )
+	);
 
 	const handleSubmit = ( event ) => {
 		event.preventDefault();
@@ -107,6 +110,15 @@ export default function Chatbot( { onClose, className } ) {
 					{ messages.map( ( content, index ) => (
 						<ChatbotMessage key={ index } content={ content } />
 					) ) }
+					{ loading && (
+						<ChatbotMessage
+							content={ {
+								role: 'model',
+								parts: [ { text: '' } ],
+							} }
+							loading
+						/>
+					) }
 				</div>
 				<div className="ai-services-chatbot__input-container">
 					<form

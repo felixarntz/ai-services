@@ -1,4 +1,4 @@
-.chatbot-container {
+.ai-services-assistant-chatbot-container {
 	position: fixed;
 	bottom: 2rem;
 	right: 2rem;
@@ -8,21 +8,21 @@
 
 	@media (min-width: 782px) {
 
-		.react-chatbot-kit-chat-container {
+		.ai-services-chatbot__container {
 			width: 400px;
 		}
 
-		.react-chatbot-kit-chat-bot-message {
+		.ai-services-chatbot__message--assistant {
 			width: 309.5px;
 		}
 	}
 
-	.react-chatbot-kit-chat-input {
+	.ai-services-chatbot__input {
 		margin: 0;
 	}
 }
 
-.components-button.button.chatbot-button {
+.components-button.button.ai-services-assistant-chatbot-button {
 	width: 72px;
 	height: 72px;
 	border-radius: 50%;

@@ -13,8 +13,7 @@
     "@wordpress/interface": "^6.4.0",
     "clsx": "^2.1.1",
     "markdown-to-jsx": "^7.5.0",
-    "prop-types": "^15.8.1",
-    "react-chatbot-kit": "^2.2.2"
+    "prop-types": "^15.8.1"
   },
   "scripts": {
     "build": "wp-scripts build",

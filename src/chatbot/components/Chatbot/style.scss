@@ -1,0 +1,276 @@
+.ai-services-chatbot {
+
+	&__container {
+		position: relative;
+		width: 275px;
+	}
+
+	&__inner-container {
+		height: 500px;
+		background-color: #fff;
+		border-radius: 3px;
+		border-radius: 5px;
+	}
+
+	&__header {
+		border-top-right-radius: 5px;
+		border-top-left-radius: 5px;
+		border-bottom: 1px solid #d8d8d8;
+		background-color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 0.85rem;
+		color: #514f4f;
+		padding: 12.5px;
+		font-weight: 700;
+	}
+
+	&__header-title {
+		font-weight: 700;
+		padding-right: 36px;
+
+		&__note {
+			font-size: 80%;
+			font-weight: 400;
+		}
+	}
+
+	&__header-close-button {
+		margin: 0;
+		padding: 0;
+		background-color: transparent;
+		border: 1px solid transparent;
+		color: #646970;
+		z-index: 1000;
+		outline: none;
+		transition: color 0.1s ease-in-out;
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: #135e96;
+		}
+
+		&__icon::before {
+			content: "\f158";
+			font: 400 20px / 1 dashicons; // stylelint-disable-line font-family-no-missing-generic-family-keyword
+			vertical-align: middle;
+		}
+	}
+
+	&__messages-container {
+		padding: 0 17.5px 10px 17.5px;
+		overflow-x: hidden;
+		overflow-y: scroll;
+		height: 396px;
+	}
+
+	&__message-container {
+		display: flex;
+		margin: 15px 0;
+
+		&--user {
+			justify-content: flex-start;
+			flex-direction: row-reverse;
+		}
+
+		&--assistant {
+			justify-content: flex-start;
+		}
+	}
+
+	&__avatar-container {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		font-size: 1.2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		&--user {
+			margin-left: 12.5px;
+			background-color: #3d4e8d;
+		}
+
+		&--assistant {
+			margin-right: 12.5px;
+			background-color: #d8d8d8;
+		}
+	}
+
+	&__avatar-icon {
+
+		&--user {
+			fill: #fff;
+			width: 15px;
+			height: 15px;
+		}
+
+		&--assistant {
+			fill: #494646;
+		}
+	}
+
+	&__avatar-letter {
+		margin: 0;
+		padding: 0;
+
+		&--user {
+			color: #fff;
+		}
+
+		&--assistant {
+			color: #1d1d1d;
+		}
+	}
+
+	&__message {
+		padding: 10px;
+		border-radius: 5px;
+		font-size: 0.9rem;
+		font-weight: medium;
+		position: relative;
+		width: 184.5px;
+		text-align: left;
+
+		&--user {
+			background-color: #f1f1f1;
+			color: #585858;
+		}
+
+		&--assistant {
+			background-color: #2898ec;
+			color: #fff;
+		}
+
+		p {
+			font-size: 0.9rem;
+		}
+
+		ul {
+			list-style: disc;
+		}
+
+		ul,
+		ol {
+			padding-left: 1rem;
+		}
+
+		p:first-child,
+		ul:first-child,
+		ol:first-child {
+			margin-top: 0;
+		}
+
+		p:last-child,
+		ul:last-child,
+		ol:last-child {
+			margin-bottom: 0;
+		}
+
+		div + .button {
+			margin-top: 1rem;
+		}
+	}
+
+	&__message-arrow {
+		width: 0;
+		height: 0;
+		border-top: 8px solid transparent;
+		border-bottom: 8px solid transparent;
+		position: absolute;
+
+		&--user {
+			border-left: 8px solid #f1f1f1;
+			right: -7px;
+			top: 13px;
+		}
+
+		&--assistant {
+			border-right: 8px solid #2898ec;
+			left: -7px;
+			top: 13px;
+		}
+	}
+
+	&__loading-icon-container {
+		height: 17px;
+		width: 25px;
+	}
+
+	&__input-container {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		display: flex;
+	}
+
+	&__input {
+		width: 100%;
+		padding: 12.5px;
+		border: none;
+		font-size: 0.85rem;
+		border-top: 1px solid #d8d8d8;
+		border-bottom-left-radius: 5px;
+	}
+
+	&__input-form {
+		width: 100%;
+		display: flex;
+	}
+
+	&__input::placeholder {
+		color: #585858;
+	}
+
+	&__btn-send {
+		background-color: #2898ec;
+		width: 100px;
+		border: none;
+		color: #fff;
+		border-bottom-right-radius: 5px;
+	}
+
+	&__btn-send-icon {
+		fill: #fff;
+		width: 15px;
+		margin: 0 auto;
+	}
+}
+
+.chatbot-loader-container {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+
+#chatbot-loader #chatbot-loader-dot1 {
+	animation: load 1s infinite;
+}
+
+#chatbot-loader #chatbot-loader-dot2 {
+	animation: load 1s infinite;
+	animation-delay: 0.2s;
+}
+
+#chatbot-loader #chatbot-loader-dot3 {
+	animation: load 1s infinite;
+	animation-delay: 0.4s;
+}
+
+@keyframes load {
+
+	0% {
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}

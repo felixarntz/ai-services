@@ -135,22 +135,13 @@ class Chatbot implements With_Hooks {
 			)
 		);
 		$this->style_registry->register(
-			'react_chatbot_kit',
-			array(
-				'src'          => $this->plugin_env->url( 'build/chatbot/index.css' ),
-				'path'         => $this->plugin_env->path( 'build/chatbot/index.css' ),
-				'manifest'     => $this->plugin_env->path( 'build/chatbot/index.asset.php' ),
-				'dependencies' => array(),
-			)
-		);
-		$this->style_registry->register(
 			'ais_chatbot',
 			array(
 				'src'          => $this->plugin_env->url( 'build/chatbot/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/chatbot/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/chatbot/index.asset.php' ),
 				// Don't use 'wp-components' everywhere because it is too heavy to load for just a button.
-				'dependencies' => array( 'react_chatbot_kit' ),
+				'dependencies' => array(),
 			)
 		);
 	}

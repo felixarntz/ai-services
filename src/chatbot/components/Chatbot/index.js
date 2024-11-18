@@ -53,19 +53,29 @@ export default function Chatbot( { onClose, className } ) {
 
 	const [ input, setInputValue ] = useState( '' );
 
-	const { sendMessage } = useDispatch( aiStore );
+	const { sendMessage, receiveContent } = useDispatch( aiStore );
 
 	const sendPrompt = async ( message ) => {
-		let aiResponseText;
 		try {
-			const aiResponse = await sendMessage( chatId, message );
-			aiResponseText = helpers.contentToText( aiResponse );
+			await sendMessage( chatId, message );
 		} catch ( error ) {
+			let aiResponseText;
 			if ( getErrorChatResponse ) {
 				aiResponseText = getErrorChatResponse( error );
 			}
 			if ( aiResponseText ) {
-				// TODO: Amend history.
+				/*
+				 * Amend chat history to include the error response.
+				 * Include a special `type` property to indicate that this is an error.
+				 */
+				receiveContent(
+					chatId,
+					helpers.textToContent( message, 'user' )
+				);
+				receiveContent( chatId, {
+					...helpers.textToContent( aiResponseText, 'model' ),
+					type: 'error',
+				} );
 			} else {
 				console.error( error ); // eslint-disable-line no-console
 			}

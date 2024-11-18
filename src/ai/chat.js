@@ -124,8 +124,11 @@ const actions = {
 			try {
 				response = await session.sendMessage( newContent );
 			} catch ( error ) {
-				console.error( error?.message || error ); // eslint-disable-line no-console
 				dispatch.revertContent( chatId );
+				await dispatch( {
+					type: LOAD_CHAT_FINISH,
+					payload: { chatId },
+				} );
 				throw error;
 			}
 
@@ -233,7 +236,10 @@ function reducer( state = initialState, action ) {
 				...state,
 				chatHistories: {
 					...state.chatHistories,
-					[ chatId ]: [ ...state.chatHistories[ chatId ], content ],
+					[ chatId ]: [
+						...( state.chatHistories[ chatId ] || [] ),
+						content,
+					],
 				},
 			};
 		}

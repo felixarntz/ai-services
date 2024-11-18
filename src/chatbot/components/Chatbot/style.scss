@@ -143,6 +143,10 @@
 		&--assistant {
 			background-color: #2898ec;
 			color: #fff;
+
+			&.ai-services-error {
+				background-color: #d63638;
+			}
 		}
 
 		p {
@@ -192,6 +196,10 @@
 			border-right: 8px solid #2898ec;
 			left: -7px;
 			top: 13px;
+
+			&.ai-services-error {
+				border-right-color: #d63638;
+			}
 		}
 	}
 

@@ -31,6 +31,7 @@ export default function ChatbotMessage( { content, loading } ) {
 	const ResponseRenderer =
 		useChatbotConfig( 'ResponseRenderer' ) || DefaultResponseRenderer;
 	const classSuffix = content.role === 'user' ? 'user' : 'assistant';
+	const errorClass = content.type === 'error' ? ' ai-services-error' : '';
 
 	return (
 		<div
@@ -59,7 +60,7 @@ export default function ChatbotMessage( { content, loading } ) {
 			{ loading && <Loader /> }
 			{ ! loading && (
 				<div
-					className={ `ai-services-chatbot__message ai-services-chatbot__message--${ classSuffix }` }
+					className={ `ai-services-chatbot__message ai-services-chatbot__message--${ classSuffix }${ errorClass }` }
 				>
 					{ content.parts.map( ( part, index ) =>
 						!! part.text ? (
@@ -70,7 +71,7 @@ export default function ChatbotMessage( { content, loading } ) {
 						) : null
 					) }
 					<div
-						className={ `ai-services-chatbot__message-arrow ai-services-chatbot__message-arrow--${ classSuffix }` }
+						className={ `ai-services-chatbot__message-arrow ai-services-chatbot__message-arrow--${ classSuffix }${ errorClass }` }
 					></div>
 				</div>
 			) }

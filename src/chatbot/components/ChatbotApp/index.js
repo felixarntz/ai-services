@@ -30,6 +30,26 @@ import './style.scss';
 const CHAT_ID = 'wpspChatbotPrimary';
 const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_GENERATION ] };
 
+const retrieveVisibility = () => {
+	const chatbotVisibility = window.sessionStorage.getItem(
+		'ai-services-built-in-chatbot-visibility'
+	);
+	return chatbotVisibility === 'visible';
+};
+
+const storeVisibility = ( isVisible ) => {
+	if ( isVisible ) {
+		window.sessionStorage.setItem(
+			'ai-services-built-in-chatbot-visibility',
+			'visible'
+		);
+	} else {
+		window.sessionStorage.removeItem(
+			'ai-services-built-in-chatbot-visibility'
+		);
+	}
+};
+
 const getErrorChatResponse = ( error ) => {
 	return (
 		__(
@@ -116,8 +136,16 @@ export default function ChatbotApp() {
 
 	const [ isVisible, setIsVisible ] = useState( false );
 
+	useEffect( () => {
+		const initialVisibility = retrieveVisibility();
+		if ( initialVisibility ) {
+			setIsVisible( true );
+		}
+	}, [ setIsVisible ] );
+
 	const toggleVisibility = useCallback( () => {
 		setIsVisible( ! isVisible );
+		storeVisibility( ! isVisible );
 
 		// Focus on the toggle when the chatbot is closed.
 		if ( isVisible && toggleButtonRef.current ) {

@@ -94,6 +94,7 @@ const getChatbotConfig = ( serviceName ) => {
 				: '',
 			closeButton: __( 'Close chatbot', 'ai-services' ),
 			sendButton: __( 'Send prompt', 'ai-services' ),
+			inputLabel: __( 'Chatbot input', 'ai-services' ),
 			inputPlaceholder: __( 'Write your message here', 'ai-services' ),
 		},
 		initialBotMessage: __( 'How can I help you?', 'ai-services' ),

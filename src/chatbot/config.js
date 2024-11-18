@@ -33,6 +33,7 @@ ChatbotConfigProvider.propTypes = {
 			subtitle: PropTypes.string,
 			closeButton: PropTypes.string,
 			sendButton: PropTypes.string,
+			inputLabel: PropTypes.string,
 			inputPlaceholder: PropTypes.string,
 		} ),
 		initialBotMessage: PropTypes.string,

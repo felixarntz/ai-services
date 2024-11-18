@@ -144,7 +144,14 @@ export default function Chatbot( { onClose, className } ) {
 						className="ai-services-chatbot__input-form"
 						onSubmit={ handleSubmit }
 					>
+						<label
+							htmlFor="ai-services-chatbot-input"
+							className="screen-reader-text"
+						>
+							{ labels.inputLabel }
+						</label>
 						<input
+							id="ai-services-chatbot-input"
 							className="ai-services-chatbot__input"
 							placeholder={ labels.inputPlaceholder }
 							value={ input }

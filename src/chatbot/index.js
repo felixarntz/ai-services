@@ -1,9 +1,4 @@
 /**
- * External dependencies
- */
-import { store as aiStore } from '@ai-services/ai';
-
-/**
  * WordPress dependencies
  */
 import domReady from '@wordpress/dom-ready';
@@ -37,8 +32,6 @@ domReady( () => {
 	if ( ! renderTarget ) {
 		return;
 	}
-
-	console.log( 'Chatbot loaded, using store:', aiStore.name ); // eslint-disable-line no-console
 
 	mountApp( <ChatbotApp />, renderTarget );
 } );

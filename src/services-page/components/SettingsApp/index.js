@@ -7,8 +7,8 @@ import {
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
-	PluginIcon,
-} from '@ai-services/components';
+} from '@ai-services/interface';
+import { PluginIcon } from '@ai-services/components';
 
 /**
  * WordPress dependencies

@@ -4,7 +4,7 @@
 import {
 	DistractionFreePreferenceToggleMenuItem,
 	KeyboardShortcutsMenuItem,
-} from '@ai-services/components';
+} from '@ai-services/interface';
 
 /**
  * WordPress dependencies

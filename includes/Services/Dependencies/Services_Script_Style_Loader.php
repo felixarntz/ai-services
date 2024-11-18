@@ -95,6 +95,15 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->script_registry->register(
+			'ais-interface',
+			array(
+				'src'      => $this->plugin_env->url( 'build/interface/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/interface/index.asset.php' ),
+				'strategy' => 'defer',
+			)
+		);
+
+		$this->script_registry->register(
 			'ais-services-page',
 			array(
 				'src'      => $this->plugin_env->url( 'build/services-page/index.js' ),
@@ -109,6 +118,16 @@ class Services_Script_Style_Loader {
 				'src'          => $this->plugin_env->url( 'build/components/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/components/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/components/index.asset.php' ),
+				'dependencies' => array( 'wp-components' ),
+			)
+		);
+
+		$this->style_registry->register(
+			'ais-interface',
+			array(
+				'src'          => $this->plugin_env->url( 'build/interface/style-index.css' ),
+				'path'         => $this->plugin_env->path( 'build/interface/style-index.css' ),
+				'manifest'     => $this->plugin_env->path( 'build/interface/index.asset.php' ),
 				'dependencies' => array( 'wp-components', 'wp-editor' ),
 			)
 		);
@@ -119,7 +138,7 @@ class Services_Script_Style_Loader {
 				'src'          => $this->plugin_env->url( 'build/services-page/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/services-page/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/services-page/index.asset.php' ),
-				'dependencies' => array( 'wp-components', 'ais-components' ),
+				'dependencies' => array( 'wp-components', 'ais-components', 'ais-interface' ),
 			)
 		);
 	}

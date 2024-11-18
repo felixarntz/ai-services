@@ -89,10 +89,13 @@ const ResponseRenderer = ( { text } ) => {
 				linkText: '',
 			};
 		}
+
+		// If the response includes something after the link text, remove it.
+		const cleanLinkText = parts[ 2 ].split( '\n' )[ 0 ];
 		return {
 			text: parts[ 0 ].trim(),
 			linkUrl: parts[ 1 ].trim(),
-			linkText: parts[ 2 ].trim(),
+			linkText: cleanLinkText.trim(),
 		};
 	}, [ text ] );
 

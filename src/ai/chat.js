@@ -32,19 +32,44 @@ const initialState = {
 	chatsLoading: {},
 };
 
+/**
+ * Sanitizes the chat history to remove any unsupported properties.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object[]} history Chat history.
+ * @return {Object[]} Sanitized chat history.
+ */
+function sanitizeHistory( history ) {
+	return history.map( ( content ) => {
+		if (
+			content.role &&
+			content.parts &&
+			Object.keys( content ).length > 2
+		) {
+			return {
+				role: content.role,
+				parts: content.parts,
+			};
+		}
+		return content;
+	} );
+}
+
 const actions = {
 	/**
 	 * Starts a chat session.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param {string} chatId              Identifier to use for the chat.
-	 * @param {Object} options             Chat options.
-	 * @param {string} options.service     AI service to use.
-	 * @param {Object} options.modelParams Model parameters (including optional model slug).
+	 * @param {string}   chatId              Identifier to use for the chat.
+	 * @param {Object}   options             Chat options.
+	 * @param {string}   options.service     AI service to use.
+	 * @param {Object}   options.modelParams Model parameters (including optional model slug).
+	 * @param {Object[]} options.history     Chat history.
 	 * @return {Function} Action creator.
 	 */
-	startChat( chatId, { service, modelParams } ) {
+	startChat( chatId, { service, modelParams, history } ) {
 		return async ( { dispatch, select } ) => {
 			if ( select.getServices() === undefined ) {
 				await resolveSelect( STORE_NAME ).getServices();
@@ -74,11 +99,8 @@ const actions = {
 				service || SERVICE_ARGS
 			);
 
-			// TODO: Support history persistence.
-			const history = [];
-
 			const model = aiService.getModel( modelParams );
-			const session = model.startChat( history );
+			const session = model.startChat( sanitizeHistory( history || [] ) );
 
 			dispatch.receiveChat( chatId, {
 				session,

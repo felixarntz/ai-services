@@ -25,12 +25,13 @@ import './style.scss';
  *
  * @since n.e.x.t
  *
- * @param {Object}   props           Component props.
- * @param {Function} props.onClose   Function to call when the close button is clicked.
- * @param {string}   props.className Class name to use on the chatbot container.
+ * @param {Object}   props                  Component props.
+ * @param {Function} props.onUpdateMessages Function to call when the history of messages is updated.
+ * @param {Function} props.onClose          Function to call when the close button is clicked.
+ * @param {string}   props.className        Class name to use on the chatbot container.
  * @return {Component} The component to be rendered.
  */
-export default function Chatbot( { onClose, className } ) {
+export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 	const chatId = useChatbotConfig( 'chatId' );
 	const labels = useChatbotConfig( 'labels' );
 	const initialBotMessage = useChatbotConfig( 'initialBotMessage' );
@@ -97,6 +98,14 @@ export default function Chatbot( { onClose, className } ) {
 	const loading = useSelect( ( select ) =>
 		select( aiStore ).isChatLoading( chatId )
 	);
+
+	useEffect( () => {
+		if ( ! onUpdateMessages ) {
+			return;
+		}
+		const timeout = setTimeout( () => onUpdateMessages( messages ), 500 );
+		return () => clearTimeout( timeout );
+	}, [ messages, onUpdateMessages ] );
 
 	const handleSubmit = ( event ) => {
 		event.preventDefault();

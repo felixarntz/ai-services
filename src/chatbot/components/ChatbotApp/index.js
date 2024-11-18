@@ -50,6 +50,20 @@ const storeVisibility = ( isVisible ) => {
 	}
 };
 
+const retrieveHistory = () => {
+	const chatbotHistory = window.sessionStorage.getItem(
+		'ai-services-built-in-chatbot-history'
+	);
+	return chatbotHistory ? JSON.parse( chatbotHistory ) : [];
+};
+
+const storeHistory = ( history ) => {
+	window.sessionStorage.setItem(
+		'ai-services-built-in-chatbot-history',
+		JSON.stringify( history )
+	);
+};
+
 const getErrorChatResponse = ( error ) => {
 	return (
 		__(
@@ -175,6 +189,7 @@ export default function ChatbotApp() {
 					modelParams: {
 						feature: 'ai-services-chatbot',
 					},
+					history: retrieveHistory(),
 				} );
 			}
 		}
@@ -214,7 +229,10 @@ export default function ChatbotApp() {
 			>
 				{ isVisible && hasChat && (
 					<ChatbotConfigProvider config={ config }>
-						<Chatbot onClose={ toggleVisibility } />
+						<Chatbot
+							onUpdateMessages={ storeHistory }
+							onClose={ toggleVisibility }
+						/>
 					</ChatbotConfigProvider>
 				) }
 			</div>

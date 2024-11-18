@@ -142,7 +142,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 					&& ! str_contains( $model_slug, '-instruct' )
 					&& ! str_contains( $model_slug, '-realtime' )
 					&& ! str_contains( $model_slug, '-audio' )
-                ) {
+				) {
 					if ( str_starts_with( $model_slug, 'gpt-4o' ) ) {
 						$model_caps[ $model_slug ] = $gpt_multimodal_capabilities;
 					} else {

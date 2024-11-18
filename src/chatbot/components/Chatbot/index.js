@@ -37,6 +37,7 @@ export default function Chatbot( { onClose, className } ) {
 	const getErrorChatResponse = useChatbotConfig( 'getErrorChatResponse' );
 
 	const messagesContainerRef = useRef();
+	const inputRef = useRef();
 
 	const scrollIntoView = () => {
 		setTimeout( () => {
@@ -47,9 +48,17 @@ export default function Chatbot( { onClose, className } ) {
 		}, 50 );
 	};
 
+	// Scroll to the latest message when the component mounts.
 	useEffect( () => {
 		scrollIntoView();
 	} );
+
+	// Focus on the input when the component mounts.
+	useEffect( () => {
+		if ( inputRef.current ) {
+			inputRef.current.focus();
+		}
+	}, [ inputRef ] );
 
 	const [ input, setInputValue ] = useState( '' );
 
@@ -142,6 +151,7 @@ export default function Chatbot( { onClose, className } ) {
 							onChange={ ( event ) =>
 								setInputValue( event.target.value )
 							}
+							ref={ inputRef }
 						/>
 						<button className="ai-services-chatbot__btn-send">
 							<SendIcon className="ai-services-chatbot__btn-send-icon" />

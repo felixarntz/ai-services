@@ -268,6 +268,12 @@ try {
 }
 ```
 
+### Using the browser built-in on-device AI
+
+In JavaScript the AI Services plugin allows using another service `browser`, additionally to using the third party API based AI services. This service relies on [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis), which allow using AI in the browser, running on device, which can be a great option for certain use-cases as it does not require paying for API access and does not involve sending your prompts to an external third-party API.
+
+Note that these APIs are still in an experimental stage and are not yet rolled out completely. If you use Chrome and already have access to the APIs, you can use them through the AI Services plugin just like any other service's APIs. To see whether you have access, check if `window.ai.assistant` is available in your browser console. If not, you can [request to join the Early Preview Program](http://goo.gle/chrome-ai-dev-preview-join).
+
 ### Customizing the default model configuration
 
 When retrieving a model using the `getModel()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. The `generationConfig` key needs to contain an object with configuration arguments. These arguments are normalized in a way that works across the different AI services and their APIs.

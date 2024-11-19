@@ -305,6 +305,7 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 
 **Bug Fixes:**
 
+* Remove prefix from base64 inline image data for Anthropic AI integration. Props [mslinnea](https://github.com/mslinnea). ([#19](https://github.com/felixarntz/ai-services/pull/19))
 * Fix bug in `CandidatesStreamProcessor` in JS, leading to stream responses to not being aggregated correctly. ([969b554](https://github.com/felixarntz/ai-services/commit/969b55414945dc598528f894f741ae92b151adea))
 * Fix OpenAI model definitions by restricting to `gpt-4o` models for multimodal support. Props [mslinnea](https://github.com/mslinnea). ([#18](https://github.com/felixarntz/ai-services/pull/18))
 * Split components package into distinct components and interface packages to better separate responsibilities and avoid JS warning outside of AI Services admin screen. Props [westonruter](https://github.com/westonruter). ([056461c](https://github.com/felixarntz/ai-services/commit/056461c92014926777172424073eb70aac172b5d), [#13](https://github.com/felixarntz/ai-services/issues/13))

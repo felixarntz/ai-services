@@ -56,6 +56,22 @@ function sanitizeHistory( history ) {
 	} );
 }
 
+/**
+ * Processes a stream of content and yields its chunks.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}   responseGenerator The generator that yields the chunks of content.
+ * @param {Function} completeCallback  Callback that is called once the generator has been processed.
+ * @return {Object} The generator that yields the chunks of content.
+ */
+async function* processContentStream( responseGenerator, completeCallback ) {
+	for await ( const response of responseGenerator ) {
+		yield response;
+	}
+	completeCallback();
+}
+
 const actions = {
 	/**
 	 * Starts a chat session.
@@ -162,6 +178,59 @@ const actions = {
 			} );
 
 			return response;
+		};
+	},
+
+	/**
+	 * Sends a message to the chat, streaming the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string}                 chatId  Identifier of the chat.
+	 * @param {string|Object|Object[]} content Chat message content.
+	 * @return {Function} Action creator.
+	 */
+	streamSendMessage( chatId, content ) {
+		return async ( { dispatch } ) => {
+			const session = chatSessionInstances[ chatId ];
+			if ( ! session ) {
+				// eslint-disable-next-line no-console
+				console.error( `Chat ${ chatId } not found.` );
+				return;
+			}
+
+			const newContent = formatNewContent( content );
+			dispatch.receiveContent( chatId, newContent );
+
+			await dispatch( {
+				type: LOAD_CHAT_START,
+				payload: { chatId },
+			} );
+
+			let responseGenerator;
+			try {
+				responseGenerator =
+					await session.streamSendMessage( newContent );
+			} catch ( error ) {
+				dispatch.revertContent( chatId );
+				await dispatch( {
+					type: LOAD_CHAT_FINISH,
+					payload: { chatId },
+				} );
+				throw error;
+			}
+
+			await dispatch( {
+				type: LOAD_CHAT_FINISH,
+				payload: { chatId },
+			} );
+
+			return processContentStream( responseGenerator, () => {
+				// Once the stream is complete, get the final response from the chat session and dispatch it.
+				const history = session.getHistory();
+				const response = { ...history[ history.length - 1 ] };
+				dispatch.receiveContent( chatId, response );
+			} );
 		};
 	},
 

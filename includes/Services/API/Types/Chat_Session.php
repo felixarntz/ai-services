@@ -13,6 +13,7 @@ use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Generator;
 use InvalidArgumentException;
 
 /**
@@ -105,6 +106,60 @@ final class Chat_Session {
 		$this->history[] = $response_content;
 
 		return $response_content;
+	}
+
+	/**
+	 * Sends a chat message to the model, streaming the response.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|Parts|Content $content         The message to send.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Generator<Content> Generator that yields the chunks of content with generated text.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
+	 */
+	public function stream_send_message( $content, array $request_options = array() ): Generator {
+		$new_content = Formatter::format_new_content( $content );
+
+		$contents   = $this->history;
+		$contents[] = $new_content;
+
+		$candidate_filter_args = array();
+		if ( isset( $request_options['candidate_filter_args'] ) ) {
+			$candidate_filter_args = $request_options['candidate_filter_args'];
+			unset( $request_options['candidate_filter_args'] );
+		}
+
+		$candidates_generator = $this->model->stream_generate_text( $contents, $request_options );
+
+		$candidates_processor = Helpers::process_candidates_stream( $candidates_generator );
+		foreach ( $candidates_generator as $candidates ) {
+			if ( $candidate_filter_args ) {
+				$candidates = $candidates->filter( $candidate_filter_args );
+			}
+
+			if ( count( $candidates ) === 0 ) {
+				throw new Generative_AI_Exception(
+					esc_html__( 'The response did not include any relevant candidates.', 'ai-services' )
+				);
+			}
+
+			$candidates_processor->add_chunk( $candidates );
+
+			$partial_contents = Helpers::get_candidate_contents( $candidates );
+			$partial_content  = $partial_contents[0];
+
+			yield $partial_content;
+		}
+
+		$complete_candidates = $candidates_processor->get_complete();
+
+		$complete_contents = Helpers::get_candidate_contents( $complete_candidates );
+		$complete_content  = $complete_contents[0];
+
+		$this->history[] = $new_content;
+		$this->history[] = $complete_content;
 	}
 
 	/**

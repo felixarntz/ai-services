@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\HTTP\Contracts\With_Stream
  *
- * @since n.e.x.t
+ * @since 0.3.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use Generator;
 /**
  * Interface for a class that contains a readable stream.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  */
 interface With_Stream {
 
 	/**
 	 * Returns a generator that reads individual chunks of decoded JSON data from the streamed response body.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return Generator The generator for the response stream.
 	 */

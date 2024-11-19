@@ -74,7 +74,7 @@ export default class GenerativeAiService {
 	/**
 	 * Gets a generative model instance from the service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {Object} modelParams Model parameters. At a minimum this must include the unique "feature" identifier. It
 	 *                             can also include the model slug and other optional parameters.
@@ -128,7 +128,7 @@ export default class GenerativeAiService {
 	 *
 	 * This is a short-hand method for `service.getModel( modelParams ).streamGenerateText( content )`.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional
 	 *                                             history.

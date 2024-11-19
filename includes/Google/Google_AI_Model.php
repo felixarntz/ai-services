@@ -186,7 +186,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -219,7 +219,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Prepares the API request parameters for generating text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating text content.
@@ -310,7 +310,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Merges a streaming response chunk with the previous candidates data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $candidates_data The candidates data from the previous chunk.
 	 * @param array<string, mixed> $chunk_data      The response chunk data.
@@ -336,7 +336,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Transforms a given candidate from the API response into a Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $candidate_data The API response candidate data.
 	 * @param int                  $index          The index of the candidate in the response.
@@ -365,7 +365,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Checks that the response includes candidates with content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed>[] $candidates_data The candidates data from the response.
 	 *

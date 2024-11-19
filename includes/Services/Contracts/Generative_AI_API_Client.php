@@ -35,7 +35,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Processes the response data from the API.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Response $response         The response instance. Must not be a stream response, i.e. not implement the
 	 *                                   With_Stream interface.
@@ -51,7 +51,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Processes the response data stream from the API.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Response $response         The response instance. Must implement With_Stream. The response data will
 	 *                                   be processed in chunks, with each chunk of data being passed to the process
@@ -69,7 +69,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a new exception for an AI API request error.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string $message The error message to include in the exception.
 	 * @return Generative_AI_Exception The exception instance.
@@ -79,7 +79,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a new exception for an AI API response error.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string $message The error message to include in the exception.
 	 * @return Generative_AI_Exception The exception instance.
@@ -89,7 +89,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a new exception for an AI API response error for a missing key.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string $key The missing key in the response data.
 	 * @return Generative_AI_Exception The exception instance.

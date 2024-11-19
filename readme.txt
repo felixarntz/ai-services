@@ -5,7 +5,7 @@ Plugin URI:   https://wordpress.org/plugins/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Tested up to: 6.7
-Stable tag:   0.2.0
+Stable tag:   0.3.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -269,6 +269,54 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 1. The AI Services settings screen where end users can paste their AI service credentials
 
 == Changelog ==
+
+= 0.3.0 =
+
+**Features:**
+
+* Add text streaming support to generative models in JavaScript. ([9967db5](https://github.com/felixarntz/ai-services/commit/9967db5ac2c7d659345a01bb6acc52978c9278ef), [#3](https://github.com/felixarntz/ai-services/issues/3))
+* Introduce REST route to stream generate text, using an event stream. ([071a664](https://github.com/felixarntz/ai-services/commit/071a664e7b0693870b3f0b822451410bdc5e1875), [#3](https://github.com/felixarntz/ai-services/issues/3))
+* Add text streaming support to all built-in services Anthropic, Google, OpenAI. ([e27697a](https://github.com/felixarntz/ai-services/commit/e27697a581204652c8eb08fb37775e185cbb376a), [#3](https://github.com/felixarntz/ai-services/issues/3))
+* Introduce API foundation for streaming text responses. ([9476333](https://github.com/felixarntz/ai-services/commit/9476333b0b4e0a968eef6a84743924caaa2be844))
+
+**Enhancements:**
+
+* Polish and complete implementation of Chrome browser built-in AI integration. ([1beb2c5](https://github.com/felixarntz/ai-services/commit/1beb2c5748821ccd2efed31592f99dd03d41423a), [#6](https://github.com/felixarntz/ai-services/issues/6))
+* Support text streaming in chat implementations in both PHP and JavaScript. ([9e11c03](https://github.com/felixarntz/ai-services/commit/9e11c034b2f5906b54f33e40a3b0645cc199379f), [#3](https://github.com/felixarntz/ai-services/issues/3))
+* Use streaming by default for the built-in chatbot. ([3f6266b](https://github.com/felixarntz/ai-services/commit/3f6266b81893b2abcaa8774eb513c3ca3845b1f7))
+* Use streaming by default for WP-CLI text generation, customizable via filter. ([f9be4ad](https://github.com/felixarntz/ai-services/commit/f9be4ad955400aa825235f86868445067d2e831e))
+* Remove unnecessary `console.log` call for chatbot. ([7637632](https://github.com/felixarntz/ai-services/commit/7637632e92c04338b096f7ec7696a93d80693623))
+* Persist chatbot messages history in session storage. ([a349274](https://github.com/felixarntz/ai-services/commit/a349274a4b072a1676410151079dd49f224c9b5b), [#4](https://github.com/felixarntz/ai-services/issues/4))
+* Persist chatbot visibility across page loads. ([81a0511](https://github.com/felixarntz/ai-services/commit/81a051151aed336312b59dcca5205b77fa372cd6), [#4](https://github.com/felixarntz/ai-services/issues/4))
+* Include chatbot input label for screen reader users for better accessibility. ([94026e5](https://github.com/felixarntz/ai-services/commit/94026e5fed3f14977ba4ad57321755e450816a8c), [#4](https://github.com/felixarntz/ai-services/issues/4))
+* Improve chatbot accessibility by focusing on input when the chatbot is opened. ([7b5c6f4](https://github.com/felixarntz/ai-services/commit/7b5c6f4eb7b42beb823dcbc268245df887cbbf2d), [#4](https://github.com/felixarntz/ai-services/issues/4))
+* Improve chatbot error handling by displaying technical errors as a chatbot response. ([e57d716](https://github.com/felixarntz/ai-services/commit/e57d7165c255536015ffadb136b6181900b816b0))
+* Show loading ellipsis in chatbot while generating text response. ([db79515](https://github.com/felixarntz/ai-services/commit/db7951596fd95e9f5c0b448f2f39b87336b96413), [#4](https://github.com/felixarntz/ai-services/issues/4))
+* Handle errors during browser AI session creation more gracefully. ([0edd56f](https://github.com/felixarntz/ai-services/commit/0edd56f350deced5dde25bab84c5377f42365add))
+* Consistently handle AI temperature parameter between services, expecting a value between 0.0 and 1.0. ([e7ae611](https://github.com/felixarntz/ai-services/commit/e7ae611b34edbf82ec6cd9fa9ee97cfa7d4423a6))
+* Improve error handling in chat store and built-in chatbot. ([06b2340](https://github.com/felixarntz/ai-services/commit/06b23400c2c8837977a8ba3a43d4cdee44d81789))
+* Expand AI capabilities with `CHAT_HISTORY` capability to differentiate between whether text generation models support history. ([4c2feb4](https://github.com/felixarntz/ai-services/commit/4c2feb4112f9dda700a34f425eb3eab0831bee13))
+* Provide helper function in PHP and JS to aggregate chunks from candidates stream into final candidates response. ([a27bdf6](https://github.com/felixarntz/ai-services/commit/a27bdf65042200d9f55ee3a4c83bb56d0d31032f), [#3](https://github.com/felixarntz/ai-services/issues/3))
+* Ensure third-party production libraries are always backward compatible with minimum supported PHP version by separating tooling. ([e4fe291](https://github.com/felixarntz/ai-services/commit/e4fe2919da046e742dc2c40d4b1a5e90e3e480bd))
+* Enhance JavaScript API with model instances for better parity with PHP API, while continuing to allow previous approach as short-hand syntax. ([7992d6d](https://github.com/felixarntz/ai-services/commit/7992d6dd5adb72ea57857f5f5c548563f0e30000))
+* Restructure JavaScript code into separate files per class. ([cd8d90d](https://github.com/felixarntz/ai-services/commit/cd8d90da9bfa59fcb31174279ef41c36fde60e55))
+* Remove specific API client interface methods that should not be required for the interface. ([140d7c1](https://github.com/felixarntz/ai-services/commit/140d7c128875b5a73c5a31a93e4f1793ea3599d0))
+* Allow candidates to have no content. ([c072689](https://github.com/felixarntz/ai-services/commit/c072689ebff295ff40de1e8bd57e3abc28b35c14))
+
+**Bug Fixes:**
+
+* Fix bug in `CandidatesStreamProcessor` in JS, leading to stream responses to not being aggregated correctly. ([969b554](https://github.com/felixarntz/ai-services/commit/969b55414945dc598528f894f741ae92b151adea))
+* Fix OpenAI model definitions by restricting to `gpt-4o` models for multimodal support. Props [mslinnea](https://github.com/mslinnea). ([#18](https://github.com/felixarntz/ai-services/pull/18))
+* Split components package into distinct components and interface packages to better separate responsibilities and avoid JS warning outside of AI Services admin screen. Props [westonruter](https://github.com/westonruter). ([056461c](https://github.com/felixarntz/ai-services/commit/056461c92014926777172424073eb70aac172b5d), [#13](https://github.com/felixarntz/ai-services/issues/13))
+* Fix chatbot bug where unexpected AI response could lead to link button to contain unexpected label and overflow its container. ([66f3578](https://github.com/felixarntz/ai-services/commit/66f357883371d6d14a3805615ace681a411d4741))
+* Fix UI warnings in WordPress 6.7 due to JS component updates. ([6e8d231](https://github.com/felixarntz/ai-services/commit/6e8d2317d2db9d049efd3ce9e63c128bc7fe72a3))
+* Fix failing Anthropic API requests when no generation config was provided. ([33db20b](https://github.com/felixarntz/ai-services/commit/33db20be1e4179d0776401090f363456994c98a3))
+
+**Documentation:**
+
+* Include documentation section about using browser built-in AI in JavaScript. ([91c5be7](https://github.com/felixarntz/ai-services/commit/91c5be76a46091d235d7eeeb78f44ae0178a9c1d), [#6](https://github.com/felixarntz/ai-services/issues/6))
+* Expand documentation to explain how to customize model configuration. ([930058a](https://github.com/felixarntz/ai-services/commit/930058ab3e8ffbbb6adadbbb4022887b6be17e89))
+* Expand documentation to cover how to use new text streaming capabilities in PHP and JS. ([20d028b](https://github.com/felixarntz/ai-services/commit/20d028ba3cade8d1c98a7694ce51816515d7cc84), [#3](https://github.com/felixarntz/ai-services/issues/3))
 
 = 0.2.0 =
 

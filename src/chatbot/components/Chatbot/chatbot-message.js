@@ -29,7 +29,7 @@ const defaultRenderStreamResponse = ( text ) => {
 /**
  * Renders a chatbot message.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object}  props                  Component props.
  * @param {Object}  props.content          The message content object.

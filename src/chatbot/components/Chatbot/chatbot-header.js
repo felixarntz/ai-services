@@ -11,7 +11,7 @@ import { useChatbotConfig } from '../../config';
 /**
  * Renders the chatbot header.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object}   props         Component props.
  * @param {Function} props.onClose Function to call when the close button is clicked.

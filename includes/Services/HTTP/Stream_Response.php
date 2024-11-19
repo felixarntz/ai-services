@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\HTTP\Stream_Response
  *
- * @since n.e.x.t
+ * @since 0.3.0
  * @package ai-services
  */
 
@@ -18,7 +18,7 @@ use IteratorAggregate;
 /**
  * Class for a HTTP response that uses streaming.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @implements IteratorAggregate<Generator>
  */
@@ -27,7 +27,7 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	/**
 	 * The stream to read from.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 * @var StreamInterface
 	 */
 	private $stream;
@@ -35,7 +35,7 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param int                   $status  The HTTP status code received with the response.
 	 * @param StreamInterface       $stream  The response body stream to read from.
@@ -52,7 +52,7 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	/**
 	 * Returns a generator that reads individual chunks of decoded JSON data from the streamed response body.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return Generator The generator for the response stream.
 	 */
@@ -70,7 +70,7 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	/**
 	 * Retrieves an iterator reading individual chunks of decoded JSON data from the streamed response body.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return Generator The iterator for the response stream.
 	 */
@@ -81,7 +81,7 @@ class Stream_Response extends Generic_Response implements With_Stream, IteratorA
 	/**
 	 * Reads a line from the stream.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param StreamInterface $stream The stream to read from.
 	 * @return string The line read from the stream.

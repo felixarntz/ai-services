@@ -492,7 +492,7 @@ final class AI_Services_Command {
 		 * Streaming will print the generated text as it comes in, providing more immediate feedback, which can be
 		 * especially useful for long-running generation tasks.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.3.0
 		 *
 		 * @param bool $use_streaming Whether to use streaming for generating text content in WP-CLI. Default is true.
 		 */
@@ -669,7 +669,7 @@ final class AI_Services_Command {
 	/**
 	 * Generates text content using the given generative model, streaming the response and printing it as it comes in.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Generative_AI_Model $model  The model to use.
 	 * @param string              $prompt The text prompt to generate content for.

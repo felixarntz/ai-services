@@ -155,7 +155,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -188,7 +188,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Prepares the API request parameters for generating text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating text content.
@@ -273,7 +273,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Merges a streaming response chunk with the previous candidates data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $candidates_data The candidates data from the previous chunk.
 	 * @param array<string, mixed> $chunk_data      The response chunk data.
@@ -317,7 +317,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	/**
 	 * Transforms a given choice from the API response into a Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $choice_data The API response candidate data.
 	 * @param int                  $index       The index of the choice in the response.

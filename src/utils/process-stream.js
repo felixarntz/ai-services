@@ -1,7 +1,7 @@
 /**
  * Processes a streaming response from the server, returning a generator that receives chunks of data.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Response} response The response object.
  * @return {Object} The generator that yields chunks of data.
@@ -17,7 +17,7 @@ export default function processStream( response ) {
 /**
  * Gets a generator that yields chunks of data from a stream.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {ReadableStream} stream The stream object.
  * @return {Object} The generator that yields chunks of data.
@@ -43,7 +43,7 @@ const chunkLineRegex = /^data\: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
  * Each chunk is parsed and yielded as an object. If parsing fails, an error is logged and the chunk is skipped.
  * The stream is closed when the input stream is closed, and cancelled when the input stream is cancelled.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {ReadableStream} inputStream The input stream.
  * @return {ReadableStream} The output stream.
@@ -54,7 +54,7 @@ function getResponseStream( inputStream ) {
 		/**
 		 * Processes the input stream and enqueues chunks of data.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.3.0
 		 *
 		 * @param {ReadableStreamDefaultController} controller The stream controller.
 		 */
@@ -96,7 +96,7 @@ function getResponseStream( inputStream ) {
 		/**
 		 * Cancels the input stream.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.3.0
 		 */
 		cancel() {
 			reader.cancel();

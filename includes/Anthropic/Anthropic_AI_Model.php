@@ -155,7 +155,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -197,7 +197,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	/**
 	 * Prepares the API request parameters for generating text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating text content.
@@ -236,7 +236,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	/**
 	 * Extracts the candidates with content from the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $response_data         The response data.
 	 * @param ?Candidates          $prev_chunk_candidates The candidates from the previous chunk in case of a streaming
@@ -291,7 +291,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	/**
 	 * Merges a streaming response chunk with the previous candidate data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $candidate_data The candidate data from the previous chunk.
 	 * @param array<string, mixed> $chunk_data     The response chunk data.

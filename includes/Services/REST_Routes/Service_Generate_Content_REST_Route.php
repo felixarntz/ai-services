@@ -149,7 +149,7 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Generates content using the given service and model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Generative_AI_Service          $service The service instance.
 	 * @param Generative_AI_Model            $model   The model instance.

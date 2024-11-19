@@ -1,7 +1,7 @@
 /**
  * Appends the content of a new candidate to the content of an existing candidate.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object} existingContent The existing content data.
  * @param {Object} newContent      The new content data.
@@ -41,13 +41,13 @@ function appendContent( existingContent, newContent ) {
 /**
  * Class to process a candidates stream.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  */
 export default class CandidatesStreamProcessor {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {Object} generator The generator that yields chunks of response candidates with the generated text
 	 *                           content.
@@ -63,7 +63,7 @@ export default class CandidatesStreamProcessor {
 	 * A callback can be passed that is called for each chunk of candidates. You could use such a callback for example
 	 * to echo the text contents of each chunk as they are being processed.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {Function|null} chunkCallback Optional. Callback that is called for each chunk of candidates.
 	 * @return {Promise<Object[]>} The complete candidates instance.
@@ -82,7 +82,7 @@ export default class CandidatesStreamProcessor {
 	/**
 	 * Adds a chunk of candidates to the overall candidates instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {Object} candidates The chunk of candidates to add.
 	 */
@@ -121,7 +121,7 @@ export default class CandidatesStreamProcessor {
 	/**
 	 * Gets the complete candidates instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return {Object[]|null} The complete candidates instance, or null if the generator is not done yet.
 	 */

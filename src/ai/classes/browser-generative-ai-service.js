@@ -17,7 +17,7 @@ export default class BrowserGenerativeAiService extends GenerativeAiService {
 	/**
 	 * Gets a generative model instance from the service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {Object} modelParams Model parameters. At a minimum this must include the unique "feature" identifier. It
 	 *                             can also include the model slug and other optional parameters.

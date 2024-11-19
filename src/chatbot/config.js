@@ -14,7 +14,7 @@ const { Provider } = ChatbotConfigContext;
 /**
  * Provides the chatbot configuration to child components.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object}  props          Component props.
  * @param {Object}  props.config   The chat configuration object.
@@ -48,7 +48,7 @@ ChatbotConfigProvider.propTypes = {
 /**
  * A hook that returns a value from the chat configuration.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {string} key The configuration key.
  * @return {*} The configuration value, or undefined.

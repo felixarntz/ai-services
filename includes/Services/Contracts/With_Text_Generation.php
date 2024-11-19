@@ -40,7 +40,7 @@ interface With_Text_Generation {
 	/**
 	 * Generates text content using the model, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).

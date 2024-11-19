@@ -46,7 +46,7 @@ trait With_Text_Generation_Trait {
 	/**
 	 * Generates text content using the model, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         Prompt for the content to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).
@@ -65,7 +65,7 @@ trait With_Text_Generation_Trait {
 	/**
 	 * Sanitizes the input content for generating text.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string|Parts|Content|Content[] $content The input content.
 	 * @return Content[] The sanitized content.
@@ -119,7 +119,7 @@ trait With_Text_Generation_Trait {
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.

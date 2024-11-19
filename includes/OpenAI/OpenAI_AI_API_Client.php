@@ -87,7 +87,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Creates a stream request instance to generate content using the specified model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $params          The request parameters.

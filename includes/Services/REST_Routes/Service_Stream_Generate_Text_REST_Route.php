@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Stream_Generate_Text_REST_Route
  *
- * @since n.e.x.t
+ * @since 0.3.0
  * @package ai-services
  */
 
@@ -21,7 +21,7 @@ use WP_REST_Server;
 /**
  * Class representing the REST API route for generating text content, streaming the response.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  */
 class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST_Route {
 	const BASE    = '/services/(?P<slug>[\w-]+):stream-generate-text';
@@ -30,7 +30,7 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 	/**
 	 * Returns the route base.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return string Route base.
 	 */
@@ -41,7 +41,7 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 	/**
 	 * Returns the route methods, as a comma-separated string.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return string Route methods, as a comma-separated string.
 	 */
@@ -52,7 +52,7 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 	/**
 	 * Generates content using the given service and model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Generative_AI_Service          $service The service instance.
 	 * @param Generative_AI_Model            $model   The model instance.
@@ -77,7 +77,7 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 	/**
 	 * Sends the candidates chunks in the generator as a streamed response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Generator<Candidates> $candidates_generator The generator yielding the candidates chunks.
 	 *
@@ -110,7 +110,7 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 	/**
 	 * Configures the environment for streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @SuppressWarnings(PHPMD.ErrorControlOperator)
 	 */
@@ -136,7 +136,7 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 	/**
 	 * Sends necessary headers for the streamed response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 */
 	private function send_stream_headers(): void {
 		header( 'Content-Type: text/event-stream' );
@@ -148,7 +148,7 @@ class Service_Stream_Generate_Text_REST_Route extends Service_Generate_Text_REST
 	/**
 	 * Sends the given candidates as a streamed data chunk.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Candidates $candidates The candidates to send.
 	 *

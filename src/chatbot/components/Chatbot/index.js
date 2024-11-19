@@ -23,7 +23,7 @@ import './style.scss';
 /**
  * Renders the chatbot.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object}   props                  Component props.
  * @param {Function} props.onUpdateMessages Function to call when the history of messages is updated.

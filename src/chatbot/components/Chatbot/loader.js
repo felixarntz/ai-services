@@ -1,7 +1,7 @@
 /**
  * Renders the loader.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @return {Component} The component to be rendered.
  */

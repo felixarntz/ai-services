@@ -12,7 +12,7 @@ import { validateContent, validateCapabilities } from '../util';
  * While the API allows for an array of multiple content objects to be passed, this is not supported by the browser
  * implementation. As such, this function will throw an error if it encounters an array of multiple content objects.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional history.
  * @return {string|Object|Object[]} The content, as a string, content object, or array of content objects.
@@ -54,7 +54,7 @@ function prepareContentForBrowser( content ) {
  *
  * See https://github.com/explainers-by-googlers/prompt-api#examples for supported parameters.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object} modelParams Model parameters.
  * @return {Promise<Object>} The browser session.
@@ -99,7 +99,7 @@ async function createSession( modelParams ) {
 /**
  * Wraps the browser text generator to match the candidates API syntax.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object} resultTextGenerator The browser text generator.
  * @return {Object} The wrapped generator.
@@ -125,13 +125,13 @@ async function* wrapBrowserTextGenerator( resultTextGenerator ) {
 /**
  * Special model class only used for models of the 'browser' service.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  */
 export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 	/**
 	 * Generates text content using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
 	 *                                         history.
@@ -160,7 +160,7 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 	/**
 	 * Generates text content using the model, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
 	 *                                         history.

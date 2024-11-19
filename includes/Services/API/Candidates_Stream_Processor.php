@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Candidates_Stream_Processor
  *
- * @since n.e.x.t
+ * @since 0.3.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Generator;
 /**
  * Class to process a candidates stream.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  */
 final class Candidates_Stream_Processor {
 
 	/**
 	 * Generator that yields the chunks of response candidates.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 * @var Generator<Candidates>
 	 */
 	private $generator;
@@ -31,7 +31,7 @@ final class Candidates_Stream_Processor {
 	 *
 	 * May be incomplete if the stream has not been fully processed yet.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 * @var Candidates|null
 	 */
 	private $candidates;
@@ -39,7 +39,7 @@ final class Candidates_Stream_Processor {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Generator<Candidates> $generator The generator that yields the chunks of response candidates.
 	 */
@@ -53,7 +53,7 @@ final class Candidates_Stream_Processor {
 	 * A callback can be passed that is called for each chunk of candidates. You could use such a callback for example
 	 * to echo the text contents of each chunk as they are being processed.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param callable|null $chunk_callback Optional. Callback that is called for each chunk of candidates.
 	 * @return Candidates The complete candidates instance.
@@ -71,7 +71,7 @@ final class Candidates_Stream_Processor {
 	/**
 	 * Adds a chunk of candidates to the overall candidates instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Candidates $candidates The chunk of candidates to add.
 	 */
@@ -107,7 +107,7 @@ final class Candidates_Stream_Processor {
 	/**
 	 * Gets the complete candidates instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return Candidates|null The complete candidates instance, or null if the generator is not done yet.
 	 */
@@ -122,7 +122,7 @@ final class Candidates_Stream_Processor {
 	/**
 	 * Appends the content of a new candidate to the content of an existing candidate.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $existing_content The existing content data.
 	 * @param array<string, mixed> $new_content      The new content data.

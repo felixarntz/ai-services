@@ -126,7 +126,7 @@ export function validateChatHistory( history ) {
 /**
  * Validates the model parameters.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object} modelParams Model parameters.
  */
@@ -144,7 +144,7 @@ export function validateModelParams( modelParams ) {
 /**
  * Validates the given available capabilities include all requested capabilities.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {string[]} availableCapabilities Available capabilities.
  * @param {string[]} requestedCapabilities Requested capabilities.
@@ -170,7 +170,7 @@ export function validateCapabilities(
 /**
  * Detects the requested capabilities from the content.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {string|Object|Object[]} content          Content data to pass to the model, including the prompt and
  *                                                  optional history.
@@ -197,7 +197,7 @@ export function detectRequestedCapabilitiesFromContent(
 /**
  * Finds a model from the available models based on the given model parameters.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object} availableModels Map of the available model slugs and their capabilities.
  * @param {Object} modelParams     Model parameters. Should contain either a 'model' slug or requested 'capabilities'.

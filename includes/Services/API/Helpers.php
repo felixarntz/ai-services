@@ -122,7 +122,7 @@ final class Helpers {
 	 * generator and process them with a callback. Alternatively, you can read from the generator yourself and provide
 	 * all chunks to the processor manually.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Generator<Candidates> $generator The generator that yields the chunks of response candidates.
 	 * @return Candidates_Stream_Processor The stream processor instance.

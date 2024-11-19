@@ -111,7 +111,7 @@ final class Chat_Session {
 	/**
 	 * Sends a chat message to the model, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param string|Parts|Content $content         The message to send.
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.

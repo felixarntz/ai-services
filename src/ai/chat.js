@@ -35,7 +35,7 @@ const initialState = {
 /**
  * Sanitizes the chat history to remove any unsupported properties.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object[]} history Chat history.
  * @return {Object[]} Sanitized chat history.
@@ -59,7 +59,7 @@ function sanitizeHistory( history ) {
 /**
  * Processes a stream of content and yields its chunks.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object}   responseGenerator The generator that yields the chunks of content.
  * @param {Function} completeCallback  Callback that is called once the generator has been processed.
@@ -184,7 +184,7 @@ const actions = {
 	/**
 	 * Sends a message to the chat, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {string}                 chatId  Identifier of the chat.
 	 * @param {string|Object|Object[]} content Chat message content.

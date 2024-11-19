@@ -20,13 +20,13 @@ const EMPTY_OBJECT = {};
 /**
  * Model class.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  */
 export default class GenerativeAiModel {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {Object}   model              Model object.
 	 * @param {string}   model.serviceSlug  Service slug.
@@ -48,7 +48,7 @@ export default class GenerativeAiModel {
 	/**
 	 * Gets the model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @return {string} Model name.
 	 */
@@ -64,7 +64,7 @@ export default class GenerativeAiModel {
 	/**
 	 * Generates text content using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
 	 *                                         history.
@@ -97,7 +97,7 @@ export default class GenerativeAiModel {
 	/**
 	 * Generates text content using the model, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
 	 *                                         history.
@@ -133,7 +133,7 @@ export default class GenerativeAiModel {
 	/**
 	 * Starts a multi-turn chat session using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {Object[]} history Chat history.
 	 * @return {ChatSession} Chat session.

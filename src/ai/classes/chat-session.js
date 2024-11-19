@@ -69,7 +69,7 @@ export default class ChatSession {
 	/**
 	 * Sends a chat message to the model, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param {string|Object|Object[]} content Chat message content.
 	 * @return {Promise<Object>} The generator that yields chunks of the response content.
@@ -97,7 +97,7 @@ export default class ChatSession {
  * Other than yielding the content chunks, this generator function aggregates the candidates chunks into a single
  * candidates instance, and once completed invokes the provided callback with the complete response content.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object}   candidatesGenerator The generator that yields the chunks of response candidates.
  * @param {Function} completeCallback    Callback that is called with the complete response content.

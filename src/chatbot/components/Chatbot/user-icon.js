@@ -1,7 +1,7 @@
 /**
  * Renders the user icon.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  *
  * @param {Object} props The component props.
  * @return {Component} The component to be rendered.

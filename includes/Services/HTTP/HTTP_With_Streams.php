@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams
  *
- * @since n.e.x.t
+ * @since 0.3.0
  * @package ai-services
  */
 
@@ -18,7 +18,7 @@ use Felix_Arntz\AI_Services_Dependencies\GuzzleHttp\Exception\ClientException;
 /**
  * Extended HTTP class with support for streaming responses.
  *
- * @since n.e.x.t
+ * @since 0.3.0
  */
 final class HTTP_With_Streams extends HTTP {
 
@@ -27,7 +27,7 @@ final class HTTP_With_Streams extends HTTP {
 	 *
 	 * Used for streaming requests, as WordPress Core's Requests API does not support this.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 * @var Client
 	 */
 	private $guzzle;
@@ -35,7 +35,7 @@ final class HTTP_With_Streams extends HTTP {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param array<string, mixed> $default_options Optional. Default options to use for all requests. Default empty
 	 *                                              array.
@@ -49,7 +49,7 @@ final class HTTP_With_Streams extends HTTP {
 	/**
 	 * Sends an HTTP request and streams the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.3.0
 	 *
 	 * @param Request $request The request to send.
 	 * @return Stream_Response The stream response.

@@ -23,7 +23,10 @@ function appendContent( existingContent, newContent ) {
 			return;
 		}
 
-		if ( ! existingContent.parts[ index ].text || ! newPart.text ) {
+		if (
+			existingContent.parts[ index ].text === undefined ||
+			newPart.text === undefined
+		) {
 			return;
 		}
 

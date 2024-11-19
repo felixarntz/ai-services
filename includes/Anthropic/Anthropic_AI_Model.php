@@ -430,8 +430,13 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 							'source' => array(
 								'type'       => 'base64',
 								'media_type' => $mime_type,
-								'data'       => $part->get_base64_data(),
-							),
+								// The Anthropic AI API expects inlineData blobs to be without the prefix.
+								'data'     => preg_replace(
+									'/^data:[a-z]+\/[a-z]+;base64,/',
+									'',
+									$part->get_base64_data()
+								),
+							)
 						);
 					} else {
 						throw new InvalidArgumentException(

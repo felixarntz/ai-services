@@ -39,6 +39,8 @@ ChatbotConfigProvider.propTypes = {
 		initialBotMessage: PropTypes.string,
 		getErrorChatResponse: PropTypes.func,
 		ResponseRenderer: PropTypes.elementType,
+		useStreaming: PropTypes.bool,
+		renderStreamResponse: PropTypes.func,
 	} ).isRequired,
 	children: PropTypes.node.isRequired,
 };

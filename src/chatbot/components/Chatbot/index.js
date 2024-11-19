@@ -35,6 +35,7 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 	const chatId = useChatbotConfig( 'chatId' );
 	const labels = useChatbotConfig( 'labels' );
 	const initialBotMessage = useChatbotConfig( 'initialBotMessage' );
+	const streaming = useChatbotConfig( 'useStreaming' );
 	const getErrorChatResponse = useChatbotConfig( 'getErrorChatResponse' );
 
 	const messagesContainerRef = useRef();
@@ -63,11 +64,23 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 
 	const [ input, setInputValue ] = useState( '' );
 
-	const { sendMessage, receiveContent } = useDispatch( aiStore );
+	const [ currentMessageGenerator, setCurrentMessageGenerator ] =
+		useState( null );
+
+	const { sendMessage, streamSendMessage, receiveContent } =
+		useDispatch( aiStore );
 
 	const sendPrompt = async ( message ) => {
 		try {
-			await sendMessage( chatId, message );
+			if ( streaming ) {
+				const messageGenerator = await streamSendMessage(
+					chatId,
+					message
+				);
+				setCurrentMessageGenerator( messageGenerator );
+			} else {
+				await sendMessage( chatId, message );
+			}
 		} catch ( error ) {
 			let aiResponseText;
 			if ( getErrorChatResponse ) {
@@ -100,12 +113,35 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 	);
 
 	useEffect( () => {
+		/*
+		 * If streaming is enabled, a message may have been streamed.
+		 * Upon receiving the new message in the datastore though, that streaming is done,
+		 * so the message generator needs to be cleared.
+		 */
+		if ( streaming ) {
+			setCurrentMessageGenerator( null );
+		}
+
+		/*
+		 * If onUpdateMessages callback is provided, call it with the updated messages.
+		 * Use a timeout to debounce the calls.
+		 */
 		if ( ! onUpdateMessages ) {
 			return;
 		}
 		const timeout = setTimeout( () => onUpdateMessages( messages ), 500 );
 		return () => clearTimeout( timeout );
-	}, [ messages, onUpdateMessages ] );
+	}, [ messages, onUpdateMessages, streaming, setCurrentMessageGenerator ] );
+
+	useEffect( () => {
+		// While there is a message generator streaming, keep scrolling to the bottom of the chat.
+		if ( ! currentMessageGenerator ) {
+			return;
+		}
+
+		const interval = setInterval( scrollIntoView, 500 );
+		return () => clearInterval( interval );
+	}, [ currentMessageGenerator ] );
 
 	const handleSubmit = ( event ) => {
 		event.preventDefault();
@@ -145,6 +181,15 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 								parts: [ { text: '' } ],
 							} }
 							loading
+						/>
+					) }
+					{ ! loading && !! currentMessageGenerator && (
+						<ChatbotMessage
+							content={ {
+								role: 'model',
+								parts: [ { text: '' } ],
+							} }
+							contentGenerator={ currentMessageGenerator }
 						/>
 					) }
 				</div>

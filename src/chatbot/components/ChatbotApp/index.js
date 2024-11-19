@@ -91,7 +91,7 @@ const ResponseRenderer = ( { text } ) => {
 		}
 
 		// If the response includes something after the link text, remove it.
-		const cleanLinkText = parts[ 2 ].split( '\n' )[ 0 ];
+		const cleanLinkText = parts[ 2 ].trim().split( '\n' )[ 0 ];
 		return {
 			text: parts[ 0 ].trim(),
 			linkUrl: parts[ 1 ].trim(),
@@ -137,6 +137,7 @@ const getChatbotConfig = ( serviceName ) => {
 		initialBotMessage: __( 'How can I help you?', 'ai-services' ),
 		getErrorChatResponse,
 		ResponseRenderer,
+		useStreaming: true,
 	};
 };
 

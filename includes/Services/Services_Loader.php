@@ -45,6 +45,7 @@ final class Services_Loader implements With_Hooks {
 	 * @since 0.1.0
 	 */
 	public function add_hooks(): void {
+		$this->add_cleanup_hooks();
 		$this->load_capabilities();
 		$this->load_dependencies();
 		$this->load_options();
@@ -54,6 +55,60 @@ final class Services_Loader implements With_Hooks {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			\WP_CLI::add_command( 'ai-services', $this->container['cli_command'] );
 		}
+	}
+
+	/**
+	 * Adds cleanup hooks related to plugin deactivation.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function add_cleanup_hooks(): void {
+		// This function is only available in WordPress 6.4+.
+		if ( ! function_exists( 'wp_set_options_autoload' ) ) {
+			return;
+		}
+
+		// Disable autoloading of plugin options on deactivation.
+		register_deactivation_hook(
+			$this->container['plugin_env']->main_file(),
+			function ( $network_wide ) {
+				// For network-wide deactivation, this cleanup cannot be reliably implemented.
+				if ( $network_wide ) {
+					return;
+				}
+
+				$autoloaded_options = $this->get_autoloaded_options();
+				if ( ! $autoloaded_options ) {
+					return;
+				}
+
+				wp_set_options_autoload(
+					$autoloaded_options,
+					false
+				);
+			}
+		);
+
+		// Reinstate original autoload settings on (re-)activation.
+		register_activation_hook(
+			$this->container['plugin_env']->main_file(),
+			function ( $network_wide ) {
+				// See deactivation hook for network-wide cleanup limitations.
+				if ( $network_wide ) {
+					return;
+				}
+
+				$autoloaded_options = $this->get_autoloaded_options();
+				if ( ! $autoloaded_options ) {
+					return;
+				}
+
+				wp_set_options_autoload(
+					$autoloaded_options,
+					true
+				);
+			}
+		);
 	}
 
 	/**
@@ -174,6 +229,30 @@ final class Services_Loader implements With_Hooks {
 				return $links;
 			}
 		);
+	}
+
+	/**
+	 * Gets the service option names that are autoloaded.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string[] List of autoloaded service options.
+	 */
+	private function get_autoloaded_options(): array {
+		$autoloaded_options = array();
+
+		foreach ( $this->container['option_container']->get_keys() as $key ) {
+			// Trigger option instantiation so that the autoload config is populated.
+			$this->container['option_container']->get( $key );
+
+			$autoload = $this->container['option_repository']->get_autoload_config( $key );
+
+			if ( true === $autoload ) {
+				$autoloaded_options[] = $key;
+			}
+		}
+
+		return $autoloaded_options;
 	}
 
 	/**

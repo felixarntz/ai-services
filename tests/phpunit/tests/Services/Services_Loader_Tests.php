@@ -55,6 +55,104 @@ class Services_Loader_Tests extends Test_Case {
 	}
 
 	/**
+	 * @covers Services_Loader::add_cleanup_hooks
+	 */
+	public function test_add_cleanup_hooks_single() {
+		if ( ! function_exists( 'wp_set_options_autoload' ) ) {
+			$this->markTestSkipped( 'This test requires WordPress 6.4+.' );
+		}
+
+		$container    = $this->getInaccessibleProperty( $this->services_loader, 'container' );
+		$services_api = $container->get( 'api' );
+
+		// Register a test service so that an API key option is registered for it.
+		$services_api->register_service(
+			'test-service',
+			static function () {
+				return null;
+			},
+			array(
+				'name' => 'Test Service',
+			)
+		);
+
+		update_option( 'ais_test-service_api_key', '12345678', true );
+
+		$options = array( 'ais_test-service_api_key' );
+
+		remove_all_actions( "deactivate_{$this->plugin_basename}" );
+		remove_all_actions( "activate_{$this->plugin_basename}" );
+		$this->callInaccessibleMethod( $this->services_loader, 'add_cleanup_hooks' );
+
+		// Deactivation should turn off autoloading for all options.
+		do_action( "deactivate_{$this->plugin_basename}", false );
+		$this->assertSameSetsWithIndex(
+			array(
+				'ais_test-service_api_key' => false,
+			),
+			$this->get_option_autoload_values( $options )
+		);
+
+		// Reactivation should turn on autoloading again for options where it should be enabled.
+		do_action( "activate_{$this->plugin_basename}", false );
+		$this->assertSameSetsWithIndex(
+			array(
+				'ais_test-service_api_key' => true,
+			),
+			$this->get_option_autoload_values( $options )
+		);
+	}
+
+	/**
+	 * @covers Services_Loader::add_cleanup_hooks
+	 */
+	public function test_add_cleanup_hooks_network_wide() {
+		if ( ! function_exists( 'wp_set_options_autoload' ) ) {
+			$this->markTestSkipped( 'This test requires WordPress 6.4+.' );
+		}
+
+		$container    = $this->getInaccessibleProperty( $this->services_loader, 'container' );
+		$services_api = $container->get( 'api' );
+
+		// Register a test service so that an API key option is registered for it.
+		$services_api->register_service(
+			'test-service',
+			static function () {
+				return null;
+			},
+			array(
+				'name' => 'Test Service',
+			)
+		);
+
+		update_option( 'ais_test-service_api_key', '12345678', true );
+
+		$options = array( 'ais_test-service_api_key' );
+
+		remove_all_actions( "deactivate_{$this->plugin_basename}" );
+		remove_all_actions( "activate_{$this->plugin_basename}" );
+		$this->callInaccessibleMethod( $this->services_loader, 'add_cleanup_hooks' );
+
+		// For network-wide deactivation, this shouldn't do anything.
+		do_action( "deactivate_{$this->plugin_basename}", true );
+		$this->assertSameSetsWithIndex(
+			array(
+				'ais_test-service_api_key' => true,
+			),
+			$this->get_option_autoload_values( $options )
+		);
+
+		// And this shouldn't do anything either for network-wide activation.
+		do_action( "activate_{$this->plugin_basename}", true );
+		$this->assertSameSetsWithIndex(
+			array(
+				'ais_test-service_api_key' => true,
+			),
+			$this->get_option_autoload_values( $options )
+		);
+	}
+
+	/**
 	 * @covers Services_Loader::load_capabilities
 	 */
 	public function test_load_capabilities() {
@@ -159,5 +257,24 @@ class Services_Loader_Tests extends Test_Case {
 		remove_all_actions( 'admin_menu' );
 		$this->callInaccessibleMethod( $this->services_loader, 'load_settings_page' );
 		do_action( 'admin_menu' );
+	}
+
+	private function get_option_autoload_values( array $options ): array {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT option_name, autoload FROM $wpdb->options WHERE option_name IN (" . implode( ',', array_fill( 0, count( $options ), '%s' ) ) . ')',
+				$options
+			)
+		);
+
+		$autoload_values = wp_autoload_values_to_autoload();
+
+		$options = array();
+		foreach ( $results as $row ) {
+			$options[ $row->option_name ] = in_array( $row->autoload, $autoload_values, true );
+		}
+		return $options;
 	}
 }

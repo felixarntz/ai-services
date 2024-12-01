@@ -40,7 +40,6 @@ class Plugin_Main_Tests extends Test_Case {
 			// Via Plugin_Main.
 			'init',
 			"activate_{$this->plugin_basename}",
-			"deactivate_{$this->plugin_basename}",
 
 			// Via Services_Loader.
 			'plugins_loaded',

@@ -55,6 +55,7 @@ function prepareContentForBrowser( content ) {
  * See https://github.com/explainers-by-googlers/prompt-api#examples for supported parameters.
  *
  * @since 0.3.0
+ * @since n.e.x.t Checks for newer `ai.languageModel` property.
  *
  * @param {Object} modelParams Model parameters.
  * @return {Promise<Object>} The browser session.
@@ -79,12 +80,14 @@ async function createSession( modelParams ) {
 		}
 	}
 
+	const llm = window.ai.languageModel || window.ai.assistant;
+
 	if ( Object.keys( browserParams ).length === 0 ) {
-		return window.ai.assistant.create();
+		return llm.create();
 	}
 
 	try {
-		const session = await window.ai.assistant.create( browserParams );
+		const session = await llm.create( browserParams );
 		return session;
 	} catch ( error ) {
 		// eslint-disable-next-line no-console
@@ -92,7 +95,7 @@ async function createSession( modelParams ) {
 			'Failed to create browser session with modelParams, therefore creating default session. Original error:',
 			error
 		);
-		return window.ai.assistant.create();
+		return llm.create();
 	}
 }
 

@@ -38,6 +38,7 @@ export async function getBrowserServiceData() {
  * Gets the AI capabilities that the browser supports.
  *
  * @since 0.1.0
+ * @since n.e.x.t Checks for newer `ai.languageModel` property.
  *
  * @param {Object} ai The browser AI API object.
  * @return {Promise<string[]>} The list of AI capabilities.
@@ -45,8 +46,10 @@ export async function getBrowserServiceData() {
 async function getBrowserAiCapabilities( ai ) {
 	const capabilities = [];
 
-	if ( ai.assistant ) {
-		const supportsTextGeneration = await ai.assistant.capabilities();
+	const llm = ai.languageModel || ai.assistant;
+
+	if ( llm ) {
+		const supportsTextGeneration = await llm.capabilities();
 		if (
 			supportsTextGeneration &&
 			supportsTextGeneration.available === 'readily'

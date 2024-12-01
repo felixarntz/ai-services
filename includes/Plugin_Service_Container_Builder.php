@@ -226,18 +226,5 @@ final class Plugin_Service_Container_Builder {
 				)
 			);
 		};
-
-		// Option to store the main plugin data.
-		$options['ais_options'] = function () {
-			return new Option(
-				$this->container['option_repository'],
-				'ais_options',
-				array(
-					'type'     => 'object',
-					'default'  => array(),
-					'autoload' => true,
-				)
-			);
-		};
 	}
 }

@@ -5,6 +5,7 @@ import {
 	DistractionFreePreferenceToggleMenuItem,
 	KeyboardShortcutsMenuItem,
 } from '@ai-services/interface';
+import { store as aiStore } from '@ai-services/ai';
 
 /**
  * WordPress dependencies
@@ -34,6 +35,22 @@ export default function SettingsMoreMenu() {
 		[]
 	);
 
+	const { homepageUrl, supportUrl, contributingUrl } = useSelect(
+		( select ) => {
+			const {
+				getPluginHomepageUrl,
+				getPluginSupportUrl,
+				getPluginContributingUrl,
+			} = select( aiStore );
+
+			return {
+				homepageUrl: getPluginHomepageUrl(),
+				supportUrl: getPluginSupportUrl(),
+				contributingUrl: getPluginContributingUrl(),
+			};
+		}
+	);
+
 	return (
 		<DropdownMenu
 			icon={ moreVertical }
@@ -51,28 +68,70 @@ export default function SettingsMoreMenu() {
 		>
 			{ () => (
 				<>
-					<MenuGroup label={ _x( 'View', 'noun' ) }>
+					<MenuGroup label={ _x( 'View', 'noun', 'ai-services' ) }>
 						<DistractionFreePreferenceToggleMenuItem />
 					</MenuGroup>
-					<MenuGroup label={ __( 'Tools' ) }>
+					<MenuGroup label={ __( 'Tools', 'ai-services' ) }>
 						<KeyboardShortcutsMenuItem />
-						<MenuItem
-							icon={ external }
-							href={ __(
-								'https://wordpress.org/support/plugin/ai-services/',
-								'ai-services'
-							) }
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{ __( 'Support', 'ai-services' ) }
-							<VisuallyHidden as="span">
-								{
-									/* translators: accessibility text */
-									__( '(opens in a new tab)', 'ai-services' )
-								}
-							</VisuallyHidden>
-						</MenuItem>
+					</MenuGroup>
+					<MenuGroup label={ __( 'Resources', 'ai-services' ) }>
+						{ !! supportUrl && (
+							<MenuItem
+								icon={ external }
+								href={ supportUrl }
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{ __( 'Support', 'ai-services' ) }
+								<VisuallyHidden as="span">
+									{
+										/* translators: accessibility text */
+										__(
+											'(opens in a new tab)',
+											'ai-services'
+										)
+									}
+								</VisuallyHidden>
+							</MenuItem>
+						) }
+						{ !! homepageUrl && (
+							<MenuItem
+								icon={ external }
+								href={ homepageUrl }
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{ __( 'Homepage', 'ai-services' ) }
+								<VisuallyHidden as="span">
+									{
+										/* translators: accessibility text */
+										__(
+											'(opens in a new tab)',
+											'ai-services'
+										)
+									}
+								</VisuallyHidden>
+							</MenuItem>
+						) }
+						{ !! contributingUrl && (
+							<MenuItem
+								icon={ external }
+								href={ contributingUrl }
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{ __( 'Contributing', 'ai-services' ) }
+								<VisuallyHidden as="span">
+									{
+										/* translators: accessibility text */
+										__(
+											'(opens in a new tab)',
+											'ai-services'
+										)
+									}
+								</VisuallyHidden>
+							</MenuItem>
+						) }
 					</MenuGroup>
 				</>
 			) }

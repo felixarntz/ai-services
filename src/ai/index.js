@@ -7,13 +7,18 @@ import { createReduxStore, register } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
+import selfStoreConfig from './self';
 import servicesStoreConfig from './services';
 import chatStoreConfig from './chat';
 import * as enums from './enums';
 import * as helpers from './helpers';
 import combineStores from '../utils/combine-stores';
 
-const storeConfig = combineStores( servicesStoreConfig, chatStoreConfig );
+const storeConfig = combineStores(
+	selfStoreConfig,
+	servicesStoreConfig,
+	chatStoreConfig
+);
 
 export const store = createReduxStore( STORE_NAME, storeConfig );
 register( store );

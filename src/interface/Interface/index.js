@@ -7,8 +7,12 @@ import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import { InterfaceSkeleton } from '@wordpress/interface';
+import {
+	InterfaceSkeleton,
+	store as interfaceStore,
+} from '@wordpress/interface';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { useEffect, useState } from '@wordpress/element';
 import { store as preferencesStore } from '@wordpress/preferences';
 import {
 	useShortcut,
@@ -40,12 +44,13 @@ import Snackbars from '../Snackbars';
 export default function Interface( { className, labels, children } ) {
 	const isLargeViewport = useViewportMatch( 'medium' );
 
-	const { isDistractionFree, previousShortcut, nextShortcut } = useSelect(
-		( select ) => {
+	const { isDistractionFree, previousShortcut, nextShortcut, activeSidebar } =
+		useSelect( ( select ) => {
 			const { get } = select( preferencesStore );
 			const { getAllShortcutKeyCombinations } = select(
 				keyboardShortcutsStore
 			);
+			const { getActiveComplementaryArea } = select( interfaceStore );
 
 			return {
 				isDistractionFree: get( 'ai-services', 'distractionFree' ),
@@ -55,15 +60,16 @@ export default function Interface( { className, labels, children } ) {
 				nextShortcut: getAllShortcutKeyCombinations(
 					'ai-services/next-region'
 				),
+				activeSidebar: getActiveComplementaryArea( 'ai-services' ),
 			};
+		} );
+
+	const [ defaultSidebar, setDefaultSidebar ] = useState( null );
+	useEffect( () => {
+		if ( activeSidebar && ! defaultSidebar ) {
+			setDefaultSidebar( activeSidebar );
 		}
-	);
-
-	const { toggle: togglePreference } = useDispatch( preferencesStore );
-
-	useShortcut( 'ai-services/toggle-distraction-free', () => {
-		togglePreference( 'ai-services', 'distractionFree' );
-	} );
+	}, [ activeSidebar, defaultSidebar, setDefaultSidebar ] );
 
 	const hasHeader = useHasHeader();
 	const header = hasHeader && (
@@ -86,6 +92,24 @@ export default function Interface( { className, labels, children } ) {
 
 	const hasSidebar = useHasSidebar();
 	const sidebar = hasSidebar && <Sidebar.Slot />;
+
+	const { toggle: togglePreference } = useDispatch( preferencesStore );
+
+	useShortcut( 'ai-services/toggle-distraction-free', () => {
+		togglePreference( 'ai-services', 'distractionFree' );
+	} );
+
+	const { getActiveComplementaryArea } = useSelect( interfaceStore );
+	const { enableComplementaryArea, disableComplementaryArea } =
+		useDispatch( interfaceStore );
+
+	useShortcut( 'ai-services/toggle-sidebar', () => {
+		if ( getActiveComplementaryArea( 'ai-services' ) ) {
+			disableComplementaryArea( 'ai-services' );
+		} else if ( defaultSidebar ) {
+			enableComplementaryArea( 'ai-services', defaultSidebar );
+		}
+	} );
 
 	return (
 		<InterfaceSkeleton

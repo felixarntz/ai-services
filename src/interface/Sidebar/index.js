@@ -11,7 +11,9 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUseSlotFills as useSlotFills,
 } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
 
 /**
  * Renders a sidebar for the application.
@@ -26,6 +28,7 @@ import { __ } from '@wordpress/i18n';
  * @param {string}   props.identifier        Identifier for the sidebar, to use in the store.
  * @param {string}   props.title             Title of the sidebar.
  * @param {Element}  props.icon              Icon to display in the sidebar header.
+ * @param {Element}  props.header            Custom header to render for the sidebar.
  * @param {?boolean} props.isPinnable        Whether the sidebar can be pinned by the user. If not, UI to open/close
  *                                           the sidebar needs to be manually rendered, e.g. via the SidebarToggle
  *                                           component.
@@ -37,18 +40,28 @@ function Sidebar( {
 	identifier,
 	title,
 	icon,
+	header,
 	isPinnable,
 	isActiveByDefault,
 	children,
 } ) {
+	const shortcut = useSelect( ( select ) =>
+		select( keyboardShortcutsStore ).getShortcutRepresentation(
+			'ai-services/toggle-sidebar',
+			'display'
+		)
+	);
+
 	return (
 		<ComplementaryArea
 			scope="ai-services"
 			identifier={ identifier }
 			title={ title }
 			icon={ icon }
+			header={ header }
 			isPinnable={ isPinnable }
 			isActiveByDefault={ isActiveByDefault }
+			toggleShortcut={ shortcut }
 			closeLabel={ __( 'Close sidebar', 'ai-services' ) }
 		>
 			{ children }
@@ -60,6 +73,7 @@ Sidebar.propTypes = {
 	identifier: PropTypes.string.isRequired,
 	title: PropTypes.string.isRequired,
 	icon: PropTypes.node.isRequired,
+	header: PropTypes.node.isRequired,
 	isPinnable: PropTypes.bool,
 	isActiveByDefault: PropTypes.bool,
 	children: PropTypes.node.isRequired,

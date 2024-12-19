@@ -211,6 +211,24 @@ const selectors = {
 			return getGenerativeAiService( services[ slug ] );
 		}
 	),
+
+	getServiceName: createRegistrySelector( ( select ) => ( state, slug ) => {
+		const services = select( STORE_NAME ).getServices();
+		if ( services === undefined ) {
+			return undefined;
+		}
+		return services[ slug ]?.name || '';
+	} ),
+
+	getServiceCredentialsUrl: createRegistrySelector(
+		( select ) => ( state, slug ) => {
+			const services = select( STORE_NAME ).getServices();
+			if ( services === undefined ) {
+				return undefined;
+			}
+			return services[ slug ]?.credentials_url || '';
+		}
+	),
 };
 
 const storeConfig = {

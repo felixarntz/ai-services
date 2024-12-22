@@ -112,6 +112,15 @@ class Services_Script_Style_Loader {
 			)
 		);
 
+		$this->script_registry->register(
+			'ais-playground-page',
+			array(
+				'src'      => $this->plugin_env->url( 'build/playground-page/index.js' ),
+				'manifest' => $this->plugin_env->path( 'build/playground-page/index.asset.php' ),
+				'strategy' => 'defer',
+			)
+		);
+
 		$this->style_registry->register(
 			'ais-components',
 			array(
@@ -138,6 +147,16 @@ class Services_Script_Style_Loader {
 				'src'          => $this->plugin_env->url( 'build/services-page/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/services-page/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/services-page/index.asset.php' ),
+				'dependencies' => array( 'wp-components', 'ais-components', 'ais-interface' ),
+			)
+		);
+
+		$this->style_registry->register(
+			'ais-playground-page',
+			array(
+				'src'          => $this->plugin_env->url( 'build/playground-page/style-index.css' ),
+				'path'         => $this->plugin_env->path( 'build/playground-page/style-index.css' ),
+				'manifest'     => $this->plugin_env->path( 'build/playground-page/index.asset.php' ),
 				'dependencies' => array( 'wp-components', 'ais-components', 'ais-interface' ),
 			)
 		);

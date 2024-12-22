@@ -9,8 +9,11 @@
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
 use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Contracts\Admin_Page;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Route;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Exception\REST_Exception;
 use WP_REST_Request;
@@ -35,6 +38,14 @@ class Self_REST_Route extends Abstract_REST_Route {
 	private $plugin_env;
 
 	/**
+	 * Site environment.
+	 *
+	 * @since n.e.x.t
+	 * @var Site_Env
+	 */
+	private $site_env;
+
+	/**
 	 * The services API instance.
 	 *
 	 * @since n.e.x.t
@@ -51,6 +62,38 @@ class Self_REST_Route extends Abstract_REST_Route {
 	private $current_user;
 
 	/**
+	 * WordPress admin settings menu.
+	 *
+	 * @since n.e.x.t
+	 * @var Admin_Menu
+	 */
+	private $settings_menu;
+
+	/**
+	 * WordPress admin tools menu.
+	 *
+	 * @since n.e.x.t
+	 * @var Admin_Menu
+	 */
+	private $tools_menu;
+
+	/**
+	 * The plugin's admin settings page.
+	 *
+	 * @since n.e.x.t
+	 * @var Admin_Page
+	 */
+	private $settings_page;
+
+	/**
+	 * The plugin's admin playground page.
+	 *
+	 * @since n.e.x.t
+	 * @var Admin_Page
+	 */
+	private $playground_page;
+
+	/**
 	 * Internal resource schema definition.
 	 *
 	 * @since n.e.x.t
@@ -63,14 +106,33 @@ class Self_REST_Route extends Abstract_REST_Route {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Plugin_Env   $plugin_env   The plugin environment.
-	 * @param Services_API $services_api The services API instance.
-	 * @param Current_User $current_user The current user service.
+	 * @param Plugin_Env   $plugin_env      The plugin environment.
+	 * @param Site_Env     $site_env        The site environment.
+	 * @param Services_API $services_api    The services API instance.
+	 * @param Current_User $current_user    The current user service.
+	 * @param Admin_Menu   $settings_menu   WordPress admin settings menu.
+	 * @param Admin_Menu   $tools_menu      WordPress admin tools menu.
+	 * @param Admin_Page   $settings_page   The plugin's admin settings page.
+	 * @param Admin_Page   $playground_page The plugin's admin playground page.
 	 */
-	public function __construct( Plugin_Env $plugin_env, Services_API $services_api, Current_User $current_user ) {
-		$this->plugin_env   = $plugin_env;
-		$this->services_api = $services_api;
-		$this->current_user = $current_user;
+	public function __construct(
+		Plugin_Env $plugin_env,
+		Site_Env $site_env,
+		Services_API $services_api,
+		Current_User $current_user,
+		Admin_Menu $settings_menu,
+		Admin_Menu $tools_menu,
+		Admin_Page $settings_page,
+		Admin_Page $playground_page
+	) {
+		$this->plugin_env      = $plugin_env;
+		$this->site_env        = $site_env;
+		$this->services_api    = $services_api;
+		$this->current_user    = $current_user;
+		$this->settings_menu   = $settings_menu;
+		$this->tools_menu      = $tools_menu;
+		$this->settings_page   = $settings_page;
+		$this->playground_page = $playground_page;
 
 		$this->schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -109,6 +171,18 @@ class Self_REST_Route extends Abstract_REST_Route {
 				),
 				'plugin_contributing_url'   => array(
 					'description' => __( 'Plugin support URL.', 'ai-services' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'plugin_settings_url'       => array(
+					'description' => __( 'AI Services settings URL.', 'ai-services' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'plugin_playground_url'     => array(
+					'description' => __( 'AI Playground URL.', 'ai-services' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
@@ -202,6 +276,12 @@ class Self_REST_Route extends Abstract_REST_Route {
 				case 'plugin_contributing_url':
 					$value = 'https://github.com/felixarntz/ai-services';
 					break;
+				case 'plugin_settings_url':
+					$value = $this->get_admin_url( $this->settings_menu, $this->settings_page );
+					break;
+				case 'plugin_playground_url':
+					$value = $this->get_admin_url( $this->tools_menu, $this->playground_page );
+					break;
 				case 'current_user_capabilities':
 					$value = $this->get_current_user_capabilities();
 					break;
@@ -270,7 +350,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	 * @param WP_REST_Request $request Request object.
 	 * @return string[] Fields to be included in the response.
 	 */
-	protected function get_fields_to_include( WP_REST_Request $request ): array {
+	protected function get_fields_to_include( WP_REST_Request $request ): array /* @phpstan-ignore-line */ {
 		$properties = $this->schema['properties'] ?? array();
 
 		// Exclude fields that specify a different context than the request context.
@@ -294,6 +374,30 @@ class Self_REST_Route extends Abstract_REST_Route {
 
 		// Return the list of all requested fields which appear in the schema.
 		return array_values( array_intersect( $fields, $requested_fields ) );
+	}
+
+	/**
+	 * Gets the URL to a specific admin page within a given admin menu.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Admin_Menu $menu WordPress admin menu.
+	 * @param Admin_Page $page WordPress admin page.
+	 * @return string Admin page URL.
+	 */
+	private function get_admin_url( Admin_Menu $menu, Admin_Page $page ): string {
+		$menu_slug = $menu->get_slug();
+		if ( str_ends_with( $menu_slug, '.php' ) ) {
+			$menu_file = $menu_slug;
+		} else {
+			$menu_file = 'admin.php';
+		}
+
+		return add_query_arg(
+			'page',
+			$page->get_slug(),
+			$this->site_env->admin_url( $menu_file )
+		);
 	}
 
 	/**

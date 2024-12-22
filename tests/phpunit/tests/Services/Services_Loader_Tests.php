@@ -243,6 +243,7 @@ class Services_Loader_Tests extends Test_Case {
 	 */
 	public function test_load_settings_page() {
 		$settings_menu_mock = $this->createBasicMock( Admin_Menu::class );
+		$tools_menu_mock    = $this->createBasicMock( Admin_Menu::class );
 
 		$container = $this->getInaccessibleProperty( $this->services_loader, 'container' );
 		$container->set(
@@ -251,8 +252,15 @@ class Services_Loader_Tests extends Test_Case {
 				return $settings_menu_mock;
 	 		}
 		);
+		$container->set(
+			'admin_tools_menu',
+			static function () use ( $tools_menu_mock ) {
+				return $tools_menu_mock;
+			}
+		);
 
 		$settings_menu_mock->expects( $this->once() )->method( 'add_page' );
+		$tools_menu_mock->expects( $this->once() )->method( 'add_page' );
 
 		remove_all_actions( 'admin_menu' );
 		$this->callInaccessibleMethod( $this->services_loader, 'load_settings_page' );

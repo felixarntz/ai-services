@@ -112,6 +112,16 @@ const selectors = {
 		return pluginData?.plugin_contributing_url;
 	} ),
 
+	getPluginSettingsUrl: createRegistrySelector( ( select ) => () => {
+		const pluginData = select( STORE_NAME ).getPluginData();
+		return pluginData?.plugin_settings_url;
+	} ),
+
+	getPluginPlaygroundUrl: createRegistrySelector( ( select ) => () => {
+		const pluginData = select( STORE_NAME ).getPluginData();
+		return pluginData?.plugin_playground_url;
+	} ),
+
 	currentUserCan: createRegistrySelector(
 		( select ) =>
 			( state, capability, ...args ) => {

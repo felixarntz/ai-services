@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
+use Felix_Arntz\AI_Services\Services\Admin\Playground_Page;
 use Felix_Arntz\AI_Services\Services\Admin\Plugin_Action_Link;
 use Felix_Arntz\AI_Services\Services\Admin\Settings_Page;
 use Felix_Arntz\AI_Services\Services\CLI\AI_Services_Command;
@@ -251,7 +252,16 @@ final class Services_Service_Container_Builder {
 
 			return new REST_Route_Collection(
 				array(
-					new Self_REST_Route( $cont['plugin_env'], $cont['api'], $cont['current_user'] ),
+					new Self_REST_Route(
+						$cont['plugin_env'],
+						$cont['site_env'],
+						$cont['api'],
+						$cont['current_user'],
+						$cont['admin_settings_menu'],
+						$cont['admin_tools_menu'],
+						$cont['admin_settings_page'],
+						$cont['admin_playground_page']
+					),
 					new Service_List_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
 					new Service_Get_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
 					new Service_Generate_Text_REST_Route( $cont['api'], $cont['current_user'] ),
@@ -270,16 +280,25 @@ final class Services_Service_Container_Builder {
 	 * @since 0.1.0
 	 */
 	private function build_admin_services(): void {
-		$this->container['admin_settings_menu'] = static function () {
+		$this->container['admin_settings_menu']   = static function () {
 			return new Admin_Menu( 'options-general.php' );
 		};
-		$this->container['admin_settings_page'] = static function ( $cont ) {
+		$this->container['admin_tools_menu']      = static function () {
+			return new Admin_Menu( 'tools.php' );
+		};
+		$this->container['admin_settings_page']   = static function ( $cont ) {
 			return new Settings_Page(
 				$cont['script_registry'],
 				$cont['style_registry']
 			);
 		};
-		$this->container['plugin_action_link']  = static function ( $cont ) {
+		$this->container['admin_playground_page'] = static function ( $cont ) {
+			return new Playground_Page(
+				$cont['script_registry'],
+				$cont['style_registry']
+			);
+		};
+		$this->container['plugin_action_link']    = static function ( $cont ) {
 			return new Plugin_Action_Link(
 				$cont['admin_settings_menu'],
 				$cont['admin_settings_page'],

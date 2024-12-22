@@ -22,35 +22,36 @@ import {
 import { store as preferencesStore } from '@wordpress/preferences';
 
 /**
- * Renders the More menu to display in the header of the settings app.
+ * Renders the More menu to display in the header of the playground app.
  *
- * @since 0.1.0
+ * @since n.e.x.t
  *
  * @return {Component} The component to be rendered.
  */
-export default function SettingsMoreMenu() {
+export default function PlaygroundMoreMenu() {
 	const showIconLabels = useSelect(
 		( select ) =>
 			select( preferencesStore ).get( 'ai-services', 'showIconLabels' ),
 		[]
 	);
 
-	const { playgroundUrl, homepageUrl, supportUrl, contributingUrl } =
-		useSelect( ( select ) => {
+	const { settingsUrl, homepageUrl, supportUrl, contributingUrl } = useSelect(
+		( select ) => {
 			const {
-				getPluginPlaygroundUrl,
+				getPluginSettingsUrl,
 				getPluginHomepageUrl,
 				getPluginSupportUrl,
 				getPluginContributingUrl,
 			} = select( aiStore );
 
 			return {
-				playgroundUrl: getPluginPlaygroundUrl(),
+				settingsUrl: getPluginSettingsUrl(),
 				homepageUrl: getPluginHomepageUrl(),
 				supportUrl: getPluginSupportUrl(),
 				contributingUrl: getPluginContributingUrl(),
 			};
-		} );
+		}
+	);
 
 	return (
 		<DropdownMenu
@@ -74,12 +75,9 @@ export default function SettingsMoreMenu() {
 					</MenuGroup>
 					<MenuGroup label={ __( 'Tools', 'ai-services' ) }>
 						<KeyboardShortcutsMenuItem />
-						{ !! playgroundUrl && (
-							<MenuItem href={ playgroundUrl }>
-								{ __(
-									'AI Services Playground',
-									'ai-services'
-								) }
+						{ !! settingsUrl && (
+							<MenuItem href={ settingsUrl }>
+								{ __( 'AI Services Settings', 'ai-services' ) }
 							</MenuItem>
 						) }
 					</MenuGroup>

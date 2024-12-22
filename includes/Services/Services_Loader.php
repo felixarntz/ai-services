@@ -213,6 +213,7 @@ final class Services_Loader implements With_Hooks {
 			'admin_menu',
 			function () {
 				$this->container['admin_settings_menu']->add_page( $this->container['admin_settings_page'] );
+				$this->container['admin_tools_menu']->add_page( $this->container['admin_playground_page'] );
 			}
 		);
 

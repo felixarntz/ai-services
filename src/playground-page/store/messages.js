@@ -75,13 +75,19 @@ const actions = {
 				await resolveSelect( aiStore ).getServices();
 			}
 
+			const modelParams = {
+				feature: 'ai-playground',
+				model: modelSlug,
+			};
+			const systemInstruction = select.getSystemInstruction();
+			if ( systemInstruction ) {
+				modelParams.systemInstruction = systemInstruction;
+			}
+
 			const service = registry
 				.select( aiStore )
 				.getAvailableService( serviceSlug );
-			const model = service.getModel( {
-				feature: 'ai-playground',
-				model: modelSlug,
-			} );
+			const model = service.getModel( modelParams );
 
 			let candidates;
 			try {

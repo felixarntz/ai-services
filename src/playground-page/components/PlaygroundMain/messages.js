@@ -7,6 +7,7 @@ import Markdown from 'markdown-to-jsx';
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
+import { useEffect, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
@@ -44,8 +45,28 @@ export default function Messages() {
 		select( playgroundStore ).getMessages()
 	);
 
+	const messagesContainerRef = useRef();
+
+	const scrollIntoView = () =>
+		setTimeout( () => {
+			if ( messagesContainerRef.current ) {
+				messagesContainerRef.current.scrollTop =
+					messagesContainerRef?.current?.scrollHeight;
+			}
+		}, 50 );
+
+	// Scroll to the latest message when the component mounts.
+	useEffect( () => {
+		const timeout = scrollIntoView();
+
+		return () => clearTimeout( timeout );
+	}, [ messages ] );
+
 	return (
-		<div className="ai-services-playground__messages-container">
+		<div
+			className="ai-services-playground__messages-container"
+			ref={ messagesContainerRef }
+		>
 			<div className="ai-services-playground__messages">
 				{ messages.map(
 					( { type, content, ...additionalData }, index ) => (

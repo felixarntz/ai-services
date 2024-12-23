@@ -3,8 +3,13 @@
  */
 import { Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { preformatted } from '@wordpress/icons';
+import {
+	useShortcut,
+	store as keyboardShortcutsStore,
+} from '@wordpress/keyboard-shortcuts';
 
 /**
  * Internal dependencies
@@ -19,6 +24,22 @@ import { store as playgroundStore } from '../../store';
  * @return {Component} The component to be rendered.
  */
 export default function SystemInstructionToggle() {
+	const { registerShortcut } = useDispatch( keyboardShortcutsStore );
+	useEffect( () => {
+		registerShortcut( {
+			name: 'ai-services/toggle-system-instruction',
+			category: 'global',
+			description: __(
+				'Show or hide the system instruction.',
+				'ai-services'
+			),
+			keyCombination: {
+				modifier: 'primaryShift',
+				character: '.',
+			},
+		} );
+	}, [ registerShortcut ] );
+
 	const isSystemInstructionVisible = useSelect( ( select ) =>
 		select( playgroundStore ).isSystemInstructionVisible()
 	);
@@ -33,6 +54,17 @@ export default function SystemInstructionToggle() {
 		}
 	};
 
+	useShortcut( 'ai-services/toggle-system-instruction', () => {
+		toggleSystemInstruction();
+	} );
+
+	const shortcut = useSelect( ( select ) =>
+		select( keyboardShortcutsStore ).getShortcutRepresentation(
+			'ai-services/toggle-system-instruction',
+			'display'
+		)
+	);
+
 	return (
 		<Button
 			icon={ preformatted }
@@ -42,6 +74,7 @@ export default function SystemInstructionToggle() {
 			aria-controls="ai-services-playground-system-instruction"
 			aria-pressed={ isSystemInstructionVisible }
 			aria-expanded={ isSystemInstructionVisible }
+			shortcut={ shortcut }
 		/>
 	);
 }

@@ -240,6 +240,10 @@
 			color: var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9));
 		}
 
+		&--complex {
+			width: auto;
+		}
+
 		&--primary:not(:disabled) {
 			color: var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9));
 

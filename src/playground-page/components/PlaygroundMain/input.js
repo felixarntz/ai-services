@@ -8,6 +8,7 @@ import { enums, store as aiStore } from '@ai-services/ai';
  */
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
+import { ToggleControl } from '@wordpress/components';
 import { useCallback, useEffect, useState, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { send, upload, close } from '@wordpress/icons';
@@ -85,6 +86,7 @@ const matchLastMessage = (
 export default function Input() {
 	const [ prompt, setPrompt ] = useState( '' );
 	const [ attachment, setAttachment ] = useState( undefined );
+	const [ includeHistory, setIncludeHistory ] = useState( false );
 	const [ promptToMatch, setPromptToMatch ] = useState( false );
 	const [ matchedIndex, setMatchedIndex ] = useState( -1 );
 
@@ -144,7 +146,10 @@ export default function Input() {
 			prompt,
 			capabilities.includes( enums.AiCapability.MULTIMODAL_INPUT )
 				? attachment
-				: undefined
+				: undefined,
+			capabilities.includes( enums.AiCapability.CHAT_HISTORY )
+				? includeHistory
+				: false
 		);
 	};
 
@@ -274,6 +279,22 @@ export default function Input() {
 									{ upload }
 								</button>
 							) }
+						{ capabilities.includes(
+							enums.AiCapability.CHAT_HISTORY
+						) && (
+							<ToggleControl
+								__nextHasNoMarginBottom
+								className="ai-services-playground__input-action ai-services-playground__input-action--complex"
+								label={ __(
+									'Send message history with the prompt',
+									'ai-services'
+								) }
+								checked={ includeHistory }
+								onChange={ () =>
+									setIncludeHistory( ! includeHistory )
+								}
+							/>
+						) }
 					</div>
 					<div className="ai-services-playground__input-action-group">
 						<button

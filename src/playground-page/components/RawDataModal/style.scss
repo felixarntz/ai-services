@@ -3,7 +3,9 @@
 	&__raw-data-modal.components-modal__frame {
 
 		@media (min-width: 600px) {
+			width: 80%;
 			min-width: 550px;
+			max-width: 900px;
 		}
 	}
 

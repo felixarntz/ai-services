@@ -80,11 +80,12 @@ const actions = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {string}  prompt     Message prompt.
-	 * @param {Object?} attachment Optional attachment object.
+	 * @param {string}  prompt         Message prompt.
+	 * @param {Object?} attachment     Optional attachment object.
+	 * @param {boolean} includeHistory Whether to include the message history before the prompt. Default false.
 	 * @return {Function} Action creator.
 	 */
-	sendMessage( prompt, attachment ) {
+	sendMessage( prompt, attachment, includeHistory ) {
 		return async ( { registry, dispatch, select } ) => {
 			const serviceSlug = select.getService();
 			const modelSlug = select.getModel();
@@ -104,9 +105,23 @@ const actions = {
 			}
 
 			const newContent = await formatNewContent( prompt, attachment );
+
+			let contentToSend = newContent;
+			if ( includeHistory ) {
+				const originalMessages = select.getMessages();
+				if ( originalMessages && originalMessages.length ) {
+					contentToSend = [
+						...originalMessages.map(
+							( message ) => message.content
+						),
+						newContent,
+					];
+				}
+			}
+
 			dispatch.receiveMessage( 'user', newContent, {
 				rawData: {
-					content: newContent,
+					content: contentToSend,
 					modelParams,
 				},
 			} );
@@ -126,7 +141,7 @@ const actions = {
 
 			let candidates;
 			try {
-				candidates = await model.generateText( newContent );
+				candidates = await model.generateText( contentToSend );
 
 				const responseContent =
 					helpers.getCandidateContents( candidates )[ 0 ];

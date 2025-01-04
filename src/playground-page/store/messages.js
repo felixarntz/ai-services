@@ -9,7 +9,10 @@ import { enums, helpers, store as aiStore } from '@ai-services/ai';
 import { resolveSelect } from '@wordpress/data';
 import { sprintf } from '@wordpress/i18n';
 
+const EMPTY_ARRAY = [];
+
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
+const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
 const RESET_MESSAGES = 'RESET_MESSAGES';
 const SET_ACTIVE_RAW_DATA = 'SET_ACTIVE_RAW_DATA';
 const LOAD_START = 'LOAD_START';
@@ -57,7 +60,7 @@ const formatNewContent = async ( prompt, attachment ) => {
 };
 
 const initialState = {
-	messages: [],
+	messages: undefined,
 	loading: false,
 	activeRawData: null,
 };
@@ -168,6 +171,21 @@ const actions = {
 	},
 
 	/**
+	 * Receives messages from cache to restore the session.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {Object[]} messages Messages to restore.
+	 * @return {Object} Action creator.
+	 */
+	receiveMessagesFromCache( messages ) {
+		return {
+			type: RECEIVE_MESSAGES_FROM_CACHE,
+			payload: { messages },
+		};
+	},
+
+	/**
 	 * Resets all messages, effectively deleting them to start a new session.
 	 *
 	 * @since n.e.x.t
@@ -220,9 +238,22 @@ function reducer( state = initialState, action ) {
 					newMessage.rawData = additionalData.rawData;
 				}
 			}
+
+			const messages = [ ...state.messages, newMessage ];
+			window.sessionStorage.setItem(
+				'ai-services-playground-messages',
+				JSON.stringify( messages )
+			);
 			return {
 				...state,
-				messages: [ ...state.messages, newMessage ],
+				messages,
+			};
+		}
+		case RECEIVE_MESSAGES_FROM_CACHE: {
+			const { messages } = action.payload;
+			return {
+				...state,
+				messages,
 			};
 		}
 		case RESET_MESSAGES: {
@@ -255,13 +286,33 @@ function reducer( state = initialState, action ) {
 	return state;
 }
 
+const resolvers = {
+	/**
+	 * Retrieves messages from session storage.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return {Function} Action creator.
+	 */
+	getMessages() {
+		return async ( { dispatch } ) => {
+			const messages = window.sessionStorage.getItem(
+				'ai-services-playground-messages'
+			);
+			dispatch.receiveMessagesFromCache(
+				messages ? JSON.parse( messages ) : EMPTY_ARRAY
+			);
+		};
+	},
+};
+
 const selectors = {
 	getMessages: ( state ) => {
-		return state.messages;
+		return state.messages || EMPTY_ARRAY;
 	},
 
 	isLoading: ( state ) => {
-		return state.loading;
+		return state.loading || state.messages === undefined;
 	},
 
 	getActiveRawData: ( state ) => {
@@ -273,6 +324,7 @@ const storeConfig = {
 	initialState,
 	actions,
 	reducer,
+	resolvers,
 	selectors,
 };
 

@@ -59,6 +59,9 @@ class Playground_Page extends Abstract_Admin_Page {
 		add_action(
 			'admin_enqueue_scripts',
 			function () {
+				// The Playground script implicitly requires the media library.
+				wp_enqueue_media();
+
 				$this->script_registry->enqueue( 'ais-playground-page' );
 				$this->style_registry->enqueue( 'ais-playground-page' );
 

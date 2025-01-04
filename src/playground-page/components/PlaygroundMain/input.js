@@ -7,15 +7,17 @@ import { enums, store as aiStore } from '@ai-services/ai';
  * WordPress dependencies
  */
 import { useSelect, useDispatch } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
 import { useCallback, useEffect, useState, useRef } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
-import { send, upload } from '@wordpress/icons';
+import { __, sprintf } from '@wordpress/i18n';
+import { send, upload, close } from '@wordpress/icons';
 import { UP, DOWN } from '@wordpress/keycodes';
 
 /**
  * Internal dependencies
  */
 import { store as playgroundStore } from '../../store';
+import MediaModal from './media-modal';
 
 const EMPTY_ARRAY = [];
 
@@ -82,11 +84,12 @@ const matchLastMessage = (
  */
 export default function Input() {
 	const [ prompt, setPrompt ] = useState( '' );
+	const [ attachment, setAttachment ] = useState( undefined );
 	const [ promptToMatch, setPromptToMatch ] = useState( false );
 	const [ matchedIndex, setMatchedIndex ] = useState( -1 );
 
-	const { service, model, capabilities, messages } = useSelect(
-		( select ) => {
+	const { service, model, capabilities, messages, canUploadMedia } =
+		useSelect( ( select ) => {
 			const { getService, getModel, getMessages } =
 				select( playgroundStore );
 			const { getServices } = select( aiStore );
@@ -109,18 +112,24 @@ export default function Input() {
 				}
 			}
 
+			const { canUser } = select( coreStore );
+
 			return {
 				service: currentService,
 				model: currentModel,
 				capabilities: currentCapabilities,
 				messages: getMessages(),
+				canUploadMedia:
+					canUser( 'create', {
+						kind: 'root',
+						name: 'media',
+					} ) ?? true,
 			};
-		}
-	);
+		} );
 
 	const { sendMessage } = useDispatch( playgroundStore );
 
-	const disabled = ! service || ! model || ! prompt;
+	const disabled = ! service || ! model || ( ! prompt && ! attachment );
 
 	const sendPrompt = async () => {
 		if ( disabled ) {
@@ -130,7 +139,13 @@ export default function Input() {
 		setPromptToMatch( false );
 		setMatchedIndex( -1 );
 		setPrompt( '' );
-		await sendMessage( prompt );
+		setAttachment( undefined );
+		await sendMessage(
+			prompt,
+			capabilities.includes( enums.AiCapability.MULTIMODAL_INPUT )
+				? attachment
+				: undefined
+		);
 	};
 
 	const searchLastMessage = useCallback(
@@ -188,23 +203,77 @@ export default function Input() {
 					onChange={ ( event ) => setPrompt( event.target.value ) }
 					rows="2"
 				></textarea>
+				{ capabilities.includes(
+					enums.AiCapability.MULTIMODAL_INPUT
+				) &&
+					attachment && (
+						<div className="ai-services-playground__input-attachment">
+							<img
+								className="attachment-preview"
+								src={
+									attachment.sizes?.thumbnail?.url ||
+									attachment.icon
+								}
+								alt={ sprintf(
+									/* translators: %s: attachment filename */
+									__( 'Selected file: %s', 'ai-services' ),
+									attachment.filename
+								) }
+								width="80"
+								height="80"
+							/>
+							<button
+								className="attachment-remove-button"
+								aria-label={ __(
+									'Remove selected media',
+									'ai-services'
+								) }
+								onClick={ () => setAttachment( undefined ) }
+							>
+								{ close }
+							</button>
+						</div>
+					) }
 				<div className="ai-services-playground__input-actions">
 					<div className="ai-services-playground__input-action-group">
 						{ capabilities.includes(
 							enums.AiCapability.MULTIMODAL_INPUT
-						) && (
-							<button
-								className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
-								aria-label={ __(
-									'Upload media for multimodal prompt',
-									'ai-services'
-								) }
-								disabled={ true }
-								onClick={ () => {} }
-							>
-								{ upload }
-							</button>
-						) }
+						) &&
+							canUploadMedia && (
+								<MediaModal
+									attachmentId={ attachment?.id }
+									onSelect={ setAttachment }
+									allowedTypes={ [ 'image' ] }
+									render={ ( { open } ) => (
+										<button
+											className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
+											aria-label={ __(
+												'Select media for multimodal prompt',
+												'ai-services'
+											) }
+											onClick={ open }
+										>
+											{ upload }
+										</button>
+									) }
+								/>
+							) }
+						{ capabilities.includes(
+							enums.AiCapability.MULTIMODAL_INPUT
+						) &&
+							! canUploadMedia && (
+								<button
+									className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
+									aria-label={ __(
+										'Missing required permissions to select media',
+										'ai-services'
+									) }
+									disabled={ true }
+									onClick={ () => {} }
+								>
+									{ upload }
+								</button>
+							) }
 					</div>
 					<div className="ai-services-playground__input-action-group">
 						<button

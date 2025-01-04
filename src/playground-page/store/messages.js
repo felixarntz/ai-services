@@ -14,19 +14,45 @@ const RESET_MESSAGES = 'RESET_MESSAGES';
 const LOAD_START = 'LOAD_START';
 const LOAD_FINISH = 'LOAD_FINISH';
 
-const formatNewContent = ( content ) => {
-	if ( typeof content === 'string' ) {
-		return helpers.textToContent( content );
-	}
-
-	if ( Array.isArray( content ) ) {
-		return {
-			role: enums.ContentRole.USER,
-			parts: content,
+const getBase64Image = async ( url ) => {
+	const data = await fetch( url );
+	const blob = await data.blob();
+	return new Promise( ( resolve ) => {
+		const reader = new window.FileReader();
+		reader.readAsDataURL( blob );
+		reader.onloadend = () => {
+			const base64data = reader.result;
+			resolve( base64data );
 		};
+	} );
+};
+
+const formatNewContent = async ( prompt, attachment ) => {
+	if ( ! attachment ) {
+		return helpers.textToContent( prompt );
 	}
 
-	return content;
+	const parts = [];
+	if ( prompt ) {
+		parts.push( { text: prompt } );
+	}
+	if ( attachment ) {
+		const mimeType = attachment.mime;
+		const data = await getBase64Image(
+			attachment.sizes?.large?.url || attachment.url
+		);
+		parts.push( {
+			inlineData: {
+				mimeType,
+				data,
+			},
+		} );
+	}
+
+	return {
+		role: enums.ContentRole.USER,
+		parts,
+	};
 };
 
 const initialState = {
@@ -51,10 +77,11 @@ const actions = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {string|Object|Object[]} content Chat message content.
+	 * @param {string}  prompt     Message prompt.
+	 * @param {Object?} attachment Optional attachment object.
 	 * @return {Function} Action creator.
 	 */
-	sendMessage( content ) {
+	sendMessage( prompt, attachment ) {
 		return async ( { registry, dispatch, select } ) => {
 			const serviceSlug = select.getService();
 			const modelSlug = select.getModel();
@@ -64,7 +91,7 @@ const actions = {
 				return;
 			}
 
-			const newContent = formatNewContent( content );
+			const newContent = await formatNewContent( prompt, attachment );
 			dispatch.receiveMessage( 'user', newContent );
 
 			await dispatch( {

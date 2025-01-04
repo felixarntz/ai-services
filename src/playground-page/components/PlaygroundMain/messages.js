@@ -34,6 +34,83 @@ const getModelAuthor = ( additionalData ) => {
 };
 
 /**
+ * Renders a single media element.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} props          The component props.
+ * @param {string} props.mimeType The media MIME type.
+ * @param {string} props.src      The media source.
+ * @return {Component} The component to be rendered.
+ */
+function Media( { mimeType, src } ) {
+	if ( mimeType.startsWith( 'image' ) ) {
+		return <img src={ src } alt="" />;
+	}
+
+	if ( mimeType.startsWith( 'audio' ) ) {
+		return <audio src={ src } controls />;
+	}
+
+	if ( mimeType.startsWith( 'video' ) ) {
+		return <video src={ src } controls />;
+	}
+
+	return null;
+}
+
+/**
+ * Renders formatted content parts.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object}   props       Component props.
+ * @param {Object[]} props.parts The parts to render.
+ * @return {Component} The component to be rendered.
+ */
+function Parts( { parts } ) {
+	return parts.map( ( part, index ) => {
+		if ( part.text ) {
+			return (
+				<div className="ai-services-content-part" key={ index }>
+					<Markdown
+						options={ {
+							forceBlock: true,
+							forceWrapper: true,
+						} }
+					>
+						{ part.text }
+					</Markdown>
+				</div>
+			);
+		}
+
+		if ( part.inlineData ) {
+			const { mimeType, data } = part.inlineData;
+			const base64 = /^data:[a-z]+\/[a-z]+;base64,/.test( data )
+				? data
+				: `data:${ mimeType };base64,${ data }`;
+			return (
+				<div className="ai-services-content-part" key={ index }>
+					<Media mimeType={ mimeType } src={ base64 } />
+				</div>
+			);
+		}
+
+		if ( part.fileData ) {
+			const { mimeType, fileUri } = part.fileData;
+			return (
+				<div className="ai-services-content-part" key={ index }>
+					<Media mimeType={ mimeType } src={ fileUri } />
+				</div>
+			);
+		}
+
+		return null;
+	} );
+}
+
+/**
  * Renders the messages UI.
  *
  * @since n.e.x.t
@@ -83,20 +160,7 @@ export default function Messages() {
 										: getModelAuthor( additionalData ) }
 								</div>
 								<div className="ai-services-playground__message-content">
-									{ content.parts.map(
-										( { text }, partIndex ) =>
-											!! text && (
-												<Markdown
-													key={ partIndex }
-													options={ {
-														forceBlock: true,
-														forceWrapper: true,
-													} }
-												>
-													{ text }
-												</Markdown>
-											)
-									) }
+									<Parts parts={ content.parts } />
 								</div>
 							</div>
 						</div>

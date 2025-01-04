@@ -4,8 +4,12 @@
 import { __ } from '@wordpress/i18n';
 import { MenuItem } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { store as interfaceStore } from '@wordpress/interface';
 import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
+
+/**
+ * Internal dependencies
+ */
+import { store as interfaceStore } from '../../store';
 
 /**
  * Renders a menu item to open the keyboard shortcuts help modal.
@@ -25,7 +29,7 @@ export default function KeyboardShortcutsMenuItem() {
 
 	return (
 		<MenuItem
-			onClick={ () => openModal( 'ai-services/keyboard-shortcuts-help' ) }
+			onClick={ () => openModal( 'keyboard-shortcuts-help' ) }
 			shortcut={ shortcut }
 		>
 			{ __( 'Keyboard shortcuts', 'ai-services' ) }

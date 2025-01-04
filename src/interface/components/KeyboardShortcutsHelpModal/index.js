@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import { Modal } from '@wordpress/components';
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
@@ -16,7 +15,12 @@ import {
 } from '@wordpress/keyboard-shortcuts';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { displayShortcutList, shortcutAriaLabel } from '@wordpress/keycodes';
-import { store as interfaceStore } from '@wordpress/interface';
+
+/**
+ * Internal dependencies
+ */
+import { store as interfaceStore } from '../../store';
+import Modal from '../Modal';
 
 /**
  * Renders a shortcut key combination.
@@ -229,34 +233,17 @@ ShortcutCategorySection.propTypes = {
  * @return {Component} The component to be rendered.
  */
 export default function KeyboardShortcutsHelpModal() {
-	const isModalActive = useSelect(
-		( select ) =>
-			select( interfaceStore ).isModalActive(
-				'ai-services/keyboard-shortcuts-help'
-			),
-		[]
+	const { toggleModal } = useDispatch( interfaceStore );
+
+	useShortcut( 'ai-services/keyboard-shortcuts', () =>
+		toggleModal( 'keyboard-shortcuts-help' )
 	);
-	const { openModal, closeModal } = useDispatch( interfaceStore );
-
-	const toggleModal = () => {
-		if ( isModalActive ) {
-			closeModal();
-		} else {
-			openModal( 'ai-services/keyboard-shortcuts-help' );
-		}
-	};
-	useShortcut( 'ai-services/keyboard-shortcuts', toggleModal );
-
-	if ( ! isModalActive ) {
-		return null;
-	}
 
 	return (
 		<Modal
-			className="editor-keyboard-shortcut-help-modal"
+			identifier="keyboard-shortcuts-help"
 			title={ __( 'Keyboard shortcuts', 'ai-services' ) }
-			closeButtonLabel={ __( 'Close', 'ai-services' ) }
-			onRequestClose={ toggleModal }
+			className="editor-keyboard-shortcut-help-modal"
 		>
 			<ShortcutCategorySection categoryName="main" />
 			<ShortcutCategorySection

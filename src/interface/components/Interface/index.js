@@ -7,13 +7,9 @@ import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import {
-	InterfaceSkeleton,
-	store as interfaceStore,
-} from '@wordpress/interface';
+import { InterfaceSkeleton } from '@wordpress/interface';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useEffect, useState } from '@wordpress/element';
-import { store as preferencesStore } from '@wordpress/preferences';
+import { useEffect } from '@wordpress/element';
 import {
 	useShortcut,
 	store as keyboardShortcutsStore,
@@ -23,10 +19,12 @@ import { useViewportMatch } from '@wordpress/compose';
 /**
  * Internal dependencies
  */
+import { store as interfaceStore } from '../../store';
 import { default as Header, useHasHeader } from '../Header';
 import HeaderActions from '../HeaderActions';
 import { default as Footer, useHasFooter } from '../Footer';
 import { default as Sidebar, useHasSidebar } from '../Sidebar';
+import { default as Modal } from '../Modal';
 import Notices from '../Notices';
 import Snackbars from '../Snackbars';
 
@@ -44,32 +42,48 @@ import Snackbars from '../Snackbars';
 export default function Interface( { className, labels, children } ) {
 	const isLargeViewport = useViewportMatch( 'medium' );
 
-	const { isDistractionFree, previousShortcut, nextShortcut, activeSidebar } =
-		useSelect( ( select ) => {
-			const { get } = select( preferencesStore );
-			const { getAllShortcutKeyCombinations } = select(
-				keyboardShortcutsStore
-			);
-			const { getActiveComplementaryArea } = select( interfaceStore );
+	const {
+		isDistractionFree,
+		previousShortcut,
+		nextShortcut,
+		activeSidebar,
+		defaultSidebar,
+	} = useSelect( ( select ) => {
+		const { getAllShortcutKeyCombinations } = select(
+			keyboardShortcutsStore
+		);
+		const { getActiveSidebar, getDefaultSidebar, getPreference } =
+			select( interfaceStore );
 
-			return {
-				isDistractionFree: get( 'ai-services', 'distractionFree' ),
-				previousShortcut: getAllShortcutKeyCombinations(
-					'ai-services/previous-region'
-				),
-				nextShortcut: getAllShortcutKeyCombinations(
-					'ai-services/next-region'
-				),
-				activeSidebar: getActiveComplementaryArea( 'ai-services' ),
-			};
-		} );
+		return {
+			isDistractionFree: getPreference( 'distractionFree' ),
+			previousShortcut: getAllShortcutKeyCombinations(
+				'ai-services/previous-region'
+			),
+			nextShortcut: getAllShortcutKeyCombinations(
+				'ai-services/next-region'
+			),
+			activeSidebar: getActiveSidebar(),
+			defaultSidebar: getDefaultSidebar(),
+		};
+	} );
 
-	const [ defaultSidebar, setDefaultSidebar ] = useState( null );
+	const { setDefaultSidebar, toggleDefaultSidebar, togglePreference } =
+		useDispatch( interfaceStore );
+
 	useEffect( () => {
 		if ( activeSidebar && ! defaultSidebar ) {
 			setDefaultSidebar( activeSidebar );
 		}
 	}, [ activeSidebar, defaultSidebar, setDefaultSidebar ] );
+
+	useShortcut( 'ai-services/toggle-distraction-free', () => {
+		togglePreference( 'distractionFree' );
+	} );
+
+	useShortcut( 'ai-services/toggle-sidebar', () => {
+		toggleDefaultSidebar();
+	} );
 
 	const hasHeader = useHasHeader();
 	const header = hasHeader && (
@@ -93,24 +107,6 @@ export default function Interface( { className, labels, children } ) {
 	const hasSidebar = useHasSidebar();
 	const sidebar = hasSidebar && <Sidebar.Slot />;
 
-	const { toggle: togglePreference } = useDispatch( preferencesStore );
-
-	useShortcut( 'ai-services/toggle-distraction-free', () => {
-		togglePreference( 'ai-services', 'distractionFree' );
-	} );
-
-	const { getActiveComplementaryArea } = useSelect( interfaceStore );
-	const { enableComplementaryArea, disableComplementaryArea } =
-		useDispatch( interfaceStore );
-
-	useShortcut( 'ai-services/toggle-sidebar', () => {
-		if ( getActiveComplementaryArea( 'ai-services' ) ) {
-			disableComplementaryArea( 'ai-services' );
-		} else if ( defaultSidebar ) {
-			enableComplementaryArea( 'ai-services', defaultSidebar );
-		}
-	} );
-
 	return (
 		<InterfaceSkeleton
 			enableRegionNavigation={ true }
@@ -125,6 +121,7 @@ export default function Interface( { className, labels, children } ) {
 					{ ! isDistractionFree && <Notices /> }
 					{ children }
 					<Snackbars />
+					<Modal.Slot />
 				</>
 			}
 			editorNotices={ <Notices /> }

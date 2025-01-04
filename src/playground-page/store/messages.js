@@ -7,10 +7,11 @@ import { enums, helpers, store as aiStore } from '@ai-services/ai';
  * WordPress dependencies
  */
 import { resolveSelect } from '@wordpress/data';
-import { __, sprintf } from '@wordpress/i18n';
+import { sprintf } from '@wordpress/i18n';
 
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 const RESET_MESSAGES = 'RESET_MESSAGES';
+const SET_ACTIVE_RAW_DATA = 'SET_ACTIVE_RAW_DATA';
 const LOAD_START = 'LOAD_START';
 const LOAD_FINISH = 'LOAD_FINISH';
 
@@ -58,15 +59,12 @@ const formatNewContent = async ( prompt, attachment ) => {
 const initialState = {
 	messages: [],
 	loading: false,
+	activeRawData: null,
 };
 
 const formatErrorContent = ( error ) => {
 	return helpers.textToContent(
-		sprintf(
-			/* translators: %s: error message */
-			__( 'An error occurred: %s', 'ai-services' ),
-			error.message || error
-		),
+		sprintf( '%s', error.message || error ),
 		enums.ContentRole.MODEL
 	);
 };
@@ -91,17 +89,6 @@ const actions = {
 				return;
 			}
 
-			const newContent = await formatNewContent( prompt, attachment );
-			dispatch.receiveMessage( 'user', newContent );
-
-			await dispatch( {
-				type: LOAD_START,
-			} );
-
-			if ( registry.select( aiStore ).getServices() === undefined ) {
-				await resolveSelect( aiStore ).getServices();
-			}
-
 			const modelParams = {
 				feature: 'ai-playground',
 				model: modelSlug,
@@ -109,6 +96,22 @@ const actions = {
 			const systemInstruction = select.getSystemInstruction();
 			if ( systemInstruction ) {
 				modelParams.systemInstruction = systemInstruction;
+			}
+
+			const newContent = await formatNewContent( prompt, attachment );
+			dispatch.receiveMessage( 'user', newContent, {
+				rawData: {
+					content: newContent,
+					modelParams,
+				},
+			} );
+
+			await dispatch( {
+				type: LOAD_START,
+			} );
+
+			if ( registry.select( aiStore ).getServices() === undefined ) {
+				await resolveSelect( aiStore ).getServices();
 			}
 
 			const service = registry
@@ -177,6 +180,21 @@ const actions = {
 			payload: {},
 		};
 	},
+
+	/**
+	 * Sets the active raw data (to display in a modal).
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {Object} rawData Raw data to display.
+	 * @return {Object} Action creator.
+	 */
+	setActiveRawData( rawData ) {
+		return {
+			type: SET_ACTIVE_RAW_DATA,
+			payload: { rawData },
+		};
+	},
 };
 
 /**
@@ -193,10 +211,14 @@ function reducer( state = initialState, action ) {
 		case RECEIVE_MESSAGE: {
 			const { type, content, additionalData } = action.payload;
 			const newMessage = { type, content };
-			if ( additionalData && type === 'model' ) {
-				newMessage.service = additionalData.service;
-				newMessage.model = additionalData.model;
-				newMessage.rawData = additionalData.rawData;
+			if ( additionalData ) {
+				if ( type === 'model' ) {
+					newMessage.service = additionalData.service;
+					newMessage.model = additionalData.model;
+					newMessage.rawData = additionalData.rawData;
+				} else if ( type === 'user' ) {
+					newMessage.rawData = additionalData.rawData;
+				}
 			}
 			return {
 				...state,
@@ -207,6 +229,13 @@ function reducer( state = initialState, action ) {
 			return {
 				...state,
 				messages: [],
+			};
+		}
+		case SET_ACTIVE_RAW_DATA: {
+			const { rawData } = action.payload;
+			return {
+				...state,
+				activeRawData: rawData,
 			};
 		}
 		case LOAD_START: {
@@ -233,6 +262,10 @@ const selectors = {
 
 	isLoading: ( state ) => {
 		return state.loading;
+	},
+
+	getActiveRawData: ( state ) => {
+		return state.activeRawData;
 	},
 };
 

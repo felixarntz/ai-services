@@ -10,13 +10,13 @@ import {
 	PinnedSidebars,
 } from '@ai-services/interface';
 import { PluginIcon } from '@ai-services/components';
-import { useViewportMatch } from '@wordpress/compose';
 
 /**
  * WordPress dependencies
  */
 import { __, isRTL } from '@wordpress/i18n';
 import { drawerLeft, drawerRight } from '@wordpress/icons';
+import { useViewportMatch } from '@wordpress/compose';
 
 /**
  * Internal dependencies
@@ -25,6 +25,7 @@ import LostMessagesWarning from '../LostMessagesWarning';
 import PlaygroundMoreMenu from '../PlaygroundMoreMenu';
 import PlaygroundStatus from '../PlaygroundStatus';
 import PlaygroundMain from '../PlaygroundMain';
+import RawDataModal from '../RawDataModal';
 import PlaygroundCapabilitiesPanel from '../PlaygroundCapabilitiesPanel';
 import PlaygroundServiceModelPanel from '../PlaygroundServiceModelPanel';
 import SystemInstructionToggle from './system-instruction-toggle';
@@ -69,6 +70,7 @@ export default function PlaygroundApp() {
 				</HeaderActions>
 			</Header>
 			<PlaygroundMain />
+			<RawDataModal />
 			<Sidebar
 				identifier="ai-services/playground-sidebar"
 				title={ __( 'AI Configuration', 'ai-services' ) }

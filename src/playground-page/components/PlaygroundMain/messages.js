@@ -2,13 +2,16 @@
  * External dependencies
  */
 import Markdown from 'markdown-to-jsx';
+import { store as interfaceStore } from '@ai-services/interface';
 
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { Toolbar, ToolbarButton } from '@wordpress/components';
 import { useEffect, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import { code } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -122,6 +125,9 @@ export default function Messages() {
 		select( playgroundStore ).getMessages()
 	);
 
+	const { setActiveRawData } = useDispatch( playgroundStore );
+	const { openModal } = useDispatch( interfaceStore );
+
 	const messagesContainerRef = useRef();
 
 	const scrollIntoView = () =>
@@ -162,6 +168,32 @@ export default function Messages() {
 								<div className="ai-services-playground__message-content">
 									<Parts parts={ content.parts } />
 								</div>
+								{ additionalData.rawData && (
+									<Toolbar
+										className="ai-services-playground__message-toolbar"
+										label={ __(
+											'Additional message actions',
+											'ai-services'
+										) }
+									>
+										<ToolbarButton
+											size="small"
+											icon={ code }
+											iconSize={ 18 }
+											onClick={ () => {
+												setActiveRawData(
+													additionalData.rawData
+												);
+												openModal( 'raw-message-data' );
+											} }
+										>
+											{ __(
+												'View raw data',
+												'ai-services'
+											) }
+										</ToolbarButton>
+									</Toolbar>
+								) }
 							</div>
 						</div>
 					)

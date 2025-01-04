@@ -202,7 +202,7 @@ export default function Input() {
 					value={ prompt }
 					onChange={ ( event ) => setPrompt( event.target.value ) }
 					rows="2"
-				></textarea>
+				/>
 				{ capabilities.includes(
 					enums.AiCapability.MULTIMODAL_INPUT
 				) &&

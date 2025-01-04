@@ -11,6 +11,8 @@ import { sprintf } from '@wordpress/i18n';
 
 const EMPTY_ARRAY = [];
 
+const SESSION_STORAGE_KEY = 'ai-services-playground-messages';
+
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
 const RESET_MESSAGES = 'RESET_MESSAGES';
@@ -241,7 +243,7 @@ function reducer( state = initialState, action ) {
 
 			const messages = [ ...state.messages, newMessage ];
 			window.sessionStorage.setItem(
-				'ai-services-playground-messages',
+				SESSION_STORAGE_KEY,
 				JSON.stringify( messages )
 			);
 			return {
@@ -257,6 +259,7 @@ function reducer( state = initialState, action ) {
 			};
 		}
 		case RESET_MESSAGES: {
+			window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
 			return {
 				...state,
 				messages: [],
@@ -296,9 +299,8 @@ const resolvers = {
 	 */
 	getMessages() {
 		return async ( { dispatch } ) => {
-			const messages = window.sessionStorage.getItem(
-				'ai-services-playground-messages'
-			);
+			const messages =
+				window.sessionStorage.getItem( SESSION_STORAGE_KEY );
 			dispatch.receiveMessagesFromCache(
 				messages ? JSON.parse( messages ) : EMPTY_ARRAY
 			);

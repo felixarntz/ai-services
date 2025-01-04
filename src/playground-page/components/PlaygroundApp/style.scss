@@ -1,3 +1,11 @@
 .ais-header__left svg + h1 {
 	margin-left: 10px;
 }
+
+.ais-header__right {
+
+	.components-button:disabled,
+	.components-button[aria-disabled="true"] {
+		cursor: not-allowed;
+	}
+}

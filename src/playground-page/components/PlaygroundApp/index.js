@@ -21,7 +21,6 @@ import { useViewportMatch } from '@wordpress/compose';
 /**
  * Internal dependencies
  */
-import LostMessagesWarning from '../LostMessagesWarning';
 import PlaygroundMoreMenu from '../PlaygroundMoreMenu';
 import PlaygroundStatus from '../PlaygroundStatus';
 import PlaygroundMain from '../PlaygroundMain';
@@ -29,6 +28,7 @@ import RawDataModal from '../RawDataModal';
 import PlaygroundCapabilitiesPanel from '../PlaygroundCapabilitiesPanel';
 import PlaygroundServiceModelPanel from '../PlaygroundServiceModelPanel';
 import SystemInstructionToggle from './system-instruction-toggle';
+import ResetMessagesButton from './reset-messages-button';
 import './style.scss';
 
 const interfaceLabels = {
@@ -51,7 +51,6 @@ export default function PlaygroundApp() {
 
 	return (
 		<App labels={ interfaceLabels }>
-			<LostMessagesWarning />
 			<Header>
 				<PluginIcon size={ 48 } />
 				<h1
@@ -64,6 +63,7 @@ export default function PlaygroundApp() {
 					{ __( 'Playground', 'ai-services' ) }
 				</h1>
 				<HeaderActions>
+					<ResetMessagesButton />
 					<SystemInstructionToggle />
 					<PinnedSidebars />
 					<PlaygroundMoreMenu />

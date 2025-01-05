@@ -99,6 +99,19 @@ const actions = {
 				feature: 'ai-playground',
 				model: modelSlug,
 			};
+
+			const generationConfig = {};
+			const paramKeys = [ 'maxOutputTokens', 'temperature', 'topP' ];
+			paramKeys.forEach( ( key ) => {
+				const value = select.getModelParam( key );
+				if ( value ) {
+					generationConfig[ key ] = Number( value );
+				}
+			} );
+			if ( Object.keys( generationConfig ).length ) {
+				modelParams.generationConfig = generationConfig;
+			}
+
 			const systemInstruction = select.getSystemInstruction();
 			if ( systemInstruction ) {
 				modelParams.systemInstruction = systemInstruction;

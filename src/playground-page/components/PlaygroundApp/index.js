@@ -27,6 +27,7 @@ import PlaygroundMain from '../PlaygroundMain';
 import RawDataModal from '../RawDataModal';
 import PlaygroundCapabilitiesPanel from '../PlaygroundCapabilitiesPanel';
 import PlaygroundServiceModelPanel from '../PlaygroundServiceModelPanel';
+import PlaygroundModelConfigPanel from '../PlaygroundModelConfigPanel';
 import SystemInstructionToggle from './system-instruction-toggle';
 import ResetMessagesButton from './reset-messages-button';
 import './style.scss';
@@ -84,6 +85,7 @@ export default function PlaygroundApp() {
 			>
 				<PlaygroundCapabilitiesPanel />
 				<PlaygroundServiceModelPanel />
+				<PlaygroundModelConfigPanel />
 			</Sidebar>
 			<Footer>
 				<PlaygroundStatus />

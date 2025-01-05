@@ -95,6 +95,23 @@ const actions = {
 	},
 
 	/**
+	 * Sets a model configuration parameter.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string} key   Parameter key.
+	 * @param {*}      value Parameter value.
+	 * @return {Function} Action creator.
+	 */
+	setModelParam( key, value ) {
+		return ( { registry } ) => {
+			registry
+				.dispatch( preferencesStore )
+				.set( 'ai-services-playground', `model_param_${ key }`, value );
+		};
+	},
+
+	/**
 	 * Sets the system instruction.
 	 *
 	 * @since n.e.x.t
@@ -190,6 +207,13 @@ const selectors = {
 			return false;
 		}
 		return model;
+	} ),
+
+	getModelParam: createRegistrySelector( ( select ) => ( state, key ) => {
+		return select( preferencesStore ).get(
+			'ai-services-playground',
+			`model_param_${ key }`
+		);
 	} ),
 
 	getAvailableServices: createRegistrySelector( ( select ) => () => {

@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import { store as interfaceStore } from '@ai-services/interface';
+
+/**
  * WordPress dependencies
  */
 import {
@@ -7,7 +12,6 @@ import {
 	SelectControl,
 } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -24,13 +28,12 @@ import './style.scss';
  * @return {Component} The component to be rendered.
  */
 export default function PlaygroundCapabilitiesPanel() {
-	const [ panelOpened, setPanelOpened ] = useState( true );
-
 	const {
 		availableFoundationalCapabilities,
 		availableAdditionalCapabilities,
 		foundationalCapability,
 		additionalCapabilities,
+		isPanelOpened,
 	} = useSelect( ( select ) => {
 		const {
 			getAvailableFoundationalCapabilities,
@@ -38,6 +41,7 @@ export default function PlaygroundCapabilitiesPanel() {
 			getFoundationalCapability,
 			getAdditionalCapabilities,
 		} = select( playgroundStore );
+		const { isPanelActive } = select( interfaceStore );
 
 		return {
 			availableFoundationalCapabilities:
@@ -46,17 +50,19 @@ export default function PlaygroundCapabilitiesPanel() {
 				getAvailableAdditionalCapabilities(),
 			foundationalCapability: getFoundationalCapability(),
 			additionalCapabilities: getAdditionalCapabilities(),
+			isPanelOpened: isPanelActive( 'playground-capabilities', true ),
 		};
 	} );
 
 	const { setFoundationalCapability, toggleAdditionalCapability } =
 		useDispatch( playgroundStore );
+	const { togglePanel } = useDispatch( interfaceStore );
 
 	return (
 		<PanelBody
 			title={ __( 'Capabilities', 'ai-services' ) }
-			opened={ panelOpened }
-			onToggle={ () => setPanelOpened( ! panelOpened ) }
+			opened={ isPanelOpened }
+			onToggle={ () => togglePanel( 'playground-capabilities' ) }
 			className="ai-services-playground-capabilities-panel"
 		>
 			<SelectControl

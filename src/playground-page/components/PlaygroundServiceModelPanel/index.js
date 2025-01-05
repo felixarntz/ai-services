@@ -2,17 +2,14 @@
  * External dependencies
  */
 import { store as aiStore } from '@ai-services/ai';
+import { store as interfaceStore } from '@ai-services/interface';
 
 /**
  * WordPress dependencies
  */
 import { PanelBody, Notice, SelectControl } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import {
-	createInterpolateElement,
-	useMemo,
-	useState,
-} from '@wordpress/element';
+import { createInterpolateElement, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -36,8 +33,6 @@ const MODEL_SELECT_PLACEHOLDER_OPTIONS = [
  * @return {Component} The component to be rendered.
  */
 export default function PlaygroundServiceModelPanel() {
-	const [ panelOpened, setPanelOpened ] = useState( true );
-
 	const {
 		availableServices,
 		availableModels,
@@ -45,6 +40,7 @@ export default function PlaygroundServiceModelPanel() {
 		model,
 		servicesSettingsUrl,
 		currentUserCanManageServices,
+		isPanelOpened,
 	} = useSelect( ( select ) => {
 		const {
 			getAvailableServices,
@@ -53,6 +49,7 @@ export default function PlaygroundServiceModelPanel() {
 			getModel,
 		} = select( playgroundStore );
 		const { getPluginSettingsUrl, currentUserCan } = select( aiStore );
+		const { isPanelActive } = select( interfaceStore );
 
 		return {
 			availableServices: getAvailableServices(),
@@ -63,10 +60,12 @@ export default function PlaygroundServiceModelPanel() {
 			currentUserCanManageServices: currentUserCan(
 				'ais_manage_services'
 			),
+			isPanelOpened: isPanelActive( 'playground-service-model', true ),
 		};
 	} );
 
 	const { setService, setModel } = useDispatch( playgroundStore );
+	const { togglePanel } = useDispatch( interfaceStore );
 
 	const serviceSelectOptions = useMemo( () => {
 		return [
@@ -97,8 +96,8 @@ export default function PlaygroundServiceModelPanel() {
 	return (
 		<PanelBody
 			title={ __( 'Model selection', 'ai-services' ) }
-			opened={ panelOpened }
-			onToggle={ () => setPanelOpened( ! panelOpened ) }
+			opened={ isPanelOpened }
+			onToggle={ () => togglePanel( 'playground-service-model' ) }
 			className="ai-services-playground-service-model-panel"
 		>
 			{ availableServices.length ? (

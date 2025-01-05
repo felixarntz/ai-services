@@ -1,9 +1,13 @@
 /**
+ * External dependencies
+ */
+import { store as interfaceStore } from '@ai-services/interface';
+
+/**
  * WordPress dependencies
  */
 import { PanelBody, TextControl } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
@@ -20,25 +24,28 @@ import './style.scss';
  * @return {Component} The component to be rendered.
  */
 export default function PlaygroundModelConfigPanel() {
-	const [ panelOpened, setPanelOpened ] = useState( false );
+	const { maxOutputTokens, temperature, topP, isPanelOpened } = useSelect(
+		( select ) => {
+			const { getModelParam } = select( playgroundStore );
+			const { isPanelActive } = select( interfaceStore );
 
-	const { maxOutputTokens, temperature, topP } = useSelect( ( select ) => {
-		const { getModelParam } = select( playgroundStore );
-
-		return {
-			maxOutputTokens: getModelParam( 'maxOutputTokens' ),
-			temperature: getModelParam( 'temperature' ),
-			topP: getModelParam( 'topP' ),
-		};
-	} );
+			return {
+				maxOutputTokens: getModelParam( 'maxOutputTokens' ),
+				temperature: getModelParam( 'temperature' ),
+				topP: getModelParam( 'topP' ),
+				isPanelOpened: isPanelActive( 'playground-model-config' ),
+			};
+		}
+	);
 
 	const { setModelParam } = useDispatch( playgroundStore );
+	const { togglePanel } = useDispatch( interfaceStore );
 
 	return (
 		<PanelBody
 			title={ __( 'Model configuration', 'ai-services' ) }
-			opened={ panelOpened }
-			onToggle={ () => setPanelOpened( ! panelOpened ) }
+			opened={ isPanelOpened }
+			onToggle={ () => togglePanel( 'playground-model-config' ) }
 			className="ai-services-playground-model-config-panel"
 		>
 			<TextControl

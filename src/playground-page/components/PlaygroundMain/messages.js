@@ -130,19 +130,29 @@ export default function Messages() {
 
 	const messagesContainerRef = useRef();
 
-	const scrollIntoView = () =>
-		setTimeout( () => {
+	const scrollIntoView = () => {
+		const interval = setInterval( () => {
 			if ( messagesContainerRef.current ) {
+				if (
+					messagesContainerRef.current.scrollTop +
+						messagesContainerRef.current.clientHeight >=
+					messagesContainerRef.current.scrollHeight
+				) {
+					clearInterval( interval );
+					return;
+				}
 				messagesContainerRef.current.scrollTop =
-					messagesContainerRef?.current?.scrollHeight;
+					messagesContainerRef.current.scrollHeight;
 			}
-		}, 50 );
+		}, 100 );
+		return interval;
+	};
 
 	// Scroll to the latest message when the component mounts.
 	useEffect( () => {
-		const timeout = scrollIntoView();
+		const interval = scrollIntoView();
 
-		return () => clearTimeout( timeout );
+		return () => clearInterval( interval );
 	}, [ messages ] );
 
 	return (

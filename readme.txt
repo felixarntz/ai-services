@@ -15,7 +15,7 @@ Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript
 
 This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
 
-The plugin does intentionally _not_ come with specific AI driven features built-in, except for a simple WordPress support assistant chatbot that is opt-in via code. The purpose of this plugin is to facilitate use of AI by other plugins. As such, it is a perfect use-case for [plugin dependencies](https://make.wordpress.org/core/2024/03/05/introducing-plugin-dependencies-in-wordpress-6-5/).
+The plugin does intentionally _not_ come with specific AI driven features built-in, except for an AI Playground screen to explore AI capabilities as well as a settings screen to configure AI service credentials. The purpose of this plugin is to facilitate use of AI by other plugins. As such, it is a perfect use-case for [plugin dependencies](https://make.wordpress.org/core/2024/03/05/introducing-plugin-dependencies-in-wordpress-6-5/).
 
 Here's a (non-comprehensive) feature list:
 
@@ -29,10 +29,8 @@ Here's a (non-comprehensive) feature list:
   * [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
   * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
-* WordPress Assistant chatbot is the single user-facing built-in feature the plugin comes with
-  * This effectively is a simple proof of concept of how the APIs the plugin provides can be used
-  * The chatbot feature is inactive by default and can easily be [enabled via filter](#how%20can%20i%20enable%20the%20wordpress%20assistant%20chatbot%20feature%3F)
-  * No other user-facing features will ever be added - that's a promise - because this is first and foremost an **infrastructure plugin** that other plugins can rely on
+* AI Playground administration screen (in the Tools menu) allows exploring the different AI capabilities
+* AI Services settings screen to configure services with API credentials
 
 **Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set. As long as it is in a `0.x.y` version, there may be occasional breaking changes when using lower level parts of the API. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
 
@@ -174,7 +172,11 @@ Additionally, the [plugin documentation](https://github.com/felixarntz/ai-servic
 
 = Usage =
 
-You can configure the plugin with your AI service credentials using the _Settings > AI Services_ screen in the WP Admin menu.
+Once the plugin is active, you will find a new _Settings > AI Services_ submenu in the WordPress administration menu. In there, you can configure your AI service API keys. After that, you can use the _Tools > AI Playground_ screen to explore the available AI capabilities of the different connected services.
+
+If you have enabled the WordPress assistant chatbot via filter, you should see a small "Need help?" button in the lower right throughout WP Admin after you have configured at least one (valid) API key.
+
+Please refer to the [plugin documentation](https://github.com/felixarntz/ai-services/tree/main/docs/README.md) for instructions on how you can actually use the AI capabilities of the plugin in your own projects.
 
 == Frequently Asked Questions ==
 
@@ -206,7 +208,7 @@ Note that this filter does not allow you to change the `feature` parameter, as t
 
 = How can I enable the WordPress Assistant chatbot feature?
 
-There is a single user-facing built-in feature the plugin comes with, which is a simple WordPress Assistant chatbot, effectively acting as a proof of concept. Since the plugin is purely an infrastructure plugin that other plugins can use to access AI capabilities in WordPress, that chatbot feature is disabled by default.
+There is a simple WordPress Assistant chatbot available as an experimental feature of the plugin, effectively acting as a proof of concept. Since the plugin is purely an infrastructure plugin that other plugins can use to access AI capabilities in WordPress, that chatbot feature is disabled by default.
 
 If you want to test or use the chatbot, you can easily enable it via filter:
 

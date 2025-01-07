@@ -48,7 +48,7 @@ class Chatbot_Loader {
 		/**
 		 * Filters whether the chatbot is enabled.
 		 *
-		 * The chatbot is the only user-facing feature built into this plugin, effectively as a small proof of concept,
+		 * The chatbot is an experimental feature built into this plugin, effectively as a small proof of concept,
 		 * since otherwise it is an infrastructure plugin. It is disabled by default, but can be enabled by using this
 		 * filter.
 		 *

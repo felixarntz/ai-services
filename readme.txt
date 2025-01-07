@@ -272,7 +272,8 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 
 == Screenshots ==
 
-1. The AI Services settings screen where end users can paste their AI service credentials
+1. The AI Services settings screen where users can paste their AI service credentials
+2. The AI Playground where users can explore the AI capabilities of the different services
 
 == Changelog ==
 

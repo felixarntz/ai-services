@@ -241,6 +241,10 @@ add_filter(
 
 The same approach works for any other services too. Simply use the correct service slug, e.g. `openai` for the OpenAI integration and `anthropic` for the Anthropic integration.
 
+= Which user capabilities are available and how can I customize them? =
+
+[Please see the documentation article on customizing the available plugin capabilities.](https://github.com/felixarntz/ai-services/blob/main/docs/Customizing-the-Available-Capabilities.md)
+
 = Should this be in WordPress Core? =
 
 Probably not? At least not yet. While generative AI has been around for a few years, in the grand scheme of things we are still only scratching the surface of what's possible. But most importantly, the lack of standardization makes it difficult to consider built-in AI support in WordPress Core.

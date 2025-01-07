@@ -127,9 +127,11 @@ final class Services_Loader implements With_Hooks {
 				 *
 				 * This hook allows you to modify the rules for how these capabilities are granted. The capabilities
 				 * available in the controller are:
+				 *
 				 * - 'ais_manage_services' (base capability)
 				 * - 'ais_access_services' (base capability)
 				 * - 'ais_access_service' (meta capability, called with the specific service slug as parameter)
+				 * - 'ais_use_playground' (meta capability)
 				 *
 				 * @since 0.1.0
 				 *

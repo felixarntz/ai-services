@@ -2,7 +2,9 @@
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
-![AI Services settings screen showing text input fields for API credentials](https://github.com/user-attachments/assets/da7ba9e2-b9bd-4d03-aebc-1a42c33689be)
+| AI Services settings screen | AI Playground screen |
+| ------------- | ------------- |
+| ![The AI Services settings screen where users can paste their AI service credentials](https://raw.githubusercontent.com/felixarntz/ai-services/refs/heads/main/.wordpress-org/screenshot-1.png)  | ![The AI Playground where users can explore the AI capabilities of the different services](https://raw.githubusercontent.com/felixarntz/ai-services/refs/heads/main/.wordpress-org/screenshot-2.png)  |
 
 This WordPress plugin introduces central infrastructure which allows other plugins to make use of AI capabilities. It exposes APIs that can be used in various contexts, whether you need to use AI capabilities in server-side or client-side code. Furthermore, the APIs are agnostic of the AI service - whether that's Anthropic, Google, or OpenAI, to only name a few, you can use any of them in the same way. You can also register your own implementation of another service, if it is not supported out of the box.
 

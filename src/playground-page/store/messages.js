@@ -13,14 +13,87 @@ const EMPTY_ARRAY = [];
 
 const SESSION_STORAGE_KEY = 'ai-services-playground-messages';
 
-const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
-const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
-const RESET_MESSAGES = 'RESET_MESSAGES';
-const SET_ACTIVE_RAW_DATA = 'SET_ACTIVE_RAW_DATA';
-const LOAD_START = 'LOAD_START';
-const LOAD_FINISH = 'LOAD_FINISH';
+const prepareMessageForCache = ( message ) => {
+	return {
+		...message,
+		content: {
+			...message.content,
+			parts: message.content.parts.map( ( part ) => {
+				/*
+				 * For inline data where the attachment is known, strip the actual base64 data to save space.
+				 * Otherwise, the data may be too large for session storage.
+				 */
+				if (
+					part.inlineData &&
+					part.inlineData.data &&
+					message.attachment
+				) {
+					const { data, ...otherInlineData } = part.inlineData;
+					return {
+						...part,
+						inlineData: {
+							...otherInlineData,
+						},
+					};
+				}
+				return part;
+			} ),
+		},
+	};
+};
 
-const getBase64Image = async ( url ) => {
+const parseMessageFromCache = async ( message ) => {
+	return {
+		...message,
+		content: {
+			...message.content,
+			parts: await Promise.all(
+				message.content.parts.map( async ( part ) => {
+					// For inline data where the attachment is known but base64 data was stripped before cache, restore it.
+					if (
+						part.inlineData &&
+						! part.inlineData.data &&
+						message.attachment
+					) {
+						return {
+							...part,
+							inlineData: {
+								...part.inlineData,
+								data: await getBase64Representation(
+									message.attachment.sizes?.large?.url ||
+										message.attachment.url
+								),
+							},
+						};
+					}
+					return part;
+				} )
+			),
+		},
+	};
+};
+
+const retrieveMessages = async () => {
+	const messagesJson = window.sessionStorage.getItem( SESSION_STORAGE_KEY );
+	if ( messagesJson ) {
+		const messages = JSON.parse( messagesJson );
+		return await Promise.all( messages.map( parseMessageFromCache ) );
+	}
+	return EMPTY_ARRAY;
+};
+
+const storeMessages = ( messages ) => {
+	window.sessionStorage.setItem(
+		SESSION_STORAGE_KEY,
+		JSON.stringify( messages.map( prepareMessageForCache ) )
+	);
+};
+
+const clearMessages = () => {
+	window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
+};
+
+const getBase64Representation = async ( url ) => {
 	const data = await fetch( url );
 	const blob = await data.blob();
 	return new Promise( ( resolve ) => {
@@ -44,7 +117,7 @@ const formatNewContent = async ( prompt, attachment ) => {
 	}
 	if ( attachment ) {
 		const mimeType = attachment.mime;
-		const data = await getBase64Image(
+		const data = await getBase64Representation(
 			attachment.sizes?.large?.url || attachment.url
 		);
 		parts.push( {
@@ -60,6 +133,13 @@ const formatNewContent = async ( prompt, attachment ) => {
 		parts,
 	};
 };
+
+const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
+const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
+const RESET_MESSAGES = 'RESET_MESSAGES';
+const SET_ACTIVE_RAW_DATA = 'SET_ACTIVE_RAW_DATA';
+const LOAD_START = 'LOAD_START';
+const LOAD_FINISH = 'LOAD_FINISH';
 
 const initialState = {
 	messages: undefined,
@@ -132,12 +212,17 @@ const actions = {
 				}
 			}
 
-			dispatch.receiveMessage( 'user', newContent, {
+			const additionalPromptData = {
 				rawData: {
 					content: contentToSend,
 					modelParams,
 				},
-			} );
+			};
+			if ( attachment ) {
+				additionalPromptData.attachment = attachment;
+			}
+
+			dispatch.receiveMessage( 'user', newContent, additionalPromptData );
 
 			await dispatch( {
 				type: LOAD_START,
@@ -264,16 +349,19 @@ function reducer( state = initialState, action ) {
 					newMessage.service = additionalData.service;
 					newMessage.model = additionalData.model;
 					newMessage.rawData = additionalData.rawData;
+					if ( additionalData.attachment ) {
+						newMessage.attachment = additionalData.attachment;
+					}
 				} else if ( type === 'user' ) {
 					newMessage.rawData = additionalData.rawData;
+					if ( additionalData.attachment ) {
+						newMessage.attachment = additionalData.attachment;
+					}
 				}
 			}
 
 			const messages = [ ...state.messages, newMessage ];
-			window.sessionStorage.setItem(
-				SESSION_STORAGE_KEY,
-				JSON.stringify( messages )
-			);
+			storeMessages( messages );
 			return {
 				...state,
 				messages,
@@ -287,7 +375,7 @@ function reducer( state = initialState, action ) {
 			};
 		}
 		case RESET_MESSAGES: {
-			window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
+			clearMessages();
 			return {
 				...state,
 				messages: [],
@@ -327,11 +415,8 @@ const resolvers = {
 	 */
 	getMessages() {
 		return async ( { dispatch } ) => {
-			const messages =
-				window.sessionStorage.getItem( SESSION_STORAGE_KEY );
-			dispatch.receiveMessagesFromCache(
-				messages ? JSON.parse( messages ) : EMPTY_ARRAY
-			);
+			const messages = await retrieveMessages();
+			dispatch.receiveMessagesFromCache( messages );
 		};
 	},
 };

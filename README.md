@@ -2,7 +2,7 @@
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
-| AI Services settings screen | AI Playground screen |
+| AI Services: Settings screen | AI Services: Playground screen |
 | ------------- | ------------- |
 | ![The AI Services settings screen where users can paste their AI service credentials](https://raw.githubusercontent.com/felixarntz/ai-services/refs/heads/main/.wordpress-org/screenshot-1.png)  | ![The AI Playground where users can explore the AI capabilities of the different services](https://raw.githubusercontent.com/felixarntz/ai-services/refs/heads/main/.wordpress-org/screenshot-2.png)  |
 

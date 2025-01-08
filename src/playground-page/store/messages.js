@@ -13,64 +13,90 @@ const EMPTY_ARRAY = [];
 
 const SESSION_STORAGE_KEY = 'ai-services-playground-messages';
 
-const prepareMessageForCache = ( message ) => {
+const prepareContentForCache = ( content, attachment ) => {
 	return {
-		...message,
-		content: {
-			...message.content,
-			parts: message.content.parts.map( ( part ) => {
-				/*
-				 * For inline data where the attachment is known, strip the actual base64 data to save space.
-				 * Otherwise, the data may be too large for session storage.
-				 */
-				if (
-					part.inlineData &&
-					part.inlineData.data &&
-					message.attachment
-				) {
-					const { data, ...otherInlineData } = part.inlineData;
+		...content,
+		parts: content.parts.map( ( part ) => {
+			/*
+			 * For inline data where the attachment is known, strip the actual base64 data to save space.
+			 * Otherwise, the data may be too large for session storage.
+			 */
+			if ( part.inlineData && part.inlineData.data && attachment ) {
+				const { data, ...otherInlineData } = part.inlineData;
+				return {
+					...part,
+					inlineData: {
+						...otherInlineData,
+					},
+				};
+			}
+			return part;
+		} ),
+	};
+};
+
+const parseContentFromCache = async ( content, attachment ) => {
+	return {
+		...content,
+		parts: await Promise.all(
+			content.parts.map( async ( part ) => {
+				// For inline data where the attachment is known but base64 data was stripped before cache, restore it.
+				if ( part.inlineData && ! part.inlineData.data && attachment ) {
 					return {
 						...part,
 						inlineData: {
-							...otherInlineData,
+							...part.inlineData,
+							data: await getBase64Representation(
+								attachment.sizes?.large?.url || attachment.url
+							),
 						},
 					};
 				}
 				return part;
-			} ),
-		},
+			} )
+		),
 	};
 };
 
-const parseMessageFromCache = async ( message ) => {
-	return {
+const prepareMessageForCache = ( message ) => {
+	// We can only optimize messages with inline media if they have the attachment specified.
+	if ( ! message.attachment ) {
+		return message;
+	}
+
+	const prepared = {
 		...message,
-		content: {
-			...message.content,
-			parts: await Promise.all(
-				message.content.parts.map( async ( part ) => {
-					// For inline data where the attachment is known but base64 data was stripped before cache, restore it.
-					if (
-						part.inlineData &&
-						! part.inlineData.data &&
-						message.attachment
-					) {
-						return {
-							...part,
-							inlineData: {
-								...part.inlineData,
-								data: await getBase64Representation(
-									message.attachment.sizes?.large?.url ||
-										message.attachment.url
-								),
-							},
-						};
-					}
-					return part;
-				} )
-			),
-		},
+		content: prepareContentForCache( message.content, message.attachment ),
 	};
+	if ( prepared.rawData && prepared.rawData.content ) {
+		prepared.rawData = {
+			...prepared.rawData,
+			content: prepared.content,
+		};
+	}
+	return prepared;
+};
+
+const parseMessageFromCache = async ( message ) => {
+	// We can only parse messages with inline media if they have the attachment specified.
+	if ( ! message.attachment ) {
+		return message;
+	}
+
+	const parsed = {
+		...message,
+		content: await parseContentFromCache(
+			message.content,
+			message.attachment
+		),
+	};
+	if ( parsed.rawData && parsed.rawData.content ) {
+		parsed.rawData = {
+			...parsed.rawData,
+			content: parsed.content,
+		};
+	}
+	return parsed;
 };
 
 const retrieveMessages = async () => {

@@ -13,7 +13,7 @@ import './store';
 /**
  * Mounts the given component into the DOM.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Component} Component    The component to be mounted.
  * @param {Element}   renderTarget The target element to render the component into.

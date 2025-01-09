@@ -23,7 +23,7 @@ import './style.scss';
 /**
  * Renders the playground sidebar panel for AI capabilities.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

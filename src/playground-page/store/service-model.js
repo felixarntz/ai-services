@@ -58,7 +58,7 @@ const actions = {
 	/**
 	 * Sets the service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} service Service identifier.
 	 * @return {Function} Action creator.
@@ -81,7 +81,7 @@ const actions = {
 	/**
 	 * Sets the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} model Model identifier.
 	 * @return {Function} Action creator.
@@ -97,7 +97,7 @@ const actions = {
 	/**
 	 * Sets a model configuration parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} key   Parameter key.
 	 * @param {*}      value Parameter value.
@@ -114,7 +114,7 @@ const actions = {
 	/**
 	 * Sets the system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} systemInstruction System instruction.
 	 * @return {Function} Action creator.
@@ -134,7 +134,7 @@ const actions = {
 	/**
 	 * Shows the system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */
@@ -153,7 +153,7 @@ const actions = {
 	/**
 	 * Hides the system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */

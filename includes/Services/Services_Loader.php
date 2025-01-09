@@ -60,7 +60,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Adds cleanup hooks related to plugin deactivation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 */
 	private function add_cleanup_hooks(): void {
 		// This function is only available in WordPress 6.4+.
@@ -237,7 +237,7 @@ final class Services_Loader implements With_Hooks {
 	/**
 	 * Gets the service option names that are autoloaded.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return string[] List of autoloaded service options.
 	 */

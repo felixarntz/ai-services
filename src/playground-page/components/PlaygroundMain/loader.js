@@ -11,7 +11,7 @@ import { store as playgroundStore } from '../../store';
 /**
  * Renders the loader UI.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

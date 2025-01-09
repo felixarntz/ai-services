@@ -24,7 +24,7 @@ import { store as preferencesStore } from '@wordpress/preferences';
 /**
  * Renders the More menu to display in the header of the playground app.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

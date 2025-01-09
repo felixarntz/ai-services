@@ -9,7 +9,7 @@ import './style.scss';
 /**
  * Renders the playground main content.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

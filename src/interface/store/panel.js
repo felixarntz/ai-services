@@ -8,7 +8,7 @@ const actions = {
 	/**
 	 * Opens a panel.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} panelId Panel identifier.
 	 * @return {Function} Action creator.
@@ -34,7 +34,7 @@ const actions = {
 	/**
 	 * Closes a panel.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} panelId Panel identifier.
 	 * @return {Function} Action creator.
@@ -64,7 +64,7 @@ const actions = {
 	 * If the panel is active, it will be closed.
 	 * If the panel is closed, it will be opened.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} panelId Panel identifier.
 	 * @return {Function} Action creator.

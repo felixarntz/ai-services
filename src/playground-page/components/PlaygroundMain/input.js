@@ -79,7 +79,7 @@ const matchLastMessage = (
 /**
  * Renders the prompt input UI.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

@@ -55,7 +55,7 @@ function prepareContentForBrowser( content ) {
  * See https://github.com/explainers-by-googlers/prompt-api#examples for supported parameters.
  *
  * @since 0.3.0
- * @since n.e.x.t Checks for newer `ai.languageModel` property.
+ * @since 0.4.0 Checks for newer `ai.languageModel` property.
  *
  * @param {Object} modelParams Model parameters.
  * @return {Promise<Object>} The browser session.

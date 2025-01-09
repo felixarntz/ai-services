@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Renders the default button to open the media library.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object}   props      The component props.
  * @param {Function} props.open The function to open the media library modal.
@@ -30,7 +30,7 @@ function DefaultMediaButton( { open } ) {
 /**
  * Renders the media modal.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object}    props              The component props.
  * @param {Function}  props.onSelect     The callback function to call when a media item is selected.

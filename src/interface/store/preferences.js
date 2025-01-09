@@ -8,7 +8,7 @@ const actions = {
 	/**
 	 * Sets a preference.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} name  Preference name.
 	 * @param {any}    value Preference value.
@@ -25,7 +25,7 @@ const actions = {
 	/**
 	 * Toggles a preference.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} name Preference name.
 	 * @return {Function} Action creator.

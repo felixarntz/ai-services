@@ -36,7 +36,7 @@ const actions = {
 	/**
 	 * Sets the foundational capability.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} capability Foundational capability identifier.
 	 * @return {Function} Action creator.
@@ -56,7 +56,7 @@ const actions = {
 	/**
 	 * Toggles one of the additional capabilities
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} capability Additional capability identifier.
 	 * @return {Function} Action creator.
@@ -95,7 +95,7 @@ const actions = {
 	/**
 	 * Receives available foundational capabilities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {Object[]} capabilities Foundational capabilities, as array of objects with `identifier` and `label` properties.
 	 * @return {Function} Action creator.
@@ -114,7 +114,7 @@ const actions = {
 	/**
 	 * Receives available additional capabilities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {Object[]} capabilities Additional capabilities, as array of objects with `identifier` and `label` properties.
 	 * @return {Function} Action creator.
@@ -134,7 +134,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.
@@ -165,7 +165,7 @@ const resolvers = {
 	/**
 	 * Loads foundational capabilities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */
@@ -185,7 +185,7 @@ const resolvers = {
 	/**
 	 * Loads additional capabilities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */

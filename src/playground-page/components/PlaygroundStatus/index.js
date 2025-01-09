@@ -18,7 +18,7 @@ import { store as playgroundStore } from '../../store';
 /**
  * Renders the playground status text in a paragraph.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

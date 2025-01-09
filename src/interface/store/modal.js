@@ -8,7 +8,7 @@ const actions = {
 	/**
 	 * Opens a modal.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} modalId Modal identifier.
 	 * @return {Function} Action creator.
@@ -24,7 +24,7 @@ const actions = {
 	/**
 	 * Closes the currently open modal.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */
@@ -40,7 +40,7 @@ const actions = {
 	 * If the modal is active, it will be closed.
 	 * If the modal is closed or another modal is active, it will be opened.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} modalId Modal identifier.
 	 * @return {Function} Action creator.

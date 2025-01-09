@@ -27,7 +27,7 @@ const { Fill, Slot } = createSlotFill( 'Modal' );
  *
  * Multiple modals can be rendered, but only one can be active at a time.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object}  props            Component props.
  * @param {string}  props.identifier Identifier for the modal, to use in the store.
@@ -70,7 +70,7 @@ Modal.Slot = Slot;
 /**
  * Hook to check whether any fills are provided for the Modal slot.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {boolean} True if there are any Modal fills, false otherwise.
  */

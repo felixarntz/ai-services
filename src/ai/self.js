@@ -19,7 +19,7 @@ const actions = {
 	/**
 	 * Receives plugin data from the server.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {Object} pluginData Plugin data received from the server, as key value pairs.
 	 * @return {Function} Action creator.
@@ -39,7 +39,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.
@@ -63,7 +63,7 @@ const resolvers = {
 	/**
 	 * Fetches the plugin data from the server.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */

@@ -43,7 +43,7 @@ const interfaceLabels = {
 /**
  * Renders the full playground application.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

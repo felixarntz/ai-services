@@ -14,7 +14,7 @@ const actions = {
 	/**
 	 * Opens a sidebar.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} sidebarId Sidebar identifier.
 	 * @return {Function} Action creator.
@@ -30,7 +30,7 @@ const actions = {
 	/**
 	 * Closes the currently open sidebar (if any).
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */
@@ -48,7 +48,7 @@ const actions = {
 	 * If the sidebar is active, it will be closed.
 	 * If the sidebar is closed or another sidebar is active, it will be opened.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} sidebarId Sidebar identifier.
 	 * @return {Function} Action creator.
@@ -69,7 +69,7 @@ const actions = {
 	 * If a sidebar is active, it will be closed.
 	 * If no sidebar is active, the default sidebar will be opened.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */
@@ -90,7 +90,7 @@ const actions = {
 	/**
 	 * Sets the default sidebar.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} sidebarId Sidebar identifier.
 	 * @return {Object} Action creator.
@@ -106,7 +106,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.

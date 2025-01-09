@@ -19,7 +19,7 @@ import './style.scss';
 /**
  * Renders the modal displaying the raw data for a message.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

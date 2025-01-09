@@ -184,7 +184,7 @@ const actions = {
 	/**
 	 * Sends a message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string}  prompt         Message prompt.
 	 * @param {Object?} attachment     Optional attachment object.
@@ -297,7 +297,7 @@ const actions = {
 	/**
 	 * Receives new content to append to the list of messages.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {string} type           Message type. Either 'user', 'model', or 'error'.
 	 * @param {Object} content        Message content.
@@ -314,7 +314,7 @@ const actions = {
 	/**
 	 * Receives messages from cache to restore the session.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {Object[]} messages Messages to restore.
 	 * @return {Object} Action creator.
@@ -329,7 +329,7 @@ const actions = {
 	/**
 	 * Resets all messages, effectively deleting them to start a new session.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Object} Action creator.
 	 */
@@ -343,7 +343,7 @@ const actions = {
 	/**
 	 * Sets the active raw data (to display in a modal).
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param {Object} rawData Raw data to display.
 	 * @return {Object} Action creator.
@@ -359,7 +359,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.
@@ -435,7 +435,7 @@ const resolvers = {
 	/**
 	 * Retrieves messages from session storage.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return {Function} Action creator.
 	 */

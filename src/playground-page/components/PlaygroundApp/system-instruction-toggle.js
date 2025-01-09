@@ -19,7 +19,7 @@ import { store as playgroundStore } from '../../store';
 /**
  * Renders the system instruction toggle button.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

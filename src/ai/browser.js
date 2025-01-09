@@ -38,7 +38,7 @@ export async function getBrowserServiceData() {
  * Gets the AI capabilities that the browser supports.
  *
  * @since 0.1.0
- * @since n.e.x.t Checks for newer `ai.languageModel` property.
+ * @since 0.4.0 Checks for newer `ai.languageModel` property.
  *
  * @param {Object} ai The browser AI API object.
  * @return {Promise<string[]>} The list of AI capabilities.

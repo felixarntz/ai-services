@@ -28,7 +28,7 @@ const MODEL_SELECT_PLACEHOLDER_OPTIONS = [
 /**
  * Renders the playground sidebar panel for AI service and model selection.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\Self_REST_Route
  *
- * @since n.e.x.t
+ * @since 0.4.0
  * @package ai-services
  */
 
@@ -23,7 +23,7 @@ use WP_REST_Server;
 /**
  * Class representing the REST API route for getting general data for the plugin in context of the current user.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  */
 class Self_REST_Route extends Abstract_REST_Route {
 	const BASE    = '/self';
@@ -32,7 +32,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * The plugin environment.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Plugin_Env
 	 */
 	private $plugin_env;
@@ -40,7 +40,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Site environment.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Site_Env
 	 */
 	private $site_env;
@@ -48,7 +48,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * The services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -56,7 +56,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Current user service.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -64,7 +64,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * WordPress admin settings menu.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Admin_Menu
 	 */
 	private $settings_menu;
@@ -72,7 +72,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * WordPress admin tools menu.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Admin_Menu
 	 */
 	private $tools_menu;
@@ -80,7 +80,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * The plugin's admin settings page.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Admin_Page
 	 */
 	private $settings_page;
@@ -88,7 +88,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * The plugin's admin playground page.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var Admin_Page
 	 */
 	private $playground_page;
@@ -96,7 +96,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Internal resource schema definition.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 * @var array<string, mixed>
 	 */
 	private $schema;
@@ -104,7 +104,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param Plugin_Env   $plugin_env      The plugin environment.
 	 * @param Site_Env     $site_env        The site environment.
@@ -204,7 +204,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route base.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return string Route base.
 	 */
@@ -215,7 +215,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route methods, as a comma-separated string.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return string Route methods, as a comma-separated string.
 	 */
@@ -226,7 +226,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Checks the required permissions for the given request and throws an exception if they aren't met.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 *
@@ -245,7 +245,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Handles the given request and returns a response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 * @return WP_REST_Response WordPress REST response object.
@@ -307,7 +307,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route specific arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return array<string, mixed> Route arguments.
 	 */
@@ -327,7 +327,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the global route arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return array<string, mixed> Global route arguments.
 	 */
@@ -345,7 +345,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	 *
 	 * This is mostly a copy of {@see WP_REST_Controller::get_fields_for_response()}.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return string[] Fields to be included in the response.
@@ -379,7 +379,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Gets the URL to a specific admin page within a given admin menu.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @param Admin_Menu $menu WordPress admin menu.
 	 * @param Admin_Page $page WordPress admin page.
@@ -403,7 +403,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Gets the map of the plugin capabilities and whether they are granted for the current user.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.4.0
 	 *
 	 * @return array<string, bool> Map of the plugin capabilities for the current user and whether they are granted.
 	 */

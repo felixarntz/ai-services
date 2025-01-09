@@ -5,7 +5,7 @@ Plugin URI:   https://wordpress.org/plugins/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Tested up to: 6.7
-Stable tag:   0.3.0
+Stable tag:   0.4.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -276,6 +276,43 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 2. The AI Playground where users can explore the AI capabilities of the different services
 
 == Changelog ==
+
+= 0.4.0 =
+
+**Features:**
+
+* Add AI Playground screen which allows to explore services and models with their configurations and behaviors. ([1495994](https://github.com/felixarntz/ai-services/commit/1495994399a39baf300b4f70d3f8c93ebf29059e))
+* Add REST route and expand `ai-services/ai` store to provide general plugin data and user capabilities for JavaScript consumption. ([83d770c](https://github.com/felixarntz/ai-services/commit/83d770cd31eb598bd8b1a52e5f117655ef8a1075))
+
+**Enhancements:**
+
+* Ensure AI playground message data can be stored in session storage by avoiding to include inline data for attachments. ([b667611](https://github.com/felixarntz/ai-services/commit/b667611c539529ac2f34fcb933af9675dc75d41a), [7d346a2](https://github.com/felixarntz/ai-services/commit/7d346a2423bad8d1bae84c82abb80899e565066d))
+* Implement store infrastructure to manage panel state and persist open/closed AI playground panels. ([89572e8](https://github.com/felixarntz/ai-services/commit/89572e8e2368d68894b82287e639b483d0840f6f))
+* Implement AI playground panel to allow customizing most commonly supported AI model config parameters. ([27ea03f](https://github.com/felixarntz/ai-services/commit/27ea03f54f14bb840efb635673f5f3cad83a3508))
+* Support providing message history alongside new prompt in AI playground. ([33c54cc](https://github.com/felixarntz/ai-services/commit/33c54cc202b1466b726e6fedf645682896fd2dba))
+* Allow to reset the list of messages in the AI playground. ([9537986](https://github.com/felixarntz/ai-services/commit/95379864c53aef24a3c9f453b89da200eb9e4ae7))
+* Persist messages from AI playground in session storage. ([60c45d9](https://github.com/felixarntz/ai-services/commit/60c45d99e82807f9d8bddc386e71a98d3c9fe7b3))
+* Expand interface package with store for easier abstraction and a new `Modal` component. ([5ee0e20](https://github.com/felixarntz/ai-services/commit/5ee0e20ba09194774ca7d6902607500fd6a2ace6))
+* Implement playground UI to select an attachment from the media library to provide as multimodal input. ([dbad8d3](https://github.com/felixarntz/ai-services/commit/dbad8d360a64649b00e1fa033e2f291a6a59568b))
+* Enhance playground input by allowing arrow navigation to access previous messages and automatically focusing on it. ([f44efa5](https://github.com/felixarntz/ai-services/commit/f44efa501bde7a0ef8ad104b4c7ae54fe523d148))
+* Implement keyboard shortcut to toggle system instruction. ([66f990d](https://github.com/felixarntz/ai-services/commit/66f990da149a35b3f90432f4bacbf21081b45828))
+* Automatically scroll to latest messages as new messages arrive. ([c8f3746](https://github.com/felixarntz/ai-services/commit/c8f37468e96d8ed6778f7f41ec1fe18684e536b0))
+* Implement `getServiceName` and `getServiceCredentialsUrl` selectors in `ai-services/ai` store for parity with PHP API. ([d9ca118](https://github.com/felixarntz/ai-services/commit/d9ca1184a4479beca255b3a40a5a697874c07acd))
+* Implement store `ai-services/ai-playground` for new AI playground screen. ([96f5b45](https://github.com/felixarntz/ai-services/commit/96f5b454ecb79969523f70febd22d588a00f98ee))
+* Use newer `ai.languageModel` property for Chrome built-in AI, continuing to support `ai.assistant` for backward compatibility. ([0f52227](https://github.com/felixarntz/ai-services/commit/0f5222725419881edcea91fb4524248f005623fb))
+* Remove unused option. ([28a864a](https://github.com/felixarntz/ai-services/commit/28a864a24e70ff31a5577e69c6025fca94331b5e))
+* Ensure service options are set to (temporarily) not autoload when plugin gets deactivated. ([4841d5b](https://github.com/felixarntz/ai-services/commit/4841d5b5670131b14ceb908a1ee05d056dab3fd4))
+
+**Bug Fixes:**
+
+* Fix AI playground automatic message scrolling to correctly function with multiple quick subsequent updates. ([50f40fe](https://github.com/felixarntz/ai-services/commit/50f40fe649a444af0a7efaaa2539fef1361b2b7c))
+* Fix sidebar toggle button being hidden on mobile. ([9d44650](https://github.com/felixarntz/ai-services/commit/9d4465058050effeb256aad1bb12698752500275))
+* Fix bugs with sidebar handling and support keyboard shortcut in interface abstraction. ([cf7b926](https://github.com/felixarntz/ai-services/commit/cf7b926f9810dd664e8a8b016bfa6b8a0835455f))
+
+**Documentation:**
+
+* Add documentation about the available user capabilities and how to customize them. ([a1d972b](https://github.com/felixarntz/ai-services/commit/a1d972bdca6121cd3358827798f2c6cd0a2f79ea))
+* Expand readme and documentation to reference the new AI Playground screen. ([a136c1c](https://github.com/felixarntz/ai-services/commit/a136c1c0a7f1685593ec13c8084f436c665f5a27))
 
 = 0.3.0 =
 

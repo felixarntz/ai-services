@@ -39,7 +39,7 @@ const getModelAuthor = ( additionalData ) => {
 /**
  * Renders a single media element.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object} props          The component props.
  * @param {string} props.mimeType The media MIME type.
@@ -65,7 +65,7 @@ function Media( { mimeType, src } ) {
 /**
  * Renders formatted content parts.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @param {Object}   props       Component props.
  * @param {Object[]} props.parts The parts to render.
@@ -116,7 +116,7 @@ function Parts( { parts } ) {
 /**
  * Renders the messages UI.
  *
- * @since n.e.x.t
+ * @since 0.4.0
  *
  * @return {Component} The component to be rendered.
  */

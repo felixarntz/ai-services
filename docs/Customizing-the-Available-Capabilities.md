@@ -2,7 +2,7 @@
 
 # Customizing the Available Capabilities
 
-The AI Services comes with several custom user capabilities which are granted to users based on certain existing capabilities by default. This behavior can be modified to fine tune which users on a WordPress site are able to use the AI capabilities.
+The AI Services plugin comes with several custom user capabilities which are granted to users based on certain existing capabilities by default. This behavior can be modified to fine tune which users on a WordPress site are able to use the AI capabilities.
 
 ## Available capabilities
 

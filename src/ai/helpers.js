@@ -78,6 +78,25 @@ export function getTextFromContents( contents ) {
 }
 
 /**
+ * Gets the first Content object in the given list which contains text.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object[]} contents The list of Content objects.
+ * @return {?Object} The Content object, or null if no Content object has text parts.
+ */
+export function getTextContentFromContents( contents ) {
+	for ( const content of contents ) {
+		const text = contentToText( content );
+		if ( text ) {
+			return content;
+		}
+	}
+
+	return null;
+};
+
+/**
  * Gets the Content objects for each candidate in the given list.
  *
  * @since 0.2.0

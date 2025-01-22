@@ -94,6 +94,25 @@ final class Helpers {
 	}
 
 	/**
+	 * Gets the first Content instance in the given list which contains text.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Content[] $contents The list of Content instances.
+	 * @return Content|null The Content instance, or null if no Content instance has text parts.
+	 */
+	public static function get_text_content_from_contents( array $contents ): ?Content {
+		foreach ( $contents as $content ) {
+			$text = self::content_to_text( $content );
+			if ( '' !== $text ) {
+				return $content;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets the Content instances for each candidate in the given list.
 	 *
 	 * @since 0.2.0

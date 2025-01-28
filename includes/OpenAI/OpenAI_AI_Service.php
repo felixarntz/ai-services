@@ -10,7 +10,10 @@ namespace Felix_Arntz\AI_Services\OpenAI;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -165,20 +168,23 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * Gets a generative model instance for the provided model parameters.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Support for the $tools and $toolConfig arguments was added.
 	 *
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.
 	 *
-	 *     @type string               $feature           Required. Unique identifier of the feature that the model
-	 *                                                   will be used for. Must only contain lowercase letters,
-	 *                                                   numbers, hyphens.
-	 *     @type string               $model             The model slug. By default, the model will be determined
-	 *                                                   based on heuristics such as the requested capabilities.
-	 *     @type string[]             $capabilities      Capabilities requested for the model to support. It is
-	 *                                                   recommended to specify this if you do not explicitly specify a
-	 *                                                   model slug.
-	 *     @type Generation_Config?   $generationConfig  Model generation configuration options. Default none.
-	 *     @type string|Parts|Content $systemInstruction The system instruction for the model. Default none.
+	 *     @type string                 $feature           Required. Unique identifier of the feature that the model
+	 *                                                     will be used for. Must only contain lowercase letters,
+	 *                                                     numbers, hyphens.
+	 *     @type string                 $model             The model slug. By default, the model will be determined
+	 *                                                     based on heuristics such as the requested capabilities.
+	 *     @type string[]               $capabilities      Capabilities requested for the model to support. It is
+	 *                                                     recommended to specify this if you do not explicitly specify
+	 *                                                     a model slug.
+	 *     @type Tools|null             $tools             The tools to use for the model. Default none.
+	 *     @type Tool_Config|null       $toolConfig        Tool configuration options. Default none.
+	 *     @type Generation_Config|null $generationConfig  Model generation configuration options.  Default none.
+	 *     @type string|Parts|Content   $systemInstruction The system instruction for the model. Default none.
 	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return Generative_AI_Model The generative model.

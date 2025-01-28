@@ -14,8 +14,14 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
@@ -51,6 +57,22 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * @var string
 	 */
 	private $model;
+
+	/**
+	 * The tools available to use for the model.
+	 *
+	 * @since n.e.x.t
+	 * @var Tools|null
+	 */
+	private $tools;
+
+	/**
+	 * The tool configuration, if applicable.
+	 *
+	 * @since n.e.x.t
+	 * @var Tool_Config|null
+	 */
+	private $tool_config;
 
 	/**
 	 * The generation configuration.
@@ -96,11 +118,33 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 
 		$this->model = $model;
 
-		if ( isset( $model_params['generationConfig'] ) ) {
-			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
-				$this->generation_config = $model_params['generationConfig'];
-			} else {
-				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
+		$data_obj_params = array(
+			array(
+				'param_key'     => 'tools',
+				'property_name' => 'tools',
+				'class_name'    => Tools::class,
+			),
+			array(
+				'param_key'     => 'toolConfig',
+				'property_name' => 'tool_config',
+				'class_name'    => Tool_Config::class,
+			),
+			array(
+				'param_key'     => 'generationConfig',
+				'property_name' => 'generation_config',
+				'class_name'    => Generation_Config::class,
+			),
+		);
+		foreach ( $data_obj_params as $data_obj_param ) {
+			$param_key     = $data_obj_param['param_key'];
+			$property_name = $data_obj_param['property_name'];
+			$class_name    = $data_obj_param['class_name'];
+			if ( isset( $model_params[ $param_key ] ) ) {
+				if ( $model_params[ $param_key ] instanceof $class_name ) {
+					$this->$property_name = $model_params[ $param_key ];
+				} else {
+					$this->$property_name = $class_name::from_array( $model_params[ $param_key ] );
+				}
 			}
 		}
 
@@ -206,7 +250,6 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 		$transformers = self::get_content_transformers();
 
 		$params = array(
-			// TODO: Add support for tools and tool config, to support code generation.
 			'messages' => array_map(
 				static function ( Content $content ) use ( $transformers ) {
 					return Transformer::transform_content( $content, $transformers );
@@ -217,6 +260,14 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 
 		if ( $this->system_instruction ) {
 			$params['system'] = Helpers::content_to_text( $this->system_instruction );
+		}
+
+		if ( $this->tools ) {
+			$params['tools'] = $this->prepare_tools_param( $this->tools );
+		}
+
+		if ( $this->tool_config ) {
+			$params['tool_choice'] = $this->prepare_tool_choice_param( $this->tool_config );
 		}
 
 		if ( $this->generation_config ) {
@@ -374,11 +425,35 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 			? Content_Role::USER
 			: Content_Role::MODEL;
 
+		return new Content(
+			$role,
+			$this->prepare_api_response_content_parts( $response_data )
+		);
+	}
+
+	/**
+	 * Transforms a given API response into a Parts instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $response_data The API response.
+	 * @return Parts The Parts instance.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response is invalid.
+	 */
+	private function prepare_api_response_content_parts( array $response_data ): Parts {
 		$parts = array();
 		foreach ( $response_data['content'] as $part ) {
-			// TODO: Support decoding tool call responses.
 			if ( 'text' === $part['type'] ) {
 				$parts[] = array( 'text' => $part['text'] );
+			} elseif ( 'tool_use' === $part['type'] ) {
+				$parts[] = array(
+					'functionCall' => array(
+						'id'   => $part['id'],
+						'name' => $part['name'],
+						'args' => $part['input'],
+					),
+				);
 			} else {
 				throw $this->api->create_response_exception(
 					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
@@ -387,12 +462,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 			}
 		}
 
-		return Content::from_array(
-			array(
-				'role'  => $role,
-				'parts' => $parts,
-			)
-		);
+		return Parts::from_array( $parts );
 	}
 
 	/**
@@ -401,6 +471,10 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 	 * @since 0.2.0
 	 *
 	 * @return array<string, callable> The content transformers.
+	 *
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
 	private static function get_content_transformers(): array {
 		return array(
@@ -422,7 +496,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 						$mime_type = $part->get_mime_type();
 						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
 							throw new InvalidArgumentException(
-								esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
+								esc_html__( 'The Anthropic API only supports text, inline image, function call, and function response parts.', 'ai-services' )
 							);
 						}
 						$parts[] = array(
@@ -438,9 +512,23 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 								),
 							),
 						);
+					} elseif ( $part instanceof Function_Call_Part ) {
+						$parts[] = array(
+							'type'  => 'tool_use',
+							'id'    => $part->get_id(),
+							'name'  => $part->get_name(),
+							'input' => $part->get_args(),
+						);
+					} elseif ( $part instanceof Function_Response_Part ) {
+						$response = $part->get_response();
+						$parts[]  = array(
+							'type'        => 'tool_result',
+							'tool_use_id' => $part->get_id(),
+							'content'     => wp_json_encode( $response ),
+						);
 					} else {
 						throw new InvalidArgumentException(
-							esc_html__( 'Invalid content part: The Anthropic API only supports text and inline image parts.', 'ai-services' )
+							esc_html__( 'The Anthropic API only supports text, inline image, function call, and function response parts.', 'ai-services' )
 						);
 					}
 				}
@@ -484,5 +572,65 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Multimodal_Input, 
 				return $config->get_top_k();
 			},
 		);
+	}
+
+	/**
+	 * Prepares the API request tools parameter for the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Tools $tools The tools to prepare the parameter with.
+	 * @return array<string, mixed>[] The tools parameter value.
+	 *
+	 * @throws InvalidArgumentException Thrown if an invalid tool is provided.
+	 */
+	private function prepare_tools_param( Tools $tools ): array {
+		$tools_param = array();
+
+		foreach ( $tools as $tool ) {
+			if ( ! $tool instanceof Function_Declarations_Tool ) {
+				throw new InvalidArgumentException(
+					esc_html__( 'Invalid tool: Only function declarations tools are supported.', 'ai-services' )
+				);
+			}
+
+			$function_declarations = $tool->get_function_declarations();
+			foreach ( $function_declarations as $declaration ) {
+				$tools_param[] = array_filter(
+					array(
+						'name'         => $declaration['name'],
+						'description'  => $declaration['description'] ?? null,
+						'input_schema' => $declaration['parameters'] ?? null,
+					)
+				);
+			}
+		}
+
+		return $tools_param;
+	}
+
+	/**
+	 * Prepares the API request tool choice parameter for the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Tool_Config $tool_config The tool config to prepare the parameter with.
+	 * @return array<string, mixed> The tool config parameter value.
+	 */
+	private function prepare_tool_choice_param( Tool_Config $tool_config ): array {
+		$tool_choice_param = array(
+			// Either 'auto' or 'any'.
+			'type' => $tool_config->get_function_call_mode(),
+		);
+
+		if ( 'any' === $tool_choice_param['type'] ) {
+			$allowed_function_names = $tool_config->get_allowed_function_names();
+			if ( count( $allowed_function_names ) === 1 ) {
+				$tool_choice_param['type'] = 'tool';
+				$tool_choice_param['name'] = $allowed_function_names[0];
+			}
+		}
+
+		return $tool_choice_param;
 	}
 }

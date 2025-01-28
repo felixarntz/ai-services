@@ -13,9 +13,15 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
@@ -51,6 +57,22 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @var string
 	 */
 	private $model;
+
+	/**
+	 * The tools available to use for the model.
+	 *
+	 * @since n.e.x.t
+	 * @var Tools|null
+	 */
+	private $tools;
+
+	/**
+	 * The tool configuration, if applicable.
+	 *
+	 * @since n.e.x.t
+	 * @var Tool_Config|null
+	 */
+	private $tool_config;
 
 	/**
 	 * The generation configuration.
@@ -96,11 +118,33 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 
 		$this->model = $model;
 
-		if ( isset( $model_params['generationConfig'] ) ) {
-			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
-				$this->generation_config = $model_params['generationConfig'];
-			} else {
-				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
+		$data_obj_params = array(
+			array(
+				'param_key'     => 'tools',
+				'property_name' => 'tools',
+				'class_name'    => Tools::class,
+			),
+			array(
+				'param_key'     => 'toolConfig',
+				'property_name' => 'tool_config',
+				'class_name'    => Tool_Config::class,
+			),
+			array(
+				'param_key'     => 'generationConfig',
+				'property_name' => 'generation_config',
+				'class_name'    => Generation_Config::class,
+			),
+		);
+		foreach ( $data_obj_params as $data_obj_param ) {
+			$param_key     = $data_obj_param['param_key'];
+			$property_name = $data_obj_param['property_name'];
+			$class_name    = $data_obj_param['class_name'];
+			if ( isset( $model_params[ $param_key ] ) ) {
+				if ( $model_params[ $param_key ] instanceof $class_name ) {
+					$this->$property_name = $model_params[ $param_key ];
+				} else {
+					$this->$property_name = $class_name::from_array( $model_params[ $param_key ] );
+				}
 			}
 		}
 
@@ -201,7 +245,6 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		$transformers = self::get_content_transformers();
 
 		$params = array(
-			// TODO: Add support for tools and tool config, to support code generation.
 			'messages' => array_map(
 				static function ( Content $content ) use ( $transformers ) {
 					return Transformer::transform_content( $content, $transformers );
@@ -209,6 +252,14 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				$contents
 			),
 		);
+
+		if ( $this->tools ) {
+			$params['tools'] = $this->prepare_tools_param( $this->tools );
+		}
+
+		if ( $this->tool_config ) {
+			$params['tool_choice'] = $this->prepare_tool_choice_param( $this->tool_config );
+		}
 
 		if ( $this->generation_config ) {
 			$params = Transformer::transform_generation_config_params(
@@ -326,28 +377,63 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @throws Generative_AI_Exception Thrown if the response is invalid.
 	 */
 	private function prepare_choice_content( array $choice_data, int $index ): Content {
-		if ( ! isset( $choice_data['message']['content'] ) ) {
+		if ( ! isset( $choice_data['message'] ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->api->create_missing_response_key_exception( "choices.{$index}.message.content" );
+			throw $this->api->create_missing_response_key_exception( "choices.{$index}.message" );
 		}
 
 		$role = isset( $choice_data['message']['role'] ) && 'user' === $choice_data['message']['role']
 			? Content_Role::USER
 			: Content_Role::MODEL;
 
-		// TODO: Support decoding tool call responses (in $choice_data['message']['tool_calls']).
-		$parts = array(
-			array(
-				'text' => $choice_data['message']['content'],
-			),
+		return new Content(
+			$role,
+			$this->prepare_choice_content_parts( $choice_data )
 		);
+	}
 
-		return Content::from_array(
-			array(
-				'role'  => $role,
-				'parts' => $parts,
-			)
-		);
+	/**
+	 * Transforms a given choice from the API response into a Parts instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $choice_data The API response candidate data.
+	 * @return Parts The Parts instance.
+	 *
+	 * @throws Generative_AI_Exception Thrown if the response is invalid.
+	 */
+	private function prepare_choice_content_parts( array $choice_data ): Parts {
+		$parts = array();
+		if ( isset( $choice_data['message']['content'] ) && is_string( $choice_data['message']['content'] ) ) {
+			$parts[] = array( 'text' => $choice_data['message']['content'] );
+		}
+		if ( isset( $choice_data['message']['tool_calls'] ) && is_array( $choice_data['message']['tool_calls'] ) ) {
+			foreach ( $choice_data['message']['tool_calls'] as $tool_call ) {
+				if ( ! isset( $tool_call['type'] ) || 'function' !== $tool_call['type'] || ! isset( $tool_call['function'] ) ) {
+					throw $this->api->create_response_exception(
+						// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+						__( 'The response includes a tool of an unexpected type.', 'ai-services' )
+					);
+				}
+				$parts[] = array(
+					'functionCall' => array(
+						'id'   => $tool_call['id'],
+						'name' => $tool_call['function']['name'],
+						'args' => is_string( $tool_call['function']['arguments'] )
+							? json_decode( $tool_call['function']['arguments'], true )
+							: $tool_call['function']['arguments'],
+					),
+				);
+			}
+		}
+		if ( count( $parts ) === 0 ) {
+			throw $this->api->create_response_exception(
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				__( 'The response includes unexpected content.', 'ai-services' )
+			);
+		}
+
+		return Parts::from_array( $parts );
 	}
 
 	/**
@@ -356,10 +442,20 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @since 0.2.0
 	 *
 	 * @return array<string, callable> The content transformers.
+	 *
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
 	private static function get_content_transformers(): array {
 		return array(
-			'role'    => static function ( Content $content ) {
+			'role'         => static function ( Content $content ) {
+				// Special case of a function response.
+				$parts = $content->get_parts();
+				if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Function_Response_Part ) {
+					return 'tool';
+				}
+
 				if ( $content->get_role() === Content_Role::MODEL ) {
 					return 'assistant';
 				}
@@ -368,7 +464,14 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				}
 				return 'user';
 			},
-			'content' => static function ( Content $content ) {
+			'content'      => static function ( Content $content ) {
+				// Special case of a function response.
+				$parts = $content->get_parts();
+				if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Function_Response_Part ) {
+					$response = $parts->get( 0 )->get_response();
+					return wp_json_encode( $response );
+				}
+
 				$parts = array();
 				foreach ( $content->get_parts() as $part ) {
 					if ( $part instanceof Text_Part ) {
@@ -395,14 +498,14 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 							);
 						} else {
 							throw new InvalidArgumentException(
-								esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+								esc_html__( 'The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
 						$mime_type = $part->get_mime_type();
 						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
 							throw new InvalidArgumentException(
-								esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+								esc_html__( 'The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
 							);
 						}
 						$parts[] = array(
@@ -411,13 +514,53 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 								'url' => $part->get_file_uri(),
 							),
 						);
-					} else {
-						throw new InvalidArgumentException(
-							esc_html__( 'Invalid content part: The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
-						);
+					} else { // phpcs:ignore Universal.ControlStructures.DisallowLonelyIf.Found
+
+						/*
+						 * Special cases: Function call parts are handled as part of a separate `tool_calls` key, and
+						 * function response parts are are only supported as the only content of a message. They are
+						 * handled as a special case above.
+						 */
+						if ( $part instanceof Function_Response_Part ) {
+							throw new InvalidArgumentException(
+								esc_html__( 'The OpenAI API only allows a single function response, and it has to be the only content of the message.', 'ai-services' )
+							);
+						} elseif ( ! $part instanceof Function_Call_Part ) {
+							throw new InvalidArgumentException(
+								esc_html__( 'The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+							);
+						}
 					}
 				}
 				return $parts;
+			},
+			'tool_calls'   => static function ( Content $content ) {
+				// Special key that only applies in case function calls are present.
+				$tool_calls = array();
+				foreach ( $content->get_parts() as $part ) {
+					if ( $part instanceof Function_Call_Part ) {
+						$tool_calls[] = array(
+							'type'     => 'function',
+							'id'       => $part->get_id(),
+							'function' => array(
+								'name'      => $part->get_name(),
+								'arguments' => wp_json_encode( $part->get_args() ),
+							),
+						);
+					}
+				}
+				if ( count( $tool_calls ) > 0 ) {
+					return $tool_calls;
+				}
+				return null;
+			},
+			'tool_call_id' => static function ( Content $content ) {
+				// Special key that only applies in case of a function response.
+				$parts = $content->get_parts();
+				if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Function_Response_Part ) {
+					return $parts->get( 0 )->get_id();
+				}
+				return null;
 			},
 		);
 	}
@@ -472,5 +615,70 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				return $config->get_logprobs();
 			},
 		);
+	}
+
+	/**
+	 * Prepares the API request tools parameter for the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Tools $tools The tools to prepare the parameter with.
+	 * @return array<string, mixed>[] The tools parameter value.
+	 *
+	 * @throws InvalidArgumentException Thrown if an invalid tool is provided.
+	 */
+	private function prepare_tools_param( Tools $tools ): array {
+		$tools_param = array();
+
+		foreach ( $tools as $tool ) {
+			if ( ! $tool instanceof Function_Declarations_Tool ) {
+				throw new InvalidArgumentException(
+					esc_html__( 'Invalid tool: Only function declarations tools are supported.', 'ai-services' )
+				);
+			}
+
+			$function_declarations = $tool->get_function_declarations();
+			foreach ( $function_declarations as $declaration ) {
+				$tools_param[] = array(
+					'type'     => 'function',
+					'function' => array_filter(
+						array(
+							'name'        => $declaration['name'],
+							'description' => $declaration['description'] ?? null,
+							'parameters'  => $declaration['parameters'] ?? null,
+							'strict'      => true,
+						)
+					),
+				);
+			}
+		}
+
+		return $tools_param;
+	}
+
+	/**
+	 * Prepares the API request tool choice parameter for the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Tool_Config $tool_config The tool config to prepare the parameter with.
+	 * @return array<string, mixed> The tool config parameter value.
+	 */
+	private function prepare_tool_choice_param( Tool_Config $tool_config ): array {
+		// Either 'auto' or 'any'.
+		$tool_choice_param = $tool_config->get_function_call_mode() === 'any' ? 'required' : 'auto';
+
+		if ( 'required' === $tool_choice_param ) {
+			// If one specific function must be called, the parameter needs to be an object, otherwise a string.
+			$allowed_function_names = $tool_config->get_allowed_function_names();
+			if ( count( $allowed_function_names ) === 1 ) {
+				$tool_choice_param = array(
+					'type'     => 'function',
+					'function' => array( 'name' => $allowed_function_names[0] ),
+				);
+			}
+		}
+
+		return $tool_choice_param;
 	}
 }

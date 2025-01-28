@@ -14,9 +14,15 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
@@ -52,6 +58,22 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @var string
 	 */
 	private $model;
+
+	/**
+	 * The tools available to use for the model.
+	 *
+	 * @since n.e.x.t
+	 * @var Tools|null
+	 */
+	private $tools;
+
+	/**
+	 * The tool configuration, if applicable.
+	 *
+	 * @since n.e.x.t
+	 * @var Tool_Config|null
+	 */
+	private $tool_config;
 
 	/**
 	 * The generation configuration.
@@ -109,15 +131,35 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			$this->model = 'models/' . $model;
 		}
 
-		if ( isset( $model_params['generationConfig'] ) ) {
-			if ( $model_params['generationConfig'] instanceof Generation_Config ) {
-				$this->generation_config = $model_params['generationConfig'];
-			} else {
-				$this->generation_config = Generation_Config::from_array( $model_params['generationConfig'] );
+		$data_obj_params = array(
+			array(
+				'param_key'     => 'tools',
+				'property_name' => 'tools',
+				'class_name'    => Tools::class,
+			),
+			array(
+				'param_key'     => 'toolConfig',
+				'property_name' => 'tool_config',
+				'class_name'    => Tool_Config::class,
+			),
+			array(
+				'param_key'     => 'generationConfig',
+				'property_name' => 'generation_config',
+				'class_name'    => Generation_Config::class,
+			),
+		);
+		foreach ( $data_obj_params as $data_obj_param ) {
+			$param_key     = $data_obj_param['param_key'];
+			$property_name = $data_obj_param['property_name'];
+			$class_name    = $data_obj_param['class_name'];
+			if ( isset( $model_params[ $param_key ] ) ) {
+				if ( $model_params[ $param_key ] instanceof $class_name ) {
+					$this->$property_name = $model_params[ $param_key ];
+				} else {
+					$this->$property_name = $class_name::from_array( $model_params[ $param_key ] );
+				}
 			}
 		}
-
-		// TODO: Add support for tools and tool config, to support code generation.
 
 		if ( isset( $model_params['systemInstruction'] ) ) {
 			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
@@ -228,7 +270,6 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		$transformers = self::get_content_transformers();
 
 		$params = array(
-			// TODO: Add support for tools and tool config, to support code generation.
 			'contents' => array_map(
 				static function ( Content $content ) use ( $transformers ) {
 					return Transformer::transform_content( $content, $transformers );
@@ -236,6 +277,14 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				$contents
 			),
 		);
+
+		if ( $this->tools ) {
+			$params['tools'] = $this->prepare_tools_param( $this->tools );
+		}
+
+		if ( $this->tool_config ) {
+			$params['toolConfig'] = $this->prepare_tool_config_param( $this->tool_config );
+		}
 
 		if ( $this->generation_config ) {
 			$params                     = array_merge( $this->generation_config->get_additional_args(), $params );
@@ -354,11 +403,9 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 			? Content_Role::USER
 			: Content_Role::MODEL;
 
-		return Content::from_array(
-			array(
-				'role'  => $role,
-				'parts' => $candidate_data['content']['parts'],
-			)
+		return new Content(
+			$role,
+			Parts::from_array( $candidate_data['content']['parts'] )
 		);
 	}
 
@@ -416,6 +463,10 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 	 * @since 0.2.0
 	 *
 	 * @return array<string, callable> The content transformers.
+	 *
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
 	private static function get_content_transformers(): array {
 		return array(
@@ -446,7 +497,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 							);
 						} else {
 							throw new Generative_AI_Exception(
-								esc_html__( 'The Google AI API only supports text, image, and audio parts.', 'ai-services' )
+								esc_html__( 'The Google AI API only supports text, image, audio, function call, and function response parts.', 'ai-services' )
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
@@ -463,12 +514,26 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 							);
 						} else {
 							throw new Generative_AI_Exception(
-								esc_html__( 'The Google AI API only supports text, image, and audio parts.', 'ai-services' )
+								esc_html__( 'The Google AI API only supports text, image, audio, function call, and function response parts.', 'ai-services' )
 							);
 						}
+					} elseif ( $part instanceof Function_Call_Part ) {
+						$parts[] = array(
+							'functionCall' => array(
+								'name' => $part->get_name(),
+								'args' => $part->get_args(),
+							),
+						);
+					} elseif ( $part instanceof Function_Response_Part ) {
+						$parts[] = array(
+							'functionResponse' => array(
+								'name'     => $part->get_name(),
+								'response' => $part->get_response(),
+							),
+						);
 					} else {
 						throw new Generative_AI_Exception(
-							esc_html__( 'The Google AI API only supports text, image, and audio parts.', 'ai-services' )
+							esc_html__( 'The Google AI API only supports text, image, audio, function call, and function response parts.', 'ai-services' )
 						);
 					}
 				}
@@ -527,5 +592,71 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 				return $config->get_logprobs();
 			},
 		);
+	}
+
+	/**
+	 * Prepares the API request tools parameter for the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Tools $tools The tools to prepare the parameter with.
+	 * @return array<string, mixed>[] The tools parameter value.
+	 *
+	 * @throws InvalidArgumentException Thrown if an invalid tool is provided.
+	 */
+	private function prepare_tools_param( Tools $tools ): array {
+		$tools_param = array();
+
+		foreach ( $tools as $tool ) {
+			if ( ! $tool instanceof Function_Declarations_Tool ) {
+				throw new InvalidArgumentException(
+					esc_html__( 'Invalid tool: Only function declarations tools are supported.', 'ai-services' )
+				);
+			}
+
+			$function_declarations = $tool->get_function_declarations();
+			$declarations_data     = array();
+			foreach ( $function_declarations as $declaration ) {
+				$declarations_data[] = array_filter(
+					array(
+						'name'        => $declaration['name'],
+						'description' => $declaration['description'] ?? null,
+						'parameters'  => $declaration['parameters'] ?? null,
+					)
+				);
+			}
+
+			$tools_param[] = array(
+				'functionDeclarations' => $declarations_data,
+			);
+		}
+
+		return $tools_param;
+	}
+
+	/**
+	 * Prepares the API request tool config parameter for the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Tool_Config $tool_config The tool config to prepare the parameter with.
+	 * @return array<string, mixed> The tool config parameter value.
+	 */
+	private function prepare_tool_config_param( Tool_Config $tool_config ): array {
+		$tool_config_param = array(
+			'functionCallingConfig' => array(
+				// Either 'auto' or 'any'.
+				'mode' => strtoupper( $tool_config->get_function_call_mode() ),
+			),
+		);
+
+		if ( 'ANY' === $tool_config_param['functionCallingConfig']['mode'] ) {
+			$allowed_function_names = $tool_config->get_allowed_function_names();
+			if ( count( $allowed_function_names ) > 0 ) {
+				$tool_config_param['functionCallingConfig']['allowedFunctionNames'] = $allowed_function_names;
+			}
+		}
+
+		return $tool_config_param;
 	}
 }

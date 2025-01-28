@@ -23,10 +23,8 @@
     "lint-css": "wp-scripts lint-style",
     "lint-js": "wp-scripts lint-js",
     "lint-php": "wp-env run cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer lint",
-    "pretest-php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer --working-dir=php-tools/test update",
-    "test-php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --verbose",
-    "pretest-php-multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer --working-dir=php-tools/test update",
-    "test-php-multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) php-tools/test/vendor/bin/phpunit -c tests/phpunit/multisite.xml --verbose",
+    "test-php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer test",
+    "test-php-multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) composer test-multisite",
     "wp-env": "wp-env"
   }
 }

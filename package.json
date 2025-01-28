@@ -4,9 +4,9 @@
   "repository": "git+https://github.com/vendor-ns/wp-starter-plugin.git",
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
-    "@wordpress/env": "^10.4.0",
-    "@wordpress/scripts": "^28.4.0",
-    "fast-glob": "^3.3.2"
+    "@wordpress/env": "^10.16.0",
+    "@wordpress/scripts": "^30.9.0",
+    "fast-glob": "^3.3.3"
   },
   "dependencies": {
     "@wordpress/icons": "^10.5.0",

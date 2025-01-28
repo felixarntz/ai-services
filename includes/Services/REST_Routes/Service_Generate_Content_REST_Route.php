@@ -14,6 +14,8 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
@@ -207,9 +209,28 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 */
 	protected function process_model_params( array $model_params ): array {
 		// Parse associative arrays into their relevant data structures.
-		if ( isset( $model_params['generationConfig'] ) && is_array( $model_params['generationConfig'] ) ) {
-			$model_params['generationConfig'] = Generation_Config::from_array( $model_params['generationConfig'] );
+		$data_obj_params = array(
+			array(
+				'param_key'  => 'tools',
+				'class_name' => Tools::class,
+			),
+			array(
+				'param_key'  => 'toolConfig',
+				'class_name' => Tool_Config::class,
+			),
+			array(
+				'param_key'  => 'generationConfig',
+				'class_name' => Generation_Config::class,
+			),
+		);
+		foreach ( $data_obj_params as $data_obj_param ) {
+			$param_key  = $data_obj_param['param_key'];
+			$class_name = $data_obj_param['class_name'];
+			if ( isset( $model_params[ $param_key ] ) && is_array( $model_params[ $param_key ] ) ) {
+				$model_params[ $param_key ] = $class_name::from_array( $model_params[ $param_key ] );
+			}
 		}
+
 		if ( isset( $model_params['systemInstruction'] ) && is_array( $model_params['systemInstruction'] ) ) {
 			if ( isset( $model_params['systemInstruction']['role'] ) ) {
 				$model_params['systemInstruction'] = Content::from_array( $model_params['systemInstruction'] );
@@ -271,6 +292,14 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 						'items'       => array(
 							'type' => 'string',
 						),
+					),
+					'tools'             => array_merge(
+						array( 'description' => __( 'Available tools for the model.', 'ai-services' ) ),
+						Tools::get_json_schema()
+					),
+					'toolConfig'        => array_merge(
+						array( 'description' => __( 'Tool configuration options.', 'ai-services' ) ),
+						Tool_Config::get_json_schema()
 					),
 					'generationConfig'  => array_merge(
 						array( 'description' => __( 'Model generation configuration options.', 'ai-services' ) ),

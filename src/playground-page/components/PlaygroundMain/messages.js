@@ -9,7 +9,7 @@ import { store as interfaceStore } from '@ai-services/interface';
  */
 import { useSelect, useDispatch } from '@wordpress/data';
 import { Toolbar, ToolbarButton } from '@wordpress/components';
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useMemo, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { code } from '@wordpress/icons';
 
@@ -63,6 +63,32 @@ function Media( { mimeType, src } ) {
 }
 
 /**
+ * Renders a textarea with JSON formatted data.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} props       The component props.
+ * @param {Object} props.data  The data to display.
+ * @param {string} props.label The textarea label.
+ * @return {Component} The component to be rendered.
+ */
+function JsonTextarea( { data, label } ) {
+	const dataJson = useMemo( () => {
+		return JSON.stringify( data, null, 2 );
+	}, [ data ] );
+
+	return (
+		<textarea
+			className="code"
+			aria-label={ label }
+			value={ dataJson }
+			rows="5"
+			readOnly
+		/>
+	);
+}
+
+/**
  * Renders formatted content parts.
  *
  * @since 0.4.0
@@ -105,6 +131,28 @@ function Parts( { parts } ) {
 			return (
 				<div className="ai-services-content-part" key={ index }>
 					<Media mimeType={ mimeType } src={ fileUri } />
+				</div>
+			);
+		}
+
+		if ( part.functionCall ) {
+			return (
+				<div className="ai-services-content-part" key={ index }>
+					<JsonTextarea
+						data={ part.functionCall }
+						label={ __( 'Function call data', 'ai-services' ) }
+					/>
+				</div>
+			);
+		}
+
+		if ( part.functionResponse ) {
+			return (
+				<div className="ai-services-content-part" key={ index }>
+					<JsonTextarea
+						data={ part.functionResponse }
+						label={ __( 'Function response data', 'ai-services' ) }
+					/>
 				</div>
 			);
 		}

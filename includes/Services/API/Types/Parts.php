@@ -11,6 +11,8 @@ namespace Felix_Arntz\AI_Services\Services\API\Types;
 use ArrayIterator;
 use Felix_Arntz\AI_Services\Services\API\Types\Contracts\Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
@@ -85,6 +87,64 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 						'fileUri'  => $file_uri,
 					),
 				)
+			)
+		);
+	}
+
+	/**
+	 * Adds a function call part to the content.
+	 *
+	 * Every function call must have at least one of $id and $name provided.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $id   The ID of the function call, or an empty string.
+	 * @param string               $name The name of the function, or an empty string.
+	 * @param array<string, mixed> $args The arguments of the function call.
+	 */
+	public function add_function_call_part( string $id, string $name, array $args ): void {
+		$data = array();
+		if ( $id ) {
+			$data['id'] = $id;
+		}
+		if ( $name ) {
+			$data['name'] = $name;
+		}
+		$data['args'] = $args;
+
+		$this->add_part(
+			Function_Call_Part::from_array(
+				array( 'functionCall' => $data )
+			)
+		);
+	}
+
+	/**
+	 * Adds a function response part to the content.
+	 *
+	 * Every function response must have at least one of $id and $name provided.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $id       The ID of the function response, or an empty string. If present, this must
+	 *                                       match the function call ID.
+	 * @param string               $name     The name of the function, or an empty string. If present, this must match
+	 *                                       the name of the function called.
+	 * @param array<string, mixed> $response The function output response.
+	 */
+	public function add_function_response_part( string $id, string $name, array $response ): void {
+		$data = array();
+		if ( $id ) {
+			$data['id'] = $id;
+		}
+		if ( $name ) {
+			$data['name'] = $name;
+		}
+		$data['response'] = $response;
+
+		$this->add_part(
+			Function_Response_Part::from_array(
+				array( 'functionResponse' => $data )
 			)
 		);
 	}
@@ -218,6 +278,10 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 				$parts->add_part( Inline_Data_Part::from_array( $part ) );
 			} elseif ( isset( $part['fileData'] ) ) {
 				$parts->add_part( File_Data_Part::from_array( $part ) );
+			} elseif ( isset( $part['functionCall'] ) ) {
+				$parts->add_part( Function_Call_Part::from_array( $part ) );
+			} elseif ( isset( $part['functionResponse'] ) ) {
+				$parts->add_part( Function_Response_Part::from_array( $part ) );
 			} else {
 				throw new InvalidArgumentException( 'Invalid part data.' );
 			}
@@ -234,13 +298,17 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 	 * @return array<string, mixed> The JSON schema.
 	 */
 	public static function get_json_schema(): array {
-		$text_part_schema        = Text_Part::get_json_schema();
-		$inline_data_part_schema = Inline_Data_Part::get_json_schema();
-		$file_data_part_schema   = File_Data_Part::get_json_schema();
+		$text_part_schema              = Text_Part::get_json_schema();
+		$inline_data_part_schema       = Inline_Data_Part::get_json_schema();
+		$file_data_part_schema         = File_Data_Part::get_json_schema();
+		$function_call_part_schema     = Function_Call_Part::get_json_schema();
+		$function_response_part_schema = Function_Response_Part::get_json_schema();
 		unset(
 			$text_part_schema['type'],
 			$inline_data_part_schema['type'],
-			$file_data_part_schema['type']
+			$file_data_part_schema['type'],
+			$function_call_part_schema['type'],
+			$function_response_part_schema['type']
 		);
 
 		return array(
@@ -252,6 +320,8 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 					$text_part_schema,
 					$inline_data_part_schema,
 					$file_data_part_schema,
+					$function_call_part_schema,
+					$function_response_part_schema,
 				),
 			),
 		);

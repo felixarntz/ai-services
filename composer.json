@@ -71,7 +71,7 @@
     ],
     "test-multisite": [
       "composer --working-dir=php-tools/test update",
-      "WP_MULTISITE=1 php-tools/test/vendor/bin/phpunit -c tests/phpunit/multisite.xml --verbose"
+      "WP_MULTISITE=1 php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --exclude-group=ms-excluded --verbose"
     ]
   }
 }

@@ -200,7 +200,7 @@
             "description": "A library providing classes around WordPress APIs, to be used for example in object oriented WordPress plugins.",
             "support": {
                 "issues": "https://github.com/felixarntz/wp-oop-plugin-lib/issues",
-                "source": "https://github.com/felixarntz/wp-oop-plugin-lib/tree/main"
+                "source": "https://github.com/felixarntz/wp-oop-plugin-lib/tree/0.1.1"
             },
             "time": "2024-12-01T01:47:28+00:00"
         },

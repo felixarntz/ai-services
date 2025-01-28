@@ -20,7 +20,6 @@ import { useChatbotConfig } from '../../config';
 export default function ChatbotHeader( { onClose } ) {
 	const labels = useChatbotConfig( 'labels' );
 
-	// TODO: Implement functionality to close the chatbot UI.
 	return (
 		<div className="ai-services-chatbot__header">
 			<div className="ai-services-chatbot__header-title">

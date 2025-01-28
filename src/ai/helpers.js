@@ -94,7 +94,7 @@ export function getTextContentFromContents( contents ) {
 	}
 
 	return null;
-};
+}
 
 /**
  * Gets the Content objects for each candidate in the given list.

@@ -68,7 +68,6 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 	 * @return Request The request instance.
 	 */
 	public function create_list_models_request( array $params = array(), array $request_options = array() ): Request {
-		// TODO: This is in fact not supported by the Anthropic API. Is there any way to remotely get models?
 		return $this->create_get_request( 'models', $params, $request_options );
 	}
 

@@ -17,7 +17,6 @@ use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
-use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
@@ -89,32 +88,11 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 * @throws RuntimeException Thrown if the connection check cannot be performed.
 	 */
 	public function is_connected(): bool {
-		/*
-		 * To check the connection, the only way is to generate content.
-		 * In order to avoid unnecessary API usage, we generate a single token of text.
-		 */
-		$model = $this->get_model(
-			array(
-				'feature'          => 'connection_check',
-				'capabilities'     => array( AI_Capability::TEXT_GENERATION ),
-				'generationConfig' => new Generation_Config( array( 'maxOutputTokens' => 1 ) ),
-			)
-		);
-
-		// This should never happen but needs to be here as a sanity check.
-		if ( ! $model instanceof With_Text_Generation ) {
-			throw new RuntimeException( 'No Anthropic model supports text generation.' );
-		}
-
 		try {
-			$model->generate_text( 'a' );
+			$this->list_models();
 			return true;
 		} catch ( Generative_AI_Exception $e ) {
-			// Only if the request failed specifically due to the API key being invalid, we return false.
-			if ( str_contains( $e->getMessage(), 'invalid x-api-key' ) ) {
-				return false;
-			}
-			return true;
+			return false;
 		}
 	}
 
@@ -130,22 +108,25 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		// Unfortunately the Anthropic API does not return models, so we have to hardcode them here.
+		$request       = $this->api->create_list_models_request();
+		$response_data = $this->api->make_request( $request )->get_data();
+
+		if ( ! isset( $response_data['data'] ) || ! $response_data['data'] ) {
+			throw $this->api->create_missing_response_key_exception( 'data' );
+		}
+
+		// Unfortunately the Anthropic API does not return model capabilities, so we have to hardcode them here.
 		$anthropic_capabilities = array(
 			AI_Capability::CHAT_HISTORY,
 			AI_Capability::MULTIMODAL_INPUT,
 			AI_Capability::TEXT_GENERATION,
 		);
 
-		$model_slugs = array(
-			'claude-3-opus-20240229',
-			'claude-3-sonnet-20240229',
-			'claude-3-haiku-20240307',
-			'claude-3-5-sonnet-20240620',
-		);
 		return array_reduce(
-			$model_slugs,
-			static function ( array $models_data, string $model_slug ) use ( $anthropic_capabilities ) {
+			$response_data['data'],
+			static function ( array $models_data, array $model_data ) use ( $anthropic_capabilities ) {
+				$model_slug = $model_data['id'];
+
 				$models_data[ $model_slug ] = array(
 					'slug'         => $model_slug,
 					'capabilities' => $anthropic_capabilities,

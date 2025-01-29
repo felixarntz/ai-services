@@ -110,28 +110,20 @@ class Google_AI_Service implements Generative_AI_Service {
 		$response_data = $this->api->make_request( $request )->get_data();
 
 		if ( ! isset( $response_data['models'] ) || ! $response_data['models'] ) {
-			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: key name */
-						__( 'The response from the Google AI API is missing the "%s" key.', 'ai-services' ),
-						'models'
-					)
-				)
-			);
+			throw $this->api->create_missing_response_key_exception( 'models' );
 		}
 
 		return array_reduce(
 			$response_data['models'],
-			static function ( array $models, array $model ) {
-				$model_slug = $model['baseModelId'] ?? $model['name'];
+			static function ( array $models_data, array $model_data ) {
+				$model_slug = $model_data['baseModelId'] ?? $model_data['name'];
 				if ( str_starts_with( $model_slug, 'models/' ) ) {
 					$model_slug = substr( $model_slug, 7 );
 				}
 
 				if (
-					isset( $model['supportedGenerationMethods'] ) &&
-					in_array( 'generateContent', $model['supportedGenerationMethods'], true )
+					isset( $model_data['supportedGenerationMethods'] ) &&
+					in_array( 'generateContent', $model_data['supportedGenerationMethods'], true )
 				) {
 					$model_caps = array(
 						AI_Capability::CHAT_HISTORY,
@@ -142,11 +134,11 @@ class Google_AI_Service implements Generative_AI_Service {
 					$model_caps = array();
 				}
 
-				$models[ $model_slug ] = array(
+				$models_data[ $model_slug ] = array(
 					'slug'         => $model_slug,
 					'capabilities' => $model_caps,
 				);
-				return $models;
+				return $models_data;
 			},
 			array()
 		);

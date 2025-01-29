@@ -109,23 +109,8 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 		$response_data = $this->api->make_request( $request )->get_data();
 
 		if ( ! isset( $response_data['data'] ) || ! $response_data['data'] ) {
-			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: key name */
-						__( 'The response from the OpenAI API is missing the "%s" key.', 'ai-services' ),
-						'data'
-					)
-				)
-			);
+			throw $this->api->create_missing_response_key_exception( 'data' );
 		}
-
-		$model_slugs = array_map(
-			static function ( array $model ) {
-				return $model['id'];
-			},
-			$response_data['data']
-		);
 
 		// Unfortunately, the OpenAI API does not return model capabilities, so we have to hardcode them here.
 		$gpt_capabilities            = array(
@@ -139,8 +124,10 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 		);
 
 		return array_reduce(
-			$model_slugs,
-			static function ( array $models_data, string $model_slug ) use ( $gpt_capabilities, $gpt_multimodal_capabilities ) {
+			$response_data['data'],
+			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities ) {
+				$model_slug = $model_data['id'];
+
 				if (
 					str_starts_with( $model_slug, 'gpt-' )
 					&& ! str_contains( $model_slug, '-instruct' )

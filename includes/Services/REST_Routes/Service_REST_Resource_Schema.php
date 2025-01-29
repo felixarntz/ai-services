@@ -126,6 +126,10 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 								'description' => __( 'Model slug.', 'ai-services' ),
 								'type'        => 'string',
 							),
+							'name'         => array(
+								'description' => __( 'User-facing model name.', 'ai-services' ),
+								'type'        => 'string',
+							),
 							'capabilities' => array(
 								'description' => __( 'List of the AI capabilities that the model supports.', 'ai-services' ),
 								'type'        => 'array',

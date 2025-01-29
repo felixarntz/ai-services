@@ -55,10 +55,13 @@ final class AI_Capabilities {
 	 * @since 0.1.0
 	 * @since n.e.x.t Now expects an array of model data shapes, mapped by model slug.
 	 *
-	 * @param array<string, array{slug: string, capabilities: string[]}> $models       Data for each model, mapped by
-	 *                                                                                 model slug.
-	 * @param string[]                                                   $capabilities The required capabilities that
-	 *                                                                                 the models should satisfy.
+	 * @param array<string, array{slug: string, name: string, capabilities: string[]}> $models       Data for each
+	 *                                                                                               model, mapped by
+	 *                                                                                               model slug.
+	 * @param string[]                                                                 $capabilities The required
+	 *                                                                                               capabilities that
+	 *                                                                                               the models should
+	 *                                                                                               satisfy.
 	 * @return string[] Slugs of all models that satisfy the given capabilities.
 	 *
 	 * @throws InvalidArgumentException Thrown if no model satisfies the given capabilities.

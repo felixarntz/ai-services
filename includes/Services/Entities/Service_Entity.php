@@ -142,7 +142,8 @@ class Service_Entity implements Entity {
 	 * @since 0.1.0
 	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
-	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
+	 * @return array<string, array{slug: string, name:string, capabilities: string[]}> Data for each model, mapped by
+	 *                                                                                 model slug.
 	 */
 	private function get_available_models(): array {
 		if ( ! $this->services_api->is_service_available( $this->slug ) ) {

@@ -31,16 +31,18 @@ export default class GenerativeAiModel {
 	 * @param {Object}   model              Model object.
 	 * @param {string}   model.serviceSlug  Service slug.
 	 * @param {string}   model.slug         Model slug.
+	 * @param {string}   model.name         Model name.
 	 * @param {string[]} model.capabilities AI capabilities that the model supports.
 	 * @param {Object}   modelParams        Model parameters passed. At a minimum this must include the unique
 	 *                                      "feature" identifier. It can also include the model slug and other optional
 	 *                                      parameters.
 	 */
-	constructor( { serviceSlug, slug, capabilities }, modelParams ) {
+	constructor( { serviceSlug, slug, name, capabilities }, modelParams ) {
 		validateModelParams( modelParams );
 
 		this.serviceSlug = serviceSlug;
 		this.slug = slug;
+		this.name = name;
 		this.capabilities = capabilities;
 		this.modelParams = modelParams || EMPTY_OBJECT;
 	}

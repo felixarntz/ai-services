@@ -39,18 +39,16 @@ const filterAvailableServices = memoize(
 
 const filterAvailableModels = memoize(
 	( availableModels, requiredCapabilities ) => {
-		return Object.keys( availableModels )
-			.filter( ( modelSlug ) => {
+		return Object.values( availableModels )
+			.filter( ( modelData ) => {
 				return requiredCapabilities.every( ( capability ) =>
-					availableModels[ modelSlug ].capabilities.includes(
-						capability
-					)
+					modelData.capabilities.includes( capability )
 				);
 			} )
-			.map( ( modelSlug ) => {
+			.map( ( modelData ) => {
 				return {
-					identifier: modelSlug,
-					label: modelSlug,
+					identifier: modelData.slug,
+					label: modelData.name,
 				};
 			} );
 	}

@@ -60,6 +60,7 @@ final class AI_Services_Command {
 	 */
 	private $model_default_fields = array(
 		'slug',
+		'name',
 		'capabilities',
 	);
 
@@ -561,7 +562,8 @@ final class AI_Services_Command {
 	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
 	 * @param string $service_slug The service slug.
-	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
+	 * @return array<string, array{slug: string, name:string, capabilities: string[]}> Data for each model, mapped by
+	 *                                                                                 model slug.
 	 */
 	private function get_service_models( string $service_slug ): array {
 		$service = $this->services_api->get_available_service( $service_slug );

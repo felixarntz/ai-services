@@ -103,7 +103,8 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
+	 * @return array<string, array{slug: string, name:string, capabilities: string[]}> Data for each model, mapped by
+	 *                                                                                 model slug.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
@@ -129,6 +130,7 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 
 				$models_data[ $model_slug ] = array(
 					'slug'         => $model_slug,
+					'name'         => $model_data['display_name'] ?? $model_slug,
 					'capabilities' => $anthropic_capabilities,
 				);
 				return $models_data;

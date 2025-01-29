@@ -11,6 +11,8 @@ namespace Felix_Arntz\AI_Services\Services\CLI;
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
@@ -454,14 +456,16 @@ final class AI_Services_Command {
 		$assoc_args             = $this->parse_assoc_args(
 			$assoc_args,
 			array(
-				'feature'            => '',
-				'system-instruction' => '',
+				'feature'               => '',
+				'system-instruction'    => '',
+				'function-declarations' => '',
 			),
 			$this->formatter_args
 		);
 		$generation_config_args = $this->sanitize_generation_config_args(
 			array_diff_key( $generation_config_args, $assoc_args )
 		);
+		$function_declarations  = $assoc_args['function-declarations'] ? json_decode( $assoc_args['function-declarations'], true ) : array();
 
 		$capabilities = array( AI_Capability::TEXT_GENERATION );
 
@@ -481,22 +485,32 @@ final class AI_Services_Command {
 			'model'             => $model_slug,
 			'capabilities'      => $capabilities,
 			'generationConfig'  => Generation_Config::from_array( $generation_config_args ),
+			'tools'             => $function_declarations ? Tools::from_array(
+				array(
+					array( 'functionDeclarations' => $function_declarations ),
+				)
+			) : null,
 			'systemInstruction' => $assoc_args['system-instruction'] ? $assoc_args['system-instruction'] : null,
 		);
 
 		$model = $this->get_model( $service, $model_params );
 
-		/**
-		 * Filters whether to use streaming for generating text content in WP-CLI.
-		 *
-		 * Streaming will print the generated text as it comes in, providing more immediate feedback, which can be
-		 * especially useful for long-running generation tasks.
-		 *
-		 * @since 0.3.0
-		 *
-		 * @param bool $use_streaming Whether to use streaming for generating text content in WP-CLI. Default is true.
-		 */
-		$use_streaming = apply_filters( 'ai_services_wp_cli_use_streaming', true );
+		// At the moment, streaming is only supported for plain text generation without tools.
+		if ( null !== $model_params['tools'] ) {
+			$use_streaming = false;
+		} else {
+			/**
+			 * Filters whether to use streaming for generating text content in WP-CLI.
+			 *
+			 * Streaming will print the generated text as it comes in, providing more immediate feedback, which can be
+			 * especially useful for long-running generation tasks.
+			 *
+			 * @since 0.3.0
+			 *
+			 * @param bool $use_streaming Whether to use streaming for generating text content in WP-CLI. Default is true.
+			 */
+			$use_streaming = apply_filters( 'ai_services_wp_cli_use_streaming', true );
+		}
 
 		if ( $use_streaming ) {
 			$this->stream_generate_text_using_model( $model, $prompt );
@@ -660,10 +674,21 @@ final class AI_Services_Command {
 			);
 		}
 
-		$text = Helpers::get_text_from_contents(
+		// Try finding content with text, otherwise just use the first candidate.
+		$content = Helpers::get_text_content_from_contents(
 			Helpers::get_candidate_contents( $candidates )
 		);
-		WP_CLI::print_value( trim( $text ), array( 'format' => 'table' ) );
+		if ( ! $content ) {
+			$content = Helpers::get_candidate_contents( $candidates )[0];
+		}
+
+		// If the content is purely text, print it directly, otherwise print the parts as structured JSON.
+		$parts = $content->get_parts();
+		if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Text_Part ) {
+			WP_CLI::print_value( trim( $parts->get( 0 )->get_text() ), array( 'format' => 'table' ) );
+			return;
+		}
+		WP_CLI::print_value( $parts->to_array(), array( 'format' => 'json' ) );
 	}
 
 	/**

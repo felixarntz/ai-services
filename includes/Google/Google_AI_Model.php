@@ -621,7 +621,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 					array(
 						'name'        => $declaration['name'],
 						'description' => $declaration['description'] ?? null,
-						'parameters'  => $declaration['parameters'] ?? null,
+						'parameters'  => isset( $declaration['parameters'] ) ? $this->remove_additional_properties_key( $declaration['parameters'] ) : null,
 					)
 				);
 			}
@@ -632,6 +632,28 @@ class Google_AI_Model implements Generative_AI_Model, With_Multimodal_Input, Wit
 		}
 
 		return $tools_param;
+	}
+
+	/**
+	 * Removes the `additionalProperties` key from the schema, including child schemas.
+	 *
+	 * This is necessary because the Google AI API will reject the schema if it contains this key.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $schema The schema to remove the `additionalProperties` key from.
+	 * @return array<string, mixed> The schema without the `additionalProperties` key.
+	 */
+	private function remove_additional_properties_key( array $schema ): array {
+		if ( isset( $schema['additionalProperties'] ) ) {
+			unset( $schema['additionalProperties'] );
+		}
+		if ( isset( $schema['properties'] ) ) {
+			foreach ( $schema['properties'] as $key => $child_schema ) {
+				$schema['properties'][ $key ] = $this->remove_additional_properties_key( $child_schema );
+			}
+		}
+		return $schema;
 	}
 
 	/**

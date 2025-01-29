@@ -106,7 +106,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		$request       = $this->api->create_list_models_request();
+		$request       = $this->api->create_list_models_request( array(), $request_options );
 		$response_data = $this->api->make_request( $request )->get_data();
 
 		if ( ! isset( $response_data['data'] ) || ! $response_data['data'] ) {

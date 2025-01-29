@@ -62,6 +62,7 @@ export default function SettingsCards() {
 						disabled={ isLoading }
 						checked={ deleteData || false }
 						onChange={ setDeleteData }
+						__nextHasNoMarginBottom
 					/>
 				</CardBody>
 			</Card>

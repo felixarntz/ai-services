@@ -9,8 +9,8 @@
     "fast-glob": "^3.3.3"
   },
   "dependencies": {
-    "@wordpress/icons": "^10.5.0",
-    "@wordpress/interface": "^6.4.0",
+    "@wordpress/icons": "^10.16.0",
+    "@wordpress/interface": "^9.1.0",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1"
   },

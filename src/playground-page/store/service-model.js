@@ -42,7 +42,9 @@ const filterAvailableModels = memoize(
 		return Object.keys( availableModels )
 			.filter( ( modelSlug ) => {
 				return requiredCapabilities.every( ( capability ) =>
-					availableModels[ modelSlug ].includes( capability )
+					availableModels[ modelSlug ].capabilities.includes(
+						capability
+					)
 				);
 			} )
 			.map( ( modelSlug ) => {

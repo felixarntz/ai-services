@@ -98,9 +98,10 @@ class Google_AI_Service implements Generative_AI_Service {
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
+	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
@@ -141,7 +142,10 @@ class Google_AI_Service implements Generative_AI_Service {
 					$model_caps = array();
 				}
 
-				$models[ $model_slug ] = $model_caps;
+				$models[ $model_slug ] = array(
+					'slug'         => $model_slug,
+					'capabilities' => $model_caps,
+				);
 				return $models;
 			},
 			array()

@@ -23,7 +23,7 @@ export default class GenerativeAiService {
 	 * @param {string}   service.slug             Service slug.
 	 * @param {string}   service.name             Service name.
 	 * @param {string[]} service.capabilities     AI capabilities that the service supports.
-	 * @param {Object}   service.available_models Map of the available model slugs and their capabilities.
+	 * @param {Object}   service.available_models Data for each model, mapped by model slug.
 	 */
 	constructor( { slug, name, capabilities, available_models: models } ) {
 		if ( ! models || ! Object.keys( models ).length ) {
@@ -65,7 +65,7 @@ export default class GenerativeAiService {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return {Object} Map of the available model slugs and their capabilities.
+	 * @return {Object} Data for each model, mapped by model slug.
 	 */
 	listModels() {
 		return this.models;

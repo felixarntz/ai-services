@@ -375,23 +375,15 @@ final class AI_Services_Command {
 		if ( count( $assoc_args['slugs'] ) > 0 ) {
 			$models = array_intersect_key( $models, array_flip( $assoc_args['slugs'] ) );
 		}
-
-		$models_data = array();
-		foreach ( $models as $model_slug => $model_capabilities ) {
-			$models_data[] = array(
-				'slug'         => $model_slug,
-				'capabilities' => $model_capabilities,
-			);
-		}
-
-		usort( $models_data, $this->get_model_sort_callback( $assoc_args['orderby'], $assoc_args['order'] ) );
+		$models = array_values( $models );
+		usort( $models, $this->get_model_sort_callback( $assoc_args['orderby'], $assoc_args['order'] ) );
 
 		$formatter = $this->get_formatter(
 			$assoc_args,
 			$this->model_default_fields
 		);
 
-		$formatter->display_items( $models_data );
+		$formatter->display_items( $models );
 	}
 
 	/**
@@ -434,22 +426,7 @@ final class AI_Services_Command {
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
 	 */
 	public function generate_text( array $args, array $assoc_args ): void {
-		if ( ! isset( $args[0] ) ) {
-			WP_CLI::error( 'You must provide at least a prompt as positional argument.' );
-		}
-		if ( count( $args ) === 3 ) {
-			$service_slug = $args[0];
-			$model_slug   = $args[1];
-			$prompt       = $args[2];
-		} elseif ( count( $args ) === 2 ) {
-			$service_slug = $args[0];
-			$model_slug   = null;
-			$prompt       = $args[1];
-		} else {
-			$service_slug = null;
-			$model_slug   = null;
-			$prompt       = $args[0];
-		}
+		list( $service_slug, $model_slug, $prompt ) = $this->parse_generate_positional_args( $args );
 
 		// Assume any unknown arguments are generation configuration arguments.
 		$generation_config_args = $assoc_args;
@@ -495,28 +472,65 @@ final class AI_Services_Command {
 
 		$model = $this->get_model( $service, $model_params );
 
-		// At the moment, streaming is only supported for plain text generation without tools.
-		if ( null !== $model_params['tools'] ) {
-			$use_streaming = false;
-		} else {
-			/**
-			 * Filters whether to use streaming for generating text content in WP-CLI.
-			 *
-			 * Streaming will print the generated text as it comes in, providing more immediate feedback, which can be
-			 * especially useful for long-running generation tasks.
-			 *
-			 * @since 0.3.0
-			 *
-			 * @param bool $use_streaming Whether to use streaming for generating text content in WP-CLI. Default is true.
-			 */
-			$use_streaming = apply_filters( 'ai_services_wp_cli_use_streaming', true );
-		}
-
-		if ( $use_streaming ) {
+		if ( $this->should_use_streaming( $model_params ) ) {
 			$this->stream_generate_text_using_model( $model, $prompt );
 		} else {
 			$this->generate_text_using_model( $model, $prompt );
 		}
+	}
+
+	/**
+	 * Parses the positional arguments for a generate command.
+	 *
+	 * Up to three positional arguments are supported, for the service slug, model slug, and prompt.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param mixed[] $args The positional arguments.
+	 * @return array<?string> The parsed positional arguments, always containing three elements: service slug, model
+	 *                        slug, and prompt. Each of them is either a string or `null` if not provided.
+	 */
+	private function parse_generate_positional_args( array $args ): array {
+		if ( ! isset( $args[0] ) ) {
+			WP_CLI::error( 'You must provide at least a prompt as positional argument.' );
+		}
+
+		if ( count( $args ) === 3 ) {
+			return $args;
+		}
+
+		if ( count( $args ) === 2 ) {
+			return array( $args[0], null, $args[1] );
+		}
+
+		return array( null, null, $args[0] );
+	}
+
+	/**
+	 * Checks whether to use streaming for generating content in WP-CLI.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $model_params The model parameters.
+	 * @return bool Whether to use streaming for generating content in WP-CLI.
+	 */
+	private function should_use_streaming( array $model_params ): bool {
+		// At the moment, streaming is only supported for plain text generation without tools.
+		if ( isset( $model_params['tools'] ) ) {
+			return false;
+		}
+
+		/**
+		 * Filters whether to use streaming for generating text content in WP-CLI.
+		 *
+		 * Streaming will print the generated text as it comes in, providing more immediate feedback, which can be
+		 * especially useful for long-running generation tasks.
+		 *
+		 * @since 0.3.0
+		 *
+		 * @param bool $use_streaming Whether to use streaming for generating text content in WP-CLI. Default is true.
+		 */
+		return (bool) apply_filters( 'ai_services_wp_cli_use_streaming', true );
 	}
 
 	/**
@@ -544,9 +558,10 @@ final class AI_Services_Command {
 	 * The service must be available for this to work.
 	 *
 	 * @since 0.2.0
+	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
 	 * @param string $service_slug The service slug.
-	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
+	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
 	 */
 	private function get_service_models( string $service_slug ): array {
 		$service = $this->services_api->get_available_service( $service_slug );

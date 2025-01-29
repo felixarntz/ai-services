@@ -97,9 +97,10 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
+	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
@@ -139,7 +140,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 
 		return array_reduce(
 			$model_slugs,
-			static function ( array $model_caps, string $model_slug ) use ( $gpt_capabilities, $gpt_multimodal_capabilities ) {
+			static function ( array $models_data, string $model_slug ) use ( $gpt_capabilities, $gpt_multimodal_capabilities ) {
 				if (
 					str_starts_with( $model_slug, 'gpt-' )
 					&& ! str_contains( $model_slug, '-instruct' )
@@ -147,18 +148,23 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 					&& ! str_contains( $model_slug, '-audio' )
 				) {
 					if ( str_starts_with( $model_slug, 'gpt-4o' ) ) {
-						$model_caps[ $model_slug ] = $gpt_multimodal_capabilities;
+						$model_caps = $gpt_multimodal_capabilities;
 					} else {
-						$model_caps[ $model_slug ] = $gpt_capabilities;
+						$model_caps = $gpt_capabilities;
 					}
 				} else {
 					/*
 					 * TODO: Support other models once capabilities are added.
 					 * For example, dall-e models for image generation, tts models for text-to-speech.
 					 */
-					$model_caps[ $model_slug ] = array();
+					$model_caps = array();
 				}
-				return $model_caps;
+
+				$models_data[ $model_slug ] = array(
+					'slug'         => $model_slug,
+					'capabilities' => $model_caps,
+				);
+				return $models_data;
 			},
 			array()
 		);

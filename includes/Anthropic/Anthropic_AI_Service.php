@@ -122,9 +122,10 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
+	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
@@ -136,14 +137,22 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 			AI_Capability::TEXT_GENERATION,
 		);
 
-		return array_fill_keys(
-			array(
-				'claude-3-opus-20240229',
-				'claude-3-sonnet-20240229',
-				'claude-3-haiku-20240307',
-				'claude-3-5-sonnet-20240620',
-			),
-			$anthropic_capabilities
+		$model_slugs = array(
+			'claude-3-opus-20240229',
+			'claude-3-sonnet-20240229',
+			'claude-3-haiku-20240307',
+			'claude-3-5-sonnet-20240620',
+		);
+		return array_reduce(
+			$model_slugs,
+			static function ( array $models_data, string $model_slug ) use ( $anthropic_capabilities ) {
+				$models_data[ $model_slug ] = array(
+					'slug'         => $model_slug,
+					'capabilities' => $anthropic_capabilities,
+				);
+				return $models_data;
+			},
+			array()
 		);
 	}
 

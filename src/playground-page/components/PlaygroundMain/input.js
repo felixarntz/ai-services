@@ -110,7 +110,7 @@ export default function Input() {
 					currentCapabilities =
 						services[ currentService ].available_models[
 							currentModel
-						];
+						].capabilities;
 				}
 			}
 

@@ -26,7 +26,7 @@ const serviceInstances = {};
  * @param {Object} serviceData                  Service data.
  * @param {string} serviceData.slug             Service slug.
  * @param {string} serviceData.name             Service name.
- * @param {Object} serviceData.available_models Map of the available model slugs and their capabilities.
+ * @param {Object} serviceData.available_models Data for each model, mapped by model slug.
  * @return {GenerativeAiService} Generative AI service instance.
  */
 function getGenerativeAiService( serviceData ) {

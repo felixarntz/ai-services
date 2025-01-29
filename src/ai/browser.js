@@ -28,7 +28,14 @@ export async function getBrowserServiceData() {
 			is_available: capabilities.length > 0,
 			capabilities,
 			available_models:
-				capabilities.length > 0 ? { default: capabilities } : {},
+				capabilities.length > 0
+					? {
+							default: {
+								slug: 'default',
+								capabilities,
+							},
+					  }
+					: {},
 		};
 	}
 	return browser;

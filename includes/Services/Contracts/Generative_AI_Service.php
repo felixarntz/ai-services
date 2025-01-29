@@ -57,9 +57,10 @@ interface Generative_AI_Service {
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return array<string, string[]> Map of the available model slugs and their capabilities.
+	 * @return array<string, array{slug: string, capabilities: string[]}> Data for each model, mapped by model slug.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */

@@ -53,17 +53,20 @@ final class AI_Capabilities {
 	 * Gets the model slugs that satisfy the given capabilities.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Now expects an array of model data shapes, mapped by model slug.
 	 *
-	 * @param array<string, string[]> $models       Map of the available model slugs and their capabilities.
-	 * @param string[]                $capabilities The required capabilities that the models should satisfy.
+	 * @param array<string, array{slug: string, capabilities: string[]}> $models       Data for each model, mapped by
+	 *                                                                                 model slug.
+	 * @param string[]                                                   $capabilities The required capabilities that
+	 *                                                                                 the models should satisfy.
 	 * @return string[] Slugs of all models that satisfy the given capabilities.
 	 *
 	 * @throws InvalidArgumentException Thrown if no model satisfies the given capabilities.
 	 */
 	public static function get_model_slugs_for_capabilities( array $models, array $capabilities ): array {
 		$model_slugs = array();
-		foreach ( $models as $model_slug => $model_caps ) {
-			if ( ! array_diff( $capabilities, $model_caps ) ) {
+		foreach ( $models as $model_slug => $model_data ) {
+			if ( ! array_diff( $capabilities, $model_data['capabilities'] ) ) {
 				$model_slugs[] = $model_slug;
 			}
 		}

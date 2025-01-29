@@ -197,18 +197,18 @@ export function detectRequestedCapabilitiesFromContent(
 /**
  * Finds a model from the available models based on the given model parameters.
  *
+ * An exception is thrown if no matching model is found based on the given model parameters.
+ *
  * @since 0.3.0
  *
- * @param {Object} availableModels Map of the available model slugs and their capabilities.
+ * @param {Object} availableModels Data for each model, mapped by model slug.
  * @param {Object} modelParams     Model parameters. Should contain either a 'model' slug or requested 'capabilities'.
- * @return {Object} Model object containing 'slug' and 'capabilities' properties.
+ * @return {Object} Model data object.
  */
 export function findModel( availableModels, modelParams ) {
 	// Find model by slug, if specified.
 	if ( modelParams.model ) {
-		const capabilities = availableModels[ modelParams.model ];
-
-		if ( ! capabilities ) {
+		if ( ! availableModels[ modelParams.model ] ) {
 			throw new Error(
 				__(
 					'The specified model is not available for the service.',
@@ -217,10 +217,7 @@ export function findModel( availableModels, modelParams ) {
 			);
 		}
 
-		return {
-			slug: modelParams.model,
-			capabilities,
-		};
+		return availableModels[ modelParams.model ];
 	}
 
 	/*
@@ -232,16 +229,12 @@ export function findModel( availableModels, modelParams ) {
 	];
 
 	for ( const model of Object.keys( availableModels ) ) {
-		const capabilities = availableModels[ model ];
 		if (
 			requestedCapabilities.every( ( capability ) =>
-				capabilities.includes( capability )
+				availableModels[ model ].capabilities.includes( capability )
 			)
 		) {
-			return {
-				slug: model,
-				capabilities,
-			};
+			return availableModels[ model ];
 		}
 	}
 

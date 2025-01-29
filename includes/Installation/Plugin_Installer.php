@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Installation;
 
 use Exception;
+use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Installation\Abstract_Installer;
 
 /**
@@ -39,7 +40,12 @@ class Plugin_Installer extends Abstract_Installer {
 	 * @throws Exception Thrown when upgrading fails.
 	 */
 	protected function upgrade_data( string $old_version ): void {
-		// No upgrade routines yet.
+		if ( version_compare( $old_version, 'n.e.x.t', '<' ) ) {
+			// Invalidate all existing service caches since return shape of `list_models()` method changed.
+			Service_Request_Cache::invalidate_caches( 'anthropic' );
+			Service_Request_Cache::invalidate_caches( 'google' );
+			Service_Request_Cache::invalidate_caches( 'openai' );
+		}
 	}
 
 	/**

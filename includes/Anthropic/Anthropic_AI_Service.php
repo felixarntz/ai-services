@@ -207,7 +207,7 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 */
 	private function sort_models_by_preference( array $model_slugs ): array {
 		$get_preference_group = static function ( $model_slug ) {
-			if ( str_starts_with( $model_slug, 'claude-3' ) ) {
+			if ( str_starts_with( $model_slug, 'claude-3-5' ) ) {
 				if ( str_contains( $model_slug, '-sonnet' ) ) {
 					return 0;
 				}

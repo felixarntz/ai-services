@@ -117,7 +117,11 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 		}
 
 		// Unfortunately the Anthropic API does not return model capabilities, so we have to hardcode them here.
-		$anthropic_capabilities = array(
+		$anthropic_legacy_capabilities = array(
+			AI_Capability::CHAT_HISTORY,
+			AI_Capability::TEXT_GENERATION,
+		);
+		$anthropic_capabilities        = array(
 			AI_Capability::CHAT_HISTORY,
 			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::MULTIMODAL_INPUT,
@@ -126,13 +130,19 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 
 		return array_reduce(
 			$response_data['data'],
-			static function ( array $models_data, array $model_data ) use ( $anthropic_capabilities ) {
+			static function ( array $models_data, array $model_data ) use ( $anthropic_legacy_capabilities, $anthropic_capabilities ) {
 				$model_slug = $model_data['id'];
+
+				if ( str_starts_with( $model_slug, 'claude-2.' ) ) {
+					$model_caps = $anthropic_legacy_capabilities;
+				} else {
+					$model_caps = $anthropic_capabilities;
+				}
 
 				$models_data[ $model_slug ] = array(
 					'slug'         => $model_slug,
 					'name'         => $model_data['display_name'] ?? $model_slug,
-					'capabilities' => $anthropic_capabilities,
+					'capabilities' => $model_caps,
 				);
 				return $models_data;
 			},

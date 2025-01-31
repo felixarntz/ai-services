@@ -114,7 +114,12 @@ class Google_AI_Service implements Generative_AI_Service {
 			throw $this->api->create_missing_response_key_exception( 'models' );
 		}
 
-		$google_capabilities = array(
+		$google_legacy_capabilities = array(
+			AI_Capability::CHAT_HISTORY,
+			AI_Capability::FUNCTION_CALLING,
+			AI_Capability::TEXT_GENERATION,
+		);
+		$google_capabilities        = array(
 			AI_Capability::CHAT_HISTORY,
 			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::MULTIMODAL_INPUT,
@@ -123,7 +128,7 @@ class Google_AI_Service implements Generative_AI_Service {
 
 		return array_reduce(
 			$response_data['models'],
-			static function ( array $models_data, array $model_data ) use ( $google_capabilities ) {
+			static function ( array $models_data, array $model_data ) use ( $google_legacy_capabilities, $google_capabilities ) {
 				$model_slug = $model_data['baseModelId'] ?? $model_data['name'];
 				if ( str_starts_with( $model_slug, 'models/' ) ) {
 					$model_slug = substr( $model_slug, 7 );
@@ -133,7 +138,14 @@ class Google_AI_Service implements Generative_AI_Service {
 					isset( $model_data['supportedGenerationMethods'] ) &&
 					in_array( 'generateContent', $model_data['supportedGenerationMethods'], true )
 				) {
-					$model_caps = $google_capabilities;
+					if (
+						str_starts_with( $model_slug, 'gemini-1.0' ) ||
+						str_starts_with( $model_slug, 'gemini-pro' ) // 'gemini-pro' without version refers to 1.0.
+					) {
+						$model_caps = $google_legacy_capabilities;
+					} else {
+						$model_caps = $google_capabilities;
+					}
 				} else {
 					$model_caps = array();
 				}

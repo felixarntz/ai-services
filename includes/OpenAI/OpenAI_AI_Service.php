@@ -218,22 +218,25 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 */
 	private function sort_models_by_preference( array $model_slugs ): array {
 		$get_preference_group = static function ( $model_slug ) {
-			if ( str_starts_with( $model_slug, 'gpt-3.5' ) ) {
+			if ( 'gpt-4o' === $model_slug ) {
+				return 0;
+			}
+			if ( str_starts_with( $model_slug, 'gpt-4o' ) ) {
+				return 1;
+			}
+			if ( str_starts_with( $model_slug, 'gpt-4' ) ) {
 				if ( str_ends_with( $model_slug, '-turbo' ) ) {
-					return 0;
+					return 2;
 				}
-				if ( str_contains( $model_slug, '-turbo' ) ) {
-					return 1;
-				}
-				return 2;
+				return 3;
 			}
 			if ( str_starts_with( $model_slug, 'gpt-' ) ) {
-				if ( str_contains( $model_slug, '-turbo' ) ) {
-					return 3;
+				if ( str_ends_with( $model_slug, '-turbo' ) ) {
+					return 4;
 				}
-				return 4;
+				return 5;
 			}
-			return 5;
+			return 6;
 		};
 
 		$preference_groups = array_fill( 0, 6, array() );

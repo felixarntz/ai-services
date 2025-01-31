@@ -16,6 +16,7 @@ namespace Felix_Arntz\AI_Services\Services\API\Enums;
 final class AI_Capability extends Abstract_Enum {
 
 	const CHAT_HISTORY     = 'chat_history';
+	const FUNCTION_CALLING = 'function_calling';
 	const IMAGE_GENERATION = 'image_generation';
 	const MULTIMODAL_INPUT = 'multimodal_input';
 	const TEXT_GENERATION  = 'text_generation';
@@ -30,6 +31,7 @@ final class AI_Capability extends Abstract_Enum {
 	protected static function get_all_values(): array {
 		return array(
 			self::CHAT_HISTORY,
+			self::FUNCTION_CALLING,
 			self::IMAGE_GENERATION,
 			self::MULTIMODAL_INPUT,
 			self::TEXT_GENERATION,

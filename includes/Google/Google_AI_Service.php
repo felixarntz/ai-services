@@ -114,9 +114,16 @@ class Google_AI_Service implements Generative_AI_Service {
 			throw $this->api->create_missing_response_key_exception( 'models' );
 		}
 
+		$google_capabilities = array(
+			AI_Capability::CHAT_HISTORY,
+			AI_Capability::FUNCTION_CALLING,
+			AI_Capability::MULTIMODAL_INPUT,
+			AI_Capability::TEXT_GENERATION,
+		);
+
 		return array_reduce(
 			$response_data['models'],
-			static function ( array $models_data, array $model_data ) {
+			static function ( array $models_data, array $model_data ) use ( $google_capabilities ) {
 				$model_slug = $model_data['baseModelId'] ?? $model_data['name'];
 				if ( str_starts_with( $model_slug, 'models/' ) ) {
 					$model_slug = substr( $model_slug, 7 );
@@ -126,11 +133,7 @@ class Google_AI_Service implements Generative_AI_Service {
 					isset( $model_data['supportedGenerationMethods'] ) &&
 					in_array( 'generateContent', $model_data['supportedGenerationMethods'], true )
 				) {
-					$model_caps = array(
-						AI_Capability::CHAT_HISTORY,
-						AI_Capability::MULTIMODAL_INPUT,
-						AI_Capability::TEXT_GENERATION,
-					);
+					$model_caps = $google_capabilities;
 				} else {
 					$model_caps = array();
 				}

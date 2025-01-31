@@ -197,6 +197,10 @@ const resolvers = {
 					label: __( 'Chat history', 'ai-services' ),
 				},
 				{
+					identifier: enums.AiCapability.FUNCTION_CALLING,
+					label: __( 'Function calling', 'ai-services' ),
+				},
+				{
 					identifier: enums.AiCapability.MULTIMODAL_INPUT,
 					label: __( 'Multimodal input', 'ai-services' ),
 				},

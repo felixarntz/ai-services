@@ -116,10 +116,12 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 		// Unfortunately, the OpenAI API does not return model capabilities, so we have to hardcode them here.
 		$gpt_capabilities            = array(
 			AI_Capability::CHAT_HISTORY,
+			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::TEXT_GENERATION,
 		);
 		$gpt_multimodal_capabilities = array(
 			AI_Capability::CHAT_HISTORY,
+			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::MULTIMODAL_INPUT,
 			AI_Capability::TEXT_GENERATION,
 		);

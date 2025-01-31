@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Services\Util;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
@@ -36,6 +37,9 @@ final class AI_Capabilities {
 		$capabilities = array();
 		if ( isset( $interfaces[ With_Chat_History::class ] ) ) {
 			$capabilities[] = AI_Capability::CHAT_HISTORY;
+		}
+		if ( isset( $interfaces[ With_Function_Calling::class ] ) ) {
+			$capabilities[] = AI_Capability::FUNCTION_CALLING;
 		}
 		if ( isset( $interfaces[ With_Image_Generation::class ] ) ) {
 			$capabilities[] = AI_Capability::IMAGE_GENERATION;

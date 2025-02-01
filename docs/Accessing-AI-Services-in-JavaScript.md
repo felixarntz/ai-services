@@ -189,7 +189,7 @@ try {
 	const candidates = await service.generateText(
 		content,
 		{
-			feature: 'my-test-feature'
+			feature: 'my-test-feature',
 			capabilities: [
 				enums.AiCapability.MULTIMODAL_INPUT,
 				enums.AiCapability.TEXT_GENERATION,
@@ -318,6 +318,168 @@ Note that not all configuration arguments are supported by every service API. Ho
 	* Supported by all except `openai`.
 
 Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Generation_Config` class](../includes/Services/API/Types/Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+
+### Function calling
+
+Several AI services and their models support function calling. Using this feature, you can provide custom function definitions to the model via JSON schema. The model cannot directly invoke these functions, but it can generate structured output suggesting a specific function to call with specific arguments. You can then handle calling the corresponding function with the suggested arguments in your business logic and provide the resulting output to the AI model as part of a subsequent prompt. This powerful feature can help the AI model to gather additional context for the user prompts and better integrate it into your processes.
+
+#### Providing function declarations
+
+In order to allow for the model to generate function call output, you need to provide function definitions via the `tools` model parameter. Here is an example, for a hypothetical weather application where users can ask the AI model about the weather forecast:
+
+```js
+const enums = aiServices.ai.enums;
+
+const functionDeclarations = [
+	{
+		name: 'get_weather',
+		description: 'Returns the weather for a given location and a given timeframe.',
+		parameters: {
+			type: 'object',
+			properties: {
+				location: {
+					type: 'string',
+					description: 'The location to get the weather forecast for, such as a city or region.',
+				},
+				timeframe: {
+					type: 'string',
+					enum: [ 'today', 'tonight', 'tomorrow', 'next-week' ],
+					description: 'The timeframe for when to get the weather forecast for.'
+				},
+			},
+		},
+	},
+];
+
+const tools [ { functionDeclarations } ];
+
+const content = {
+	role: enums.ContentRole.USER,
+	parts: [
+		{
+			text: 'What is the weather like today in Austin?'
+		},
+	]
+};
+try {
+	const candidates = await service.generateText(
+		content,
+		{
+			feature: 'my-test-feature',
+			tools: tools,
+			capabilities: [
+				enums.AiCapability.FUNCTION_CALLING,
+				enums.AiCapability.TEXT_GENERATION,
+			],
+		}
+	);
+} catch ( error ) {
+	// Handle the error.
+}
+```
+
+#### Processing a function call
+
+Depending on the prompt, the AI model may determine that it can respond to the query without a function call, or it may determine that a function call would be useful. In other words, the response may contain either, or a mix of both text response and a function call definition.
+
+Here is an example of how you could process such a response:
+
+```js
+let text = '';
+let functionCall;
+for ( const part of candidates[ 0 ].content.parts ) {
+	if ( part.text ) {
+		if ( text ) {
+			text += '\n\n';
+		}
+		text += part.text;
+	} else if ( part.functionCall ) {
+		functionCall = {
+			id: part.functionCall.id,
+			name: part.functionCall.name,
+			args: part.functionCall.args,
+		};
+	}
+}
+
+// Business logic calling the relevant function...
+
+// The function result could have any shape, from a simple scalar value to a complex array of data.
+const functionResult = {
+	location: {
+		city: 'Austin',
+		state: 'TX',
+		country: 'US',
+	},
+	weather: {
+		summary: 'sunny',
+		temperature_high: 92,
+		temperature_low: 77,
+	},
+};
+```
+
+If `functionCall` contains data, you could then call the respective function identified by `functionCall.name` in your business logic, with the arguments specified in `functionCall.args`, which is a map of argument identifiers and their values. Both the function name and its arguments will refer to one of the functions you provided to the AI model together with the prompt.
+
+The `functionCall.id` value is a special string identifier specific to the AI model you called. Not every AI service will provide a value for this, but if it is set, it is critical that you provide it back to the AI model with the eventual function response. In this example that response is hard coded into the `functionResult` variable.
+
+#### Providing the function response back to the model
+
+After calling the function, you can pass the result back to the model in a subsequent prompt to the model. Keep in mind to include the previous history from the exchange so that the model is aware of both the initial prompt, the function call it responded with and the response of the function based on your business logic.
+
+Here is what that could look like, continuing the example from above:
+
+```js
+const enums = aiServices.ai.enums;
+
+// This should contain the same function declarations provided before.
+const functionDeclarations = [
+	// ...
+];
+
+const tools [ { functionDeclarations } ];
+
+/*
+ * This should contain both the content object with the initial user prompt, and the content object with the function
+ * call received by the AI model.
+ */
+const contents = [
+	// ...
+];
+
+// This adds the function response to the overall prompt.
+const content = {
+	role: enums.ContentRole.USER,
+	parts: [
+		{
+			functionResponse: {
+        id: functionCall.id,
+        name: functionCall.name,
+        response: functionResult,
+      },
+		},
+	]
+};
+contents.push( content );
+
+try {
+	const candidates = await service.generateText(
+		contents,
+		{
+			feature: 'my-test-feature',
+			tools: tools,
+			capabilities: [
+				enums.AiCapability.FUNCTION_CALLING,
+				enums.AiCapability.TEXT_GENERATION,
+			],
+		}
+	);
+} catch ( error ) {
+	// Handle the error.
+}
+```
+
+You should now get a response from the AI model that is based on the function response data you provided to it, answering the initial prompt.
 
 ## Generating image content using an AI service
 

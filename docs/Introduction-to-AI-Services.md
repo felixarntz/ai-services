@@ -7,7 +7,7 @@ While the main introduction to the plugin can be found in the [plugin readme](..
 * Abstraction layer and APIs to communicate with any AI service in a uniform way
   * APIs are available in both PHP and in JavaScript, as well as via WP-CLI commands
   * Supports streaming text generation for more immediate feedback to users
-  * Currently only supports text generation (including multi-modal support if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
+  * Currently only supports text generation (including multi-modal input and function calling if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
 * Built-in AI service implementations
   * [Anthropic (Claude)](https://www.anthropic.com/claude)
   * [Google (Gemini)](https://ai.google.dev/gemini-api)

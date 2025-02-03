@@ -561,9 +561,10 @@ final class AI_Services_Command {
 	 * @since 0.2.0
 	 * @since n.e.x.t Return type changed to a map of model data shapes.
 	 *
+	 * @phpstan-return array<string, array{slug: string, name: string, capabilities: string[]}>
+	 *
 	 * @param string $service_slug The service slug.
-	 * @return array<string, array{slug: string, name:string, capabilities: string[]}> Data for each model, mapped by
-	 *                                                                                 model slug.
+	 * @return array<string, mixed> Data for each model, mapped by model slug.
 	 */
 	private function get_service_models( string $service_slug ): array {
 		$service = $this->services_api->get_available_service( $service_slug );

@@ -218,7 +218,11 @@ add_filter( 'ai_services_chatbot_enabled', '__return_true' );
 
 = How can I tweak the WP-CLI commands' behavior? =
 
-The `wp ai-services generate-text` command streams text responses by default, providing faster feedback to the user. If you prefer to show the complete text response in one go instead, you can disable streaming in WP-CLI by using the `ai_services_wp_cli_use_streaming` filter.
+The `wp ai-services generate-text` command streams text responses by default. This can help provide more immediate feedback to the user, since chunks with partial response candidates will be available iteratively while the model still processes the remainder of the response.
+
+An exception where it does not stream the response, but returns it all at once is if any function declarations are present.
+
+If you prefer to show the complete text response in one go instead, you can disable streaming in WP-CLI by using the `ai_services_wp_cli_use_streaming` filter.
 
 `
 add_filter( 'ai_services_wp_cli_use_streaming', '__return_false' );

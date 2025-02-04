@@ -64,3 +64,48 @@ wp ai-services generate-text "What can I do with WordPress?" --feature=my-test-f
 ```
 
 This command will automatically choose whichever service and model with text generation capabilities is available. It will only return an error if no capable service is configured at all.
+
+### Sending multimodal prompts
+
+Additionally to a simple text prompt, you can provide multimodal input to the model by referencing a WordPress media file (also called "attachment"). For example, referencing an image file allows the model to return a response related to what is shown in the image. In order to use a WordPress attachment as multimodal input, you need to use the optional `--attachment` argument. Here is an example:
+
+```bash
+wp ai-services generate-text "Generate alternative text for this image." --feature=alt-text-generator --user=admin --attachment-id=123
+```
+
+### Streaming text responses
+
+The `wp ai-services generate-text` command streams text responses by default. This can help provide more immediate feedback to the user, since chunks with partial response candidates will be available iteratively while the model still processes the remainder of the response.
+
+An exception where it does not stream the response, but returns it all at once is if any function declarations are present.
+
+If you prefer to show the complete text response in one go instead, you can disable streaming in WP-CLI by using the `ai_services_wp_cli_use_streaming` filter:
+
+```php
+add_filter( 'ai_services_wp_cli_use_streaming', '__return_false' );
+```
+
+### Function calling
+
+Several AI services and their models support function calling. Using this feature, you can provide custom function definitions to the model via JSON schema. The model cannot directly invoke these functions, but it can generate structured output suggesting a specific function to call with specific arguments. You can then handle calling the corresponding function with the suggested arguments in your business logic and provide the resulting output to the AI model as part of a subsequent prompt. This powerful feature can help the AI model to gather additional context for the user prompts and better integrate it into your processes.
+
+You can provide function declarations alongside a WP-CLI prompt by using the optional `--function-declarations` argument. It must contain a JSON-encoded array of function declarations to pass to the model as tools. Here is an example:
+
+```bash
+local function_declarations='[
+  {
+    "name": "get_weather",
+    "description": "Returns the weather for today for a given location.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type":"string",
+          "description": "The location to get the weather for, such as a city or region."
+        }
+      }
+    }
+  }
+]'
+wp ai-services generate-text "What is the weather today in Austin?" --feature=weather-info --user=admin --function-declarations="$function_declarations"
+```

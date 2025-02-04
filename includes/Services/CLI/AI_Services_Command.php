@@ -408,6 +408,12 @@ final class AI_Services_Command {
 	 * [--feature=<feature>]
 	 * : Required. Unique identifier of the feature that the model will be used for.
 	 *
+	 * [--attachment-id=<attachment-id>]
+	 * : Numeric ID of an attachment to pass to the model as multimodal input alongside the text prompt.
+	 *
+	 * [--function-declarations=<function-declarations>]
+	 * : JSON-encoded array of function declarations to pass to the model as tools.
+	 *
 	 * [--system-instruction=<system-instruction>]
 	 * : System instruction for the model.
 	 *
@@ -419,6 +425,8 @@ final class AI_Services_Command {
 	 *   wp ai-services generate-text google gemini-1.5-pro "What can I do with WordPress?" --feature=my-cli-test --user=admin
 	 *   wp ai-services generate-text openai "What can I do with WordPress?" --feature=cli-example --user=admin
 	 *   wp ai-services generate-text "Give me a list of categories for my blog about WordPress plugins." --feature=cli-category-generator --user=admin --response-mime-type=application/json --response-schema='{"type":"object","properties":{"categories":{"type":"array","items":{"type":"string"}}}}'
+	 *   wp ai-services generate-text "Generate alternative text for this image." --feature=alt-text-generator --user=admin --attachment-id=123
+	 *   wp ai-services generate-text "What is the weather today in Austin?" --feature=weather-info --user=admin --function-declarations='[{"name":"get_weather", "description":"Returns the weather for today for a given location.", "parameters":{"type":"object", "properties":{"location":{"type":"string", "description": "The location to get the weather for, such as a city or region."}}}}]'
 	 *
 	 * @subcommand generate-text
 	 *

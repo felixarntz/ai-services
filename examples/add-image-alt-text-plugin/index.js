@@ -37,19 +37,6 @@ function getMimeType( url ) {
 	}
 }
 
-async function getBase64Image( url ) {
-	const data = await fetch( url );
-	const blob = await data.blob();
-	return new Promise( ( resolve ) => {
-		const reader = new FileReader();
-		reader.readAsDataURL( blob );
-		reader.onloadend = () => {
-			const base64data = reader.result;
-			resolve( base64data );
-		};
-	} );
-}
-
 function ImageControls( { attributes, setAttributes } ) {
 	const [ inProgress, setInProgress ] = useState( false );
 
@@ -68,7 +55,7 @@ function ImageControls( { attributes, setAttributes } ) {
 		setInProgress( true );
 
 		const mimeType = getMimeType( attributes.url );
-		const base64Image = await getBase64Image( attributes.url );
+		const base64Image = await helpers.base64EncodeFile( attributes.url );
 
 		let candidates;
 		try {

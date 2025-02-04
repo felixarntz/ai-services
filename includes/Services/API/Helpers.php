@@ -11,9 +11,11 @@ namespace Felix_Arntz\AI_Services\Services\API;
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Generator;
+use WP_Post;
 
 /**
  * Class providing static helper methods as part of the public API.
@@ -33,6 +35,56 @@ final class Helpers {
 	 */
 	public static function text_to_content( string $text, string $role = Content_Role::USER ): Content {
 		return Formatter::format_content( $text, $role );
+	}
+
+	/**
+	 * Converts a text string and attachment to a multimodal Content instance.
+	 *
+	 * The text will be included as a prompt as the first part of the content, and the attachment (e.g. an image or
+	 * audio file) will be included as the second part.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string      $text       The text.
+	 * @param int|WP_Post $attachment The attachment ID or object.
+	 * @param string      $role       Optional. The role to use for the content. Default 'user'.
+	 * @return Content The content instance.
+	 */
+	public static function text_and_attachment_to_content( string $text, $attachment, string $role = Content_Role::USER ): Content {
+		if ( $attachment instanceof WP_Post ) {
+			$attachment_id = (int) $attachment->ID;
+		} else {
+			$attachment_id = (int) $attachment;
+			$attachment    = get_post( $attachment_id );
+		}
+
+		$file       = get_attached_file( $attachment_id );
+		$large_size = image_get_intermediate_size( $attachment_id, 'large' );
+		if ( $large_size && isset( $large_size['path'] ) ) {
+			// To get the absolute path to a sub-size file, we need to prepend the uploads dir.
+			if ( str_starts_with( $large_size['path'], '/' ) ) {
+				$file = $large_size['path'];
+			} else {
+				$uploads = wp_get_upload_dir();
+				if ( false === $uploads['error'] ) {
+					$file = "{$uploads['basedir']}/{$large_size['path']}";
+				}
+			}
+		}
+
+		$mime_type = wp_check_filetype( $file );
+		if ( isset( $mime_type['type'] ) ) {
+			$mime_type = $mime_type['type'];
+		} else {
+			// Fallback that should never be needed.
+			$mime_type = $attachment->post_mime_type;
+		}
+
+		$parts = new Parts();
+		$parts->add_text_part( $text );
+		$parts->add_inline_data_part( $mime_type, self::base64_encode_file( $file, $mime_type ) );
+
+		return Formatter::format_content( $parts, $role );
 	}
 
 	/**
@@ -148,5 +200,30 @@ final class Helpers {
 	 */
 	public static function process_candidates_stream( Generator $generator ): Candidates_Stream_Processor { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		return new Candidates_Stream_Processor( $generator );
+	}
+
+	/**
+	 * Base64-encodes a file and returns its data URL.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $file      Absolute path to the file, or its URL.
+	 * @param string $mime_type Optional. The MIME type of the file. If provided, the base64-encoded data URL will
+	 *                          be prefixed with `data:{mime_type};base64,`. Default empty string.
+	 * @return string The base64-encoded file data URL, or empty string on failure.
+	 */
+	public static function base64_encode_file( string $file, string $mime_type = '' ): string {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$binary_data = file_get_contents( $file );
+		if ( ! $binary_data ) {
+			return '';
+		}
+
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		$base64 = base64_encode( $binary_data );
+		if ( '' !== $mime_type ) {
+			$base64 = "data:$mime_type;base64,$base64";
+		}
+		return $base64;
 	}
 }

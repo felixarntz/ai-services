@@ -21,6 +21,35 @@ export function textToContent( text, role = ContentRole.USER ) {
 }
 
 /**
+ * Converts a text string and attachment to a multimodal Content instance.
+ *
+ * The text will be included as a prompt as the first part of the content, and the attachment (e.g. an image or
+ * audio file) will be included as the second part.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string} text       The text.
+ * @param {Object} attachment The attachment object.
+ * @param {string} role       Optional. The role to use for the content. Default 'user'.
+ * @return {Object} The Content object.
+ */
+export async function textAndAttachmentToContent(
+	text,
+	attachment,
+	role = ContentRole.USER
+) {
+	const mimeType = attachment.mime;
+	const data = await base64EncodeFile(
+		attachment.sizes?.large?.url || attachment.url
+	);
+
+	return {
+		role,
+		parts: [ { text }, { inlineData: { mimeType, data } } ],
+	};
+}
+
+/**
  * Converts a Content object to a text string.
  *
  * This function will return the combined text from all consecutive text parts in the content.
@@ -130,4 +159,36 @@ export function getCandidateContents( candidates ) {
  */
 export function processCandidatesStream( generator ) {
 	return new CandidatesStreamProcessor( generator );
+}
+
+/**
+ * Base64-encodes a file and returns its data URL.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string} file     The file URL.
+ * @param {string} mimeType Optional. The MIME type of the file. If provided, the base64-encoded data URL will
+ *                          be prefixed with `data:{mime_type};base64,`. Default empty string.
+ * @return {string} The base64-encoded file data URL, or empty string on failure.
+ */
+export async function base64EncodeFile( file, mimeType = '' ) {
+	const data = await fetch( file );
+	const blob = await data.blob();
+
+	const base64 = await new Promise( ( resolve ) => {
+		const reader = new window.FileReader();
+		reader.readAsDataURL( blob );
+		reader.onloadend = () => {
+			const base64data = reader.result;
+			resolve( base64data );
+		};
+	} );
+
+	if ( mimeType ) {
+		return base64.replace(
+			/^data:[a-z]+\/[a-z]+;base64,/,
+			`data:${ mimeType };base64,`
+		);
+	}
+	return base64;
 }

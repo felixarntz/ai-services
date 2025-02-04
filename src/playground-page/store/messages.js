@@ -46,7 +46,7 @@ const parseContentFromCache = async ( content, attachment ) => {
 						...part,
 						inlineData: {
 							...part.inlineData,
-							data: await getBase64Representation(
+							data: await helpers.base64EncodeFile(
 								attachment.sizes?.large?.url || attachment.url
 							),
 						},
@@ -119,45 +119,11 @@ const clearMessages = () => {
 	window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
 };
 
-const getBase64Representation = async ( url ) => {
-	const data = await fetch( url );
-	const blob = await data.blob();
-	return new Promise( ( resolve ) => {
-		const reader = new window.FileReader();
-		reader.readAsDataURL( blob );
-		reader.onloadend = () => {
-			const base64data = reader.result;
-			resolve( base64data );
-		};
-	} );
-};
-
 const formatNewContent = async ( prompt, attachment ) => {
-	if ( ! attachment ) {
-		return helpers.textToContent( prompt );
-	}
-
-	const parts = [];
-	if ( prompt ) {
-		parts.push( { text: prompt } );
-	}
 	if ( attachment ) {
-		const mimeType = attachment.mime;
-		const data = await getBase64Representation(
-			attachment.sizes?.large?.url || attachment.url
-		);
-		parts.push( {
-			inlineData: {
-				mimeType,
-				data,
-			},
-		} );
+		return helpers.textAndAttachmentToContent( prompt, attachment );
 	}
-
-	return {
-		role: enums.ContentRole.USER,
-		parts,
-	};
+	return helpers.textToContent( prompt );
 };
 
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';

@@ -186,7 +186,7 @@ export async function base64EncodeFile( file, mimeType = '' ) {
 
 	if ( mimeType ) {
 		return base64.replace(
-			/^data:[a-z]+\/[a-z]+;base64,/,
+			/^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/,
 			`data:${ mimeType };base64,`
 		);
 	}

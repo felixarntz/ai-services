@@ -490,7 +490,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 									'mimeType' => $mime_type,
 									// The Google AI API expects inlineData blobs to be without the prefix.
 									'data'     => preg_replace(
-										'/^data:[a-z]+\/[a-z]+;base64,/',
+										'/^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/',
 										'',
 										$part->get_base64_data()
 									),

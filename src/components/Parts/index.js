@@ -91,7 +91,7 @@ function Parts( { parts } ) {
 
 		if ( part.inlineData ) {
 			const { mimeType, data } = part.inlineData;
-			const base64 = /^data:[a-z]+\/[a-z]+;base64,/.test( data )
+			const base64 = /^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/.test( data )
 				? data
 				: `data:${ mimeType };base64,${ data }`;
 			return (

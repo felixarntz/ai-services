@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Services\CLI;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
+use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
@@ -429,54 +430,36 @@ final class AI_Services_Command {
 	public function generate_text( array $args, array $assoc_args ): void {
 		list( $service_slug, $model_slug, $prompt ) = $this->parse_generate_positional_args( $args );
 
-		// Assume any unknown arguments are generation configuration arguments.
-		$generation_config_args = $assoc_args;
-		$assoc_args             = $this->parse_assoc_args(
-			$assoc_args,
-			array(
-				'feature'               => '',
-				'system-instruction'    => '',
-				'function-declarations' => '',
-			),
-			$this->formatter_args
-		);
-		$generation_config_args = $this->sanitize_generation_config_args(
-			array_diff_key( $generation_config_args, $assoc_args )
-		);
-		$function_declarations  = $assoc_args['function-declarations'] ? json_decode( $assoc_args['function-declarations'], true ) : array();
+		$model_params = $this->get_model_params( $model_slug, $assoc_args );
 
-		$capabilities = array( AI_Capability::TEXT_GENERATION );
+		$attachment_id = isset( $assoc_args['attachment-id'] ) ? (int) $assoc_args['attachment-id'] : 0;
 
 		if ( $service_slug ) {
 			$service_args = $service_slug;
+		} elseif ( isset( $model_params['capabilities'] ) ) {
+			$service_args = array( 'capabilities' => $model_params['capabilities'] );
 		} else {
-			$service_args = array( 'capabilities' => $capabilities );
+			$service_args = array();
 		}
+
 		try {
 			$service = $this->services_api->get_available_service( $service_args );
 		} catch ( InvalidArgumentException $e ) {
 			WP_CLI::error( html_entity_decode( $e->getMessage() ) );
 		}
 
-		$model_params = array(
-			'feature'           => $assoc_args['feature'] ? $assoc_args['feature'] : null,
-			'model'             => $model_slug,
-			'capabilities'      => $capabilities,
-			'generationConfig'  => Generation_Config::from_array( $generation_config_args ),
-			'tools'             => $function_declarations ? Tools::from_array(
-				array(
-					array( 'functionDeclarations' => $function_declarations ),
-				)
-			) : null,
-			'systemInstruction' => $assoc_args['system-instruction'] ? $assoc_args['system-instruction'] : null,
-		);
-
 		$model = $this->get_model( $service, $model_params );
 
-		if ( $this->should_use_streaming( $model_params ) ) {
-			$this->stream_generate_text_using_model( $model, $prompt );
+		if ( $attachment_id ) {
+			$content = Helpers::text_and_attachment_to_content( $prompt, $attachment_id );
 		} else {
-			$this->generate_text_using_model( $model, $prompt );
+			$content = Helpers::text_to_content( $prompt );
+		}
+
+		if ( $this->should_use_streaming( $model_params ) ) {
+			$this->stream_generate_text_using_model( $model, $content );
+		} else {
+			$this->generate_text_using_model( $model, $content );
 		}
 	}
 
@@ -604,6 +587,56 @@ final class AI_Services_Command {
 	}
 
 	/**
+	 * Gets the model parameters for the given model slug and associative arguments.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|null          $model_slug The model slug.
+	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
+	 * @return array<string, mixed> The model parameters, to retrieve a model.
+	 */
+	private function get_model_params( ?string $model_slug, array $assoc_args ): array {
+		// Assume any unknown arguments are generation configuration arguments.
+		$generation_config_args = $assoc_args;
+		$assoc_args             = $this->parse_assoc_args(
+			$assoc_args,
+			array(
+				'feature'               => '',
+				'system-instruction'    => '',
+				'attachment-id'         => 0,
+				'function-declarations' => '',
+			),
+			$this->formatter_args
+		);
+		$generation_config_args = $this->sanitize_generation_config_args(
+			array_diff_key( $generation_config_args, $assoc_args )
+		);
+		$attachment_id          = (int) $assoc_args['attachment-id'];
+		$function_declarations  = $assoc_args['function-declarations'] ? json_decode( $assoc_args['function-declarations'], true ) : array();
+
+		$capabilities = array( AI_Capability::TEXT_GENERATION );
+		if ( $attachment_id ) {
+			$capabilities[] = AI_Capability::MULTIMODAL_INPUT;
+		}
+		if ( $function_declarations ) {
+			$capabilities[] = AI_Capability::FUNCTION_CALLING;
+		}
+
+		return array(
+			'feature'           => $assoc_args['feature'] ? $assoc_args['feature'] : null,
+			'model'             => $model_slug,
+			'capabilities'      => $capabilities,
+			'generationConfig'  => Generation_Config::from_array( $generation_config_args ),
+			'tools'             => $function_declarations ? Tools::from_array(
+				array(
+					array( 'functionDeclarations' => $function_declarations ),
+				)
+			) : null,
+			'systemInstruction' => $assoc_args['system-instruction'] ? $assoc_args['system-instruction'] : null,
+		);
+	}
+
+	/**
 	 * Sanitizes the generation configuration arguments.
 	 *
 	 * This method transforms hyphen-case keys to camelCase keys.
@@ -663,17 +696,18 @@ final class AI_Services_Command {
 	 * Generates text content using the given generative model and prints it.
 	 *
 	 * @since 0.2.0
+	 * @since n.e.x.t Now requires Content instance for second parameter instead of string.
 	 *
-	 * @param Generative_AI_Model $model  The model to use.
-	 * @param string              $prompt The text prompt to generate content for.
+	 * @param Generative_AI_Model $model   The model to use.
+	 * @param Content             $content Prompt for the content to generate.
 	 */
-	private function generate_text_using_model( Generative_AI_Model $model, string $prompt ): void {
+	private function generate_text_using_model( Generative_AI_Model $model, Content $content ): void {
 		if ( ! $model instanceof With_Text_Generation ) {
 			WP_CLI::error( 'The model does not support text generation.' );
 		}
 
 		try {
-			$candidates = $model->generate_text( $prompt );
+			$candidates = $model->generate_text( $content );
 		} catch ( Generative_AI_Exception $e ) {
 			WP_CLI::error(
 				sprintf(
@@ -713,17 +747,18 @@ final class AI_Services_Command {
 	 * Generates text content using the given generative model, streaming the response and printing it as it comes in.
 	 *
 	 * @since 0.3.0
+	 * @since n.e.x.t Now requires Content instance for second parameter instead of string.
 	 *
-	 * @param Generative_AI_Model $model  The model to use.
-	 * @param string              $prompt The text prompt to generate content for.
+	 * @param Generative_AI_Model $model   The model to use.
+	 * @param Content             $content Prompt for the content to generate.
 	 */
-	private function stream_generate_text_using_model( Generative_AI_Model $model, string $prompt ): void {
+	private function stream_generate_text_using_model( Generative_AI_Model $model, Content $content ): void {
 		if ( ! $model instanceof With_Text_Generation ) {
 			WP_CLI::error( 'The model does not support text generation.' );
 		}
 
 		try {
-			$candidates_generator = $model->stream_generate_text( $prompt );
+			$candidates_generator = $model->stream_generate_text( $content );
 		} catch ( Generative_AI_Exception $e ) {
 			WP_CLI::error(
 				sprintf(

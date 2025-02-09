@@ -146,9 +146,11 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		 * @param array<string, mixed> $model_params The model parameters. Commonly supports at least the parameters
 		 *                                           'feature', 'capabilities', 'generationConfig' and
 		 *                                           'systemInstruction'.
+		 * @param string               $service_slug The service slug.
+		 *
 		 * @return array<string, mixed> The processed model parameters.
 		 */
-		$filtered_model_params = (array) apply_filters( 'ai_services_model_params', $model_params );
+		$filtered_model_params = (array) apply_filters( 'ai_services_model_params', $model_params, $this->service->get_service_slug() );
 
 		// Ensure that the feature identifier cannot be changed.
 		$filtered_model_params['feature'] = $model_params['feature'];

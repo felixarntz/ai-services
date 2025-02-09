@@ -13,14 +13,16 @@ Here is an example code snippet which injects a custom system instruction whenev
 ```php
 add_filter(
 	'ai_services_model_params',
-	function ( $params ) {
-		if ( 'my-movie-expert' === $params['feature'] ) {
+	function ( $params, $service ) {
+		if ( 'my-movie-expert' === $params['feature'] && 'google' === $service ) {
 			$params['systemInstruction']  = 'You are a movie expert. You can answer questions about movies, actors, directors, and movie references.';
 			$params['systemInstruction'] .= ' If the user asks you about anything unrelated to movies, you should politely deny the request.';
 			$params['systemInstruction'] .= ' You may use famous movie quotes in your responses to make the conversation more engaging.';
 		}
 		return $params;
-	}
+	},
+	10,
+	2
 );
 ```
 

@@ -7,7 +7,7 @@ import { store as interfaceStore } from '@ai-services/interface';
 /**
  * WordPress dependencies
  */
-import { PanelBody, Notice, SelectControl } from '@wordpress/components';
+import { Flex, PanelBody, Notice, SelectControl } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { createInterpolateElement, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -16,7 +16,6 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { store as playgroundStore } from '../../store';
-import './style.scss';
 
 const MODEL_SELECT_PLACEHOLDER_OPTIONS = [
 	{
@@ -101,7 +100,7 @@ export default function PlaygroundServiceModelPanel() {
 			className="ai-services-playground-service-model-panel"
 		>
 			{ availableServices.length ? (
-				<>
+				<Flex direction="column" gap="4">
 					<SelectControl
 						className="ai-services-playground-service"
 						label={ __( 'Service', 'ai-services' ) }
@@ -123,7 +122,7 @@ export default function PlaygroundServiceModelPanel() {
 						disabled={ modelSelectOptions.length <= 1 }
 						__nextHasNoMarginBottom
 					/>
-				</>
+				</Flex>
 			) : (
 				<Notice status="warning" isDismissible={ false }>
 					{ __(

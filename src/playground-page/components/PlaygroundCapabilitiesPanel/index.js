@@ -1,24 +1,21 @@
 /**
  * External dependencies
  */
+import { MultiCheckboxControl } from '@ai-services/components';
 import { store as interfaceStore } from '@ai-services/interface';
 
 /**
  * WordPress dependencies
  */
-import {
-	PanelBody,
-	CheckboxControl,
-	SelectControl,
-} from '@wordpress/components';
+import { Flex, PanelBody, SelectControl } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
 import { store as playgroundStore } from '../../store';
-import './style.scss';
 
 /**
  * Renders the playground sidebar panel for AI capabilities.
@@ -58,6 +55,16 @@ export default function PlaygroundCapabilitiesPanel() {
 		useDispatch( playgroundStore );
 	const { togglePanel } = useDispatch( interfaceStore );
 
+	// Get option objects for available additional capabilities to render in the checkbox list.
+	const additionalCapabilityOptions = useMemo( () => {
+		return availableAdditionalCapabilities.map( ( cap ) => {
+			return {
+				value: cap.identifier,
+				label: cap.label,
+			};
+		} );
+	}, [ availableAdditionalCapabilities ] );
+
 	return (
 		<PanelBody
 			title={ __( 'Capabilities', 'ai-services' ) }
@@ -65,40 +72,30 @@ export default function PlaygroundCapabilitiesPanel() {
 			onToggle={ () => togglePanel( 'playground-capabilities' ) }
 			className="ai-services-playground-capabilities-panel"
 		>
-			<SelectControl
-				className="ai-services-playground-foundational-capability"
-				label={ __( 'Foundational Capability', 'ai-services' ) }
-				value={ foundationalCapability }
-				options={ availableFoundationalCapabilities.map(
-					( { identifier, label } ) => ( {
-						value: identifier,
-						label,
-					} )
-				) }
-				onChange={ ( value ) => setFoundationalCapability( value ) }
-				disabled={ availableFoundationalCapabilities.length < 2 }
-				__nextHasNoMarginBottom
-			/>
-			<fieldset className="ai-services-playground-additional-capabilities">
-				<legend>
-					{ __( 'Additional Capabilities', 'ai-services' ) }
-				</legend>
-				{ availableAdditionalCapabilities.map(
-					( { identifier, label } ) => (
-						<CheckboxControl
-							key={ identifier }
-							label={ label }
-							checked={ additionalCapabilities.includes(
-								identifier
-							) }
-							onChange={ () =>
-								toggleAdditionalCapability( identifier )
-							}
-							__nextHasNoMarginBottom
-						/>
-					)
-				) }
-			</fieldset>
+			<Flex direction="column" gap="4">
+				<SelectControl
+					className="ai-services-playground-foundational-capability"
+					label={ __( 'Foundational capability', 'ai-services' ) }
+					value={ foundationalCapability }
+					options={ availableFoundationalCapabilities.map(
+						( { identifier, label } ) => ( {
+							value: identifier,
+							label,
+						} )
+					) }
+					onChange={ ( value ) => setFoundationalCapability( value ) }
+					disabled={ availableFoundationalCapabilities.length < 2 }
+					__nextHasNoMarginBottom
+				/>
+				<MultiCheckboxControl
+					label={ __( 'Additional capabilities', 'ai-services' ) }
+					className="ai-services-playground-additional-capabilities"
+					value={ additionalCapabilities }
+					options={ additionalCapabilityOptions }
+					onToggle={ toggleAdditionalCapability }
+					__nextHasNoMarginBottom
+				/>
+			</Flex>
 		</PanelBody>
 	);
 }

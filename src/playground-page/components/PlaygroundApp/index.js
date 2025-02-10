@@ -24,10 +24,12 @@ import { useViewportMatch } from '@wordpress/compose';
 import PlaygroundMoreMenu from '../PlaygroundMoreMenu';
 import PlaygroundStatus from '../PlaygroundStatus';
 import PlaygroundMain from '../PlaygroundMain';
+import FunctionDeclarationsModal from '../FunctionDeclarationsModal';
 import RawDataModal from '../RawDataModal';
 import PlaygroundCapabilitiesPanel from '../PlaygroundCapabilitiesPanel';
 import PlaygroundServiceModelPanel from '../PlaygroundServiceModelPanel';
 import PlaygroundModelConfigPanel from '../PlaygroundModelConfigPanel';
+import PlaygroundFunctionDeclarationsPanel from '../PlaygroundFunctionDeclarationsPanel';
 import SystemInstructionToggle from './system-instruction-toggle';
 import ResetMessagesButton from './reset-messages-button';
 import './style.scss';
@@ -71,6 +73,7 @@ export default function PlaygroundApp() {
 				</HeaderActions>
 			</Header>
 			<PlaygroundMain />
+			<FunctionDeclarationsModal />
 			<RawDataModal />
 			<Sidebar
 				identifier="ai-services/playground-sidebar"
@@ -86,6 +89,7 @@ export default function PlaygroundApp() {
 				<PlaygroundCapabilitiesPanel />
 				<PlaygroundServiceModelPanel />
 				<PlaygroundModelConfigPanel />
+				<PlaygroundFunctionDeclarationsPanel />
 			</Sidebar>
 			<Footer>
 				<PlaygroundStatus />

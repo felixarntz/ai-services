@@ -54,6 +54,12 @@ const filterAvailableModels = memoize(
 	}
 );
 
+const SET_ACTIVE_FUNCTION_DECLARATION = 'SET_ACTIVE_FUNCTION_DECLARATION';
+
+const initialState = {
+	activeFunctionDeclaration: null,
+};
+
 const actions = {
 	/**
 	 * Sets the service.
@@ -168,7 +174,191 @@ const actions = {
 				);
 		};
 	},
+
+	/**
+	 * Adds or updates a function declaration.
+	 *
+	 * If a function with the given name is already present, it will be updated. Otherwise a new function with the name
+	 * will be added. This ensures that every function declaration is unique by name.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string} name         Unique function name.
+	 * @param {string} description  Function description.
+	 * @param {Object} parameters   Function parameters as JSON schema. It must be of type 'object', with the actual
+	 *                              parameters as properties.
+	 * @param {string} existingName Name of an existing function if this is an update and the name differs. If so, the
+	 *                              existing function will be replaced.
+	 * @return {Function} Action creator.
+	 */
+	setFunctionDeclaration( name, description, parameters, existingName ) {
+		return ( { registry } ) => {
+			// Some basic sanity checks on the input.
+			if (
+				typeof name !== 'string' ||
+				name === '' ||
+				typeof description !== 'string' ||
+				typeof parameters !== 'object' ||
+				parameters === null ||
+				parameters.type !== 'object'
+			) {
+				return;
+			}
+
+			if ( typeof existingName !== 'string' || existingName === '' ) {
+				existingName = name;
+			}
+
+			const functionDeclarations =
+				registry
+					.select( preferencesStore )
+					.get( 'ai-services-playground', 'function-declarations' ) ??
+				EMPTY_ARRAY;
+
+			const newFunctionDeclarations =
+				name !== existingName
+					? functionDeclarations.filter(
+							( declaration ) => declaration.name !== name
+					  )
+					: [ ...functionDeclarations ];
+			const existingIndex = newFunctionDeclarations.findIndex(
+				( declaration ) => declaration.name === existingName
+			);
+
+			if ( existingIndex === -1 ) {
+				newFunctionDeclarations.push( {
+					name,
+					description,
+					parameters,
+				} );
+			} else {
+				newFunctionDeclarations[ existingIndex ] = {
+					name,
+					description,
+					parameters,
+				};
+			}
+			newFunctionDeclarations.sort( ( a, b ) =>
+				a.name < b.name ? -1 : 1
+			);
+
+			registry
+				.dispatch( preferencesStore )
+				.set(
+					'ai-services-playground',
+					'function-declarations',
+					newFunctionDeclarations
+				);
+		};
+	},
+
+	/**
+	 * Deletes a function declaration.
+	 *
+	 * Deletion is irreversible.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string} name Unique function name of the function declaration to delete.
+	 * @return {Function} Action creator.
+	 */
+	deleteFunctionDeclaration( name ) {
+		return ( { registry } ) => {
+			const functionDeclarations =
+				registry
+					.select( preferencesStore )
+					.get( 'ai-services-playground', 'function-declarations' ) ??
+				EMPTY_ARRAY;
+
+			const newFunctionDeclarations = functionDeclarations.filter(
+				( declaration ) => declaration.name !== name
+			);
+			if (
+				functionDeclarations.length === newFunctionDeclarations.length
+			) {
+				return;
+			}
+
+			registry
+				.dispatch( preferencesStore )
+				.set(
+					'ai-services-playground',
+					'function-declarations',
+					newFunctionDeclarations
+				);
+		};
+	},
+
+	/**
+	 * Toggles whether a specific function declaration is selected.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string} name Function declaration name.
+	 * @return {Function} Action creator.
+	 */
+	toggleSelectedFunctionDeclaration( name ) {
+		return ( { registry } ) => {
+			const selected =
+				registry
+					.select( preferencesStore )
+					.get(
+						'ai-services-playground',
+						'selected-function-declaration-names'
+					) ?? EMPTY_ARRAY;
+
+			const newSelected = selected.includes( name )
+				? selected.filter( ( selectedName ) => selectedName !== name )
+				: [ ...selected, name ];
+
+			registry
+				.dispatch( preferencesStore )
+				.set(
+					'ai-services-playground',
+					'selected-function-declaration-names',
+					newSelected
+				);
+		};
+	},
+
+	/**
+	 * Sets the active function declaration (currently being edited in the modal).
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {Object} name Active function name being edited, or empty string to clear.
+	 * @return {Object} Action creator.
+	 */
+	setActiveFunctionDeclaration( name ) {
+		return {
+			type: SET_ACTIVE_FUNCTION_DECLARATION,
+			payload: { name },
+		};
+	},
 };
+
+/**
+ * Reducer for the store mutations.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Object} state  Current state.
+ * @param {Object} action Action object.
+ * @return {Object} New state.
+ */
+function reducer( state = initialState, action ) {
+	switch ( action.type ) {
+		case SET_ACTIVE_FUNCTION_DECLARATION: {
+			const { name } = action.payload;
+			return {
+				...state,
+				activeFunctionDeclaration: name,
+			};
+		}
+	}
+
+	return state;
+}
 
 const selectors = {
 	getService: createRegistrySelector( ( select ) => () => {
@@ -265,10 +455,35 @@ const selectors = {
 		);
 		return !! isVisible;
 	} ),
+
+	getFunctionDeclarations: createRegistrySelector( ( select ) => () => {
+		return (
+			select( preferencesStore ).get(
+				'ai-services-playground',
+				'function-declarations'
+			) ?? EMPTY_ARRAY
+		);
+	} ),
+
+	getSelectedFunctionDeclarations: createRegistrySelector(
+		( select ) => () => {
+			return (
+				select( preferencesStore ).get(
+					'ai-services-playground',
+					'selected-function-declaration-names'
+				) ?? EMPTY_ARRAY
+			);
+		}
+	),
+
+	getActiveFunctionDeclaration: ( state ) => {
+		return state.activeFunctionDeclaration;
+	},
 };
 
 const storeConfig = {
 	actions,
+	reducer,
 	selectors,
 };
 

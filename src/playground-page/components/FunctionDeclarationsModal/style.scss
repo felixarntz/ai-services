@@ -1,0 +1,87 @@
+.ai-services-playground-function-declarations-modal {
+
+	&.components-modal__frame {
+
+		@media (min-width: 600px) {
+			width: 80%;
+			min-width: 550px;
+			max-width: 900px;
+		}
+	}
+
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__content {
+		display: flex;
+		justify-content: space-between;
+		align-items: top;
+	}
+
+	&__sidebar {
+		width: 280px;
+		padding: 32px;
+		overflow-x: visible;
+		overflow-y: auto;
+	}
+
+	&__main {
+		flex: 1;
+		padding: 32px;
+	}
+
+	&__function-declarations-list {
+		max-height: 50vh;
+	}
+
+	&__title span,
+	&__function-declaration.components-button {
+		font-family: Consolas, Monaco, monospace;
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__function-declaration.components-button,
+	&__add-function-declaration.components-button {
+		display: block;
+		width: 100%;
+		height: 48px;
+		padding: 6px 12px;
+		text-align: left;
+	}
+
+	&__function-name .components-text-control__input[type="text"] {
+		font-family: Consolas, Monaco, monospace;
+	}
+
+	&__function-parameter {
+		padding: 8px;
+		background-color: rgba(0, 0, 0, 0.065);
+		border-radius: 2px;
+
+		&__name .components-text-control__input[type="text"],
+		&__type,
+		&__items-type {
+			font-family: Consolas, Monaco, monospace;
+		}
+
+		&__type,
+		&__items-type {
+			max-width: 100px;
+		}
+
+		&__description {
+			flex: 1;
+		}
+
+		.components-button.is-secondary,
+		.components-button.is-secondary:hover {
+			box-shadow: none;
+		}
+	}
+}

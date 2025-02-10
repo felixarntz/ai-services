@@ -11,6 +11,11 @@ import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
+ * Internal dependencies
+ */
+import './style.scss';
+
+/**
  * Renders a single media element.
  *
  * @since 0.4.0

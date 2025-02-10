@@ -351,7 +351,7 @@ const functionDeclarations = [
 	},
 ];
 
-const tools [ { functionDeclarations } ];
+const tools = [ { functionDeclarations } ];
 
 const content = {
 	role: enums.ContentRole.USER,
@@ -437,7 +437,7 @@ const functionDeclarations = [
 	// ...
 ];
 
-const tools [ { functionDeclarations } ];
+const tools = [ { functionDeclarations } ];
 
 /*
  * This should contain both the content object with the initial user prompt, and the content object with the function

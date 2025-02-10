@@ -126,6 +126,27 @@ const formatNewContent = async ( prompt, attachment ) => {
 	return helpers.textToContent( prompt );
 };
 
+const formatErrorContent = ( error ) => {
+	return helpers.textToContent(
+		sprintf( '%s', error.message || error ),
+		enums.ContentRole.MODEL
+	);
+};
+
+const getTools = ( functionDeclarations, selectedFunctionDeclarationNames ) => {
+	const selectedFunctionDeclarations = functionDeclarations?.filter(
+		( declaration ) =>
+			selectedFunctionDeclarationNames &&
+			selectedFunctionDeclarationNames.includes( declaration.name )
+	);
+
+	if ( selectedFunctionDeclarations && selectedFunctionDeclarations.length ) {
+		return [ { functionDeclarations: selectedFunctionDeclarations } ];
+	}
+
+	return null;
+};
+
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
 const RESET_MESSAGES = 'RESET_MESSAGES';
@@ -137,13 +158,6 @@ const initialState = {
 	messages: undefined,
 	loading: false,
 	activeRawData: null,
-};
-
-const formatErrorContent = ( error ) => {
-	return helpers.textToContent(
-		sprintf( '%s', error.message || error ),
-		enums.ContentRole.MODEL
-	);
 };
 
 const actions = {
@@ -187,6 +201,14 @@ const actions = {
 			const systemInstruction = select.getSystemInstruction();
 			if ( systemInstruction ) {
 				modelParams.systemInstruction = systemInstruction;
+			}
+
+			const tools = getTools(
+				select.getFunctionDeclarations(),
+				select.getSelectedFunctionDeclarations()
+			);
+			if ( tools ) {
+				modelParams.tools = tools;
 			}
 
 			const newContent = await formatNewContent( prompt, attachment );

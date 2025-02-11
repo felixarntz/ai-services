@@ -8,7 +8,7 @@ This filter is run consistently in any context, regardless of whether the AI mod
 
 This can be helpful, for example, if you need to inject custom model configuration parameters or a custom system instruction for a specific feature in a way that it happens dynamically on the server.
 
-Here is an example code snippet which injects a custom system instruction whenever the feature `my-movie-expert` is used:
+Here is an example code snippet which injects a custom system instruction whenever the feature `my-movie-expert` is used with any `google` model:
 
 ```php
 add_filter(

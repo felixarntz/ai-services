@@ -119,7 +119,45 @@ const clearMessages = () => {
 	window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
 };
 
-const formatNewContent = async ( prompt, attachment ) => {
+const formatNewContent = async (
+	prompt,
+	attachment,
+	includeHistory,
+	messages
+) => {
+	if ( includeHistory ) {
+		// See if the prompt is JSON in response to a function call in the last message.
+		const lastMessageFunctionCall = getLastMessageFunctionCall( messages );
+		if ( lastMessageFunctionCall ) {
+			let responseData;
+			try {
+				responseData = JSON.parse( prompt.trim() );
+			} catch ( err ) {
+				// Ignore errors.
+			}
+			if ( responseData ) {
+				const functionResponse = {};
+				if ( lastMessageFunctionCall.functionCall.id ) {
+					functionResponse.id =
+						lastMessageFunctionCall.functionCall.id;
+				}
+				if ( lastMessageFunctionCall.functionCall.name ) {
+					functionResponse.name =
+						lastMessageFunctionCall.functionCall.name;
+				}
+				functionResponse.response = responseData;
+				return {
+					role: enums.ContentRole.USER,
+					parts: [
+						{
+							functionResponse,
+						},
+					],
+				};
+			}
+		}
+	}
+
 	if ( attachment ) {
 		return helpers.textAndAttachmentToContent( prompt, attachment );
 	}
@@ -145,6 +183,19 @@ const getTools = ( functionDeclarations, selectedFunctionDeclarationNames ) => {
 	}
 
 	return null;
+};
+
+const getLastMessageFunctionCall = ( messages ) => {
+	if ( ! messages || ! messages.length ) {
+		return null;
+	}
+
+	const lastMessage = messages[ messages.length - 1 ];
+	if ( lastMessage.type !== 'model' ) {
+		return null;
+	}
+
+	return lastMessage.content?.parts?.find( ( part ) => part.functionCall );
 };
 
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
@@ -211,11 +262,17 @@ const actions = {
 				modelParams.tools = tools;
 			}
 
-			const newContent = await formatNewContent( prompt, attachment );
+			const originalMessages = select.getMessages();
+
+			const newContent = await formatNewContent(
+				prompt,
+				attachment,
+				includeHistory,
+				originalMessages
+			);
 
 			let contentToSend = newContent;
 			if ( includeHistory ) {
-				const originalMessages = select.getMessages();
 				if ( originalMessages && originalMessages.length ) {
 					contentToSend = [
 						...originalMessages.map(

@@ -269,6 +269,13 @@
 		}
 	}
 
+	&__input-notices {
+
+		.components-notice.is-info {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+	}
+
 	&__input-attachment {
 		position: relative;
 		display: block;

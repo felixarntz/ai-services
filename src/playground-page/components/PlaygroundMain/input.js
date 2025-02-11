@@ -8,8 +8,14 @@ import { enums, store as aiStore } from '@ai-services/ai';
  */
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import { ToggleControl } from '@wordpress/components';
-import { useCallback, useEffect, useState, useRef } from '@wordpress/element';
+import { Flex, Notice, ToggleControl } from '@wordpress/components';
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+	useRef,
+} from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { send, upload, close } from '@wordpress/icons';
 import { UP, DOWN } from '@wordpress/keycodes';
@@ -174,6 +180,27 @@ export default function Input() {
 		[ messages, prompt, promptToMatch, matchedIndex ]
 	);
 
+	// If the last message is a function call, allow providing JSON data as a prompt for the function response.
+	const allowFunctionResponse = useMemo( () => {
+		if ( ! capabilities.includes( enums.AiCapability.FUNCTION_CALLING ) ) {
+			return false;
+		}
+
+		if ( ! messages || ! messages.length ) {
+			return false;
+		}
+
+		const lastMessage = messages[ messages.length - 1 ];
+
+		if ( lastMessage.type !== 'model' ) {
+			return false;
+		}
+
+		return !! lastMessage.content?.parts?.some(
+			( part ) => part.functionCall
+		);
+	}, [ capabilities, messages ] );
+
 	const inputRef = useRef();
 
 	useEffect( () => {
@@ -202,111 +229,136 @@ export default function Input() {
 				<textarea
 					className="ai-services-playground__input"
 					ref={ inputRef }
-					placeholder={ __( 'Enter AI prompt', 'ai-services' ) }
+					placeholder={
+						!! ( allowFunctionResponse && includeHistory )
+							? __(
+									'Enter AI prompt or JSON data for a function response',
+									'ai-services'
+							  )
+							: __( 'Enter AI prompt', 'ai-services' )
+					}
 					aria-label={ __( 'AI prompt', 'ai-services' ) }
 					value={ prompt }
 					onChange={ ( event ) => setPrompt( event.target.value ) }
 					rows="2"
 				/>
-				{ capabilities.includes(
-					enums.AiCapability.MULTIMODAL_INPUT
-				) &&
-					attachment && (
-						<div className="ai-services-playground__input-attachment">
-							<img
-								className="attachment-preview"
-								src={
-									attachment.sizes?.thumbnail?.url ||
-									attachment.icon
-								}
-								alt={ sprintf(
-									/* translators: %s: attachment filename */
-									__( 'Selected file: %s', 'ai-services' ),
-									attachment.filename
-								) }
-								width="80"
-								height="80"
-							/>
-							<button
-								className="attachment-remove-button"
-								aria-label={ __(
-									'Remove selected media',
-									'ai-services'
-								) }
-								onClick={ () => setAttachment( undefined ) }
-							>
-								{ close }
-							</button>
-						</div>
-					) }
-				<div className="ai-services-playground__input-actions">
-					<div className="ai-services-playground__input-action-group">
-						{ capabilities.includes(
-							enums.AiCapability.MULTIMODAL_INPUT
-						) &&
-							canUploadMedia && (
-								<MediaModal
-									attachmentId={ attachment?.id }
-									onSelect={ setAttachment }
-									allowedTypes={ [ 'image' ] }
-									render={ ( { open } ) => (
-										<button
-											className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
-											aria-label={ __(
-												'Select media for multimodal prompt',
-												'ai-services'
-											) }
-											onClick={ open }
-										>
-											{ upload }
-										</button>
+				<Flex direction="column" gap="2">
+					{ capabilities.includes(
+						enums.AiCapability.MULTIMODAL_INPUT
+					) &&
+						attachment && (
+							<div className="ai-services-playground__input-attachment">
+								<img
+									className="attachment-preview"
+									src={
+										attachment.sizes?.thumbnail?.url ||
+										attachment.icon
+									}
+									alt={ sprintf(
+										/* translators: %s: attachment filename */
+										__(
+											'Selected file: %s',
+											'ai-services'
+										),
+										attachment.filename
 									) }
+									width="80"
+									height="80"
 								/>
-							) }
-						{ capabilities.includes(
-							enums.AiCapability.MULTIMODAL_INPUT
-						) &&
-							! canUploadMedia && (
 								<button
-									className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
+									className="attachment-remove-button"
 									aria-label={ __(
-										'Missing required permissions to select media',
+										'Remove selected media',
 										'ai-services'
 									) }
-									disabled={ true }
-									onClick={ () => {} }
+									onClick={ () => setAttachment( undefined ) }
 								>
-									{ upload }
+									{ close }
 								</button>
-							) }
-						{ capabilities.includes(
-							enums.AiCapability.CHAT_HISTORY
-						) && (
-							<ToggleControl
-								__nextHasNoMarginBottom
-								className="ai-services-playground__input-action ai-services-playground__input-action--complex"
-								label={ __(
-									'Send message history with the prompt',
+							</div>
+						) }
+					{ !! ( allowFunctionResponse && ! includeHistory ) && (
+						<div className="ai-services-playground__input-notices">
+							<Notice status="info" isDismissible={ false }>
+								{ __(
+									'In order to send a function response for the received function call, you need to enable message history below.',
 									'ai-services'
 								) }
-								checked={ includeHistory }
-								onChange={ () =>
-									setIncludeHistory( ! includeHistory )
-								}
-							/>
-						) }
+							</Notice>
+						</div>
+					) }
+					<div className="ai-services-playground__input-actions">
+						<div className="ai-services-playground__input-action-group">
+							{ capabilities.includes(
+								enums.AiCapability.MULTIMODAL_INPUT
+							) &&
+								canUploadMedia && (
+									<MediaModal
+										attachmentId={ attachment?.id }
+										onSelect={ setAttachment }
+										allowedTypes={ [ 'image' ] }
+										render={ ( { open } ) => (
+											<button
+												className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
+												aria-label={ __(
+													'Select media for multimodal prompt',
+													'ai-services'
+												) }
+												onClick={ open }
+											>
+												{ upload }
+											</button>
+										) }
+									/>
+								) }
+							{ capabilities.includes(
+								enums.AiCapability.MULTIMODAL_INPUT
+							) &&
+								! canUploadMedia && (
+									<button
+										className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
+										aria-label={ __(
+											'Missing required permissions to select media',
+											'ai-services'
+										) }
+										disabled={ true }
+										onClick={ () => {} }
+									>
+										{ upload }
+									</button>
+								) }
+							{ capabilities.includes(
+								enums.AiCapability.CHAT_HISTORY
+							) && (
+								<ToggleControl
+									__nextHasNoMarginBottom
+									className="ai-services-playground__input-action ai-services-playground__input-action--complex"
+									label={ __(
+										'Send message history with the prompt',
+										'ai-services'
+									) }
+									checked={ includeHistory }
+									onChange={ () =>
+										setIncludeHistory( ! includeHistory )
+									}
+								/>
+							) }
+						</div>
+						<div className="ai-services-playground__input-action-group">
+							<button
+								className="ai-services-playground__input-action ai-services-playground__input-action--primary"
+								aria-label={ __(
+									'Send AI prompt',
+									'ai-services'
+								) }
+								disabled={ disabled }
+								onClick={ sendPrompt }
+							>
+								{ send }
+							</button>
+						</div>
 					</div>
-					<div className="ai-services-playground__input-action-group">
-						<button
-							className="ai-services-playground__input-action ai-services-playground__input-action--primary"
-							aria-label={ __( 'Send AI prompt', 'ai-services' ) }
-							disabled={ disabled }
-							onClick={ sendPrompt }
-						>
-							{ send }
-						</button>
-					</div>
-				</div>
+				</Flex>
 			</div>
 		</div>
 	);

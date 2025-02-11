@@ -221,7 +221,7 @@ class Google_AI_Service implements Generative_AI_Service {
 	 */
 	private function sort_models_by_preference( array $model_slugs ): array {
 		$get_preference_group = static function ( $model_slug ) {
-			if ( str_starts_with( $model_slug, 'gemini-1.5' ) ) {
+			if ( str_starts_with( $model_slug, 'gemini-2.0' ) ) {
 				if ( str_contains( $model_slug, '-flash' ) ) {
 					return 0;
 				}

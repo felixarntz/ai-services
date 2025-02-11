@@ -266,7 +266,7 @@ const actions = {
 					},
 					model: {
 						slug: modelSlug,
-						name: modelSlug,
+						name: model.name || modelSlug,
 					},
 					rawData: candidates,
 				} );

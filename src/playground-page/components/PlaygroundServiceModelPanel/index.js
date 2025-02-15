@@ -9,8 +9,14 @@ import { store as interfaceStore } from '@ai-services/interface';
  */
 import { Flex, PanelBody, Notice, SelectControl } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { createInterpolateElement, useMemo } from '@wordpress/element';
+import {
+	createInterpolateElement,
+	useEffect,
+	useMemo,
+	useState,
+} from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { speak } from '@wordpress/a11y';
 
 /**
  * Internal dependencies
@@ -92,6 +98,30 @@ export default function PlaygroundServiceModelPanel() {
 		];
 	}, [ availableModels ] );
 
+	const [ changedService, setChangedService ] = useState( false );
+	const onChangeService = ( value ) => {
+		setService( value );
+		setChangedService( true );
+	};
+
+	// Announce to screen readers when model selection was cleared after a service change.
+	useEffect( () => {
+		if ( ! changedService ) {
+			return;
+		}
+
+		setChangedService( false );
+		if ( ! model ) {
+			speak(
+				__(
+					'Please continue navigating to select a model.',
+					'ai-services'
+				),
+				'polite'
+			);
+		}
+	}, [ changedService, model ] );
+
 	return (
 		<PanelBody
 			title={ __( 'Model selection', 'ai-services' ) }
@@ -106,7 +136,7 @@ export default function PlaygroundServiceModelPanel() {
 						label={ __( 'Service', 'ai-services' ) }
 						value={ service }
 						options={ serviceSelectOptions }
-						onChange={ ( value ) => setService( value ) }
+						onChange={ onChangeService }
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
@@ -118,7 +148,7 @@ export default function PlaygroundServiceModelPanel() {
 								? modelSelectOptions
 								: MODEL_SELECT_PLACEHOLDER_OPTIONS
 						}
-						onChange={ ( value ) => setModel( value ) }
+						onChange={ setModel }
 						disabled={ modelSelectOptions.length <= 1 }
 						__nextHasNoMarginBottom
 					/>

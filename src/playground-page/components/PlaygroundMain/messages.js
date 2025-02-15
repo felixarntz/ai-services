@@ -83,7 +83,7 @@ export default function Messages() {
 			className="ai-services-playground__messages-container"
 			ref={ messagesContainerRef }
 		>
-			<div className="ai-services-playground__messages">
+			<div className="ai-services-playground__messages" role="log">
 				{ messages.map(
 					( { type, content, ...additionalData }, index ) => (
 						<div

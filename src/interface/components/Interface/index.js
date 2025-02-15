@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { InterfaceSkeleton } from '@wordpress/interface';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
+// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+import { __unstableUseNavigateRegions as useNavigateRegions } from '@wordpress/components';
 import {
 	useShortcut,
 	store as keyboardShortcutsStore,
@@ -44,8 +46,7 @@ export default function Interface( { className, labels, children } ) {
 
 	const {
 		isDistractionFree,
-		previousShortcut,
-		nextShortcut,
+		navigateRegionsShortcuts,
 		activeSidebar,
 		defaultSidebar,
 	} = useSelect( ( select ) => {
@@ -57,12 +58,14 @@ export default function Interface( { className, labels, children } ) {
 
 		return {
 			isDistractionFree: getPreference( 'distractionFree' ),
-			previousShortcut: getAllShortcutKeyCombinations(
-				'ai-services/previous-region'
-			),
-			nextShortcut: getAllShortcutKeyCombinations(
-				'ai-services/next-region'
-			),
+			navigateRegionsShortcuts: {
+				previous: getAllShortcutKeyCombinations(
+					'ai-services/previous-region'
+				),
+				next: getAllShortcutKeyCombinations(
+					'ai-services/next-region'
+				),
+			},
 			activeSidebar: getActiveSidebar(),
 			defaultSidebar: getDefaultSidebar(),
 		};
@@ -84,6 +87,8 @@ export default function Interface( { className, labels, children } ) {
 	useShortcut( 'ai-services/toggle-sidebar', () => {
 		toggleDefaultSidebar();
 	} );
+
+	const navigateRegionsProps = useNavigateRegions( navigateRegionsShortcuts );
 
 	const hasHeader = useHasHeader();
 	const header = hasHeader && (
@@ -108,32 +113,30 @@ export default function Interface( { className, labels, children } ) {
 	const sidebar = hasSidebar && <Sidebar.Slot />;
 
 	return (
-		<InterfaceSkeleton
-			enableRegionNavigation={ true }
-			isDistractionFree={ isDistractionFree }
-			className={ clsx( 'ais-interface', className, {
-				'is-distraction-free': isDistractionFree,
-			} ) }
-			labels={ labels }
-			header={ header }
-			content={
-				<>
-					{ ! isDistractionFree && <Notices /> }
-					{ children }
-					<Snackbars />
-					<Modal.Slot />
-				</>
-			}
-			editorNotices={ <Notices /> }
-			footer={ ! isDistractionFree && isLargeViewport && footer }
-			secondarySidebar={ undefined }
-			sidebar={ ! isDistractionFree && sidebar }
-			actions={ undefined }
-			shortcuts={ {
-				previous: previousShortcut,
-				next: nextShortcut,
-			} }
-		/>
+		<div { ...navigateRegionsProps } ref={ navigateRegionsProps.ref }>
+			<InterfaceSkeleton
+				enableRegionNavigation={ true }
+				isDistractionFree={ isDistractionFree }
+				className={ clsx( 'ais-interface', className, {
+					'is-distraction-free': isDistractionFree,
+				} ) }
+				labels={ labels }
+				header={ header }
+				content={
+					<>
+						{ ! isDistractionFree && <Notices /> }
+						{ children }
+						<Snackbars />
+						<Modal.Slot />
+					</>
+				}
+				editorNotices={ <Notices /> }
+				footer={ ! isDistractionFree && isLargeViewport && footer }
+				secondarySidebar={ undefined }
+				sidebar={ ! isDistractionFree && sidebar }
+				actions={ undefined }
+			/>
+		</div>
 	);
 }
 

@@ -5,3 +5,4 @@ export { default as OptionsFilterSearchControl } from './OptionsFilterSearchCont
 export { default as Parts } from './Parts';
 export { default as PluginIcon } from './PluginIcon';
 export { default as SensitiveTextControl } from './SensitiveTextControl';
+export { default as Tabs } from './Tabs';

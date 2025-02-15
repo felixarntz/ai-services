@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { OptionsFilterSearchControl } from '@ai-services/components';
+import { OptionsFilterSearchControl, Tabs } from '@ai-services/components';
 import { Modal } from '@ai-services/interface';
 
 /**
@@ -16,8 +16,9 @@ import {
 } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect, useMemo, useState } from '@wordpress/element';
-import { __, _x } from '@wordpress/i18n';
+import { __, _x, sprintf } from '@wordpress/i18n';
 import { trash } from '@wordpress/icons';
+import { speak } from '@wordpress/a11y';
 
 /**
  * Internal dependencies
@@ -198,33 +199,15 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 }
 
 /**
- * Renders the modal for managing the available function declarations.
+ * Renders the form for adding or editing a function declaration.
  *
  * @since n.e.x.t
  *
+ * @param {Object}  props                     The component props.
+ * @param {?Object} props.functionDeclaration The function declaration to edit, or null if adding a new function.
  * @return {Component} The component to be rendered.
  */
-export default function FunctionDeclarationsModal() {
-	const { availableFunctionDeclarations, activeFunctionDeclaration } =
-		useSelect( ( select ) => {
-			const { getFunctionDeclarations, getActiveFunctionDeclaration } =
-				select( playgroundStore );
-
-			const available = getFunctionDeclarations();
-
-			let activeName = getActiveFunctionDeclaration();
-			if ( typeof activeName !== 'string' ) {
-				activeName = available.length > 0 ? available[ 0 ].name : '';
-			}
-
-			return {
-				availableFunctionDeclarations: available,
-				activeFunctionDeclaration: activeName
-					? available.find( ( { name } ) => name === activeName )
-					: null,
-			};
-		} );
-
+function FunctionDeclarationForm( { functionDeclaration } ) {
 	const {
 		setFunctionDeclaration,
 		deleteFunctionDeclaration,
@@ -237,24 +220,22 @@ export default function FunctionDeclarationsModal() {
 		useState( EMPTY_ARRAY );
 
 	useEffect( () => {
-		if ( ! activeFunctionDeclaration ) {
+		if ( ! functionDeclaration ) {
 			setFunctionName( '' );
 			setFunctionDescription( '' );
 			setFunctionParameters( EMPTY_ARRAY );
 			return;
 		}
 
-		setFunctionName( activeFunctionDeclaration.name );
-		setFunctionDescription( activeFunctionDeclaration.description || '' );
+		setFunctionName( functionDeclaration.name );
+		setFunctionDescription( functionDeclaration.description || '' );
 		setFunctionParameters(
-			activeFunctionDeclaration.parameters
-				? parametersObjectToArray(
-						activeFunctionDeclaration.parameters
-				  )
+			functionDeclaration.parameters
+				? parametersObjectToArray( functionDeclaration.parameters )
 				: EMPTY_ARRAY
 		);
 	}, [
-		activeFunctionDeclaration,
+		functionDeclaration,
 		setFunctionName,
 		setFunctionDescription,
 		setFunctionParameters,
@@ -297,7 +278,7 @@ export default function FunctionDeclarationsModal() {
 			return;
 		}
 
-		const existingFunctionName = activeFunctionDeclaration?.name;
+		const existingFunctionName = functionDeclaration?.name;
 
 		setFunctionDeclaration(
 			functionName,
@@ -309,30 +290,206 @@ export default function FunctionDeclarationsModal() {
 		// If this is a new function or the function name changed, set the new function as active.
 		if ( functionName !== existingFunctionName ) {
 			setActiveFunctionDeclaration( functionName );
+			if ( ! existingFunctionName ) {
+				speak(
+					sprintf(
+						/* translators: %s: function name */
+						__(
+							'Function %s added. You are now editing the function.',
+							'ai-services'
+						),
+						`${ functionName }()`
+					),
+					'assertive'
+				);
+			} else {
+				speak(
+					sprintf(
+						/* translators: 1: function name, 2: original function name */
+						__(
+							'Function %1$s saved and renamed from %2$s. You are now editing the function.',
+							'ai-services'
+						),
+						`${ functionName }()`,
+						`${ existingFunctionName }()`
+					),
+					'assertive'
+				);
+			}
+		} else {
+			speak(
+				sprintf(
+					/* translators: %s: function name */
+					__( 'Function %s saved.', 'ai-services' ),
+					`${ functionName }()`
+				),
+				'assertive'
+			);
 		}
 	};
 
-	// Get option objects for available function declarations to render in the checkbox list.
-	const functionDeclarationOptions = useMemo( () => {
-		return availableFunctionDeclarations.map( ( functionDeclaration ) => {
+	return (
+		<form
+			className="ai-services-playground-function-declarations-modal__form"
+			onSubmit={ ( event ) => {
+				event.preventDefault();
+				saveChanges();
+			} }
+		>
+			<Flex gap="4">
+				<h2 className="ai-services-playground-function-declarations-modal__title">
+					{ !! functionDeclaration ? (
+						<>
+							{ __( 'Edit function:', 'ai-services' ) + ' ' }
+							<span>{ `${ functionName }()` }</span>
+						</>
+					) : (
+						__( 'Add new function', 'ai-services' )
+					) }
+				</h2>
+				<div className="ai-services-playground-function-declarations-modal__actions">
+					{ !! functionDeclaration && (
+						<Button
+							icon={ trash }
+							label={ __( 'Delete function', 'ai-services' ) }
+							className="ai-services-playground-function-declarations-modal__delete"
+							variant="secondary"
+							isDestructive
+							onClick={ () => {
+								deleteFunctionDeclaration(
+									functionDeclaration.name
+								);
+							} }
+						/>
+					) }
+					<Button
+						type="submit"
+						variant="primary"
+						className="ai-services-playground-function-declarations-modal__submit"
+						disabled={ formSubmitDisabled }
+					>
+						{ !! functionDeclaration
+							? __( 'Save changes', 'ai-services' )
+							: __( 'Save', 'ai-services' ) }
+					</Button>
+				</div>
+			</Flex>
+			<Flex direction="column" gap="4">
+				<TextControl
+					label={ __( 'Function name', 'ai-services' ) }
+					className="ai-services-playground-function-declarations-modal__function-name"
+					value={ functionName }
+					onChange={ setFunctionName }
+					pattern="[a-zA-Z][a-zA-Z0-9_]*"
+					__nextHasNoMarginBottom
+				/>
+				<PatternValidator
+					value={ functionName }
+					pattern={ /^[a-zA-Z][a-zA-Z0-9_]*$/ }
+					message={ __(
+						'The function name must start with a letter and can only contain letters, numbers, and underscores.',
+						'ai-services'
+					) }
+				/>
+				<TextControl
+					label={ __( 'Function description', 'ai-services' ) }
+					className="ai-services-playground-function-declarations-modal__function-description"
+					value={ functionDescription }
+					onChange={ setFunctionDescription }
+					__nextHasNoMarginBottom
+				/>
+				{ functionParameters.map( ( parameter, index ) => (
+					<FunctionParameter
+						key={ index }
+						name={ parameter.name }
+						schema={ parameter.schema }
+						onChange={ ( newParameter ) =>
+							editFunctionParameter( newParameter, index )
+						}
+						onDelete={ () => deleteFunctionParameter( index ) }
+					/>
+				) ) }
+				<Flex gap="4">
+					<Button
+						type="button"
+						variant="secondary"
+						className="ai-services-playground-function-declarations-modal__add-parameter"
+						onClick={ addFunctionParameter }
+					>
+						{ __( 'Add parameter', 'ai-services' ) }
+					</Button>
+					<Button
+						type="submit"
+						variant="primary"
+						className="ai-services-playground-function-declarations-modal__submit"
+						disabled={ formSubmitDisabled }
+					>
+						{ !! functionDeclaration
+							? __( 'Save changes', 'ai-services' )
+							: __( 'Save', 'ai-services' ) }
+					</Button>
+				</Flex>
+			</Flex>
+		</form>
+	);
+}
+
+const getTabId = ( functionName ) => {
+	if ( functionName ) {
+		return `function-${ functionName }`;
+	}
+	return 'add-new-function';
+};
+
+const getFunctionNameFromTabId = ( tabId ) => {
+	if ( tabId === 'add-new-function' ) {
+		return '';
+	}
+	return tabId.replace( /^function-/, '' );
+};
+
+const SEARCH_FIELDS = [ 'name' ];
+
+/**
+ * Renders the modal for managing the available function declarations.
+ *
+ * @since n.e.x.t
+ *
+ * @return {Component} The component to be rendered.
+ */
+export default function FunctionDeclarationsModal() {
+	const { availableFunctionDeclarations, activeFunctionDeclaration } =
+		useSelect( ( select ) => {
+			const { getFunctionDeclarations, getActiveFunctionDeclaration } =
+				select( playgroundStore );
+
+			const available = getFunctionDeclarations();
+
+			let activeName = getActiveFunctionDeclaration();
+			if ( typeof activeName !== 'string' ) {
+				activeName = available.length > 0 ? available[ 0 ].name : '';
+			}
+
 			return {
-				value: functionDeclaration.name,
-				label: `${ functionDeclaration.name }()`,
+				availableFunctionDeclarations: available,
+				activeFunctionDeclaration: activeName
+					? available.find( ( { name } ) => name === activeName )
+					: null,
 			};
 		} );
-	}, [ availableFunctionDeclarations ] );
-	const [
-		filteredFunctionDeclarationOptions,
-		setFilteredFunctionDeclarationOptions,
-	] = useState( functionDeclarationOptions );
+
+	const { setActiveFunctionDeclaration } = useDispatch( playgroundStore );
+
+	const [ filteredFunctionDeclarations, setFilteredFunctionDeclarations ] =
+		useState( availableFunctionDeclarations );
 
 	const showFilter =
 		availableFunctionDeclarations.length >=
 		MIN_FUNCTION_DECLARATIONS_COUNT_FOR_FILTER;
 
-	const functionDeclarationOptionsToRender = showFilter
-		? filteredFunctionDeclarationOptions
-		: functionDeclarationOptions;
+	const functionDeclarationsToRender = showFilter
+		? filteredFunctionDeclarations
+		: availableFunctionDeclarations;
 
 	return (
 		<Modal
@@ -341,167 +498,90 @@ export default function FunctionDeclarationsModal() {
 			className="ai-services-playground-function-declarations-modal"
 		>
 			<div className="ai-services-playground-function-declarations-modal__content">
-				<div className="ai-services-playground-function-declarations-modal__sidebar">
-					{ showFilter && (
-						<OptionsFilterSearchControl
-							label={ __( 'Search functions', 'ai-services' ) }
-							className="ai-services-playground-function-declarations-modal__search-control"
-							options={ functionDeclarationOptions }
-							onFilter={ setFilteredFunctionDeclarationOptions }
-						/>
+				<Tabs
+					selectedTabId={ getTabId(
+						activeFunctionDeclaration?.name
 					) }
-					<div className="ai-services-playground-function-declarations-modal__function-declarations-list">
-						{ functionDeclarationOptionsToRender.map(
-							( { value, label } ) => (
-								<Button
-									key={ value }
-									label={
-										__( 'Edit function:', 'ai-services' ) +
-										' ' +
-										label
-									}
-									className="ai-services-playground-function-declarations-modal__function-declaration"
-									isPressed={
-										activeFunctionDeclaration?.name ===
-										value
-									}
-									onClick={ () => {
-										setActiveFunctionDeclaration( value );
-									} }
+					onSelect={ ( tabId ) => {
+						setActiveFunctionDeclaration(
+							getFunctionNameFromTabId( tabId )
+						);
+					} }
+					orientation="vertical"
+				>
+					<div className="ai-services-playground-function-declarations-modal__sidebar">
+						{ showFilter && (
+							<OptionsFilterSearchControl
+								label={ __(
+									'Search functions',
+									'ai-services'
+								) }
+								className="ai-services-playground-function-declarations-modal__search-control"
+								options={ availableFunctionDeclarations }
+								onFilter={ setFilteredFunctionDeclarations }
+								searchFields={ SEARCH_FIELDS }
+							/>
+						) }
+						<Tabs.TabList className="ai-services-playground-function-declarations-modal__function-declarations-list">
+							{ functionDeclarationsToRender.map(
+								( { name } ) => (
+									<Tabs.Tab
+										key={ name }
+										tabId={ getTabId( name ) }
+										title={
+											__(
+												'Edit function:',
+												'ai-services'
+											) +
+											' ' +
+											`${ name }()`
+										}
+										className="ai-services-playground-function-declarations-modal__function-declaration components-button"
+									>
+										{ `${ name }()` }
+									</Tabs.Tab>
+								)
+							) }
+							<Tabs.Tab
+								tabId={ getTabId( false ) }
+								title={ __(
+									'Add new function',
+									'ai-services'
+								) }
+								className="ai-services-playground-function-declarations-modal__add-function-declaration components-button is-link"
+							>
+								{ __( 'Add new function', 'ai-services' ) }
+							</Tabs.Tab>
+						</Tabs.TabList>
+					</div>
+					<div className="ai-services-playground-function-declarations-modal__main">
+						{ functionDeclarationsToRender.map(
+							( functionDeclaration ) => (
+								<Tabs.TabPanel
+									key={ functionDeclaration.name }
+									tabId={ getTabId(
+										functionDeclaration.name
+									) }
+									className="ai-services-playground-function-declarations-modal__function-declaration-panel"
 								>
-									{ label }
-								</Button>
+									<FunctionDeclarationForm
+										functionDeclaration={
+											functionDeclaration
+										}
+									/>
+								</Tabs.TabPanel>
 							)
 						) }
+						<Tabs.TabPanel
+							tabId={ getTabId( false ) }
+							className="ai-services-playground-function-declarations-modal__add-function-declaration-panel"
+						>
+							<FunctionDeclarationForm
+								functionDeclaration={ null }
+							/>
+						</Tabs.TabPanel>
 					</div>
-					<Button
-						className="ai-services-playground-function-declarations-modal__add-function-declaration"
-						onClick={ () => {
-							setActiveFunctionDeclaration( '' );
-						} }
-						variant="link"
-					>
-						{ __( 'Add new function', 'ai-services' ) }
-					</Button>
-				</div>
-				<div className="ai-services-playground-function-declarations-modal__main">
-					<form
-						className="ai-services-playground-function-declarations-modal__form"
-						onSubmit={ ( event ) => {
-							event.preventDefault();
-							saveChanges();
-						} }
-					>
-						<Flex gap="4">
-							<h2 className="ai-services-playground-function-declarations-modal__title">
-								{ !! activeFunctionDeclaration ? (
-									<>
-										{ __(
-											'Edit function:',
-											'ai-services'
-										) + ' ' }
-										<span>{ `${ functionName }()` }</span>
-									</>
-								) : (
-									__( 'Add new function', 'ai-services' )
-								) }
-							</h2>
-							<div className="ai-services-playground-function-declarations-modal__actions">
-								{ !! activeFunctionDeclaration && (
-									<Button
-										icon={ trash }
-										label={ __(
-											'Delete function',
-											'ai-services'
-										) }
-										className="ai-services-playground-function-declarations-modal__delete"
-										variant="secondary"
-										isDestructive
-										onClick={ () => {
-											deleteFunctionDeclaration(
-												activeFunctionDeclaration.name
-											);
-										} }
-									/>
-								) }
-								<Button
-									type="submit"
-									variant="primary"
-									className="ai-services-playground-function-declarations-modal__submit"
-									disabled={ formSubmitDisabled }
-								>
-									{ !! activeFunctionDeclaration
-										? __( 'Save changes', 'ai-services' )
-										: __( 'Save', 'ai-services' ) }
-								</Button>
-							</div>
-						</Flex>
-						<Flex direction="column" gap="4">
-							<TextControl
-								label={ __( 'Function name', 'ai-services' ) }
-								className="ai-services-playground-function-declarations-modal__function-name"
-								value={ functionName }
-								onChange={ setFunctionName }
-								pattern="[a-zA-Z][a-zA-Z0-9_]*"
-								__nextHasNoMarginBottom
-							/>
-							<PatternValidator
-								value={ functionName }
-								pattern={ /^[a-zA-Z][a-zA-Z0-9_]*$/ }
-								message={ __(
-									'The function name must start with a letter and can only contain letters, numbers, and underscores.',
-									'ai-services'
-								) }
-							/>
-							<TextControl
-								label={ __(
-									'Function description',
-									'ai-services'
-								) }
-								className="ai-services-playground-function-declarations-modal__function-description"
-								value={ functionDescription }
-								onChange={ setFunctionDescription }
-								__nextHasNoMarginBottom
-							/>
-							{ functionParameters.map( ( parameter, index ) => (
-								<FunctionParameter
-									key={ index }
-									name={ parameter.name }
-									schema={ parameter.schema }
-									onChange={ ( newParameter ) =>
-										editFunctionParameter(
-											newParameter,
-											index
-										)
-									}
-									onDelete={ () =>
-										deleteFunctionParameter( index )
-									}
-								/>
-							) ) }
-							<Flex gap="4">
-								<Button
-									type="button"
-									variant="secondary"
-									className="ai-services-playground-function-declarations-modal__add-parameter"
-									onClick={ addFunctionParameter }
-								>
-									{ __( 'Add parameter', 'ai-services' ) }
-								</Button>
-								<Button
-									type="submit"
-									variant="primary"
-									className="ai-services-playground-function-declarations-modal__submit"
-									disabled={ formSubmitDisabled }
-								>
-									{ !! activeFunctionDeclaration
-										? __( 'Save changes', 'ai-services' )
-										: __( 'Save', 'ai-services' ) }
-								</Button>
-							</Flex>
-						</Flex>
-					</form>
-				</div>
+				</Tabs>
 			</div>
 		</Modal>
 	);

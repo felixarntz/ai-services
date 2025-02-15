@@ -20,7 +20,6 @@
 	}
 
 	&__sidebar {
-		width: 280px;
 		padding: 32px;
 		overflow-x: visible;
 		overflow-y: auto;
@@ -40,19 +39,21 @@
 		font-family: Consolas, Monaco, monospace;
 	}
 
+	[aria-orientation="vertical"] &__function-declaration.components-button,
+	[aria-orientation="vertical"] &__add-function-declaration.components-button {
+		width: 100%;
+		text-align: left;
+
+		&[aria-selected="true"] {
+			color: var(--wp-components-color-foreground-inverted, #fff);
+			background: var(--wp-components-color-foreground, #1e1e1e);
+		}
+	}
+
 	&__actions {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-	}
-
-	&__function-declaration.components-button,
-	&__add-function-declaration.components-button {
-		display: block;
-		width: 100%;
-		height: 48px;
-		padding: 6px 12px;
-		text-align: left;
 	}
 
 	&__function-name .components-text-control__input[type="text"] {

@@ -9,6 +9,8 @@
     "fast-glob": "^3.3.3"
   },
   "dependencies": {
+    "@ariakit/react": "^0.4.15",
+		"@emotion/styled": "^11.6.0",
     "@wordpress/icons": "^10.16.0",
     "@wordpress/interface": "^9.1.0",
     "clsx": "^2.1.1",

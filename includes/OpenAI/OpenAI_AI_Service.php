@@ -72,7 +72,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * @return string[] The list of AI capabilities.
 	 */
 	public function get_capabilities(): array {
-		return AI_Capabilities::get_model_class_capabilities( OpenAI_AI_Model::class );
+		return AI_Capabilities::get_model_class_capabilities( OpenAI_AI_Text_Generation_Model::class );
 	}
 
 	/**
@@ -206,7 +206,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 			$model = $this->sort_models_by_preference( $model_slugs )[0];
 		}
 
-		return new OpenAI_AI_Model( $this->api, $model, $model_params, $request_options );
+		return new OpenAI_AI_Text_Generation_Model( $this->api, $model, $model_params, $request_options );
 	}
 
 	/**

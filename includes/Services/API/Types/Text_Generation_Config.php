@@ -13,7 +13,8 @@ use InvalidArgumentException;
 /**
  * Class representing text configuration options for a generative AI model.
  *
- * @since n.e.x.t Replacing `Generation_Config`.
+ * @since 0.2.0
+ * @since n.e.x.t Renamed from `Generation_Config`.
  */
 class Text_Generation_Config extends Generation_Config {
 

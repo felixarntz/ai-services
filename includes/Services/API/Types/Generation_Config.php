@@ -79,7 +79,8 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 					'n.e.x.t',
 					Text_Generation_Config::class
 				);
-				wp_trigger_error( '', $message, E_USER_DEPRECATED );
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error, WordPress.Security.EscapeOutput.OutputNotEscaped
+				trigger_error( $message, E_USER_DEPRECATED );
 			}
 		}
 

@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services\Contracts;
 
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
@@ -87,7 +88,7 @@ interface Generative_AI_Service {
 	 *                                                     a model slug.
 	 *     @type Tools|null             $tools             The tools to use for the model. Default none.
 	 *     @type Tool_Config|null       $toolConfig        Tool configuration options. Default none.
-	 *     @type Generation_Config|null $generationConfig  Model generation configuration options.  Default none.
+	 *     @type Generation_Config|null $generationConfig  Model generation configuration options. Default none.
 	 *     @type string|Parts|Content   $systemInstruction The system instruction for the model. Default none.
 	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.

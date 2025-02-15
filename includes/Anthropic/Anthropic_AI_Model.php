@@ -13,12 +13,12 @@ use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
@@ -79,7 +79,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Chat_History, With
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var Generation_Config|null
+	 * @var Text_Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -133,7 +133,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Chat_History, With
 			array(
 				'param_key'     => 'generationConfig',
 				'property_name' => 'generation_config',
-				'class_name'    => Generation_Config::class,
+				'class_name'    => Text_Generation_Config::class,
 			),
 		);
 		foreach ( $data_obj_params as $data_obj_param ) {
@@ -547,10 +547,10 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Chat_History, With
 	 */
 	private static function get_generation_config_transformers(): array {
 		return array(
-			'stop_sequences' => static function ( Generation_Config $config ) {
+			'stop_sequences' => static function ( Text_Generation_Config $config ) {
 				return $config->get_stop_sequences();
 			},
-			'max_tokens'     => static function ( Generation_Config $config ) {
+			'max_tokens'     => static function ( Text_Generation_Config $config ) {
 				$max_tokens = $config->get_max_output_tokens();
 				if ( ! $max_tokens ) {
 					// The 'max_tokens' parameter is required in the Anthropic API, so we need a default.
@@ -558,7 +558,7 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Chat_History, With
 				}
 				return $max_tokens;
 			},
-			'temperature'    => static function ( Generation_Config $config ) {
+			'temperature'    => static function ( Text_Generation_Config $config ) {
 				$temperature = $config->get_temperature();
 				if ( $temperature > 1.0 ) {
 					// The Anthropic API only supports a temperature of up to 1.0, so we need to cap it.
@@ -566,10 +566,10 @@ class Anthropic_AI_Model implements Generative_AI_Model, With_Chat_History, With
 				}
 				return $temperature;
 			},
-			'top_p'          => static function ( Generation_Config $config ) {
+			'top_p'          => static function ( Text_Generation_Config $config ) {
 				return $config->get_top_p();
 			},
-			'top_k'          => static function ( Generation_Config $config ) {
+			'top_k'          => static function ( Text_Generation_Config $config ) {
 				return $config->get_top_k();
 			},
 		);

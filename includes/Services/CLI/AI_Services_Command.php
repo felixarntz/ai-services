@@ -11,8 +11,8 @@ namespace Felix_Arntz\AI_Services\Services\CLI;
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -634,7 +634,7 @@ final class AI_Services_Command {
 			'feature'           => $assoc_args['feature'] ? $assoc_args['feature'] : null,
 			'model'             => $model_slug,
 			'capabilities'      => $capabilities,
-			'generationConfig'  => Generation_Config::from_array( $generation_config_args ),
+			'generationConfig'  => Text_Generation_Config::from_array( $generation_config_args ),
 			'tools'             => $function_declarations ? Tools::from_array(
 				array(
 					array( 'functionDeclarations' => $function_declarations ),

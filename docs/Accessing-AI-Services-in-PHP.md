@@ -245,7 +245,7 @@ It's worth noting that streaming is likely more useful in JavaScript than in PHP
 
 ### Customizing the default model configuration
 
-When retrieving a model using the `get_model()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. The `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Generation_Config` class](../includes/Services/API/Types/Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
+When retrieving a model using the `get_model()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. The `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
 
 Additionally to `generationConfig`, you can pass a `systemInstruction` argument if you want to provide a custom instruction for how the model should behave. By setting a system instruction, you give the model additional context to understand its tasks, provide more customized responses, and adhere to specific guidelines over the full user interaction with the model.
 
@@ -253,7 +253,7 @@ Here is a code example using both `generationConfig` and `systemInstruction`:
 
 ```php
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 
 try {
 	$model = $service
@@ -261,7 +261,7 @@ try {
 			array(
 				'feature'           => 'my-test-feature',
 				'capabilities'      => array( AI_Capability::TEXT_GENERATION ),
-				'generationConfig'  => Generation_Config::from_array(
+				'generationConfig'  => Text_Generation_Config::from_array(
 					array(
 						'maxOutputTokens' => 128,
 						'temperature'     => 0.2,
@@ -290,7 +290,7 @@ Note that not all configuration arguments are supported by every service API. Ho
 * `topK` _(integer)_: The maximum number of tokens to consider when sampling.
 	* Supported by all except `openai`.
 
-Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Generation_Config` class](../includes/Services/API/Types/Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
 
 ### Function calling
 

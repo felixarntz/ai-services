@@ -13,13 +13,13 @@ use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
@@ -80,7 +80,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var Generation_Config|null
+	 * @var Text_Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -146,7 +146,7 @@ class Google_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 			array(
 				'param_key'     => 'generationConfig',
 				'property_name' => 'generation_config',
-				'class_name'    => Generation_Config::class,
+				'class_name'    => Text_Generation_Config::class,
 			),
 		);
 		foreach ( $data_obj_params as $data_obj_param ) {
@@ -552,44 +552,44 @@ class Google_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 	 */
 	private static function get_generation_config_transformers(): array {
 		return array(
-			'stopSequences'    => static function ( Generation_Config $config ) {
+			'stopSequences'    => static function ( Text_Generation_Config $config ) {
 				return $config->get_stop_sequences();
 			},
-			'responseMimeType' => static function ( Generation_Config $config ) {
+			'responseMimeType' => static function ( Text_Generation_Config $config ) {
 				return $config->get_response_mime_type();
 			},
-			'responseSchema'   => static function ( Generation_Config $config ) {
+			'responseSchema'   => static function ( Text_Generation_Config $config ) {
 				if ( $config->get_response_mime_type() === 'application/json' ) {
 					return $config->get_response_schema();
 				}
 				return array();
 			},
-			'candidateCount'   => static function ( Generation_Config $config ) {
+			'candidateCount'   => static function ( Text_Generation_Config $config ) {
 				return $config->get_candidate_count();
 			},
-			'maxOutputTokens'  => static function ( Generation_Config $config ) {
+			'maxOutputTokens'  => static function ( Text_Generation_Config $config ) {
 				return $config->get_max_output_tokens();
 			},
-			'temperature'      => static function ( Generation_Config $config ) {
+			'temperature'      => static function ( Text_Generation_Config $config ) {
 				// In the Google AI API temperature ranges from 0.0 to 2.0.
 				return $config->get_temperature() * 2.0;
 			},
-			'topP'             => static function ( Generation_Config $config ) {
+			'topP'             => static function ( Text_Generation_Config $config ) {
 				return $config->get_top_p();
 			},
-			'topK'             => static function ( Generation_Config $config ) {
+			'topK'             => static function ( Text_Generation_Config $config ) {
 				return $config->get_top_k();
 			},
-			'presencePenalty'  => static function ( Generation_Config $config ) {
+			'presencePenalty'  => static function ( Text_Generation_Config $config ) {
 				return $config->get_presence_penalty();
 			},
-			'frequencyPenalty' => static function ( Generation_Config $config ) {
+			'frequencyPenalty' => static function ( Text_Generation_Config $config ) {
 				return $config->get_frequency_penalty();
 			},
-			'responseLogprobs' => static function ( Generation_Config $config ) {
+			'responseLogprobs' => static function ( Text_Generation_Config $config ) {
 				return $config->get_response_logprobs();
 			},
-			'logprobs'         => static function ( Generation_Config $config ) {
+			'logprobs'         => static function ( Text_Generation_Config $config ) {
 				return $config->get_logprobs();
 			},
 		);

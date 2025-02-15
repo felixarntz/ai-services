@@ -170,7 +170,7 @@ class Anthropic_AI_Service implements Generative_AI_Service {
 	 *                                                     a model slug.
 	 *     @type Tools|null             $tools             The tools to use for the model. Default none.
 	 *     @type Tool_Config|null       $toolConfig        Tool configuration options. Default none.
-	 *     @type Generation_Config|null $generationConfig  Model generation configuration options.  Default none.
+	 *     @type Generation_Config|null $generationConfig  Model generation configuration options. Default none.
 	 *     @type string|Parts|Content   $systemInstruction The system instruction for the model. Default none.
 	 * }
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.

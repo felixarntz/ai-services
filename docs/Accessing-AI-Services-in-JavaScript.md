@@ -317,7 +317,7 @@ Note that not all configuration arguments are supported by every service API. Ho
 * `topK` _(integer)_: The maximum number of tokens to consider when sampling.
 	* Supported by all except `openai`.
 
-Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Generation_Config` class](../includes/Services/API/Types/Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
 
 ### Function calling
 

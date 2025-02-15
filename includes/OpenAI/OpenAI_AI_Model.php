@@ -12,13 +12,13 @@ use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
@@ -79,7 +79,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 	 * The generation configuration.
 	 *
 	 * @since 0.1.0
-	 * @var Generation_Config|null
+	 * @var Text_Generation_Config|null
 	 */
 	private $generation_config;
 
@@ -133,7 +133,7 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 			array(
 				'param_key'     => 'generationConfig',
 				'property_name' => 'generation_config',
-				'class_name'    => Generation_Config::class,
+				'class_name'    => Text_Generation_Config::class,
 			),
 		);
 		foreach ( $data_obj_params as $data_obj_param ) {
@@ -575,10 +575,10 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 	 */
 	private static function get_generation_config_transformers(): array {
 		return array(
-			'stop'                  => static function ( Generation_Config $config ) {
+			'stop'                  => static function ( Text_Generation_Config $config ) {
 				return $config->get_stop_sequences();
 			},
-			'response_format'       => static function ( Generation_Config $config ) {
+			'response_format'       => static function ( Text_Generation_Config $config ) {
 				if ( $config->get_response_mime_type() === 'application/json' ) {
 					$schema = $config->get_response_schema();
 					if ( $schema ) {
@@ -591,28 +591,28 @@ class OpenAI_AI_Model implements Generative_AI_Model, With_Chat_History, With_Fu
 				}
 				return array();
 			},
-			'n'                     => static function ( Generation_Config $config ) {
+			'n'                     => static function ( Text_Generation_Config $config ) {
 				return $config->get_candidate_count();
 			},
-			'max_completion_tokens' => static function ( Generation_Config $config ) {
+			'max_completion_tokens' => static function ( Text_Generation_Config $config ) {
 				return $config->get_max_output_tokens();
 			},
-			'temperature'           => static function ( Generation_Config $config ) {
+			'temperature'           => static function ( Text_Generation_Config $config ) {
 				return $config->get_temperature();
 			},
-			'top_p'                 => static function ( Generation_Config $config ) {
+			'top_p'                 => static function ( Text_Generation_Config $config ) {
 				return $config->get_top_p();
 			},
-			'presence_penalty'      => static function ( Generation_Config $config ) {
+			'presence_penalty'      => static function ( Text_Generation_Config $config ) {
 				return $config->get_presence_penalty();
 			},
-			'frequency_penalty'     => static function ( Generation_Config $config ) {
+			'frequency_penalty'     => static function ( Text_Generation_Config $config ) {
 				return $config->get_frequency_penalty();
 			},
-			'logprobs'              => static function ( Generation_Config $config ) {
+			'logprobs'              => static function ( Text_Generation_Config $config ) {
 				return $config->get_response_logprobs();
 			},
-			'top_logprobs'          => static function ( Generation_Config $config ) {
+			'top_logprobs'          => static function ( Text_Generation_Config $config ) {
 				return $config->get_logprobs();
 			},
 		);

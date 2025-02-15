@@ -12,8 +12,8 @@ use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
@@ -220,7 +220,7 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			),
 			array(
 				'param_key'  => 'generationConfig',
-				'class_name' => Generation_Config::class,
+				'class_name' => Text_Generation_Config::class,
 			),
 		);
 		foreach ( $data_obj_params as $data_obj_param ) {
@@ -303,7 +303,7 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 					),
 					'generationConfig'  => array_merge(
 						array( 'description' => __( 'Model generation configuration options.', 'ai-services' ) ),
-						Generation_Config::get_json_schema()
+						Text_Generation_Config::get_json_schema()
 					),
 					'systemInstruction' => array(
 						'description' => __( 'System instruction for the model.', 'ai-services' ),

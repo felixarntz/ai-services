@@ -181,7 +181,7 @@ class Google_AI_Service implements Generative_AI_Service {
 	 *                                                     a model slug.
 	 *     @type Tools|null             $tools             The tools to use for the model. Default none.
 	 *     @type Tool_Config|null       $toolConfig        Tool configuration options. Default none.
-	 *     @type Generation_Config|null $generationConfig  Model generation configuration options.  Default none.
+	 *     @type Generation_Config|null $generationConfig  Model generation configuration options. Default none.
 	 *     @type string|Parts|Content   $systemInstruction The system instruction for the model. Default none.
 	 *     @type Safety_Setting[]       $safetySettings    Optional. The safety settings for the model. Default empty
 	 *                                                     array.

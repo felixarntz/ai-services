@@ -22,7 +22,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
-use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
+use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
@@ -40,7 +40,7 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since n.e.x.t Renamed from `OpenAI_AI_Model`.
  */
-class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Chat_History, With_Function_Calling, With_Multimodal_Input {
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
 
@@ -50,15 +50,7 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 	 * @since 0.1.0
 	 * @var OpenAI_AI_API_Client
 	 */
-	private $api;
-
-	/**
-	 * The model slug.
-	 *
-	 * @since 0.1.0
-	 * @var string
-	 */
-	private $model;
+	protected $api;
 
 	/**
 	 * The tools available to use for the model.
@@ -66,7 +58,7 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 	 * @since n.e.x.t
 	 * @var Tools|null
 	 */
-	private $tools;
+	protected $tools;
 
 	/**
 	 * The tool configuration, if applicable.
@@ -74,7 +66,7 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 	 * @since n.e.x.t
 	 * @var Tool_Config|null
 	 */
-	private $tool_config;
+	protected $tool_config;
 
 	/**
 	 * The generation configuration.
@@ -82,7 +74,7 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 	 * @since 0.1.0
 	 * @var Text_Generation_Config|null
 	 */
-	private $generation_config;
+	protected $generation_config;
 
 	/**
 	 * The system instruction.
@@ -90,15 +82,7 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 	 * @since 0.1.0
 	 * @var Content|null
 	 */
-	private $system_instruction;
-
-	/**
-	 * The request options.
-	 *
-	 * @since 0.1.0
-	 * @var array<string, mixed>
-	 */
-	private $request_options;
+	protected $system_instruction;
 
 	/**
 	 * Constructor.
@@ -115,55 +99,60 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
 	public function __construct( OpenAI_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
-		$this->api             = $api;
-		$this->request_options = $request_options;
+		$this->api = $api;
 
-		$this->model = $model;
+		parent::__construct( $model, $model_params, $request_options );
+	}
 
-		$data_obj_params = array(
+	/**
+	 * Sets the model parameters on the class instance.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $model_params The model parameters.
+	 *
+	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
+	 */
+	protected function set_model_params( array $model_params ): void {
+		$this->set_props_from_args(
 			array(
-				'param_key'     => 'tools',
-				'property_name' => 'tools',
-				'class_name'    => Tools::class,
+				array(
+					'arg_key'           => 'tools',
+					'property_name'     => 'tools',
+					'sanitize_callback' => static function ( $tools ) {
+						if ( $tools instanceof Tools ) {
+							return $tools;
+						}
+						return Tools::from_array( $tools );
+					},
+				),
+				array(
+					'arg_key'           => 'toolConfig',
+					'property_name'     => 'tool_config',
+					'sanitize_callback' => static function ( $tool_config ) {
+						if ( $tool_config instanceof Tool_Config ) {
+							return $tool_config;
+						}
+						return Tool_Config::from_array( $tool_config );
+					},
+				),
+				array(
+					'arg_key'           => 'generationConfig',
+					'property_name'     => 'generation_config',
+					'sanitize_callback' => static function ( $generation_config ) {
+						if ( $generation_config instanceof Text_Generation_Config ) {
+							return $generation_config;
+						}
+						return Text_Generation_Config::from_array( $generation_config );
+					},
+				),
 			),
-			array(
-				'param_key'     => 'toolConfig',
-				'property_name' => 'tool_config',
-				'class_name'    => Tool_Config::class,
-			),
-			array(
-				'param_key'     => 'generationConfig',
-				'property_name' => 'generation_config',
-				'class_name'    => Text_Generation_Config::class,
-			),
+			$model_params
 		);
-		foreach ( $data_obj_params as $data_obj_param ) {
-			$param_key     = $data_obj_param['param_key'];
-			$property_name = $data_obj_param['property_name'];
-			$class_name    = $data_obj_param['class_name'];
-			if ( isset( $model_params[ $param_key ] ) ) {
-				if ( $model_params[ $param_key ] instanceof $class_name ) {
-					$this->$property_name = $model_params[ $param_key ];
-				} else {
-					$this->$property_name = $class_name::from_array( $model_params[ $param_key ] );
-				}
-			}
-		}
 
 		if ( isset( $model_params['systemInstruction'] ) ) {
 			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
 		}
-	}
-
-	/**
-	 * Gets the model slug.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string The model slug.
-	 */
-	public function get_model_slug(): string {
-		return $this->model;
 	}
 
 	/**
@@ -181,10 +170,10 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$request  = $this->api->create_generate_content_request(
-			$this->model,
+			$this->get_model_slug(),
 			$params,
 			array_merge(
-				$this->request_options,
+				$this->get_request_options(),
 				$request_options
 			)
 		);
@@ -214,10 +203,10 @@ class OpenAI_AI_Text_Generation_Model implements Generative_AI_Model, With_Chat_
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$request  = $this->api->create_stream_generate_content_request(
-			$this->model,
+			$this->get_model_slug(),
 			$params,
 			array_merge(
-				$this->request_options,
+				$this->get_request_options(),
 				$request_options
 			)
 		);

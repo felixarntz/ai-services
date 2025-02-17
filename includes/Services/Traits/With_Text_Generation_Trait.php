@@ -13,6 +13,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
@@ -85,6 +86,12 @@ trait With_Text_Generation_Trait {
 		if ( Content_Role::USER !== $contents[0]->get_role() ) {
 			throw new InvalidArgumentException(
 				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'ai-services' )
+			);
+		}
+
+		if ( ! $this instanceof With_Chat_History && count( $contents ) > 1 ) {
+			throw new InvalidArgumentException(
+				esc_html__( 'The model does not support chat history. Only one content prompt must be provided.', 'ai-services' )
 			);
 		}
 

@@ -27,6 +27,7 @@ use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
@@ -41,7 +42,7 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since n.e.x.t Renamed from `Google_AI_Model`.
  */
-class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
 

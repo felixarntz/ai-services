@@ -107,6 +107,23 @@ class Google_AI_API_Client implements Generative_AI_API_Client {
 	}
 
 	/**
+	 * Creates a request instance to generate images using the specified model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $model           The model slug.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Request The request instance.
+	 */
+	public function create_generate_images_request( string $model, array $params, array $request_options = array() ): Request {
+		if ( ! str_contains( $model, '/' ) ) {
+			$model = 'models/' . $model;
+		}
+		return $this->create_post_request( "{$model}:predict", $params, $request_options );
+	}
+
+	/**
 	 * Returns the HTTP instance to use for requests.
 	 *
 	 * @since 0.1.0

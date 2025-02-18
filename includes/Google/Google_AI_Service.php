@@ -73,7 +73,12 @@ class Google_AI_Service implements Generative_AI_Service {
 	 * @return string[] The list of AI capabilities.
 	 */
 	public function get_capabilities(): array {
-		return AI_Capabilities::get_model_class_capabilities( Google_AI_Text_Generation_Model::class );
+		return array_unique(
+			array_merge(
+				AI_Capabilities::get_model_class_capabilities( Google_AI_Text_Generation_Model::class ),
+				AI_Capabilities::get_model_class_capabilities( Google_AI_Image_Generation_Model::class )
+			)
+		);
 	}
 
 	/**
@@ -115,21 +120,24 @@ class Google_AI_Service implements Generative_AI_Service {
 			throw $this->api->create_missing_response_key_exception( 'models' );
 		}
 
-		$google_legacy_capabilities = array(
+		$gemini_legacy_capabilities = array(
 			AI_Capability::CHAT_HISTORY,
 			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::TEXT_GENERATION,
 		);
-		$google_capabilities        = array(
+		$gemini_capabilities        = array(
 			AI_Capability::CHAT_HISTORY,
 			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::MULTIMODAL_INPUT,
 			AI_Capability::TEXT_GENERATION,
 		);
+		$imagen_capabilities        = array(
+			AI_Capability::IMAGE_GENERATION,
+		);
 
 		return array_reduce(
 			$response_data['models'],
-			static function ( array $models_data, array $model_data ) use ( $google_legacy_capabilities, $google_capabilities ) {
+			static function ( array $models_data, array $model_data ) use ( $gemini_legacy_capabilities, $gemini_capabilities, $imagen_capabilities ) {
 				$model_slug = $model_data['baseModelId'] ?? $model_data['name'];
 				if ( str_starts_with( $model_slug, 'models/' ) ) {
 					$model_slug = substr( $model_slug, 7 );
@@ -143,10 +151,15 @@ class Google_AI_Service implements Generative_AI_Service {
 						str_starts_with( $model_slug, 'gemini-1.0' ) ||
 						str_starts_with( $model_slug, 'gemini-pro' ) // 'gemini-pro' without version refers to 1.0.
 					) {
-						$model_caps = $google_legacy_capabilities;
+						$model_caps = $gemini_legacy_capabilities;
 					} else {
-						$model_caps = $google_capabilities;
+						$model_caps = $gemini_capabilities;
 					}
+				} elseif (
+					isset( $model_data['supportedGenerationMethods'] ) &&
+					in_array( 'predict', $model_data['supportedGenerationMethods'], true )
+				) {
+					$model_caps = $imagen_capabilities;
 				} else {
 					$model_caps = array();
 				}
@@ -206,6 +219,14 @@ class Google_AI_Service implements Generative_AI_Service {
 				$model_slugs = array_keys( $this->list_models( $request_options ) );
 			}
 			$model = $this->sort_models_by_preference( $model_slugs )[0];
+		}
+
+		// TODO: Not ideal to have this hard-coded. Refactor.
+		if (
+			str_starts_with( $model, 'imagen-' ) ||
+			( isset( $model_params['capabilities'] ) && in_array( AI_Capability::IMAGE_GENERATION, $model_params['capabilities'], true ) )
+		) {
+			return new Google_AI_Image_Generation_Model( $this->api, $model, $model_params, $request_options );
 		}
 
 		return new Google_AI_Text_Generation_Model( $this->api, $model, $model_params, $request_options );

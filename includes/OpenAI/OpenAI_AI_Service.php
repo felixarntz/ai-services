@@ -72,7 +72,12 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * @return string[] The list of AI capabilities.
 	 */
 	public function get_capabilities(): array {
-		return AI_Capabilities::get_model_class_capabilities( OpenAI_AI_Text_Generation_Model::class );
+		return array_unique(
+			array_merge(
+				AI_Capabilities::get_model_class_capabilities( OpenAI_AI_Text_Generation_Model::class ),
+				AI_Capabilities::get_model_class_capabilities( OpenAI_AI_Image_Generation_Model::class )
+			)
+		);
 	}
 
 	/**
@@ -126,10 +131,13 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 			AI_Capability::MULTIMODAL_INPUT,
 			AI_Capability::TEXT_GENERATION,
 		);
+		$dalle_capabilities          = array(
+			AI_Capability::IMAGE_GENERATION,
+		);
 
 		return array_reduce(
 			$response_data['data'],
-			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities ) {
+			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities, $dalle_capabilities ) {
 				$model_slug = $model_data['id'];
 
 				if (
@@ -143,11 +151,9 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 					} else {
 						$model_caps = $gpt_capabilities;
 					}
+				} elseif ( str_starts_with( $model_slug, 'dall-e-' ) ) {
+					$model_caps = $dalle_capabilities;
 				} else {
-					/*
-					 * TODO: Support other models once capabilities are added.
-					 * For example, dall-e models for image generation, tts models for text-to-speech.
-					 */
 					$model_caps = array();
 				}
 
@@ -204,6 +210,14 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 				$model_slugs = array_keys( $this->list_models( $request_options ) );
 			}
 			$model = $this->sort_models_by_preference( $model_slugs )[0];
+		}
+
+		// TODO: Not ideal to have this hard-coded. Refactor.
+		if (
+			str_starts_with( $model, 'dall-e-' ) ||
+			( isset( $model_params['capabilities'] ) && in_array( AI_Capability::IMAGE_GENERATION, $model_params['capabilities'], true ) )
+		) {
+			return new OpenAI_AI_Image_Generation_Model( $this->api, $model, $model_params, $request_options );
 		}
 
 		return new OpenAI_AI_Text_Generation_Model( $this->api, $model, $model_params, $request_options );

@@ -148,4 +148,37 @@ export default class GenerativeAiModel {
 
 		return new ChatSession( this, { history } );
 	}
+
+	/**
+	 * Generates an image using the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
+	 *                                         history.
+	 * @return {Promise<Object[]>} Model response candidates with the generated image.
+	 */
+	async generateImage( content ) {
+		validateCapabilities( this.capabilities, [
+			enums.AiCapability.IMAGE_GENERATION,
+		] );
+
+		const modelParams = { ...this.modelParams };
+
+		// Do some very basic validation.
+		validateContent( content );
+
+		try {
+			return await apiFetch( {
+				path: `/ai-services/v1/services/${ this.serviceSlug }:generate-image`,
+				method: 'POST',
+				data: {
+					content,
+					modelParams,
+				},
+			} );
+		} catch ( error ) {
+			throw new Error( error.message || error.code || error );
+		}
+	}
 }

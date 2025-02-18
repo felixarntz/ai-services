@@ -12,6 +12,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use InvalidArgumentException;
 
 /**
  * Interface for a model which allows generating images.
@@ -30,6 +31,7 @@ interface With_Image_Generation {
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
 	 * @return Candidates The response candidates with generated images - usually just one.
 	 *
+	 * @throws InvalidArgumentException Thrown if the given content is invalid.
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function generate_image( $content, array $request_options = array() ): Candidates;

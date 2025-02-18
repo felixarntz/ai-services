@@ -8,14 +8,11 @@
 
 namespace Felix_Arntz\AI_Services\Services\Traits;
 
-use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
-use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
-use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
-use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Generator;
 use InvalidArgumentException;
@@ -38,6 +35,7 @@ trait With_Text_Generation_Trait {
 	 * @return Candidates The response candidates with generated text content - usually just one.
 	 *
 	 * @throws InvalidArgumentException Thrown if the given content is invalid.
+	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	final public function generate_text( $content, array $request_options = array() ): Candidates {
 		$contents = $this->sanitize_new_content( $content );
@@ -74,40 +72,8 @@ trait With_Text_Generation_Trait {
 	 * @throws InvalidArgumentException Thrown if the input content is invalid.
 	 */
 	private function sanitize_new_content( $content ) {
-		if ( is_array( $content ) ) {
-			$contents = array_map(
-				array( Formatter::class, 'format_new_content' ),
-				$content
-			);
-		} else {
-			$contents = array( Formatter::format_new_content( $content ) );
-		}
-
-		if ( Content_Role::USER !== $contents[0]->get_role() ) {
-			throw new InvalidArgumentException(
-				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'ai-services' )
-			);
-		}
-
-		if ( ! $this instanceof With_Chat_History && count( $contents ) > 1 ) {
-			throw new InvalidArgumentException(
-				esc_html__( 'The model does not support chat history. Only one content prompt must be provided.', 'ai-services' )
-			);
-		}
-
-		if ( ! $this instanceof With_Multimodal_Input ) {
-			// For performance reasons, only check the last content prompt, which likely is the only new one.
-			$last_content         = array_pop( $contents );
-			$last_parts           = $last_content->get_parts();
-			$last_parts_text_only = $last_parts->filter( array( 'class_name' => Text_Part::class ) );
-			if ( count( $last_parts_text_only ) < count( $last_parts ) ) {
-				throw new InvalidArgumentException(
-					esc_html__( 'The model does not support multimodal input. Only text parts must be provided.', 'ai-services' )
-				);
-			}
-		}
-
-		return $contents;
+		$capabilities = AI_Capabilities::get_model_instance_capabilities( $this );
+		return Formatter::format_and_validate_new_contents( $content, $capabilities );
 	}
 
 	/**

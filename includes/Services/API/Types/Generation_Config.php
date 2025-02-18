@@ -27,7 +27,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	 * @since 0.2.0
 	 * @var array<string, mixed>
 	 */
-	private $sanitized_args;
+	protected $sanitized_args;
 
 	/**
 	 * Any additional arguments, unsanitized.
@@ -37,7 +37,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	 * @since 0.2.0
 	 * @var array<string, mixed>
 	 */
-	private $additional_args;
+	protected $additional_args;
 
 	/**
 	 * Type definitions for the supported arguments.
@@ -45,7 +45,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	 * @since 0.2.0
 	 * @var array<string, string>
 	 */
-	private $supported_args = array(
+	protected $supported_args = array(
 		'stopSequences'    => 'array',
 		'responseMimeType' => 'string',
 		'responseSchema'   => 'object',
@@ -69,7 +69,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	 */
 	public function __construct( array $args ) {
 		// Trigger deprecation notice if this class is instantiated directly.
-		if ( ! $this instanceof Text_Generation_Config ) {
+		if ( ! $this instanceof Text_Generation_Config && ! $this instanceof Image_Generation_Config ) {
 			if ( function_exists( '_deprecated_class' ) ) {
 				_deprecated_class( __CLASS__, 'n.e.x.t', Text_Generation_Config::class );
 			} elseif ( WP_DEBUG ) {
@@ -286,7 +286,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 					'additionalProperties' => true,
 				),
 				'candidateCount'   => array(
-					'description' => __( 'Number of generated responses to return.', 'ai-services' ),
+					'description' => __( 'Number of response candidates to generate.', 'ai-services' ),
 					'type'        => 'integer',
 					'minimum'     => 1,
 				),

@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services\Util;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
@@ -48,6 +49,34 @@ final class AI_Capabilities {
 			$capabilities[] = AI_Capability::MULTIMODAL_INPUT;
 		}
 		if ( isset( $interfaces[ With_Text_Generation::class ] ) ) {
+			$capabilities[] = AI_Capability::TEXT_GENERATION;
+		}
+		return $capabilities;
+	}
+
+	/**
+	 * Gets the AI capabilities that the given model instance supports.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Generative_AI_Model $model The model instance.
+	 * @return string[] The AI capabilities that the model instance supports, based on the interfaces it implements.
+	 */
+	public static function get_model_instance_capabilities( Generative_AI_Model $model ): array {
+		$capabilities = array();
+		if ( $model instanceof With_Chat_History ) {
+			$capabilities[] = AI_Capability::CHAT_HISTORY;
+		}
+		if ( $model instanceof With_Function_Calling ) {
+			$capabilities[] = AI_Capability::FUNCTION_CALLING;
+		}
+		if ( $model instanceof With_Image_Generation ) {
+			$capabilities[] = AI_Capability::IMAGE_GENERATION;
+		}
+		if ( $model instanceof With_Multimodal_Input ) {
+			$capabilities[] = AI_Capability::MULTIMODAL_INPUT;
+		}
+		if ( $model instanceof With_Text_Generation ) {
 			$capabilities[] = AI_Capability::TEXT_GENERATION;
 		}
 		return $capabilities;

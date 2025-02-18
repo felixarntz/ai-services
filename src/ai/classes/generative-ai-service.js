@@ -185,4 +185,33 @@ export default class GenerativeAiService {
 		const model = this.getModel( modelParams );
 		return model.startChat( history );
 	}
+
+	/**
+	 * Generates an image using the service.
+	 *
+	 * This is a short-hand method for `service.getModel( modelParams ).generateImage( content )`.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional
+	 *                                             history.
+	 * @param {Object}                 modelParams Model parameters. At a minimum this must include the unique
+	 *                                             "feature" identifier. It can also include the model slug and other
+	 *                                             optional parameters.
+	 * @return {Promise<Object[]>} Model response candidates with the generated image.
+	 */
+	async generateImage( content, modelParams ) {
+		// The `enums.AiCapability.IMAGE_GENERATION` capability is naturally implied to generate text.
+		if ( ! modelParams?.capabilities ) {
+			modelParams = {
+				...modelParams,
+				capabilities: detectRequestedCapabilitiesFromContent( content, [
+					enums.AiCapability.IMAGE_GENERATION,
+				] ),
+			};
+		}
+
+		const model = this.getModel( modelParams );
+		return model.generateImage( content );
+	}
 }

@@ -16,6 +16,7 @@ use Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader;
 use Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Self_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Image_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Text_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Get_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_List_REST_Route;
@@ -266,6 +267,7 @@ final class Services_Service_Container_Builder {
 					new Service_Get_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
 					new Service_Generate_Text_REST_Route( $cont['api'], $cont['current_user'] ),
 					new Service_Stream_Generate_Text_REST_Route( $cont['api'], $cont['current_user'] ),
+					new Service_Generate_Image_REST_Route( $cont['api'], $cont['current_user'] ),
 				)
 			);
 		};

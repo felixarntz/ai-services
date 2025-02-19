@@ -39,7 +39,7 @@ export async function textAndAttachmentToContent(
 	role = ContentRole.USER
 ) {
 	const mimeType = attachment.mime;
-	const data = await base64EncodeFile(
+	const data = await fileToBase64DataUrl(
 		attachment.sizes?.large?.url || attachment.url
 	);
 
@@ -162,7 +162,7 @@ export function processCandidatesStream( generator ) {
 }
 
 /**
- * Base64-encodes a file and returns its data URL.
+ * Returns the base64-encoded data URL representation of the given file URL.
  *
  * @since n.e.x.t
  *
@@ -171,11 +171,47 @@ export function processCandidatesStream( generator ) {
  *                          be prefixed with `data:{mime_type};base64,`. Default empty string.
  * @return {string} The base64-encoded file data URL, or empty string on failure.
  */
-export async function base64EncodeFile( file, mimeType = '' ) {
+export async function fileToBase64DataUrl( file, mimeType = '' ) {
+	const blob = await fileToBlob( file, mimeType );
+	if ( ! blob ) {
+		return '';
+	}
+
+	return blobToBase64DataUrl( blob );
+}
+
+/**
+ * Returns the binary data blob representation of the given file URL.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string} file     The file URL.
+ * @param {string} mimeType Optional. The MIME type of the file. If provided, the automatically detected MIME type will
+ *                          be overwritten. Default empty string.
+ * @return {Blob?} The binary data blob, or null on failure.
+ */
+export async function fileToBlob( file, mimeType = '' ) {
 	const data = await fetch( file );
 	const blob = await data.blob();
+	if ( ! blob ) {
+		return null;
+	}
+	if ( mimeType && mimeType !== blob.type ) {
+		return new Blob( [ blob ], { type: mimeType } );
+	}
+	return blob;
+}
 
-	const base64 = await new Promise( ( resolve ) => {
+/**
+ * Returns the base64-encoded data URL representation of the given binary data blob.
+ *
+ * @since n.e.x.t
+ *
+ * @param {Blob} blob The binary data blob.
+ * @return {string} The base64-encoded data URL, or empty string on failure.
+ */
+export async function blobToBase64DataUrl( blob ) {
+	const base64DataUrl = await new Promise( ( resolve ) => {
 		const reader = new window.FileReader();
 		reader.readAsDataURL( blob );
 		reader.onloadend = () => {
@@ -184,11 +220,40 @@ export async function base64EncodeFile( file, mimeType = '' ) {
 		};
 	} );
 
-	if ( mimeType ) {
-		return base64.replace(
-			/^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/,
-			`data:${ mimeType };base64,`
-		);
+	return base64DataUrl;
+}
+
+/**
+ * Returns the binary data blob representation of the given base64-encoded data URL.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string} base64DataUrl The base64-encoded data URL.
+ * @return {Blob?} The binary data blob, or null on failure.
+ */
+export async function base64DataUrlToBlob( base64DataUrl ) {
+	const prefixMatch = base64DataUrl.match(
+		/^data:([a-z0-9-]+\/[a-z0-9-]+);base64,/
+	);
+	if ( ! prefixMatch ) {
+		return null;
 	}
-	return base64;
+
+	const base64Data = base64DataUrl.substring( prefixMatch[ 0 ].length );
+	const binaryData = atob( base64Data );
+	const byteArrays = [];
+
+	for ( let offset = 0; offset < binaryData.length; offset += 512 ) {
+		const slice = binaryData.slice( offset, offset + 512 );
+
+		const byteNumbers = new Array( slice.length );
+		for ( let i = 0; i < slice.length; i++ ) {
+			byteNumbers[ i ] = slice.charCodeAt( i );
+		}
+		byteArrays.push( new Uint8Array( byteNumbers ) );
+	}
+
+	return new Blob( byteArrays, {
+		type: prefixMatch[ 1 ],
+	} );
 }

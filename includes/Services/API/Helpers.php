@@ -9,12 +9,14 @@
 namespace Felix_Arntz\AI_Services\Services\API;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
+use Felix_Arntz\AI_Services\Services\API\Types\Blob;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Generator;
+use InvalidArgumentException;
 use WP_Post;
 
 /**
@@ -82,7 +84,7 @@ final class Helpers {
 
 		$parts = new Parts();
 		$parts->add_text_part( $text );
-		$parts->add_inline_data_part( $mime_type, self::base64_encode_file( $file, $mime_type ) );
+		$parts->add_inline_data_part( $mime_type, self::file_to_base64_data_url( $file, $mime_type ) );
 
 		return Formatter::format_content( $parts, $role );
 	}
@@ -203,7 +205,7 @@ final class Helpers {
 	}
 
 	/**
-	 * Base64-encodes a file and returns its data URL.
+	 * Returns the base64-encoded data URL representation of the given file URL.
 	 *
 	 * @since n.e.x.t
 	 *
@@ -212,18 +214,69 @@ final class Helpers {
 	 *                          be prefixed with `data:{mime_type};base64,`. Default empty string.
 	 * @return string The base64-encoded file data URL, or empty string on failure.
 	 */
-	public static function base64_encode_file( string $file, string $mime_type = '' ): string {
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$binary_data = file_get_contents( $file );
-		if ( ! $binary_data ) {
+	public static function file_to_base64_data_url( string $file, string $mime_type = '' ): string {
+		$blob = self::file_to_blob( $file, $mime_type );
+		if ( ! $blob ) {
 			return '';
 		}
 
-		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		$base64 = base64_encode( $binary_data );
-		if ( '' !== $mime_type ) {
-			$base64 = "data:$mime_type;base64,$base64";
+		return self::blob_to_base64_data_url( $blob );
+	}
+
+	/**
+	 * Returns the binary data blob representation of the given file URL.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $file      Absolute path to the file, or its URL.
+	 * @param string $mime_type Optional. The MIME type of the file. If provided, the automatically detected MIME type
+	 *                          will be overwritten. Default empty string.
+	 * @return Blob|null The binary data blob, or null on failure.
+	 */
+	public static function file_to_blob( string $file, string $mime_type = '' ): ?Blob {
+		try {
+			return Blob::from_file( $file, $mime_type );
+		} catch ( InvalidArgumentException $e ) {
+			return null;
 		}
-		return $base64;
+	}
+
+	/**
+	 * Returns the base64-encoded data URL representation of the given binary data blob.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Blob $blob The binary data blob.
+	 * @return string The base64-encoded file data URL, or empty string on failure.
+	 */
+	public static function blob_to_base64_data_url( Blob $blob ): string {
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		$base64    = base64_encode( $blob->get_binary_data() );
+		$mime_type = $blob->get_mime_type();
+		return "data:$mime_type;base64,$base64";
+	}
+
+	/**
+	 * Returns the binary data blob representation of the given base64-encoded data URL.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $base64_data_url The base64-encoded data URL.
+	 * @return Blob|null The binary data blob, or null on failure.
+	 */
+	public static function base64_data_url_to_blob( string $base64_data_url ): ?Blob {
+		if ( ! preg_match( '/^data:([a-z0-9-]+\/[a-z0-9-]+);base64,/', $base64_data_url, $matches ) ) {
+			return null;
+		}
+
+		$base64 = substr( $base64_data_url, strlen( $matches[0] ) );
+
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$binary_data = base64_decode( $base64 );
+		if ( false === $binary_data ) {
+			return null;
+		}
+
+		return new Blob( $binary_data, $matches[1] );
 	}
 }

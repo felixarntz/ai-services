@@ -46,7 +46,7 @@ const parseContentFromCache = async ( content, attachment ) => {
 						...part,
 						inlineData: {
 							...part.inlineData,
-							data: await helpers.base64EncodeFile(
+							data: await helpers.fileToBase64DataUrl(
 								attachment.sizes?.large?.url || attachment.url
 							),
 						},

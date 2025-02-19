@@ -55,7 +55,7 @@ function ImageControls( { attributes, setAttributes } ) {
 		setInProgress( true );
 
 		const mimeType = getMimeType( attributes.url );
-		const base64Image = await helpers.base64EncodeFile( attributes.url );
+		const base64Image = await helpers.fileToBase64DataUrl( attributes.url );
 
 		let candidates;
 		try {

@@ -223,20 +223,31 @@ export default function Input() {
 		};
 	}, [ inputRef, searchLastMessage ] );
 
+	let inputPlaceholder = __( 'Enter AI prompt', 'ai-services' );
+	if ( allowFunctionResponse && includeHistory ) {
+		inputPlaceholder = __(
+			'Enter AI prompt or JSON data for a function response',
+			'ai-services'
+		);
+	} else if ( capabilities.includes( enums.AiCapability.IMAGE_GENERATION ) ) {
+		inputPlaceholder = __(
+			'Enter AI prompt to generate images',
+			'ai-services'
+		);
+	} else if ( capabilities.includes( enums.AiCapability.TEXT_GENERATION ) ) {
+		inputPlaceholder = __(
+			'Enter AI prompt to generate content',
+			'ai-services'
+		);
+	}
+
 	return (
 		<div className="ai-services-playground__input-backdrop">
 			<div className="ai-services-playground__input-container">
 				<textarea
 					className="ai-services-playground__input"
 					ref={ inputRef }
-					placeholder={
-						!! ( allowFunctionResponse && includeHistory )
-							? __(
-									'Enter AI prompt or JSON data for a function response',
-									'ai-services'
-							  )
-							: __( 'Enter AI prompt', 'ai-services' )
-					}
+					placeholder={ inputPlaceholder }
 					aria-label={ __( 'AI prompt', 'ai-services' ) }
 					value={ prompt }
 					onChange={ ( event ) => setPrompt( event.target.value ) }

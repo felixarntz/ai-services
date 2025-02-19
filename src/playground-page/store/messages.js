@@ -109,14 +109,27 @@ const retrieveMessages = async () => {
 };
 
 const storeMessages = ( messages ) => {
-	window.sessionStorage.setItem(
-		SESSION_STORAGE_KEY,
-		JSON.stringify( messages.map( prepareMessageForCache ) )
-	);
+	try {
+		window.sessionStorage.setItem(
+			SESSION_STORAGE_KEY,
+			JSON.stringify( messages.map( prepareMessageForCache ) )
+		);
+	} catch ( error ) {
+		// eslint-disable-next-line no-console
+		console.error( 'Failed to store messages in session storage.', error );
+	}
 };
 
 const clearMessages = () => {
-	window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
+	try {
+		window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
+	} catch ( error ) {
+		// eslint-disable-next-line no-console
+		console.error(
+			'Failed to clear messages from session storage.',
+			error
+		);
+	}
 };
 
 const formatNewContent = async (
@@ -237,14 +250,27 @@ const actions = {
 				model: modelSlug,
 			};
 
+			const foundationalCapability = select.getFoundationalCapability();
+
 			const generationConfig = {};
-			const paramKeys = [ 'maxOutputTokens', 'temperature', 'topP' ];
-			paramKeys.forEach( ( key ) => {
-				const value = select.getModelParam( key );
-				if ( value ) {
-					generationConfig[ key ] = Number( value );
+			if (
+				foundationalCapability === enums.AiCapability.IMAGE_GENERATION
+			) {
+				const aspectRatio = select.getModelParam( 'aspectRatio' );
+				if ( aspectRatio ) {
+					generationConfig.aspectRatio = aspectRatio;
 				}
-			} );
+			} else if (
+				foundationalCapability === enums.AiCapability.TEXT_GENERATION
+			) {
+				const paramKeys = [ 'maxOutputTokens', 'temperature', 'topP' ];
+				paramKeys.forEach( ( key ) => {
+					const value = select.getModelParam( key );
+					if ( value ) {
+						generationConfig[ key ] = Number( value );
+					}
+				} );
+			}
 			if ( Object.keys( generationConfig ).length ) {
 				modelParams.generationConfig = generationConfig;
 			}
@@ -254,12 +280,16 @@ const actions = {
 				modelParams.systemInstruction = systemInstruction;
 			}
 
-			const tools = getTools(
-				select.getFunctionDeclarations(),
-				select.getSelectedFunctionDeclarations()
-			);
-			if ( tools ) {
-				modelParams.tools = tools;
+			if (
+				foundationalCapability === enums.AiCapability.TEXT_GENERATION
+			) {
+				const tools = getTools(
+					select.getFunctionDeclarations(),
+					select.getSelectedFunctionDeclarations()
+				);
+				if ( tools ) {
+					modelParams.tools = tools;
+				}
 			}
 
 			const originalMessages = select.getMessages();
@@ -310,7 +340,14 @@ const actions = {
 
 			let candidates;
 			try {
-				candidates = await model.generateText( contentToSend );
+				if (
+					foundationalCapability ===
+					enums.AiCapability.IMAGE_GENERATION
+				) {
+					candidates = await model.generateImage( contentToSend );
+				} else {
+					candidates = await model.generateText( contentToSend );
+				}
 
 				const responseContent =
 					helpers.getCandidateContents( candidates )[ 0 ];

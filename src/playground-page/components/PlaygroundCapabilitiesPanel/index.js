@@ -84,7 +84,6 @@ export default function PlaygroundCapabilitiesPanel() {
 						} )
 					) }
 					onChange={ ( value ) => setFoundationalCapability( value ) }
-					disabled={ availableFoundationalCapabilities.length < 2 }
 					__nextHasNoMarginBottom
 				/>
 				<MultiCheckboxControl

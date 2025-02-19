@@ -11,11 +11,15 @@ namespace Felix_Arntz\AI_Services\Services\CLI;
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
+use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
 use Felix_Arntz\AI_Services\Services\Entities\Service_Entity_Query;
@@ -438,7 +442,7 @@ final class AI_Services_Command {
 	public function generate_text( array $args, array $assoc_args ): void {
 		list( $service_slug, $model_slug, $prompt ) = $this->parse_generate_positional_args( $args );
 
-		$model_params = $this->get_model_params( $model_slug, $assoc_args );
+		$model_params = $this->get_text_model_params( $model_slug, $assoc_args );
 
 		$attachment_id = isset( $assoc_args['attachment-id'] ) ? (int) $assoc_args['attachment-id'] : 0;
 
@@ -469,6 +473,71 @@ final class AI_Services_Command {
 		} else {
 			$this->generate_text_using_model( $model, $content );
 		}
+	}
+
+	/**
+	 * Generates an image using a generative model from an available AI service.
+	 *
+	 * Only authorized users with sufficient permissions can use this command.
+	 * Provide the `--user` argument to specify the user.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [<service>]
+	 * : The service to use. Can be omitted to use any available service.
+	 *
+	 * [<model>]
+	 * : The model to use from the service. Can be omitted to use any suitable model from the service.
+	 *
+	 * <prompt>
+	 * : The text prompt to generate an image.
+	 *
+	 * [--feature=<feature>]
+	 * : Required. Unique identifier of the feature that the model will be used for.
+	 *
+	 * [--system-instruction=<system-instruction>]
+	 * : System instruction for the model.
+	 *
+	 * [--<field>=<value>]
+	 * : Model generation config arguments. For example, `--size=2048x2048`.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *   wp ai-services generate-image google "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=my-cli-test --user=admin > img_output.txt
+	 *   wp ai-services generate-image openai dall-e-3 "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=cli-example --user=admin > img_output.txt
+	 *   wp ai-services generate-image openai "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=cli-example --response-type=file_data --user=admin
+	 *
+	 * @subcommand generate-image
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param mixed[]              $args       List of the positional arguments.
+	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
+	 */
+	public function generate_image( array $args, array $assoc_args ): void {
+		list( $service_slug, $model_slug, $prompt ) = $this->parse_generate_positional_args( $args );
+
+		$model_params = $this->get_image_model_params( $model_slug, $assoc_args );
+
+		if ( $service_slug ) {
+			$service_args = $service_slug;
+		} elseif ( isset( $model_params['capabilities'] ) ) {
+			$service_args = array( 'capabilities' => $model_params['capabilities'] );
+		} else {
+			$service_args = array();
+		}
+
+		try {
+			$service = $this->services_api->get_available_service( $service_args );
+		} catch ( InvalidArgumentException $e ) {
+			WP_CLI::error( html_entity_decode( $e->getMessage() ) );
+		}
+
+		$model = $this->get_model( $service, $model_params );
+
+		$content = Helpers::text_to_content( $prompt );
+
+		$this->generate_image_using_model( $model, $content );
 	}
 
 	/**
@@ -595,7 +664,7 @@ final class AI_Services_Command {
 	}
 
 	/**
-	 * Gets the model parameters for the given model slug and associative arguments.
+	 * Gets the text generation model parameters for the given model slug and associative arguments.
 	 *
 	 * @since n.e.x.t
 	 *
@@ -603,7 +672,7 @@ final class AI_Services_Command {
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
 	 * @return array<string, mixed> The model parameters, to retrieve a model.
 	 */
-	private function get_model_params( ?string $model_slug, array $assoc_args ): array {
+	private function get_text_model_params( ?string $model_slug, array $assoc_args ): array {
 		// Assume any unknown arguments are generation configuration arguments.
 		$generation_config_args = $assoc_args;
 		$assoc_args             = $this->parse_assoc_args(
@@ -640,6 +709,41 @@ final class AI_Services_Command {
 					array( 'functionDeclarations' => $function_declarations ),
 				)
 			) : null,
+			'systemInstruction' => $assoc_args['system-instruction'] ? $assoc_args['system-instruction'] : null,
+		);
+	}
+
+	/**
+	 * Gets the image generation model parameters for the given model slug and associative arguments.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string|null          $model_slug The model slug.
+	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
+	 * @return array<string, mixed> The model parameters, to retrieve a model.
+	 */
+	private function get_image_model_params( ?string $model_slug, array $assoc_args ): array {
+		// Assume any unknown arguments are generation configuration arguments.
+		$generation_config_args = $assoc_args;
+		$assoc_args             = $this->parse_assoc_args(
+			$assoc_args,
+			array(
+				'feature'            => '',
+				'system-instruction' => '',
+			),
+			$this->formatter_args
+		);
+		$generation_config_args = $this->sanitize_generation_config_args(
+			array_diff_key( $generation_config_args, $assoc_args )
+		);
+
+		$capabilities = array( AI_Capability::IMAGE_GENERATION );
+
+		return array(
+			'feature'           => $assoc_args['feature'] ? $assoc_args['feature'] : null,
+			'model'             => $model_slug,
+			'capabilities'      => $capabilities,
+			'generationConfig'  => Image_Generation_Config::from_array( $generation_config_args ),
 			'systemInstruction' => $assoc_args['system-instruction'] ? $assoc_args['system-instruction'] : null,
 		);
 	}
@@ -719,7 +823,7 @@ final class AI_Services_Command {
 		} catch ( Generative_AI_Exception $e ) {
 			WP_CLI::error(
 				sprintf(
-					'Generating content with model %1$s failed: %2$s',
+					'Generating text with model %1$s failed: %2$s',
 					$model->get_model_slug(),
 					html_entity_decode( $e->getMessage() )
 				)
@@ -770,7 +874,7 @@ final class AI_Services_Command {
 		} catch ( Generative_AI_Exception $e ) {
 			WP_CLI::error(
 				sprintf(
-					'Generating content with model %1$s failed: %2$s',
+					'Generating text with model %1$s failed: %2$s',
 					$model->get_model_slug(),
 					html_entity_decode( $e->getMessage() )
 				)
@@ -798,6 +902,55 @@ final class AI_Services_Command {
 			WP_CLI::error(
 				html_entity_decode( $e->getMessage() )
 			);
+		}
+	}
+
+	/**
+	 * Generates an image using the given generative model and prints it.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Generative_AI_Model $model   The model to use.
+	 * @param Content             $content Prompt for the content to generate.
+	 */
+	private function generate_image_using_model( Generative_AI_Model $model, Content $content ): void {
+		if ( ! $model instanceof With_Image_Generation ) {
+			WP_CLI::error( 'The model does not support image generation.' );
+		}
+
+		try {
+			$candidates = $model->generate_image( $content );
+		} catch ( Generative_AI_Exception $e ) {
+			WP_CLI::error(
+				sprintf(
+					'Generating image with model %1$s failed: %2$s',
+					$model->get_model_slug(),
+					html_entity_decode( $e->getMessage() )
+				)
+			);
+		} catch ( InvalidArgumentException $e ) {
+			WP_CLI::error(
+				sprintf(
+					'Invalid content provided to model %1$s: %2$s',
+					$model->get_model_slug(),
+					html_entity_decode( $e->getMessage() )
+				)
+			);
+		}
+
+		$contents = Helpers::get_candidate_contents( $candidates );
+		foreach ( $contents as $content ) {
+			// If the content is purely an image, print it directly, otherwise print the parts as structured JSON.
+			$parts = $content->get_parts();
+			if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Inline_Data_Part ) {
+				WP_CLI::print_value( $parts->get( 0 )->get_base64_data(), array( 'format' => 'table' ) );
+				continue;
+			}
+			if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof File_Data_Part ) {
+				WP_CLI::print_value( $parts->get( 0 )->get_file_uri(), array( 'format' => 'table' ) );
+				continue;
+			}
+			WP_CLI::print_value( $parts->to_array(), array( 'format' => 'json' ) );
 		}
 	}
 

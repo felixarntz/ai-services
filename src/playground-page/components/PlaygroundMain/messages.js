@@ -145,10 +145,14 @@ export default function Messages() {
 	const scrollIntoView = () => {
 		const interval = setInterval( () => {
 			if ( messagesContainerRef.current ) {
+				/*
+				 * Subtract 5px to account for potential half pixel issues.
+				 * These can cause the scroll to not reach the bottom, which can then trigger infinite scroll.
+				 */
 				if (
 					messagesContainerRef.current.scrollTop +
 						messagesContainerRef.current.clientHeight >=
-					messagesContainerRef.current.scrollHeight
+					messagesContainerRef.current.scrollHeight - 5
 				) {
 					clearInterval( interval );
 					return;

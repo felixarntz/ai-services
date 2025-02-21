@@ -141,7 +141,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 				$model_slug = $model_data['id'];
 
 				if (
-					str_starts_with( $model_slug, 'gpt-' )
+					( str_starts_with( $model_slug, 'gpt-' ) || str_starts_with( $model_slug, 'o1-' ) )
 					&& ! str_contains( $model_slug, '-instruct' )
 					&& ! str_contains( $model_slug, '-realtime' )
 					&& ! str_contains( $model_slug, '-audio' )

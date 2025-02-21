@@ -10,7 +10,7 @@ This WordPress plugin introduces central infrastructure which allows other plugi
 
 The plugin does intentionally _not_ come with specific AI driven features built-in, except for an AI Playground screen to explore AI capabilities as well as a settings screen to configure AI service credentials. The purpose of this plugin is to facilitate use of AI by other plugins. As such, it is a perfect use-case for [plugin dependencies](https://make.wordpress.org/core/2024/03/05/introducing-plugin-dependencies-in-wordpress-6-5/).
 
-**Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set. As long as it is in a `0.x.y` version, there may be occasional breaking changes when using lower level parts of the API. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
+**Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set and more being added. A crucial part of refining the plugin is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the AI services offer in a uniform way. That's why your feedback is much appreciated!
 
 ## Why?
 
@@ -20,7 +20,7 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 * Having central AI infrastructure available **unlocks AI capabilities for smaller plugins or features**: It may not be worth the investment to implement a whole AI API layer for a simple AI driven feature, but when you already have it available, it can lead to more plugins (and thus more users) benefitting from AI capabilities.
 * Last but not least, a central AI infrastructure means **users will only have to configure the AI API once**, e.g. paste their API keys only in a single WordPress administration screen. Without central AI infrastructure, every plugin has to provide its own UI for pasting API keys, making the process more tedious for site owners the more AI capabilities their site uses.
 
-## Examples
+## Code examples for using the API
 
 **Generate the answer to a prompt in PHP code:**
 

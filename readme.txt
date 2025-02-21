@@ -20,19 +20,28 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 Here's a (non-comprehensive) feature list:
 
 * Abstraction layer and APIs to communicate with any AI service in a uniform way
-  * APIs are available in both PHP and in JavaScript, as well as via WP-CLI commands
-  * Supports streaming text generation for more immediate feedback to users
-  * Currently only supports text generation (including multi-modal input and function calling if supported by the AI service), but support for additional capabilities (e.g. image generation, audio generation) will be added soon
+  * APIs are available in both PHP and in JavaScript, as well as via the WordPress REST API and WP-CLI commands
+  * Currently supports the following AI capabilities (with more on the way!):
+    * text generation (including text streaming for more immediate feedback to users)
+    * text chats with history
+    * multimodal input
+    * function calling
+    * image generation
+* AI Playground administration screen (in the Tools menu) allows exploring the different AI capabilities
+  * Explore all AI capabilities supported by the plugin via user interface
+  * Select which AI service and model to use and set a few advanced configuration parameters
+  * Define your own function declarations used for AI function calling
+  * Generate images and save them to the WordPress media library
+  * Exchange the AI service or model on the fly to continue a chat started with one model with another one
+* AI Services settings screen to configure services with API credentials
 * Built-in AI service implementations
   * [Anthropic (Claude)](https://www.anthropic.com/claude)
   * [Google (Gemini)](https://ai.google.dev/gemini-api)
   * [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
   * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
-* AI Playground administration screen (in the Tools menu) allows exploring the different AI capabilities
-* AI Services settings screen to configure services with API credentials
 
-**Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set. As long as it is in a `0.x.y` version, there may be occasional breaking changes when using lower level parts of the API. Consider the plugin early access at this point, as there are lots of enhancements to add and polishing to do. A crucial part of that is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the third party services offer in a uniform way. That's why your feedback is much appreciated!
+**Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set and more being added. A crucial part of refining the plugin is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the AI services offer in a uniform way. That's why your feedback is much appreciated!
 
 = Why? =
 
@@ -60,7 +69,7 @@ The use of the third party AI services is subject to the respective terms of ser
   * [OpenAI Terms of Use](https://openai.com/policies/row-terms-of-use/)
   * [OpenAI Privacy Policy](https://openai.com/policies/row-privacy-policy/)
 
-= Examples =
+= Code examples for using the API =
 
 **Generate the answer to a prompt in PHP code:**
 

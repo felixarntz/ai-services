@@ -72,6 +72,11 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	public function __construct( Google_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		$this->api = $api;
 
+		// Since image generation can be heavy, increase default request timeout to 30 seconds.
+		if ( ! isset( $request_options['timeout'] ) ) {
+			$request_options['timeout'] = 30;
+		}
+
 		parent::__construct( $model, $model_params, $request_options );
 	}
 

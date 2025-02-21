@@ -72,6 +72,11 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	public function __construct( OpenAI_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		$this->api = $api;
 
+		// Since image generation can be heavy, increase default request timeout to 30 seconds.
+		if ( ! isset( $request_options['timeout'] ) ) {
+			$request_options['timeout'] = 30;
+		}
+
 		parent::__construct( $model, $model_params, $request_options );
 	}
 
@@ -278,13 +283,15 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 					case '1:1':
 						return '1024x1024';
 					case '16:9':
-						return '1024x576';
+						return '1792x1024';
 					case '9:16':
-						return '576x1024';
+						return '1024x1792';
 					case '4:3':
-						return '1024x768';
+						// This is 16:9 instead of 4:3, which is the closest aspect ratio supported by the API.
+						return '1792x1024';
 					case '3:4':
-						return '768x1024';
+						// This is 9:16 instead of 3:4, which is the closest aspect ratio supported by the API.
+						return '1024x1792';
 				}
 				return '';
 			},

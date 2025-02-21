@@ -173,7 +173,8 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				self::get_generation_config_transformers()
 			);
 		} else {
-			// Override the API's default response format to return base64-encoded JSON data.
+			// Override some API defaults.
+			$params['n']               = 1;
 			$params['response_format'] = 'b64_json';
 		}
 

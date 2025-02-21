@@ -177,6 +177,9 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				$this->generation_config,
 				self::get_generation_config_transformers()
 			);
+		} else {
+			// Override some API defaults.
+			$params['parameters'] = array( 'sampleCount' => 1 );
 		}
 
 		return $params;
@@ -277,9 +280,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				return array( 'mimeType' => $output_mime );
 			},
 			'sampleCount'   => static function ( Image_Generation_Config $config ) {
-				$candidate_count = $config->get_candidate_count();
-				// The default count in the API is 4, but we only want to return 1 if the count is not set.
-				return $candidate_count ? $candidate_count : 1;
+				return $config->get_candidate_count();
 			},
 			'aspectRatio'   => static function ( Image_Generation_Config $config ) {
 				return $config->get_aspect_ratio();

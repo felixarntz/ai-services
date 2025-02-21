@@ -51,10 +51,10 @@ class Image_Generation_Config extends Generation_Config {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return int The candidate count, or 0 if not set.
+	 * @return int The candidate count (default 1).
 	 */
 	public function get_candidate_count(): int {
-		return $this->sanitized_args['candidateCount'] ?? 0;
+		return $this->sanitized_args['candidateCount'] ?? 1;
 	}
 
 	/**
@@ -76,7 +76,7 @@ class Image_Generation_Config extends Generation_Config {
 	 * @return string The quality, or empty string if not set.
 	 */
 	public function get_response_type(): string {
-		return $this->sanitized_args['responseType'] ?? '';
+		return $this->sanitized_args['responseType'] ?? 'inline_data';
 	}
 
 	/**

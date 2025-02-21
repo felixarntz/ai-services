@@ -128,10 +128,10 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	 *
 	 * @since 0.2.0
 	 *
-	 * @return int The candidate count, or 0 if not set.
+	 * @return int The candidate count (default 1).
 	 */
 	public function get_candidate_count(): int {
-		return $this->sanitized_args['candidateCount'] ?? 0;
+		return $this->sanitized_args['candidateCount'] ?? 1;
 	}
 
 	/**

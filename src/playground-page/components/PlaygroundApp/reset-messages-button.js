@@ -9,7 +9,6 @@ import {
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { reset } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -37,8 +36,6 @@ export default function ResetMessagesButton() {
 	return (
 		<>
 			<Button
-				icon={ reset }
-				label={ __( 'Reset messages', 'ai-services' ) }
 				className="is-compact"
 				disabled={ disabled }
 				onClick={ () => {
@@ -47,7 +44,9 @@ export default function ResetMessagesButton() {
 					}
 					setIsConfirmDialogVisible( true );
 				} }
-			/>
+			>
+				{ __( 'Reset messages', 'ai-services' ) }
+			</Button>
 			{ isConfirmDialogVisible && (
 				<ConfirmDialog
 					isOpen

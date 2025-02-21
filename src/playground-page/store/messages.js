@@ -7,7 +7,9 @@ import { enums, helpers, store as aiStore } from '@ai-services/ai';
  * WordPress dependencies
  */
 import { resolveSelect } from '@wordpress/data';
-import { sprintf } from '@wordpress/i18n';
+import { __, _x, sprintf } from '@wordpress/i18n';
+import { store as noticesStore } from '@wordpress/notices';
+import { uploadMedia } from '@wordpress/media-utils';
 
 const EMPTY_ARRAY = [];
 
@@ -68,11 +70,23 @@ const prepareMessageForCache = ( message ) => {
 		...message,
 		content: prepareContentForCache( message.content, message.attachment ),
 	};
-	if ( prepared.rawData && prepared.rawData.content ) {
-		prepared.rawData = {
-			...prepared.rawData,
-			content: prepared.content,
-		};
+	if ( prepared.rawData ) {
+		/*
+		 * For a user message, the content is directly in rawData, which is the request parameters object.
+		 * For a model message, the content is within the first item of rawData, which is the candidates array.
+		 */
+		if ( prepared.rawData.content ) {
+			prepared.rawData = {
+				...prepared.rawData,
+				content: prepared.content,
+			};
+		} else if ( prepared.rawData[ 0 ]?.content ) {
+			prepared.rawData = [ ...prepared.rawData ];
+			prepared.rawData[ 0 ] = {
+				...prepared.rawData[ 0 ],
+				content: prepared.content,
+			};
+		}
 	}
 	return prepared;
 };
@@ -90,11 +104,23 @@ const parseMessageFromCache = async ( message ) => {
 			message.attachment
 		),
 	};
-	if ( parsed.rawData && parsed.rawData.content ) {
-		parsed.rawData = {
-			...parsed.rawData,
-			content: parsed.content,
-		};
+	if ( parsed.rawData ) {
+		/*
+		 * For a user message, the content is directly in rawData, which is the request parameters object.
+		 * For a model message, the content is within the first item of rawData, which is the candidates array.
+		 */
+		if ( parsed.rawData.content ) {
+			parsed.rawData = {
+				...parsed.rawData,
+				content: parsed.content,
+			};
+		} else if ( parsed.rawData[ 0 ]?.content ) {
+			parsed.rawData = [ ...parsed.rawData ];
+			parsed.rawData[ 0 ] = {
+				...parsed.rawData[ 0 ],
+				content: parsed.content,
+			};
+		}
 	}
 	return parsed;
 };
@@ -211,12 +237,24 @@ const getLastMessageFunctionCall = ( messages ) => {
 	return lastMessage.content?.parts?.find( ( part ) => part.functionCall );
 };
 
+const generateDateFileSuffix = () => {
+	const now = new Date();
+	return now
+		.toISOString()
+		.substring( 0, 19 )
+		.replace( 'T', '-' )
+		.replace( /:/g, '' );
+};
+
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
 const RESET_MESSAGES = 'RESET_MESSAGES';
 const SET_ACTIVE_RAW_DATA = 'SET_ACTIVE_RAW_DATA';
+const SET_MESSAGE_ATTACHMENT = 'SET_MESSAGE_ATTACHMENT';
 const LOAD_START = 'LOAD_START';
 const LOAD_FINISH = 'LOAD_FINISH';
+
+const UPLOAD_ATTACHMENT_NOTICE_ID = 'UPLOAD_ATTACHMENT_NOTICE_ID';
 
 const initialState = {
 	messages: undefined,
@@ -377,6 +415,126 @@ const actions = {
 	},
 
 	/**
+	 * Uploads inline data of a specific message to the media library.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {number} index      The index of the message.
+	 * @param {Object} inlineData The inline data object.
+	 * @return {Function} Action creator.
+	 */
+	uploadAttachment( index, inlineData ) {
+		return async ( { dispatch, registry, select } ) => {
+			const messages = select.getMessages();
+			const message = messages?.[ index ];
+			if ( ! message ) {
+				return;
+			}
+
+			// Sanity check that it's the correct message.
+			const inlineDataPart = message.content.parts.find(
+				( part ) => part.inlineData && part.inlineData.data
+			);
+			if ( inlineDataPart?.inlineData?.data !== inlineData.data ) {
+				return;
+			}
+
+			const fileBlob = await helpers.base64DataUrlToBlob(
+				inlineData.data
+			);
+			const file = new File(
+				[ fileBlob ],
+				`ai-generated-${ generateDateFileSuffix() }.${
+					fileBlob.type.split( '/' )[ 1 ]
+				}`,
+				{
+					type: fileBlob.type,
+					lastModified: new Date().getTime(),
+				}
+			);
+
+			const attachmentData = {};
+			if ( message.type === 'model' ) {
+				const previousMessage = messages?.[ index - 1 ];
+				if ( previousMessage && previousMessage.type === 'user' ) {
+					const prompt = helpers.contentToText(
+						previousMessage.content
+					);
+					if ( prompt ) {
+						attachmentData.caption = sprintf(
+							/* translators: %s: prompt text */
+							_x(
+								'Generated for prompt: %s',
+								'attachment caption',
+								'ai-services'
+							),
+							prompt
+						);
+					}
+				}
+			}
+
+			return new Promise( ( resolve ) => {
+				uploadMedia( {
+					filesList: [ file ],
+					additionalData: attachmentData,
+					onFileChange: ( [ attachment ] ) => {
+						if ( ! attachment ) {
+							registry
+								.dispatch( noticesStore )
+								.createErrorNotice(
+									__( 'Saving file failed.', 'ai-services' ),
+									{
+										id: UPLOAD_ATTACHMENT_NOTICE_ID,
+										type: 'snackbar',
+										speak: true,
+									}
+								);
+							resolve( null );
+							return;
+						}
+						if ( attachment.id ) {
+							dispatch.setMessageAttachment( index, attachment );
+							registry
+								.dispatch( noticesStore )
+								.createSuccessNotice(
+									__(
+										'File saved to media library.',
+										'ai-services'
+									),
+									{
+										id: UPLOAD_ATTACHMENT_NOTICE_ID,
+										type: 'snackbar',
+										speak: true,
+									}
+								);
+							resolve( attachment );
+						}
+					},
+					onError: ( err ) => {
+						registry.dispatch( noticesStore ).createErrorNotice(
+							sprintf(
+								/* translators: %s: error message */
+								__(
+									'Saving file failed with error: %s',
+									'ai-services'
+								),
+								err.message || err
+							),
+							{
+								id: UPLOAD_ATTACHMENT_NOTICE_ID,
+								type: 'snackbar',
+								speak: true,
+							}
+						);
+						resolve( null );
+					},
+				} );
+			} );
+		};
+	},
+
+	/**
 	 * Receives new content to append to the list of messages.
 	 *
 	 * @since 0.4.0
@@ -434,6 +592,22 @@ const actions = {
 		return {
 			type: SET_ACTIVE_RAW_DATA,
 			payload: { rawData },
+		};
+	},
+
+	/**
+	 * Sets the attachment for a message.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {number} index      The index of the message.
+	 * @param {Object} attachment The attachment object.
+	 * @return {Object} Action creator.
+	 */
+	setMessageAttachment( index, attachment ) {
+		return {
+			type: SET_MESSAGE_ATTACHMENT,
+			payload: { index, attachment },
 		};
 	},
 };
@@ -495,6 +669,22 @@ function reducer( state = initialState, action ) {
 				...state,
 				activeRawData: rawData,
 			};
+		}
+		case SET_MESSAGE_ATTACHMENT: {
+			const { index, attachment } = action.payload;
+			if ( state.messages?.[ index ] ) {
+				const messages = [ ...state.messages ];
+				messages[ index ] = {
+					...messages[ index ],
+					attachment,
+				};
+				storeMessages( messages );
+				return {
+					...state,
+					messages,
+				};
+			}
+			return state;
 		}
 		case LOAD_START: {
 			return {

@@ -4,6 +4,7 @@ Plugin Name:  WP Starter Plugin
 Plugin URI:   https://the-plugin.com
 Author:       The Plugin Author
 Author URI:   https://the-plugin-author.com
+Contributors: flixos90
 Tested up to: 6.7
 Stable tag:   1.0.0
 License:      GPLv2 or later

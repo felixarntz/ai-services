@@ -293,10 +293,13 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 					unset( $choice_data['delta'] );
 				}
 
+				$other_choice_data = $choice_data;
+				unset( $other_choice_data['message'] );
+
 				$candidates->add_candidate(
 					new Candidate(
 						$this->prepare_choice_content( $choice_data, $index ),
-						array_merge( $choice_data, $other_data )
+						array_merge( $other_choice_data, $other_data )
 					)
 				);
 			}

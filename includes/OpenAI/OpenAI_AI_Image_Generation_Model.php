@@ -200,10 +200,13 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 
 		$candidates = new Candidates();
 		foreach ( $response_data['data'] as $index => $candidate_data ) {
+			$other_candidate_data = $candidate_data;
+			unset( $other_candidate_data['b64_json'], $other_candidate_data['url'], $other_candidate_data['mimeType'] );
+
 			$candidates->add_candidate(
 				new Candidate(
 					$this->prepare_candidate_content( $candidate_data, $index ),
-					array_merge( $candidate_data, $other_data )
+					array_merge( $other_candidate_data, $other_data )
 				)
 			);
 		}

@@ -308,10 +308,13 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				);
 			}
 
+			$other_chunk_data = $chunk_data;
+			unset( $other_chunk_data['type'], $other_chunk_data['message'] );
+
 			$candidates->add_candidate(
 				new Candidate(
 					$this->prepare_api_response_for_content( $chunk_data ),
-					$chunk_data
+					$other_chunk_data
 				)
 			);
 

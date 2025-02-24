@@ -239,9 +239,9 @@ class Services_Loader_Tests extends Test_Case {
 	}
 
 	/**
-	 * @covers Services_Loader::load_settings_page
+	 * @covers Services_Loader::load_admin_pages
 	 */
-	public function test_load_settings_page() {
+	public function test_load_admin_pages() {
 		$settings_menu_mock = $this->createBasicMock( Admin_Menu::class );
 		$tools_menu_mock    = $this->createBasicMock( Admin_Menu::class );
 
@@ -263,7 +263,7 @@ class Services_Loader_Tests extends Test_Case {
 		$tools_menu_mock->expects( $this->once() )->method( 'add_page' );
 
 		remove_all_actions( 'admin_menu' );
-		$this->callInaccessibleMethod( $this->services_loader, 'load_settings_page' );
+		$this->callInaccessibleMethod( $this->services_loader, 'load_admin_pages' );
 		do_action( 'admin_menu' );
 	}
 

@@ -2,6 +2,14 @@
   "name": "ai-services",
   "license": "GPL-2.0-or-later",
   "repository": "git+https://github.com/felixarntz/ai-services.git",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "boilerplate",
+    "starter",
+    "oop"
+  ],
+  "homepage": "https://wordpress.org/plugins/ai-services/",
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
     "@wordpress/env": "^10.16.0",

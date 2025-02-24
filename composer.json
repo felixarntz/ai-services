@@ -3,6 +3,14 @@
   "description": "Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "boilerplate",
+    "starter",
+    "oop"
+  ],
+  "homepage": "https://wordpress.org/plugins/ai-services/",
   "require": {
     "composer/installers": "~1.0",
     "felixarntz/wp-oop-plugin-lib": "dev-main",

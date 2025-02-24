@@ -14,7 +14,6 @@ use Felix_Arntz\AI_Services\Installation\Plugin_Installer;
 use Felix_Arntz\AI_Services\Services\Services_API_Instance;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
@@ -89,7 +88,6 @@ final class Plugin_Service_Container_Builder {
 		$this->build_general_services();
 		$this->build_dependency_services();
 		$this->build_option_services();
-		$this->build_entity_services();
 
 		$this->container['chatbot_loader'] = static function () {
 			return new Chatbot_Loader(
@@ -167,17 +165,6 @@ final class Plugin_Service_Container_Builder {
 		};
 		$this->container['option_registry']   = static function () {
 			return new Option_Registry( 'ai_services' );
-		};
-	}
-
-	/**
-	 * Builds the entity services for the service container.
-	 *
-	 * @since 0.1.0
-	 */
-	private function build_entity_services(): void {
-		$this->container['post_repository'] = static function () {
-			return new Post_Repository();
 		};
 	}
 

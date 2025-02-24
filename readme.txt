@@ -4,6 +4,7 @@ Plugin Name:  AI Services
 Plugin URI:   https://wordpress.org/plugins/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
+Contributors: flixos90
 Tested up to: 6.7
 Stable tag:   0.4.0
 License:      GPLv2 or later

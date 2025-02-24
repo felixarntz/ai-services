@@ -20,13 +20,16 @@ $plugin_textdomain = 'ai-services';
  * helps keep the PHP footprint and the project's file size small.
  */
 $wp_oop_plugin_lib_folders = array(
+	'Admin_Links',
 	'Admin_Pages',
+	'Admin_Pointers',
 	'Capabilities',
 	'Dependencies',
 	'Entities',
 	'General',
 	'HTTP',
 	'Installation',
+	'Meta',
 	'Options',
 	'REST_Routes',
 	'Validation',

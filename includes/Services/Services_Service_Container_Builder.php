@@ -9,7 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services;
 
 use Felix_Arntz\AI_Services\Services\Admin\Playground_Page;
-use Felix_Arntz\AI_Services\Services\Admin\Plugin_Action_Link;
+use Felix_Arntz\AI_Services\Services\Admin\Settings_Page_Link;
 use Felix_Arntz\AI_Services\Services\Admin\Settings_Page;
 use Felix_Arntz\AI_Services\Services\CLI\AI_Services_Command;
 use Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader;
@@ -23,6 +23,8 @@ use Felix_Arntz\AI_Services\Services\REST_Routes\Service_List_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_REST_Resource_Schema;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Stream_Generate_Text_REST_Route;
 use Felix_Arntz\AI_Services\Services\Util\Data_Encryption;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Links\Admin_Link_Collection;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Links\Plugin_Action_Links;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Base_Capability;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Container;
@@ -282,29 +284,40 @@ final class Services_Service_Container_Builder {
 	 * @since 0.1.0
 	 */
 	private function build_admin_services(): void {
-		$this->container['admin_settings_menu']   = static function () {
+		$this->container['admin_settings_menu']      = static function () {
 			return new Admin_Menu( 'options-general.php' );
 		};
-		$this->container['admin_tools_menu']      = static function () {
+		$this->container['admin_tools_menu']         = static function () {
 			return new Admin_Menu( 'tools.php' );
 		};
-		$this->container['admin_settings_page']   = static function ( $cont ) {
+		$this->container['admin_settings_page']      = static function ( $cont ) {
 			return new Settings_Page(
 				$cont['script_registry'],
 				$cont['style_registry']
 			);
 		};
-		$this->container['admin_playground_page'] = static function ( $cont ) {
+		$this->container['admin_playground_page']    = static function ( $cont ) {
 			return new Playground_Page(
 				$cont['script_registry'],
 				$cont['style_registry']
 			);
 		};
-		$this->container['plugin_action_link']    = static function ( $cont ) {
-			return new Plugin_Action_Link(
+		$this->container['admin_settings_page_link'] = static function ( $cont ) {
+			return new Settings_Page_Link(
 				$cont['admin_settings_menu'],
 				$cont['admin_settings_page'],
 				$cont['site_env']
+			);
+		};
+		$this->container['admin_link_collection']    = static function ( $cont ) {
+			return new Admin_Link_Collection(
+				array( $cont['admin_settings_page_link'] )
+			);
+		};
+		$this->container['plugin_action_links']      = static function ( $cont ) {
+			return new Plugin_Action_Links(
+				$cont['admin_link_collection'],
+				$cont['current_user']
 			);
 		};
 	}

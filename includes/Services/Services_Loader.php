@@ -222,14 +222,10 @@ final class Services_Loader implements With_Hooks {
 		add_filter(
 			"plugin_action_links_{$this->container['plugin_env']->basename()}",
 			function ( array $links ): array {
-				$settings_link = $this->container['plugin_action_link'];
-				if ( $this->container['current_user']->has_cap( $settings_link->get_capability() ) ) {
-					array_unshift(
-						$links,
-						$settings_link->get_html()
-					);
-				}
-				return $links;
+				return array_merge(
+					$this->container['plugin_action_links']->get_tags(),
+					$links
+				);
 			}
 		);
 	}

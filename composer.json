@@ -3,6 +3,14 @@
   "description": "The plugin description.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "boilerplate",
+    "starter",
+    "oop"
+  ],
+  "homepage": "https://the-plugin.com",
   "require": {
     "composer/installers": "~1.0",
     "felixarntz/wp-oop-plugin-lib": "dev-main",

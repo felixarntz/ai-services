@@ -2,6 +2,14 @@
   "name": "wp-starter-plugin",
   "license": "GPL-2.0-or-later",
   "repository": "git+https://github.com/vendor-ns/wp-starter-plugin.git",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "boilerplate",
+    "starter",
+    "oop"
+  ],
+  "homepage": "https://the-plugin.com",
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
     "@wordpress/env": "^10.16.0",

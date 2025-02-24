@@ -4,6 +4,57 @@
 
 This section provides some documentation on how to access AI services in JavaScript. This is relevant for any plugins that would like to generate content via client-side logic.
 
+## Enqueueing the JavaScript API
+
+Before being able to use the AI Services JavaScript API, you need to make sure it is loaded. This can be done in PHP by enqueueing the script with handle `ais-ai`, which contains the API. When the AI Services plugin is active, the `ais-ai` script is unconditionally registered so that it is easy to enqueue, but it should only be enqueued when it's actually needed to avoid unused JavaScript which can negatively impact performance.
+
+Here is an example PHP function (e.g. hooked into `wp_enqueue_scripts` or `admin_enqueue_scripts`) to show how you could have your own script require on the AI Services JavaScript API script, so that they would always be enqueued together:
+
+```php
+function myplugin_enqueue_ai_script() {
+	// Check if the AI Services plugin is active.
+	if ( ! function_exists( 'ai_services' ) ) {
+		return;
+	}
+	wp_enqueue_script(
+		'myplugin-ai-script',
+		plugin_dir_url( __FILE__ ) . 'js/ai-script.js',
+		array( 'ais-ai' )
+	);
+}
+```
+
+Alternatively, you may want to progressively enhance your script's functionality with AI instead of _requiring_ it. If so, you should conditionally add the AI Services JavaScript API as a dependency so that it is only loaded when available, but your plugin's script would be loaded regardless. Here is an example of what that could look like:
+
+```php
+function myplugin_enqueue_script_with_optional_ai() {
+	$dependencies = array();
+
+	// Add AI script dependency only if the AI Services plugin is active.
+	if ( function_exists( 'ai_services' ) ) {
+		$dependencies[] = 'ais-ai';
+	}
+
+	wp_enqueue_script(
+		'myplugin-ai-script',
+		plugin_dir_url( __FILE__ ) . 'js/ai-script.js',
+		$dependencies
+	);
+}
+```
+
+If you choose to go with the latter approach, you would need to check in your JavaScript file whether the AI Services JavaScript API is loaded. An easy way to do that would be to check for whether the `aiServices.ai` global is available:
+
+```js
+if ( window.aiServices && window.aiServices.ai ) {
+	// Run AI-dependent logic.
+}
+```
+
+But now let's dive into the actual JavaScript APIs!
+
+## Introduction to the JavaScript API
+
 The canonical entry point to all of the JavaScript public APIs is the "ai-services/ai" datastore registered in WordPress's `wp.data` registry. The store object exposes various selectors that should be used to access the AI services. The concrete usage is best outlined by examples. For illustrative purposes, here is a full example of generating text content using the `google` service:
 
 ```js

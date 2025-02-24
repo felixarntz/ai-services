@@ -9,9 +9,15 @@
 namespace Vendor_NS\WP_Starter_Plugin;
 
 use Vendor_NS\WP_Starter_Plugin\Admin\Settings_Page;
+use Vendor_NS\WP_Starter_Plugin\Admin\Settings_Page_Link;
+use Vendor_NS\WP_Starter_Plugin\Admin\Settings_Page_Pointer;
 use Vendor_NS\WP_Starter_Plugin\Dependencies\Plugin_Script_Style_Loader;
 use Vendor_NS\WP_Starter_Plugin\Installation\Plugin_Installer;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Links\Admin_Link_Collection;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Links\Plugin_Action_Links;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pages\Admin_Menu;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pointers\Admin_Pointer_Collection;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Pointers\Admin_Pointer_Loader;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Script_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependencies\Style_Registry;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
@@ -19,6 +25,8 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Gener
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Meta\Meta_Repository;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
@@ -105,6 +113,9 @@ class Plugin_Service_Container_Builder {
 		$this->container['current_user']     = static function () {
 			return new Current_User();
 		};
+		$this->container['site_env']         = static function () {
+			return new Site_Env();
+		};
 		$this->container['plugin_installer'] = static function ( $cont ) {
 			return new Plugin_Installer(
 				$cont['plugin_env'],
@@ -161,8 +172,11 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_entity_services(): void {
-		$this->container['post_repository'] = static function () {
+		$this->container['post_repository']      = static function () {
 			return new Post_Repository();
+		};
+		$this->container['user_meta_repository'] = static function () {
+			return new Meta_Repository( 'user' );
 		};
 	}
 
@@ -172,13 +186,50 @@ class Plugin_Service_Container_Builder {
 	 * @since n.e.x.t
 	 */
 	private function build_admin_services(): void {
-		$this->container['admin_settings_menu'] = static function () {
+		$this->container['admin_settings_menu']         = static function () {
 			return new Admin_Menu( 'options-general.php' );
 		};
-		$this->container['admin_settings_page'] = static function ( $cont ) {
+		$this->container['admin_settings_page']         = static function ( $cont ) {
 			return new Settings_Page(
 				$cont['script_registry'],
 				$cont['style_registry']
+			);
+		};
+		$this->container['admin_settings_page_link']    = static function ( $cont ) {
+			return new Settings_Page_Link(
+				$cont['admin_settings_menu'],
+				$cont['admin_settings_page'],
+				$cont['site_env']
+			);
+		};
+		$this->container['admin_link_collection']       = static function ( $cont ) {
+			return new Admin_Link_Collection(
+				array( $cont['admin_settings_page_link'] )
+			);
+		};
+		$this->container['plugin_action_links']         = static function ( $cont ) {
+			return new Plugin_Action_Links(
+				$cont['admin_link_collection'],
+				$cont['current_user']
+			);
+		};
+		$this->container['admin_settings_page_pointer'] = static function ( $cont ) {
+			return new Settings_Page_Pointer(
+				$cont['admin_settings_page_link']
+			);
+		};
+		$this->container['admin_pointer_collection']    = static function ( $cont ) {
+			return new Admin_Pointer_Collection(
+				array( $cont['admin_settings_page_pointer'] )
+			);
+		};
+		$this->container['admin_pointer_loader']        = static function ( $cont ) {
+			return new Admin_Pointer_Loader(
+				$cont['admin_pointer_collection'],
+				$cont['script_registry'],
+				$cont['style_registry'],
+				$cont['user_meta_repository'],
+				$cont['current_user']
 			);
 		};
 	}

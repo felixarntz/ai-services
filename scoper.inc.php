@@ -20,11 +20,14 @@ $plugin_textdomain = 'wp-starter-plugin';
  * helps keep the PHP footprint and the project's file size small.
  */
 $wp_oop_plugin_lib_folders = array(
+	'Admin_Links',
 	'Admin_Pages',
+	'Admin_Pointers',
 	'Dependencies',
 	'Entities',
 	'General',
 	'Installation',
+	'Meta',
 	'Options',
 	'Validation',
 );

@@ -197,6 +197,23 @@ class Plugin_Main implements With_Hooks {
 				$this->container['admin_settings_menu']->add_page( $this->container['admin_settings_page'] );
 			}
 		);
+
+		add_action(
+			'admin_enqueue_scripts',
+			function ( $hook_suffix ) {
+				$this->container['admin_pointer_loader']->load_pointers( $hook_suffix );
+			}
+		);
+
+		add_filter(
+			"plugin_action_links_{$this->container['plugin_env']->basename()}",
+			function ( array $links ): array {
+				return array_merge(
+					$this->container['plugin_action_links']->get_tags(),
+					$links
+				);
+			}
+		);
 	}
 
 	/**

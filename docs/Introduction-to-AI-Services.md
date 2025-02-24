@@ -21,8 +21,8 @@ While the main introduction to the plugin can be found in the [plugin readme](..
 * AI Services settings screen to configure services with API credentials
 * Built-in AI service implementations
   * [Anthropic (Claude)](https://www.anthropic.com/claude)
-  * [Google (Gemini)](https://ai.google.dev/gemini-api)
-  * [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
+  * [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
+  * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
   * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 

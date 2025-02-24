@@ -38,8 +38,8 @@ Here's a (non-comprehensive) feature list:
 * AI Services settings screen to configure services with API credentials
 * Built-in AI service implementations
   * [Anthropic (Claude)](https://www.anthropic.com/claude)
-  * [Google (Gemini)](https://ai.google.dev/gemini-api)
-  * [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
+  * [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
+  * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
   * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 
@@ -63,11 +63,11 @@ The use of the third party AI services is subject to the respective terms of ser
   * [Anthropic Consumer Terms of Service](https://www.anthropic.com/legal/consumer-terms)
   * [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms)
   * [Anthropic Privacy Policy](https://www.anthropic.com/legal/privacy)
-* [Google (Gemini)](https://ai.google.dev/gemini-api)
+* [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
   * [Google Terms of Service](https://policies.google.com/terms)
   * [Google AI Terms of Service](https://policies.google.com/terms/generative-ai)
   * [Google Privacy Policy](https://policies.google.com/privacy)
-* [OpenAI (ChatGPT)](https://openai.com/chatgpt/)
+* [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
   * [OpenAI Terms of Use](https://openai.com/policies/row-terms-of-use/)
   * [OpenAI Privacy Policy](https://openai.com/policies/row-privacy-policy/)
 

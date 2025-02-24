@@ -274,7 +274,7 @@ class Plugin_Main implements With_Hooks {
 				return new Google_AI_Service( $authentication, $http );
 			},
 			array(
-				'name'            => 'Google (Gemini)',
+				'name'            => 'Google (Gemini, Imagen)',
 				'credentials_url' => 'https://aistudio.google.com/app/apikey',
 				'allow_override'  => false,
 			)
@@ -285,7 +285,7 @@ class Plugin_Main implements With_Hooks {
 				return new OpenAI_AI_Service( $authentication, $http );
 			},
 			array(
-				'name'            => 'OpenAI (ChatGPT)',
+				'name'            => 'OpenAI (GPT, Dall-E)',
 				'credentials_url' => 'https://platform.openai.com/api-keys',
 				'allow_override'  => false,
 			)

@@ -9,7 +9,7 @@ Tested up to: 6.7
 Stable tag:   0.4.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-Tags:         boilerplate, starter, oop
+Tags:         ai, text generation, image generation, function calling, multimodal
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 

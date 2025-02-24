@@ -6,9 +6,11 @@
   "keywords": [
     "wordpress",
     "plugin",
-    "boilerplate",
-    "starter",
-    "oop"
+    "ai",
+    "text generation",
+    "image generation",
+    "function calling",
+    "multimodal"
   ],
   "homepage": "https://wordpress.org/plugins/ai-services/",
   "require": {

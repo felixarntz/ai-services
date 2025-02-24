@@ -50,7 +50,7 @@ final class Services_Loader implements With_Hooks {
 		$this->load_dependencies();
 		$this->load_options();
 		$this->load_rest_routes();
-		$this->load_settings_page();
+		$this->load_admin_pages();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			\WP_CLI::add_command( 'ai-services', $this->container['cli_command'] );
@@ -205,17 +205,25 @@ final class Services_Loader implements With_Hooks {
 	}
 
 	/**
-	 * Loads the services settings page.
+	 * Loads the services admin pages.
 	 *
 	 * @since 0.1.0
 	 * @since 0.2.0 Include a link to the settings page in the plugin action links.
+	 * @since n.e.x.t Include admin pointers and rename method to clarify purpose.
 	 */
-	private function load_settings_page(): void {
+	private function load_admin_pages(): void {
 		add_action(
 			'admin_menu',
 			function () {
 				$this->container['admin_settings_menu']->add_page( $this->container['admin_settings_page'] );
 				$this->container['admin_tools_menu']->add_page( $this->container['admin_playground_page'] );
+			}
+		);
+
+		add_action(
+			'admin_enqueue_scripts',
+			function ( $hook_suffix ) {
+				$this->container['admin_pointer_loader']->load_pointers( $hook_suffix );
 			}
 		);
 

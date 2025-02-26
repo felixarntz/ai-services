@@ -44,8 +44,11 @@ class Service_Entity_Query implements Entity_Query {
 	 * @param array<string, mixed> $query_args   {
 	 *     The query arguments.
 	 *
-	 *     @type int $number Number of services to limit results to. Default 10.
-	 *     @type int $offset Offset at which to start with the results. Default 0.
+	 *     @type string[] $slugs   Array of service slugs to limit results to. Default empty array.
+	 *     @type string   $orderby Field to order results by. Currently only 'slug' is supported. Default 'slug'.
+	 *     @type string   $order   Order of results. Either 'ASC' or 'DESC'. Default 'ASC'.
+	 *     @type int      $number  Number of services to limit results to. Default 10.
+	 *     @type int      $offset  Offset at which to start with the results. Default 0.
 	 * }
 	 */
 	public function __construct( Services_API $services_api, array $query_args ) {
@@ -104,6 +107,11 @@ class Service_Entity_Query implements Entity_Query {
 	 */
 	public function get_count(): int {
 		$slugs = $this->services_api->get_registered_service_slugs();
+
+		if ( count( $this->query_args['slugs'] ) > 0 ) {
+			$slugs = array_intersect( $slugs, $this->query_args['slugs'] );
+		}
+
 		return count( $slugs );
 	}
 

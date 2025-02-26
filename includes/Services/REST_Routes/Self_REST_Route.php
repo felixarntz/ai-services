@@ -54,7 +54,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	private $services_api;
 
 	/**
-	 * Current user service.
+	 * The current user instance.
 	 *
 	 * @since 0.4.0
 	 * @var Current_User

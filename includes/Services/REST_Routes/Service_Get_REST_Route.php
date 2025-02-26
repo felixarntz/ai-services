@@ -35,7 +35,7 @@ class Service_Get_REST_Route extends Abstract_REST_Route {
 	private $services_api;
 
 	/**
-	 * Current user service.
+	 * The current user instance.
 	 *
 	 * @since 0.1.0
 	 * @var Current_User

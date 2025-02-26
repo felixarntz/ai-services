@@ -45,7 +45,7 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	protected $services_api;
 
 	/**
-	 * Current user service.
+	 * The current user instance.
 	 *
 	 * @since 0.1.0
 	 * @var Current_User

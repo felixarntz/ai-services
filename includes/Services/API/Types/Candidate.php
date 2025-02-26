@@ -108,11 +108,11 @@ final class Candidate implements Arrayable {
 	}
 
 	/**
-	 * Converts the candidate to an array.
+	 * Returns the array representation.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return array<string, mixed> The array representation of the candidate.
+	 * @return mixed[] Array representation.
 	 */
 	public function to_array(): array {
 		return array_merge(
@@ -150,6 +150,29 @@ final class Candidate implements Arrayable {
 		unset( $data['content'] );
 
 		return new Candidate( $content, $data );
+	}
+
+	/**
+	 * Returns the JSON schema for the expected input.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> The JSON schema.
+	 */
+	public static function get_json_schema(): array {
+		return array(
+			'type'                 => 'object',
+			'properties'           => array(
+				'content' => array_merge(
+					array(
+						'description' => __( 'Candidate content.', 'ai-services' ),
+						'readonly'    => true,
+					),
+					Content::get_json_schema()
+				),
+			),
+			'additionalProperties' => true,
+		);
 	}
 
 	/**

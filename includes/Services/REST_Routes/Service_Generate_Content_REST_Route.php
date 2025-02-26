@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
 use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
+use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
@@ -371,20 +372,12 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 	 * @return array<string, mixed> The schema for the route.
 	 */
 	private function get_schema(): array {
-		return array(
-			'$schema'              => 'http://json-schema.org/draft-04/schema#',
-			'title'                => 'candidate',
-			'type'                 => 'object',
-			'properties'           => array(
-				'content' => array_merge(
-					array(
-						'description' => __( 'Candidate content.', 'ai-services' ),
-						'readonly'    => true,
-					),
-					Content::get_json_schema()
-				),
+		return array_merge(
+			array(
+				'$schema' => 'http://json-schema.org/draft-04/schema#',
+				'title'   => 'candidate',
 			),
-			'additionalProperties' => true,
+			Candidate::get_json_schema()
 		);
 	}
 

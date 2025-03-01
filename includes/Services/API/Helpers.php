@@ -15,6 +15,8 @@ use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Meta\Meta_Repository;
 use Generator;
 use InvalidArgumentException;
 use WP_Post;
@@ -202,6 +204,26 @@ final class Helpers {
 	 */
 	public static function process_candidates_stream( Generator $generator ): Candidates_Stream_Processor { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		return new Candidates_Stream_Processor( $generator );
+	}
+
+	/**
+	 * Gets the history persistence instance, to load, save, and clear histories.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return History_Persistence The history persistence instance.
+	 */
+	public static function history_persistence(): History_Persistence {
+		static $history_persistence = null;
+
+		if ( null === $history_persistence ) {
+			$history_persistence = new History_Persistence(
+				new Current_User(),
+				new Meta_Repository( 'user' )
+			);
+		}
+
+		return $history_persistence;
 	}
 
 	/**

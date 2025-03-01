@@ -2,6 +2,7 @@
  * Internal dependencies
  */
 import CandidatesStreamProcessor from './classes/candidates-stream-processor';
+import HistoryPersistence from './classes/history-persistence';
 import { ContentRole } from './enums';
 
 /**
@@ -159,6 +160,23 @@ export function getCandidateContents( candidates ) {
  */
 export function processCandidatesStream( generator ) {
 	return new CandidatesStreamProcessor( generator );
+}
+
+let historyPersistenceInstance;
+
+/**
+ * Gets the history persistence instance, to load, save, and clear histories.
+ *
+ * @since n.e.x.t
+ *
+ * @return {HistoryPersistence} The history persistence instance.
+ */
+export function historyPersistence() {
+	if ( ! historyPersistenceInstance ) {
+		historyPersistenceInstance = new HistoryPersistence();
+	}
+
+	return historyPersistenceInstance;
 }
 
 /**

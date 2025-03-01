@@ -17,6 +17,11 @@ use Felix_Arntz\AI_Services\Services\CLI\AI_Services_Command;
 use Felix_Arntz\AI_Services\Services\Dependencies\Services_Script_Style_Loader;
 use Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
+use Felix_Arntz\AI_Services\Services\REST_Routes\History_Delete_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\History_Get_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\History_List_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\History_REST_Resource_Schema;
+use Felix_Arntz\AI_Services\Services\REST_Routes\History_Update_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Self_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Image_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Text_REST_Route;
@@ -46,6 +51,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Meta\Meta
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Registry;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Aggregate_REST_Route;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Namespace;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Collection;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\REST_Route_Registry;
@@ -269,7 +275,8 @@ final class Services_Service_Container_Builder {
 			return new REST_Namespace( 'ai-services/v1' );
 		};
 		$this->container['rest_route_collection'] = function ( $cont ) {
-			$resource_schema = new Service_REST_Resource_Schema( $cont['rest_namespace'] );
+			$service_resource_schema = new Service_REST_Resource_Schema( $cont['rest_namespace'] );
+			$history_resource_schema = new History_REST_Resource_Schema( $cont['rest_namespace'] );
 
 			return new REST_Route_Collection(
 				array(
@@ -283,11 +290,19 @@ final class Services_Service_Container_Builder {
 						$cont['admin_settings_page'],
 						$cont['admin_playground_page']
 					),
-					new Service_List_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
-					new Service_Get_REST_Route( $cont['api'], $cont['current_user'], $resource_schema ),
+					new Service_List_REST_Route( $cont['api'], $cont['current_user'], $service_resource_schema ),
+					new Service_Get_REST_Route( $cont['api'], $cont['current_user'], $service_resource_schema ),
 					new Service_Generate_Text_REST_Route( $cont['api'], $cont['current_user'] ),
 					new Service_Stream_Generate_Text_REST_Route( $cont['api'], $cont['current_user'] ),
 					new Service_Generate_Image_REST_Route( $cont['api'], $cont['current_user'] ),
+					new History_List_REST_Route( $cont['current_user'], $history_resource_schema ),
+					new Aggregate_REST_Route(
+						array(
+							new History_Get_REST_Route( $cont['current_user'], $history_resource_schema ),
+							new History_Update_REST_Route( $cont['current_user'], $history_resource_schema ),
+							new History_Delete_REST_Route( $cont['current_user'], $history_resource_schema ),
+						)
+					),
 				)
 			);
 		};

@@ -69,7 +69,20 @@ class Plugin_Installer extends Abstract_Installer {
 			$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-				'ais\_%'
+				$wpdb->esc_like( 'ais_' ) . '%'
+			)
+		);
+
+		/*
+		 * Delete all (site-specific) user metadata with the plugin prefix.
+		 * This is okay as a direct database query since it only runs once when uninstalling.
+		 */
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s",
+				$wpdb->esc_like( $wpdb->get_blog_prefix() . 'ais_' ) . '%'
 			)
 		);
 	}

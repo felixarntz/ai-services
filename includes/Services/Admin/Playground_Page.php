@@ -139,6 +139,7 @@ class Playground_Page extends Abstract_Admin_Page {
 	private function preload_rest_api_data(): void {
 		$preload_paths = array(
 			'/ai-services/v1/services',
+			'/ai-services/v1/features/ai-playground/histories/default',
 		);
 
 		$preload_data = array_reduce(
@@ -146,6 +147,23 @@ class Playground_Page extends Abstract_Admin_Page {
 			'rest_preload_api_request',
 			array()
 		);
+
+		/*
+		 * If no history is currently saved, the endpoint will (rightfully) return a 404.
+		 * This leads to the preload data being empty, which in turn causes the API fetch middleware to not work.
+		 * To work around this, we manually add an empty history to the preload data.
+		 */
+		if ( ! isset( $preload_data['/ai-services/v1/features/ai-playground/histories/default'] ) ) {
+			$preload_data['/ai-services/v1/features/ai-playground/histories/default'] = array(
+				'body'    => array(
+					'feature'     => 'ai-playground',
+					'slug'        => 'default',
+					'lastUpdated' => '',
+					'entries'     => array(),
+				),
+				'headers' => array(),
+			);
+		}
 
 		$this->script_registry->add_inline_code(
 			'wp-api-fetch',

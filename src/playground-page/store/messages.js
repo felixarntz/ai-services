@@ -13,7 +13,8 @@ import { uploadMedia } from '@wordpress/media-utils';
 
 const EMPTY_ARRAY = [];
 
-const SESSION_STORAGE_KEY = 'ai-services-playground-messages';
+const FEATURE_SLUG = 'ai-playground';
+const HISTORY_SLUG = 'default';
 
 const prepareContentForCache = ( content, attachment ) => {
 	return {
@@ -29,6 +30,7 @@ const prepareContentForCache = ( content, attachment ) => {
 					...part,
 					inlineData: {
 						...otherInlineData,
+						data: '',
 					},
 				};
 			}
@@ -126,36 +128,31 @@ const parseMessageFromCache = async ( message ) => {
 };
 
 const retrieveMessages = async () => {
-	const messagesJson = window.sessionStorage.getItem( SESSION_STORAGE_KEY );
-	if ( messagesJson ) {
-		const messages = JSON.parse( messagesJson );
-		return await Promise.all( messages.map( parseMessageFromCache ) );
+	const history = await helpers
+		.historyPersistence()
+		.loadHistory( FEATURE_SLUG, HISTORY_SLUG );
+	if ( history && history.entries ) {
+		return await Promise.all(
+			history.entries.map( parseMessageFromCache )
+		);
 	}
 	return EMPTY_ARRAY;
 };
 
-const storeMessages = ( messages ) => {
-	try {
-		window.sessionStorage.setItem(
-			SESSION_STORAGE_KEY,
-			JSON.stringify( messages.map( prepareMessageForCache ) )
-		);
-	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Failed to store messages in session storage.', error );
-	}
+const storeMessages = async ( messages ) => {
+	const history = {
+		feature: FEATURE_SLUG,
+		slug: HISTORY_SLUG,
+		lastUpdated: '',
+		entries: messages.map( prepareMessageForCache ),
+	};
+	await helpers.historyPersistence().saveHistory( history );
 };
 
-const clearMessages = () => {
-	try {
-		window.sessionStorage.removeItem( SESSION_STORAGE_KEY );
-	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error(
-			'Failed to clear messages from session storage.',
-			error
-		);
-	}
+const clearMessages = async () => {
+	await helpers
+		.historyPersistence()
+		.clearHistory( FEATURE_SLUG, HISTORY_SLUG );
 };
 
 const formatNewContent = async (
@@ -284,7 +281,7 @@ const actions = {
 			}
 
 			const modelParams = {
-				feature: 'ai-playground',
+				feature: FEATURE_SLUG,
 				model: modelSlug,
 			};
 

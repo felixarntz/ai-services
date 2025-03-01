@@ -50,7 +50,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 				'href' => $this->get_route_url( str_replace( '(?P<slug>[\w-]+)', $entity->get_field_value( 'slug' ), Service_Get_REST_Route::BASE ) ),
 			),
 			'collection' => array(
-				'href' => $this->get_route_url( Service_List_REST_Route::BASE ),
+				'href' => $this->get_collection_route_url(),
 			),
 		);
 	}
@@ -60,9 +60,10 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 	 *
 	 * @since 0.1.0
 	 *
+	 * @param array<string, mixed> $params Optional. Current request parameters. Default empty array.
 	 * @return string Full collection route URL.
 	 */
-	protected function get_collection_route_url(): string {
+	protected function get_collection_route_url( array $params = array() ): string {
 		return $this->get_route_url( Service_List_REST_Route::BASE );
 	}
 

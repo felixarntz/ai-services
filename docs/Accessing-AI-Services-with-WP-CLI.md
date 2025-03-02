@@ -7,10 +7,10 @@ This section provides some documentation on how to access AI services through th
 The canonical entry point to all of the AI Services commands is the `wp ai-services` command namespace. The concrete usage is best outlined by examples. For illustrative purposes, here is a full example of generating text content using the `google` service:
 
 ```bash
-wp ai-services generate-text google "What can I do with WordPress?" --feature=my-test-feature --user=admin
+wp ai-services generate-text google "What can I do with WordPress?" --feature=my-test-feature
 ```
 
-This assumes you have a administrator account with username "admin" on your site. Any commands related to an available service (i.e. fully configured and connected) can only be run by users with sufficient permissions. The global WP-CLI argument `--user` can be used to specify the WordPress site account to use.
+For any command, you can optionally provide the global WP-CLI argument `--user`, to run the command using a specific account on your site.
 
 For more specific examples with explanations, see the following sections.
 
@@ -35,14 +35,14 @@ The following examples cover the `wp ai-services generate-text` command.
 You can provide the slug of a specific AI service as first positional argument to the `wp ai-services generate-text` command, for example the `google` service:
 
 ```bash
-wp ai-services generate-text google "What can I do with WordPress?" --feature=my-test-feature --user=admin
+wp ai-services generate-text google "What can I do with WordPress?" --feature=my-test-feature
 ```
 
 Note that this command will return an error if the service is not available (i.e. configured by the user with valid credentials). Therefore it is recommended to first check whether the service available, for example using the `wp ai-services get` command:
 
 ```bash
-if [ "$(wp ai-services get google --field=is_available --user=admin)" == "true" ]; then
-  wp ai-services generate-text google "What can I do with WordPress?" --feature=my-test-feature --user=admin
+if [ "$(wp ai-services get google --field=is_available)" == "true" ]; then
+  wp ai-services generate-text google "What can I do with WordPress?" --feature=my-test-feature
 else
   echo "The google service is not available."
 fi
@@ -53,7 +53,7 @@ fi
 If you want to go more granular and also specify which exact model to use from the service, you can specify the model slug after the service slug in the `wp ai-services generate-text` command. The following example specifies to use the `gemini-1.5-pro` model from the `google` service:
 
 ```bash
-wp ai-services generate-text google gemini-1.5-pro "What can I do with WordPress?" --feature=my-test-feature --user=admin
+wp ai-services generate-text google gemini-1.5-pro "What can I do with WordPress?" --feature=my-test-feature
 ```
 
 ### Using any available AI service
@@ -61,7 +61,7 @@ wp ai-services generate-text google gemini-1.5-pro "What can I do with WordPress
 For many AI use-cases, relying on different AI services may be feasible. For example, to respond to a simple text prompt, you could use _any_ AI service that supports text generation. If so, it is advised to not require usage of a _specific_ AI service, so that the end user can configure whichever service they prefer and still use the relevant command. You can do so by simply omitting both the service and model positional arguments from the `wp ai-services generate-text` command:
 
 ```bash
-wp ai-services generate-text "What can I do with WordPress?" --feature=my-test-feature --user=admin
+wp ai-services generate-text "What can I do with WordPress?" --feature=my-test-feature
 ```
 
 This command will automatically choose whichever service and model with text generation capabilities is available. It will only return an error if no capable service is configured at all.
@@ -71,7 +71,7 @@ This command will automatically choose whichever service and model with text gen
 Additionally to a simple text prompt, you can provide multimodal input to the model by referencing a WordPress media file (also called "attachment"). For example, referencing an image file allows the model to return a response related to what is shown in the image. In order to use a WordPress attachment as multimodal input, you need to use the optional `--attachment` argument. Here is an example:
 
 ```bash
-wp ai-services generate-text "Generate alternative text for this image." --feature=alt-text-generator --user=admin --attachment-id=123
+wp ai-services generate-text "Generate alternative text for this image." --feature=alt-text-generator --attachment-id=123
 ```
 
 ### Streaming text responses
@@ -108,7 +108,7 @@ local function_declarations='[
     }
   }
 ]'
-wp ai-services generate-text "What is the weather today in Austin?" --feature=weather-info --user=admin --function-declarations="$function_declarations"
+wp ai-services generate-text "What is the weather today in Austin?" --feature=weather-info --function-declarations="$function_declarations"
 ```
 
 ## Generating image content using an AI service
@@ -120,14 +120,14 @@ The following examples cover the `wp ai-services generate-image` command.
 You can provide the slug of a specific AI service as first positional argument to the `wp ai-services generate-image` command, for example the `google` service:
 
 ```bash
-wp ai-services generate-image google "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+wp ai-services generate-image google "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature
 ```
 
 Note that this command will return an error if the service is not available (i.e. configured by the user with valid credentials). Therefore it is recommended to first check whether the service available, for example using the `wp ai-services get` command:
 
 ```bash
-if [ "$(wp ai-services get google --field=is_available --user=admin)" == "true" ]; then
-  wp ai-services generate-image google "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+if [ "$(wp ai-services get google --field=is_available)" == "true" ]; then
+  wp ai-services generate-image google "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature
 else
   echo "The google service is not available."
 fi
@@ -138,7 +138,7 @@ fi
 If you want to go more granular and also specify which exact model to use from the service, you can specify the model slug after the service slug in the `wp ai-services generate-image` command. The following example specifies to use the `dall-e-2` model from the `openai` service:
 
 ```bash
-wp ai-services generate-image openai dall-e-2 "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+wp ai-services generate-image openai dall-e-2 "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature
 ```
 
 ### Using any available AI service
@@ -146,7 +146,7 @@ wp ai-services generate-image openai dall-e-2 "Photorealistic image with an aeri
 If it is feasible for your use-case to rely on different AI services, it is advised to not require usage of a _specific_ AI service, so that the end user can configure whichever service they prefer and still use the relevant command. You can do so by simply omitting both the service and model positional arguments from the `wp ai-services generate-image` command:
 
 ```bash
-wp ai-services generate-image "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+wp ai-services generate-image "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature
 ```
 
 This command will automatically choose whichever service and model with image generation capabilities is available. It will only return an error if no capable service is configured at all.

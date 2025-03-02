@@ -401,7 +401,11 @@ final class Services_Service_Container_Builder {
 	 */
 	private function build_cli_services(): void {
 		$this->container['cli_command'] = static function ( $cont ) {
-			return new AI_Services_Command( $cont['api'] );
+			return new AI_Services_Command(
+				$cont['api'],
+				$cont['current_user'],
+				$cont['capability_controller']
+			);
 		};
 	}
 }

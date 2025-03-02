@@ -20,6 +20,12 @@
 		</properties>
 	</rule>
 
+	<rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
+		<properties>
+			<property name="maximum" value="100" />
+		</properties>
+	</rule>
+
 	<rule ref="rulesets/cleancode.xml">
 		<exclude name="ElseExpression" />
 		<exclude name="StaticAccess" />

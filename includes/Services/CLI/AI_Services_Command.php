@@ -25,6 +25,8 @@ use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
 use Felix_Arntz\AI_Services\Services\Entities\Service_Entity_Query;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Capabilities\Capability_Controller;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use InvalidArgumentException;
 use WP_CLI;
 use WP_CLI\Formatter;
@@ -33,6 +35,8 @@ use WP_CLI\Formatter;
  * AI Services command class for WP-CLI.
  *
  * @since 0.2.0
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
 final class AI_Services_Command {
 
@@ -43,6 +47,22 @@ final class AI_Services_Command {
 	 * @var Services_API
 	 */
 	private $services_api;
+
+	/**
+	 * The current user instance.
+	 *
+	 * @since n.e.x.t
+	 * @var Current_User
+	 */
+	private $current_user;
+
+	/**
+	 * The capability controller instance.
+	 *
+	 * @since n.e.x.t
+	 * @var Capability_Controller
+	 */
+	private $capability_controller;
 
 	/**
 	 * Default fields to display for each service.
@@ -86,10 +106,14 @@ final class AI_Services_Command {
 	 *
 	 * @since 0.2.0
 	 *
-	 * @param Services_API $services_api The services API instance.
+	 * @param Services_API          $services_api          The services API instance.
+	 * @param Current_User          $current_user          The current user instance.
+	 * @param Capability_Controller $capability_controller The capability controller instance.
 	 */
-	public function __construct( Services_API $services_api ) {
-		$this->services_api = $services_api;
+	public function __construct( Services_API $services_api, Current_User $current_user, Capability_Controller $capability_controller ) {
+		$this->services_api          = $services_api;
+		$this->current_user          = $current_user;
+		$this->capability_controller = $capability_controller;
 	}
 
 	/**
@@ -164,6 +188,8 @@ final class AI_Services_Command {
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
 	 */
 	public function list_( array $args, array $assoc_args ): void {
+		$this->maybe_bypass_cap_requirements();
+
 		$assoc_args = $this->parse_assoc_args(
 			$assoc_args,
 			array(
@@ -259,6 +285,8 @@ final class AI_Services_Command {
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
 	 */
 	public function get( array $args, array $assoc_args ): void {
+		$this->maybe_bypass_cap_requirements();
+
 		if ( ! isset( $args[0] ) ) {
 			WP_CLI::error( 'Please provide a service slug as the first positional argument.' );
 		}
@@ -288,7 +316,6 @@ final class AI_Services_Command {
 	 * Lists the models for a registered and available AI service.
 	 *
 	 * Only authorized users with sufficient permissions can use this command.
-	 * Provide the `--user` argument to specify the user.
 	 *
 	 * ## OPTIONS
 	 *
@@ -340,9 +367,9 @@ final class AI_Services_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp ai-services list-models google --user=admin
-	 *   wp ai-services list-models openai --format=json --user=admin
-	 *   wp ai-services list-models google --slugs=gemini-1.5-flash,gemini-1.5-pro --user=admin
+	 *   wp ai-services list-models google
+	 *   wp ai-services list-models openai --format=json
+	 *   wp ai-services list-models google --slugs=gemini-1.5-flash,gemini-1.5-pro
 	 *
 	 * @subcommand list-models
 	 *
@@ -352,6 +379,8 @@ final class AI_Services_Command {
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
 	 */
 	public function list_models( array $args, array $assoc_args ): void {
+		$this->maybe_bypass_cap_requirements();
+
 		if ( ! isset( $args[0] ) ) {
 			WP_CLI::error( 'Please provide a service slug as the first positional argument.' );
 		}
@@ -396,7 +425,6 @@ final class AI_Services_Command {
 	 * Generates text content using a generative model from an available AI service.
 	 *
 	 * Only authorized users with sufficient permissions can use this command.
-	 * Provide the `--user` argument to specify the user.
 	 *
 	 * ## OPTIONS
 	 *
@@ -426,11 +454,11 @@ final class AI_Services_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp ai-services generate-text google gemini-1.5-pro "What can I do with WordPress?" --feature=my-cli-test --user=admin
-	 *   wp ai-services generate-text openai "What can I do with WordPress?" --feature=cli-example --user=admin
-	 *   wp ai-services generate-text "Give me a list of categories for my blog about WordPress plugins." --feature=cli-category-generator --user=admin --response-mime-type=application/json --response-schema='{"type":"object","properties":{"categories":{"type":"array","items":{"type":"string"}}}}'
-	 *   wp ai-services generate-text "Generate alternative text for this image." --feature=alt-text-generator --user=admin --attachment-id=123
-	 *   wp ai-services generate-text "What is the weather today in Austin?" --feature=weather-info --user=admin --function-declarations='[{"name":"get_weather", "description":"Returns the weather for today for a given location.", "parameters":{"type":"object", "properties":{"location":{"type":"string", "description": "The location to get the weather for, such as a city or region."}}}}]'
+	 *   wp ai-services generate-text google gemini-1.5-pro "What can I do with WordPress?" --feature=my-cli-test
+	 *   wp ai-services generate-text openai "What can I do with WordPress?" --feature=cli-example
+	 *   wp ai-services generate-text "Give me a list of categories for my blog about WordPress plugins." --feature=cli-category-generator --response-mime-type=application/json --response-schema='{"type":"object","properties":{"categories":{"type":"array","items":{"type":"string"}}}}'
+	 *   wp ai-services generate-text "Generate alternative text for this image." --feature=alt-text-generator --attachment-id=123
+	 *   wp ai-services generate-text "What is the weather today in Austin?" --feature=weather-info --function-declarations='[{"name":"get_weather", "description":"Returns the weather for today for a given location.", "parameters":{"type":"object", "properties":{"location":{"type":"string", "description": "The location to get the weather for, such as a city or region."}}}}]'
 	 *
 	 * @subcommand generate-text
 	 *
@@ -440,6 +468,8 @@ final class AI_Services_Command {
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
 	 */
 	public function generate_text( array $args, array $assoc_args ): void {
+		$this->maybe_bypass_cap_requirements();
+
 		list( $service_slug, $model_slug, $prompt ) = $this->parse_generate_positional_args( $args );
 
 		$model_params = $this->get_text_model_params( $model_slug, $assoc_args );
@@ -479,7 +509,6 @@ final class AI_Services_Command {
 	 * Generates an image using a generative model from an available AI service.
 	 *
 	 * Only authorized users with sufficient permissions can use this command.
-	 * Provide the `--user` argument to specify the user.
 	 *
 	 * ## OPTIONS
 	 *
@@ -503,9 +532,9 @@ final class AI_Services_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp ai-services generate-image google "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=my-cli-test --user=admin > img_output.txt
-	 *   wp ai-services generate-image openai dall-e-3 "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=cli-example --user=admin > img_output.txt
-	 *   wp ai-services generate-image openai "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=cli-example --response-type=file_data --user=admin
+	 *   wp ai-services generate-image google "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=my-cli-test > img_output.txt
+	 *   wp ai-services generate-image openai dall-e-3 "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=cli-example > img_output.txt
+	 *   wp ai-services generate-image openai "Photorealistic image of a French bulldog wearing sunglasses in the forest." --feature=cli-example --response-type=file_data
 	 *
 	 * @subcommand generate-image
 	 *
@@ -515,6 +544,8 @@ final class AI_Services_Command {
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
 	 */
 	public function generate_image( array $args, array $assoc_args ): void {
+		$this->maybe_bypass_cap_requirements();
+
 		list( $service_slug, $model_slug, $prompt ) = $this->parse_generate_positional_args( $args );
 
 		$model_params = $this->get_image_model_params( $model_slug, $assoc_args );
@@ -986,6 +1017,28 @@ final class AI_Services_Command {
 		return new Formatter(
 			$assoc_args,
 			$default_fields
+		);
+	}
+
+	/**
+	 * Conditionally bypasses any AI related capability requirements if no user is specified.
+	 *
+	 * This is expected behavior as WP-CLI by default has access to everything.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function maybe_bypass_cap_requirements(): void {
+		// If a user is specified, we should not bypass capability checks.
+		if ( 0 !== $this->current_user->get_id() ) {
+			return;
+		}
+
+		// Allow access to all AI services by default.
+		$this->capability_controller->set_meta_map_callback(
+			'ais_access_service',
+			function () {
+				return array( 'exist' );
+			}
 		);
 	}
 }

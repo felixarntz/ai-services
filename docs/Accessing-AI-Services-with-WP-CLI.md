@@ -22,6 +22,7 @@ The following WP-CLI commands are available:
 * `wp ai-services get`: Gets details about a registered AI service.
 * `wp ai-services list-models`: Lists the models for a registered and available AI service.
 * `wp ai-services generate-text`: Generates text content using a generative model from an available AI service.
+* `wp ai-services generate-image`: Generates an image using a generative model from an available AI service.
 
 Use `wp help ai-services` or `wp help ai-services <command>` to get detailed usage instructions and lists of the available arguments for each command.
 
@@ -109,3 +110,43 @@ local function_declarations='[
 ]'
 wp ai-services generate-text "What is the weather today in Austin?" --feature=weather-info --user=admin --function-declarations="$function_declarations"
 ```
+
+## Generating image content using an AI service
+
+The following examples cover the `wp ai-services generate-image` command.
+
+### Using a specific AI service
+
+You can provide the slug of a specific AI service as first positional argument to the `wp ai-services generate-image` command, for example the `google` service:
+
+```bash
+wp ai-services generate-image google "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+```
+
+Note that this command will return an error if the service is not available (i.e. configured by the user with valid credentials). Therefore it is recommended to first check whether the service available, for example using the `wp ai-services get` command:
+
+```bash
+if [ "$(wp ai-services get google --field=is_available --user=admin)" == "true" ]; then
+  wp ai-services generate-image google "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+else
+  echo "The google service is not available."
+fi
+```
+
+### Using a specific AI model
+
+If you want to go more granular and also specify which exact model to use from the service, you can specify the model slug after the service slug in the `wp ai-services generate-image` command. The following example specifies to use the `dall-e-2` model from the `openai` service:
+
+```bash
+wp ai-services generate-image openai dall-e-2 "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+```
+
+### Using any available AI service
+
+If it is feasible for your use-case to rely on different AI services, it is advised to not require usage of a _specific_ AI service, so that the end user can configure whichever service they prefer and still use the relevant command. You can do so by simply omitting both the service and model positional arguments from the `wp ai-services generate-image` command:
+
+```bash
+wp ai-services generate-image "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature --user=admin
+```
+
+This command will automatically choose whichever service and model with image generation capabilities is available. It will only return an error if no capable service is configured at all.

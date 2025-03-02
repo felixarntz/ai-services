@@ -174,7 +174,7 @@ try {
 
 You can also pass an array of content objects. In this case, this will be interpreted as the history including previous message exchanges from the same chat.
 
-### Processing responses
+### Processing text responses
 
 The `generate_text()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](../includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
 
@@ -196,7 +196,7 @@ foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
 
 This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
 
-As this can be tedious, the AI Services API provides a class with static helper methods to make it extremely simple. You can access the helper methods via the `Felix_Arntz\AI_Services\Services\API\Helpers` class.
+As this can be tedious, the AI Services API provides a class with static helper methods to make it extremely simple. You can access the helper methods via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](../includes/Services/API/Helpers.php).
 
 The following example shows how you can accomplish the above in a safer, yet simpler way:
 ```php
@@ -243,9 +243,9 @@ try {
 
 It's worth noting that streaming is likely more useful in JavaScript than in PHP, since in PHP there are typically no opportunities to print the iterative responses to the user as they come in. That said, streaming can certainly have value in PHP as well: It is for example used in the plugin's WP-CLI command.
 
-### Customizing the default model configuration
+### Customizing the default text generation configuration
 
-When retrieving a model using the `get_model()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. The `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
+When retrieving a model using the `get_model()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. For text generation, the `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
 
 Additionally to `generationConfig`, you can pass a `systemInstruction` argument if you want to provide a custom instruction for how the model should behave. By setting a system instruction, you give the model additional context to understand its tasks, provide more customized responses, and adhere to specific guidelines over the full user interaction with the model.
 
@@ -453,4 +453,100 @@ You should now get a response from the AI model that is based on the function re
 
 ## Generating image content using an AI service
 
-Coming soon.
+The API for generating images works very similarly to the one for [generating text content](#generating-text-content-using-an-ai-service). Basically, instead of the model class's `generate_text()` method you need to call the `generate_image()` method, and the AI capability to check for is `AI_Capability::IMAGE_GENERATION`.
+
+Here is a code example to generate an image using whichever AI service and model is available and suitable for the request:
+
+```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+
+try {
+	$service = ai_services()->get_available_service( array( 'capabilities' => array( AI_Capability::IMAGE_GENERATION ) ) );
+} catch ( InvalidArgumentException $e ) {
+	// Handle the exception.
+}
+
+try {
+	$candidates = $service
+		->get_model(
+			array(
+				'feature'      => 'my-test-feature',
+				'capabilities' => array( AI_Capability::IMAGE_GENERATION ),
+			)
+		)
+		->generate_image( 'Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert.' );
+} catch ( Exception $e ) {
+	// Handle the exception.
+}
+```
+
+The signature of the `generate_image()` method is almost exactly the same as the `generate_text()` method. You can also provide a `Content` object as input, however please note that at the moment none of the built-in AI services support multimodal input or chat history in combination with generating images. Whenever any of the models adds support for those AI capabilities in the future, it'll work out of the box right away.
+
+### Processing image responses
+
+Similar to `generate_text()`, the `generate_image()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](../includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
+
+Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidate` class](../includes/Services/API/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
+
+For example, you can use code as follows to retrieve the generated image from the first candidate.
+
+```php
+$image_url = '';
+foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
+	if ( $part instanceof \Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part ) {
+		$image_url = $part->get_base64_data(); // Data URL.
+		break;
+	}
+	if ( $part instanceof \Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part ) {
+		$image_url = $part->get_file_uri(); // Actual URL. May have limited TTL (often 1 hour).
+		break;
+	}
+}
+```
+
+By default, image models are configured to return inline data, i.e. a data URL with base64-encoded data.
+
+After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper methods related to transforming different representations of a file, via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](../includes/Services/API/Helpers.php). Related to these is the [`Felix_Arntz\AI_Services\Services\API\Types\Blob` class](../includes/Services/API/Types/Blob.php), which represents a binary data blob and is inspired by the [native JavaScript `Blob` class](https://developer.mozilla.org/en-US/docs/Web/API/Blob). For processing a data URL for a generated image, the most important helper method is `Helpers::base64_data_url_to_blob()`. Here is the full list of relevant helper methods for file processing:
+
+* `Helpers::file_to_base64_data_url( string $file, string $mime_type ): string`: Returns the base64-encoded data URL representation of the given file URL.
+* `Helpers::file_to_blob( string $file, string $mime_type = '' ): ?Blob`: Returns the binary data blob representation of the given file URL.
+* `Helpers::blob_to_base64_data_url( Blob $blob ): string`: Returns the base64-encoded data URL representation of the given binary data blob.
+* `Helpers::base64_data_url_to_blob( string $base64_data_url ): ?Blob`: Returns the binary data blob representation of the given base64-encoded data URL.
+
+### Customizing the default image generation configuration
+
+Similarly to how you can [customize the text generation configuration](#customizing-the-default-text-generation-configuration), you can customize the image generation configuration. For image generation, the `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](../includes/Services/API/Types/Image_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
+
+Here is a code example using `generationConfig`:
+
+```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config;
+
+try {
+	$model = $service
+		->get_model(
+			array(
+				'feature'          => 'my-test-feature',
+				'capabilities'     => array( AI_Capability::IMAGE_GENERATION ),
+				'generationConfig' => Image_Generation_Config::from_array(
+					array(
+						'candidateCount' => 4,
+						'aspectRatio'    => '16:9',
+					)
+				),
+			)
+		);
+
+	// Generate an image using the model.
+} catch ( Exception $e ) {
+	// Handle the exception.
+}
+```
+
+Note that not all configuration arguments are supported by every service API. Here is a list of common configuration arguments that are widely supported:
+
+* `candidateCount` _(integer)_: Number of image candidates to generate.
+* `aspectRatio` _(string)_: Aspect ratio of the generated image.
+
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](../includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.

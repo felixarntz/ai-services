@@ -254,7 +254,7 @@ try {
 
 You can also pass an array of content objects. In this case, this will be interpreted as the history including previous message exchanges from the same chat.
 
-### Processing responses
+### Processing text responses
 
 The `generateText()` model method returns an array of candidate objects that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
 
@@ -276,7 +276,7 @@ for ( const part of candidates[ 0 ].content.parts ) {
 
 This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
 
-As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods via `aiServices.ai.helpers` from the `aiServices` JavaScript global.
+As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods via [`aiServices.ai.helpers`](../src/ai/helpers.js) from the `aiServices` JavaScript global.
 
 The following example shows how you can accomplish the above in a safer, yet simpler way:
 ```js
@@ -325,7 +325,7 @@ In JavaScript the AI Services plugin allows using another service `browser`, add
 
 Note that these APIs are still in an experimental stage and are not yet rolled out completely. If you use Chrome and already have access to the APIs, you can use them through the AI Services plugin just like any other service's APIs. To see whether you have access, check if `window.ai.languageModel` is available in your browser console. If not, you can [request to join the Early Preview Program](http://goo.gle/chrome-ai-dev-preview-join).
 
-### Customizing the default model configuration
+### Customizing the default text generation configuration
 
 When retrieving a model using the `getModel()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. The `generationConfig` key needs to contain an object with configuration arguments. These arguments are normalized in a way that works across the different AI services and their APIs.
 
@@ -534,4 +534,95 @@ You should now get a response from the AI model that is based on the function re
 
 ## Generating image content using an AI service
 
-Coming soon.
+The API for generating images works very similarly to the one for [generating text content](#generating-text-content-using-an-ai-service). Basically, instead of the model or service class's `generateText()` method you need to call the `generateImage()` method, and the AI capability to check for is `enums.AiCapability.IMAGE_GENERATION`.
+
+Here is a code example to generate an image using whichever AI service and model is available and suitable for the request:
+
+```js
+const enums = aiServices.ai.enums;
+
+const SERVICE_ARGS = { capabilities: [ enums.AiCapability.IMAGE_GENERATION ] };
+const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
+if ( hasAvailableServices( SERVICE_ARGS ) ) {
+	const service = getAvailableService( SERVICE_ARGS );
+
+	try {
+		const candidates = await service.generateImage(
+			'Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert.',
+			{
+				feature: 'my-test-feature',
+				capabilities: [ enums.AiCapability.IMAGE_GENERATION ],
+			}
+		);
+	} catch ( error ) {
+		// Handle the error.
+	}
+}
+```
+
+The signature of the `generateImage()` method is almost exactly the same as the `generateText()` method. You can also provide a `Content` object as input, however please note that at the moment none of the built-in AI services support multimodal input or chat history in combination with generating images. Whenever any of the models adds support for those AI capabilities in the future, it'll work out of the box right away.
+
+### Processing image responses
+
+Similar to `generateText()`, the `generateImage()` model method returns an array of candidate objects - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
+
+Every candidate in the list is an object, which allows you to access its actual content as well as metadata about the particular response candidate.
+
+For example, you can use code as follows to retrieve the generated image from the first candidate.
+
+```js
+let imageUrl = '';
+for ( const part of candidates[ 0 ].content.parts ) {
+	if ( part.inlineData ) {
+		imageUrl = part.inlineData.data; // Data URL.
+		break;
+	}
+	if ( part.fileData ) {
+		imageUrl = part.fileData.fileUri; // Actual URL. May have limited TTL (often 1 hour).
+		break;
+	}
+}
+```
+
+By default, image models are configured to return inline data, i.e. a data URL with base64-encoded data.
+
+After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper functions related to transforming different representations of a file, via [`aiServices.ai.helpers`](../src/ai/helpers.js). For processing a data URL for a generated image, the most important helper function is `base64DataUrlToBlob()`. Here is the full list of relevant helper functions for file processing:
+
+* `fileToBase64DataUrl( file: string, mimeType: string = '' ): string`: Returns the base64-encoded data URL representation of the given file URL.
+* `fileToBlob( file: string, mimeType: string = '' ): Blob?`: Returns the binary data blob representation of the given file URL.
+* `blobToBase64DataUrl( blob: Blob ): string`: Returns the base64-encoded data URL representation of the given binary data blob.
+* `base64DataUrlToBlob( base64DataUrl: string ): Blob?`: Returns the binary data blob representation of the given base64-encoded data URL.
+
+### Customizing the default image generation configuration
+
+Similarly to how you can [customize the text generation configuration](#customizing-the-default-text-generation-configuration), you can customize the image generation configuration. The `generationConfig` key needs to contain an object with configuration arguments. These arguments are normalized in a way that works across the different AI services and their APIs.
+
+Here is a code example using `generationConfig`:
+
+```js
+const enums = aiServices.ai.enums;
+
+try {
+	const model = service.getModel(
+		{
+			feature: 'my-test-feature',
+			capabilities: [ enums.AiCapability.IMAGE_GENERATION ],
+			generationConfig: {
+				candidateCount: 4,
+				aspectRatio: '16:9',
+			},
+		}
+	);
+
+	// Generate an image using the model.
+} catch ( error ) {
+	// Handle the error.
+}
+```
+
+Note that not all configuration arguments are supported by every service API. Here is a list of common configuration arguments that are widely supported:
+
+* `candidateCount` _(integer)_: Number of image candidates to generate.
+* `aspectRatio` _(string)_: Aspect ratio of the generated image.
+
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](../includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.

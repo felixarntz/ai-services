@@ -41,9 +41,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer install
 
-      - name: Prefix relevant dependencies
-        run: composer prefix-dependencies
-
       - name: Setup Node.js (.nvmrc)
         uses: actions/setup-node@v4
         with:

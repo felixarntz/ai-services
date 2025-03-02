@@ -35,6 +35,12 @@
     }
   },
   "scripts": {
+    "post-install-cmd": [
+      "@prefix-dependencies"
+    ],
+    "post-update-cmd": [
+      "@prefix-dependencies"
+    ],
     "autoload-includes": [
       "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > includes/composer.json",
       "@composer --working-dir=includes dump-autoload --classmap-authoritative --no-interaction",

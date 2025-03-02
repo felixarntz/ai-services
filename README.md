@@ -41,7 +41,7 @@ In order to create a new plugin based on this foundation, perform the following 
 
 ## Useful commands
 
-* `composer prefix-dependencies`: Prefixes the production dependencies and regenerates the autoloader class map. You must run this after a PHP dependency used in plugin production code has been updated.
+* `composer prefix-dependencies`: Prefixes the production dependencies and regenerates the autoloader class map. This is run automatically after `composer install` and `composer update`.
 * `composer lint`: Checks the PHP code with PHP_CodeSniffer.
 * `composer format`: Automatically fixes PHP code problems detected by PHP_CodeSniffer, where possible.
 * `composer phpmd`: Checks the PHP code with PHPMD.

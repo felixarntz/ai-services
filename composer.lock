@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/felixarntz/wp-oop-plugin-lib.git",
-                "reference": "706417bc58c66458a4f870d90fb8c1cd4b03c0a5"
+                "reference": "455fe2ea3db72efb22035ef1c3ed0857dc7a4edc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/706417bc58c66458a4f870d90fb8c1cd4b03c0a5",
-                "reference": "706417bc58c66458a4f870d90fb8c1cd4b03c0a5",
+                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/455fe2ea3db72efb22035ef1c3ed0857dc7a4edc",
+                "reference": "455fe2ea3db72efb22035ef1c3ed0857dc7a4edc",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "issues": "https://github.com/felixarntz/wp-oop-plugin-lib/issues",
                 "source": "https://github.com/felixarntz/wp-oop-plugin-lib/tree/main"
             },
-            "time": "2025-03-01T18:49:16+00:00"
+            "time": "2025-03-02T19:07:25+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

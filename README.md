@@ -126,7 +126,6 @@ Alternatively, especially in this early development stage of the plugin, feel fr
 git clone https://github.com/felixarntz/ai-services.git wp-content/plugins/ai-services
 cd wp-content/plugins/ai-services
 composer install
-composer prefix-dependencies
 npm install
 npm run build
 ```

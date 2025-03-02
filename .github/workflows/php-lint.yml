@@ -56,9 +56,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer install
 
-      - name: Prefix relevant dependencies
-        run: composer prefix-dependencies
-
       - name: PHP Lint
         run: composer lint
 

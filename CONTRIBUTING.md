@@ -30,13 +30,12 @@ For the linting tools to work, you'll need to have [Composer](https://getcompose
 To set up the plugin for the very first time, please run the following:
 ```
 composer install
-composer prefix-dependencies
 npm install
 npm run build
 ```
 
 The following commands are relevant to build the plugin:
-* `composer prefix-dependencies`: Prefixes the PHP production dependencies and regenerates the autoloader class map. You must run this after a PHP dependency used in plugin production code has been updated.
+* `composer prefix-dependencies`: Prefixes the production dependencies and regenerates the autoloader class map. This is run automatically after `composer install` and `composer update`.
 * `npm run build`: Builds the JavaScript and CSS assets.
 
 The following linting commands are available:

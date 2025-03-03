@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Tools\Abstract_Tool
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use InvalidArgumentException;
 /**
  * Base class for a tool for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 abstract class Abstract_Tool implements Tool, With_JSON_Schema {
 
 	/**
 	 * The tool data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var array<string, mixed>
 	 */
 	private $data = array();
@@ -30,7 +30,7 @@ abstract class Abstract_Tool implements Tool, With_JSON_Schema {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 */
 	final public function __construct() {
 		// Empty constructor, only to prevent override.
@@ -39,7 +39,7 @@ abstract class Abstract_Tool implements Tool, With_JSON_Schema {
 	/**
 	 * Sets data for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The tool data.
 	 */
@@ -50,7 +50,7 @@ abstract class Abstract_Tool implements Tool, With_JSON_Schema {
 	/**
 	 * Formats the data for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The tool data.
 	 * @return array<string, mixed> Formatted data.
@@ -62,7 +62,7 @@ abstract class Abstract_Tool implements Tool, With_JSON_Schema {
 	/**
 	 * Gets the default data for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> Default data.
 	 */
@@ -71,7 +71,7 @@ abstract class Abstract_Tool implements Tool, With_JSON_Schema {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -85,7 +85,7 @@ abstract class Abstract_Tool implements Tool, With_JSON_Schema {
 	/**
 	 * Creates a specific Tool instance from an array of tool data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The tool data.
 	 * @return Tool The Tool instance.

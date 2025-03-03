@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\Service_Generate_Image_REST_Route
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -22,7 +22,7 @@ use WP_REST_Server;
 /**
  * Class representing the REST API route for generating text content.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Route {
 	const BASE    = '/services/(?P<slug>[\w-]+):generate-image';
@@ -31,7 +31,7 @@ class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Ro
 	/**
 	 * Returns the route base.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string Route base.
 	 */
@@ -42,7 +42,7 @@ class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Ro
 	/**
 	 * Returns the route methods, as a comma-separated string.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string Route methods, as a comma-separated string.
 	 */
@@ -53,7 +53,7 @@ class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Ro
 	/**
 	 * Generates content using the given service and model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Generative_AI_Service          $service The service instance.
 	 * @param Generative_AI_Model            $model   The model instance.
@@ -73,7 +73,7 @@ class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Ro
 	/**
 	 * Retrieves the (text-based) model with the given slug and parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Generative_AI_Service $service      The service instance to get the model from.
 	 * @param array<string, mixed>  $model_params The model parameters.
@@ -94,7 +94,7 @@ class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Ro
 	/**
 	 * Processes the model parameters before retrieving the model with them.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 * @return array<string, mixed> The processed model parameters.
@@ -124,7 +124,7 @@ class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Ro
 	/**
 	 * Creates a REST exception for a missing text generation support of a model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return REST_Exception The REST exception.
 	 */
@@ -139,7 +139,7 @@ class Service_Generate_Image_REST_Route extends Service_Generate_Content_REST_Ro
 	/**
 	 * Returns the route specific arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> Route arguments.
 	 */

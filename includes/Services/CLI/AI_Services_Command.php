@@ -51,7 +51,7 @@ final class AI_Services_Command {
 	/**
 	 * The current user instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -59,7 +59,7 @@ final class AI_Services_Command {
 	/**
 	 * The capability controller instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Capability_Controller
 	 */
 	private $capability_controller;
@@ -538,7 +538,7 @@ final class AI_Services_Command {
 	 *
 	 * @subcommand generate-image
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param mixed[]              $args       List of the positional arguments.
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
@@ -576,7 +576,7 @@ final class AI_Services_Command {
 	 *
 	 * Up to three positional arguments are supported, for the service slug, model slug, and prompt.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param mixed[] $args The positional arguments.
 	 * @return array<?string> The parsed positional arguments, always containing three elements: service slug, model
@@ -601,7 +601,7 @@ final class AI_Services_Command {
 	/**
 	 * Checks whether to use streaming for generating content in WP-CLI.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 * @return bool Whether to use streaming for generating content in WP-CLI.
@@ -650,7 +650,7 @@ final class AI_Services_Command {
 	 * The service must be available for this to work.
 	 *
 	 * @since 0.2.0
-	 * @since n.e.x.t Return type changed to a map of model data shapes.
+	 * @since 0.5.0 Return type changed to a map of model data shapes.
 	 *
 	 * @phpstan-return array<string, array{slug: string, name: string, capabilities: string[]}>
 	 *
@@ -697,7 +697,7 @@ final class AI_Services_Command {
 	/**
 	 * Gets the text generation model parameters for the given model slug and associative arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string|null          $model_slug The model slug.
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
@@ -747,7 +747,7 @@ final class AI_Services_Command {
 	/**
 	 * Gets the image generation model parameters for the given model slug and associative arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string|null          $model_slug The model slug.
 	 * @param array<string, mixed> $assoc_args Map of the associative arguments and their values.
@@ -839,7 +839,7 @@ final class AI_Services_Command {
 	 * Generates text content using the given generative model and prints it.
 	 *
 	 * @since 0.2.0
-	 * @since n.e.x.t Now requires Content instance for second parameter instead of string.
+	 * @since 0.5.0 Now requires Content instance for second parameter instead of string.
 	 *
 	 * @param Generative_AI_Model $model   The model to use.
 	 * @param Content             $content Prompt for the content to generate.
@@ -890,7 +890,7 @@ final class AI_Services_Command {
 	 * Generates text content using the given generative model, streaming the response and printing it as it comes in.
 	 *
 	 * @since 0.3.0
-	 * @since n.e.x.t Now requires Content instance for second parameter instead of string.
+	 * @since 0.5.0 Now requires Content instance for second parameter instead of string.
 	 *
 	 * @param Generative_AI_Model $model   The model to use.
 	 * @param Content             $content Prompt for the content to generate.
@@ -939,7 +939,7 @@ final class AI_Services_Command {
 	/**
 	 * Generates an image using the given generative model and prints it.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Generative_AI_Model $model   The model to use.
 	 * @param Content             $content Prompt for the content to generate.
@@ -1025,7 +1025,7 @@ final class AI_Services_Command {
 	 *
 	 * This is expected behavior as WP-CLI by default has access to everything.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 */
 	private function maybe_bypass_cap_requirements(): void {
 		// If a user is specified, we should not bypass capability checks.

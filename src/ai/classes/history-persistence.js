@@ -6,13 +6,13 @@ import apiFetch from '@wordpress/api-fetch';
 /**
  * Class for the history persistence layer.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 export default class HistoryPersistence {
 	/**
 	 * Checks whether there is a history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string} feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @param {string} slug    Unique identifier of the history within the feature. Must only contain lowercase
@@ -27,7 +27,7 @@ export default class HistoryPersistence {
 	/**
 	 * Loads the history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string} feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @param {string} slug    Unique identifier of the history within the feature. Must only contain lowercase
@@ -47,7 +47,7 @@ export default class HistoryPersistence {
 	/**
 	 * Saves the history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {Object} history The history to save. Must have a unique feature and history slug set.
 	 * @return {boolean} True on success, false on failure.
@@ -73,7 +73,7 @@ export default class HistoryPersistence {
 	/**
 	 * Clears the history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string} feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @param {string} slug    Unique identifier of the history within the feature. Must only contain lowercase
@@ -95,7 +95,7 @@ export default class HistoryPersistence {
 	/**
 	 * Loads all histories for a given feature.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string} feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @return {Object[]} All histories for the feature.

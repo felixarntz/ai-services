@@ -27,7 +27,7 @@ export function textToContent( text, role = ContentRole.USER ) {
  * The text will be included as a prompt as the first part of the content, and the attachment (e.g. an image or
  * audio file) will be included as the second part.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {string} text       The text.
  * @param {Object} attachment The attachment object.
@@ -110,7 +110,7 @@ export function getTextFromContents( contents ) {
 /**
  * Gets the first Content object in the given list which contains text.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object[]} contents The list of Content objects.
  * @return {?Object} The Content object, or null if no Content object has text parts.
@@ -167,7 +167,7 @@ let historyPersistenceInstance;
 /**
  * Gets the history persistence instance, to load, save, and clear histories.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @return {HistoryPersistence} The history persistence instance.
  */
@@ -182,7 +182,7 @@ export function historyPersistence() {
 /**
  * Returns the base64-encoded data URL representation of the given file URL.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {string} file     The file URL.
  * @param {string} mimeType Optional. The MIME type of the file. If provided, the base64-encoded data URL will
@@ -201,7 +201,7 @@ export async function fileToBase64DataUrl( file, mimeType = '' ) {
 /**
  * Returns the binary data blob representation of the given file URL.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {string} file     The file URL.
  * @param {string} mimeType Optional. The MIME type of the file. If provided, the automatically detected MIME type will
@@ -223,7 +223,7 @@ export async function fileToBlob( file, mimeType = '' ) {
 /**
  * Returns the base64-encoded data URL representation of the given binary data blob.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Blob} blob The binary data blob.
  * @return {string} The base64-encoded data URL, or empty string on failure.
@@ -244,7 +244,7 @@ export async function blobToBase64DataUrl( blob ) {
 /**
  * Returns the binary data blob representation of the given base64-encoded data URL.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {string} base64DataUrl The base64-encoded data URL.
  * @return {Blob?} The binary data blob, or null on failure.

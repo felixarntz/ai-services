@@ -92,7 +92,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 * Lists the available generative model slugs and their capabilities.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t Return type changed to a map of model data shapes.
+	 * @since 0.5.0 Return type changed to a map of model data shapes.
 	 *
 	 * @phpstan-return array<string, array{slug: string, name: string, capabilities: string[]}>
 	 *
@@ -113,7 +113,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 * Gets a generative model instance for the provided model parameters.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t Support for the $tools and $toolConfig arguments was added.
+	 * @since 0.5.0 Support for the $tools and $toolConfig arguments was added.
 	 *
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.
@@ -173,7 +173,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Validates various model parameters centrally.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *

@@ -414,7 +414,7 @@ const actions = {
 	/**
 	 * Uploads inline data of a specific message to the media library.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {number} index      The index of the message.
 	 * @param {Object} inlineData The inline data object.
@@ -595,7 +595,7 @@ const actions = {
 	/**
 	 * Sets the attachment for a message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {number} index      The index of the message.
 	 * @param {Object} attachment The attachment object.

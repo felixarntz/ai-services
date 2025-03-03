@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\History
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Class representing a chat history.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 final class History {
 
 	/**
 	 * The feature the history is associated with.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var string
 	 */
 	private $feature;
@@ -28,7 +28,7 @@ final class History {
 	/**
 	 * The history slug, unique within the feature.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var string
 	 */
 	private $slug;
@@ -36,7 +36,7 @@ final class History {
 	/**
 	 * When the history was last updated, as MySQL datetime string in GMT.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var string
 	 */
 	private $last_updated;
@@ -44,7 +44,7 @@ final class History {
 	/**
 	 * The history entries.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var History_Entry[]
 	 */
 	private $entries;
@@ -52,7 +52,7 @@ final class History {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string          $feature      The feature the history is associated with.
 	 * @param string          $slug         The history slug.
@@ -69,7 +69,7 @@ final class History {
 	/**
 	 * Gets the feature the history is associated with.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The feature.
 	 */
@@ -80,7 +80,7 @@ final class History {
 	/**
 	 * Gets the history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The history slug.
 	 */
@@ -91,7 +91,7 @@ final class History {
 	/**
 	 * Gets when the history was last updated.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The last updated MySQL datetime string in GMT.
 	 */
@@ -102,7 +102,7 @@ final class History {
 	/**
 	 * Gets the history entries.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return History_Entry[] The history entries.
 	 */
@@ -113,7 +113,7 @@ final class History {
 	/**
 	 * Sets the history entries.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param History_Entry[]|array<string, mixed>[] $entries The history entries.
 	 */
@@ -132,7 +132,7 @@ final class History {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -153,7 +153,7 @@ final class History {
 	/**
 	 * Creates a History instance from an array of history data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The history data.
 	 * @return History History instance.
@@ -181,7 +181,7 @@ final class History {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

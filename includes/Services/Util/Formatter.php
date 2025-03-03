@@ -27,7 +27,7 @@ final class Formatter {
 	 *
 	 * This method takes into account whether the provided content is supported by the given model, based on its capabilities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string|Parts|Content|Content[] $content      The content to format.
 	 * @param string[]                       $capabilities The AI capabilities that the model supports.

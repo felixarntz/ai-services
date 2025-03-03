@@ -25,7 +25,7 @@ const MIN_FUNCTION_DECLARATIONS_COUNT_FOR_FILTER = 8;
 /**
  * Renders the playground sidebar panel for function declarations relevant for AI function calling.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @return {Component} The component to be rendered.
  */

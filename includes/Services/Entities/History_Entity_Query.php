@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Entities\History_Entity_Query
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\
 /**
  * Class representing a history entity query for the REST API.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class History_Entity_Query implements Entity_Query {
 
 	/**
 	 * The history persistence instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var History_Persistence
 	 */
 	private $history_persistence;
@@ -30,7 +30,7 @@ class History_Entity_Query implements Entity_Query {
 	/**
 	 * Query arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var array<string, mixed>
 	 */
 	private $query_args;
@@ -38,7 +38,7 @@ class History_Entity_Query implements Entity_Query {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param History_Persistence  $history_persistence The history persistence instance.
 	 * @param array<string, mixed> $query_args          {
@@ -61,7 +61,7 @@ class History_Entity_Query implements Entity_Query {
 	/**
 	 * Queries histories.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return History_Entity[] List of history entities.
 	 */
@@ -103,7 +103,7 @@ class History_Entity_Query implements Entity_Query {
 	/**
 	 * Queries history IDs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return int[] Empty array, as histories do not have IDs.
 	 */
@@ -114,7 +114,7 @@ class History_Entity_Query implements Entity_Query {
 	/**
 	 * Queries the history count.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return int Service count.
 	 */
@@ -128,7 +128,7 @@ class History_Entity_Query implements Entity_Query {
 	 *
 	 * This essentially retrieves all relevant histories without any ordering or limiting.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return History[] Filtered histories based on the current query arguments.
 	 */
@@ -150,7 +150,7 @@ class History_Entity_Query implements Entity_Query {
 	/**
 	 * Parses and sanitizes the given query arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $query_args Query arguments.
 	 * @return array<string, mixed> Query arguments parsed with defaults.

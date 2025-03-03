@@ -181,7 +181,7 @@ const actions = {
 	 * If a function with the given name is already present, it will be updated. Otherwise a new function with the name
 	 * will be added. This ensures that every function declaration is unique by name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string} name         Unique function name.
 	 * @param {string} description  Function description.
@@ -257,7 +257,7 @@ const actions = {
 	 *
 	 * Deletion is irreversible.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string} name Unique function name of the function declaration to delete.
 	 * @return {Function} Action creator.
@@ -292,7 +292,7 @@ const actions = {
 	/**
 	 * Toggles whether a specific function declaration is selected.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string} name Function declaration name.
 	 * @return {Function} Action creator.
@@ -324,7 +324,7 @@ const actions = {
 	/**
 	 * Sets the active function declaration (currently being edited in the modal).
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {Object} name Active function name being edited, or empty string to clear.
 	 * @return {Object} Action creator.
@@ -340,7 +340,7 @@ const actions = {
 /**
  * Reducer for the store mutations.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object} state  Current state.
  * @param {Object} action Action object.

@@ -257,7 +257,7 @@ final class Services_Service_Container_Builder {
 	/**
 	 * Builds the entity services for the service container.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 */
 	private function build_entity_services(): void {
 		$this->container['user_meta_repository'] = static function () {

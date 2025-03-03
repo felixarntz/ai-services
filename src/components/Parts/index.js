@@ -44,7 +44,7 @@ function Media( { mimeType, src } ) {
 /**
  * Renders a textarea with JSON formatted data.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object} props       The component props.
  * @param {Object} props.data  The data to display.
@@ -71,7 +71,7 @@ function JsonTextarea( { data, label } ) {
  * Renders formatted content parts.
  *
  * @since 0.4.0
- * @since n.e.x.t Made publicly available as part of `@ai-services/components`.
+ * @since 0.5.0 Made publicly available as part of `@ai-services/components`.
  *
  * @param {Object}   props       Component props.
  * @param {Object[]} props.parts The parts to render.

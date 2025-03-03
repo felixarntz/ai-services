@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\With_Image_Generation_Trait
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -19,14 +19,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model which implements the With_Image_Generation interface.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 trait With_Image_Generation_Trait {
 
 	/**
 	 * Generates an image using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         Prompt for the image to generate. Optionally, an array
 	 *                                                        can be passed for additional context (e.g. chat history).
@@ -44,7 +44,7 @@ trait With_Image_Generation_Trait {
 	/**
 	 * Sanitizes the input content for generating an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string|Parts|Content|Content[] $content The input content.
 	 * @return Content[] The sanitized content.
@@ -59,7 +59,7 @@ trait With_Image_Generation_Trait {
 	/**
 	 * Sends a request to generate an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.

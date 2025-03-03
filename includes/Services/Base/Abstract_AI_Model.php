@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Base class for an AI model.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 abstract class Abstract_AI_Model implements Generative_AI_Model {
 
 	/**
 	 * The model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var string
 	 */
 	private $model;
@@ -29,7 +29,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * The request options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var array<string, mixed>
 	 */
 	private $request_options;
@@ -37,7 +37,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. See
@@ -56,7 +56,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Gets the model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The model slug.
 	 */
@@ -67,7 +67,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Gets the request options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The request options.
 	 */
@@ -78,7 +78,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Sets the model parameters on the class instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *
@@ -89,7 +89,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Sets class properties from the given arguments based on the given properties definitions array.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed>[] $prop_definitions The property definitions. Each entry must contain at least the
 	 *                                                 'arg_key' and 'proeprty_name' keys, and optionally the

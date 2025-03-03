@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\History_Update_REST_Route
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -22,7 +22,7 @@ use WP_REST_Server;
 /**
  * Class representing the REST API route for updating a history.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class History_Update_REST_Route extends Abstract_REST_Route {
 	const BASE    = '/features/(?P<feature>[\w-]+)/histories/(?P<slug>[\w-]+)';
@@ -31,7 +31,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * The current user instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -39,7 +39,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Relevant resource schema.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var History_REST_Resource_Schema
 	 */
 	private $resource_schema;
@@ -47,7 +47,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Current_User                 $current_user    The current user service.
 	 * @param History_REST_Resource_Schema $resource_schema The relevant resource schema.
@@ -62,7 +62,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route base.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string Route base.
 	 */
@@ -73,7 +73,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route methods, as a comma-separated string.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string Route methods, as a comma-separated string.
 	 */
@@ -84,7 +84,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Checks the required permissions for the given request and throws an exception if they aren't met.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 *
@@ -104,7 +104,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Handles the given request and returns a response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param WP_REST_Request $request WordPress REST request object, including parameters.
 	 * @return WP_REST_Response WordPress REST response object.
@@ -180,7 +180,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the route specific arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> Route arguments.
 	 */
@@ -191,7 +191,7 @@ class History_Update_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Returns the global route arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> Global route arguments.
 	 */

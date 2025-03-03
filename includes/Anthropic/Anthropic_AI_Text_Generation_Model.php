@@ -39,7 +39,7 @@ use InvalidArgumentException;
  * Class representing an Anthropic text generation AI model.
  *
  * @since 0.1.0
- * @since n.e.x.t Renamed from `Anthropic_AI_Model`.
+ * @since 0.5.0 Renamed from `Anthropic_AI_Model`.
  */
 class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
 	use With_Text_Generation_Trait;
@@ -56,7 +56,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	/**
 	 * The tools available to use for the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Tools|null
 	 */
 	protected $tools;
@@ -64,7 +64,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	/**
 	 * The tool configuration, if applicable.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Tool_Config|null
 	 */
 	protected $tool_config;
@@ -108,7 +108,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	/**
 	 * Sets the model parameters on the class instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *
@@ -429,7 +429,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	/**
 	 * Transforms a given API response into a Parts instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $response_data The API response.
 	 * @return Parts The Parts instance.
@@ -572,7 +572,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	/**
 	 * Prepares the API request tools parameter for the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Tools $tools The tools to prepare the parameter with.
 	 * @return array<string, mixed>[] The tools parameter value.
@@ -607,7 +607,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	/**
 	 * Prepares the API request tool choice parameter for the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Tool_Config $tool_config The tool config to prepare the parameter with.
 	 * @return array<string, mixed> The tool config parameter value.

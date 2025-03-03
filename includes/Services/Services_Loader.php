@@ -209,7 +209,7 @@ final class Services_Loader implements With_Hooks {
 	 *
 	 * @since 0.1.0
 	 * @since 0.2.0 Include a link to the settings page in the plugin action links.
-	 * @since n.e.x.t Include admin pointers and rename method to clarify purpose.
+	 * @since 0.5.0 Include admin pointers and rename method to clarify purpose.
 	 */
 	private function load_admin_pages(): void {
 		add_action(

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -14,7 +14,7 @@ use InvalidArgumentException;
  * Class representing text configuration options for a generative AI model.
  *
  * @since 0.2.0
- * @since n.e.x.t Renamed from `Generation_Config`.
+ * @since 0.5.0 Renamed from `Generation_Config`.
  */
 class Text_Generation_Config extends Generation_Config {
 

@@ -191,7 +191,7 @@ export default class GenerativeAiService {
 	 *
 	 * This is a short-hand method for `service.getModel( modelParams ).generateImage( content )`.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string|Object|Object[]} content     Content data to pass to the model, including the prompt and optional
 	 *                                             history.

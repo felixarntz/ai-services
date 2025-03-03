@@ -104,7 +104,7 @@ class OpenAI_AI_API_Client implements Generative_AI_API_Client {
 	/**
 	 * Creates a request instance to generate images using the specified model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string               $model           The model slug.
 	 * @param array<string, mixed> $params          The request parameters.

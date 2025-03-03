@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Admin\Settings_Page_Pointer
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Poi
 /**
  * Class representing a WP Admin pointer to the plugin's admin settings page.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class Settings_Page_Pointer extends Abstract_Admin_Page_Link_Pointer {
 
 	/**
 	 * Services API instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Services_API
 	 */
 	private $services_api;
@@ -30,7 +30,7 @@ class Settings_Page_Pointer extends Abstract_Admin_Page_Link_Pointer {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Admin_Page_Link $admin_page_link The admin page link instance.
 	 * @param Services_API    $services_api    The services API instance.
@@ -45,7 +45,7 @@ class Settings_Page_Pointer extends Abstract_Admin_Page_Link_Pointer {
 	/**
 	 * Renders the admin pointer content HTML.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 */
 	public function render(): void {
 		?>
@@ -72,7 +72,7 @@ class Settings_Page_Pointer extends Abstract_Admin_Page_Link_Pointer {
 	 * The method should not check whether anything related to the current user, such as whether they have the required
 	 * capability or whether they have already dismissed the pointer. This is handled separately.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $hook_suffix The current admin screen hook suffix.
 	 * @return bool True if the pointer is active, false otherwise.

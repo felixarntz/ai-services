@@ -39,7 +39,7 @@ const getModelAuthor = ( additionalData ) => {
 /**
  * Renders a single message.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object}   props                    The component properties.
  * @param {Object}   props.message            The message object.

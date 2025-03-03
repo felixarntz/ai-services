@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Blob
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Simple value class representing a binary data blob, e.g. from a file.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 final class Blob {
 
 	/**
 	 * The binary data of the blob.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var string
 	 */
 	private $binary_data;
@@ -28,7 +28,7 @@ final class Blob {
 	/**
 	 * The MIME type of the blob.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var string
 	 */
 	private $mime_type;
@@ -36,7 +36,7 @@ final class Blob {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $binary_data The binary data of the blob.
 	 * @param string $mime_type   The MIME type of the blob.
@@ -49,7 +49,7 @@ final class Blob {
 	/**
 	 * Retrieves the binary data of the blob.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The binary data.
 	 */
@@ -60,7 +60,7 @@ final class Blob {
 	/**
 	 * Retrieves the MIME type of the blob.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The MIME type.
 	 */
@@ -71,7 +71,7 @@ final class Blob {
 	/**
 	 * Creates a new blob instance from a file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $file      The file path or URL.
 	 * @param string $mime_type Optional. MIME type, to override the automatic detection. Default empty string.

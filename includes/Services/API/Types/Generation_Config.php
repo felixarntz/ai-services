@@ -17,7 +17,7 @@ use InvalidArgumentException;
  * Class representing configuration options for a generative AI model.
  *
  * @since 0.2.0
- * @since n.e.x.t Deprecated in favor of the `Text_Generation_Config` class.
+ * @since 0.5.0 Deprecated in favor of the `Text_Generation_Config` class.
  */
 class Generation_Config implements Arrayable, With_JSON_Schema {
 
@@ -71,12 +71,12 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 		// Trigger deprecation notice if this class is instantiated directly.
 		if ( ! $this instanceof Text_Generation_Config && ! $this instanceof Image_Generation_Config ) {
 			if ( function_exists( '_deprecated_class' ) ) {
-				_deprecated_class( __CLASS__, 'n.e.x.t', Text_Generation_Config::class );
+				_deprecated_class( __CLASS__, '0.5.0', Text_Generation_Config::class );
 			} elseif ( WP_DEBUG ) {
 				$message = sprintf(
 					'Class %1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.',
 					__CLASS__,
-					'n.e.x.t',
+					'0.5.0',
 					Text_Generation_Config::class
 				);
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error, WordPress.Security.EscapeOutput.OutputNotEscaped

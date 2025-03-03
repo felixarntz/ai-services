@@ -14,7 +14,7 @@ use InvalidArgumentException;
  * Class representing a Google AI model.
  *
  * @since 0.1.0
- * @since n.e.x.t Deprecated in favor of the `Google_AI_Text_Generation_Model` class.
+ * @since 0.5.0 Deprecated in favor of the `Google_AI_Text_Generation_Model` class.
  */
 class Google_AI_Model extends Google_AI_Text_Generation_Model {
 
@@ -34,12 +34,12 @@ class Google_AI_Model extends Google_AI_Text_Generation_Model {
 	 */
 	public function __construct( Google_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		if ( function_exists( '_deprecated_class' ) ) {
-			_deprecated_class( __CLASS__, 'n.e.x.t', Google_AI_Text_Generation_Model::class );
+			_deprecated_class( __CLASS__, '0.5.0', Google_AI_Text_Generation_Model::class );
 		} elseif ( WP_DEBUG ) {
 			$message = sprintf(
 				'Class %1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.',
 				__CLASS__,
-				'n.e.x.t',
+				'0.5.0',
 				Google_AI_Text_Generation_Model::class
 			);
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error, WordPress.Security.EscapeOutput.OutputNotEscaped

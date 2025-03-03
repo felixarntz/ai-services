@@ -6,7 +6,7 @@ Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
 Tested up to: 6.7
-Stable tag:   0.4.0
+Stable tag:   0.5.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Tags:         ai, text generation, image generation, function calling, multimodal
@@ -293,6 +293,74 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 2. The AI Playground where users can explore the AI capabilities of the different services
 
 == Changelog ==
+
+= 0.5.0 =
+
+**Features:**
+
+* Introduce image generation support in PHP and JavaScript. ([6c3b328](https://github.com/felixarntz/ai-services/commit/6c3b32815766a0e8b203f9b6771e84bb0c7a0570))
+* Introduce tool support and implement function calling in PHP and JavaScript. ([e84040c](https://github.com/felixarntz/ai-services/commit/e84040cce1679dac25de0b68e74df74d1c08ccb3))
+* Introduce history persistence API in both PHP and JavaScript, to persistently save AI message histories in user meta. ([90e69b5](https://github.com/felixarntz/ai-services/commit/90e69b57ba4b6a76d107a3432a128d2e777b3dd7))
+* Allow generating images in AI Playground. ([8b1902e](https://github.com/felixarntz/ai-services/commit/8b1902ebdbd89c3e595ef538ac44adbf2d1467d4))
+* Allow uploading images and other media generated via AI Playground to the WordPress media library. ([a00af05](https://github.com/felixarntz/ai-services/commit/a00af05250cdc37ba131da50a3228a5e8e6d24ce))
+* Allow creating and managing function declarations for AI function calling in AI Playground. ([abe6688](https://github.com/felixarntz/ai-services/commit/abe6688905f549af6f542f374435bcefb49dc28c))
+* Allow sending function responses after receiving a function call in AI Playground. ([e16ab32](https://github.com/felixarntz/ai-services/commit/e16ab3283c73ceffbf74e425944f7c123666f9e0))
+* Add WP-CLI command `wp ai-services generate-image` to generate images via the command line. ([599ce48](https://github.com/felixarntz/ai-services/commit/599ce4810fc770f47b85f9a3cd65f22e9f105bfc))
+* Add support for passing multimodal prompt via attachment to WP-CLI command. ([4d2f320](https://github.com/felixarntz/ai-services/commit/4d2f3206c151d6fefcd5ad8af637051350e30ac2))
+* Allow passing function declarations to WP-CLI `generate-text` command. ([f56b54b](https://github.com/felixarntz/ai-services/commit/f56b54b983bf696cc50c88b8c570fc4618a80e1a))
+
+**Enhancements:**
+
+* Implement image generation support for Google and OpenAI services. ([511571b](https://github.com/felixarntz/ai-services/commit/511571b690a105e0e35a358f0cc314e1e8d2c16a))
+* Implement function calling tool support for Anthropic, Google, and OpenAI services. ([d47efef](https://github.com/felixarntz/ai-services/commit/d47efef13af4c2c0050aa58ef021c9187a1a14bf))
+* Enhance AI Playground to save messages persistently using new history persistence API instead of session storage. ([919f26b](https://github.com/felixarntz/ai-services/commit/919f26b53db12d051380acc82e2db817084bb727))
+* Enhance AI Playground service selection accessibility by announcing to screen readers when model selection was cleared. ([a3d7676](https://github.com/felixarntz/ai-services/commit/a3d767604f7b875191e0f2ada97eda54e49bdd1d))
+* Enhance AI Playground chat messages accessibility by using log role. ([48a35c3](https://github.com/felixarntz/ai-services/commit/48a35c34220cf8e8be9737ff54ecb638725165fc))
+* Enhance function declarations modal accessibility by using tab semantics for navigating through the function declarations. ([94e8494](https://github.com/felixarntz/ai-services/commit/94e8494b9c3ef6be2e66458ab3901dfc07a58d83))
+* Show text instead of icon to clarify reset messages button purpose. ([843fef5](https://github.com/felixarntz/ai-services/commit/843fef520e2d2a9fc26e9fba37ca5f7c5c84fe6a))
+* Centrally handle candidate count default of 1 to avoid wasted resources. ([568502a](https://github.com/felixarntz/ai-services/commit/568502a5379e876ca8208f916476a35505b7e50d))
+* Implement several helper API methods related to dealing with binary files, blobs, and data URLs. ([a05d685](https://github.com/felixarntz/ai-services/commit/a05d685576fea47de9830cc0357d6578d62c06f0))
+* Use new Anthropic API models endpoint to fetch available models remotely. ([a3fae90](https://github.com/felixarntz/ai-services/commit/a3fae900948958a9053b470ac991406f12109028))
+* Show admin pointers to inform new users about where to configure AI Services and the ability to explore in the AI Playground. ([4d7a169](https://github.com/felixarntz/ai-services/commit/4d7a169491990c3d18c2f3f4bde647e37eb693c1))
+* Simplify plugin settings link implementation by using abstraction from library. ([d77858a](https://github.com/felixarntz/ai-services/commit/d77858a9d169a7dd83cdd264502f5deeaf165636))
+* Implement plugin action link and admin pointer for settings page. ([6566c77](https://github.com/felixarntz/ai-services/commit/6566c770652758b116c86d643c590b20494a43f7))
+* Set default request timeout for image generation to 30 seconds. ([1cc086a](https://github.com/felixarntz/ai-services/commit/1cc086a4f136817e01b0184a30054114747ba489))
+* Ensure that prompts with history are rejected if the model does not support chat history. ([bd01db0](https://github.com/felixarntz/ai-services/commit/bd01db04561f610d4bd9c74698846e1b5f7efe0a))
+* Explicitly implement `With_Text_Generation` interface in text generation model classes. ([26985a3](https://github.com/felixarntz/ai-services/commit/26985a32f02cc7eb52f9514804e464e93879276f))
+* Implement `Abstract_AI_Model` class and use it as foundation for service-specific model classes. ([3f998d9](https://github.com/felixarntz/ai-services/commit/3f998d9c67e40c3327edb40fb92e97bd8f831089))
+* Deprecate service-specific `AI_Model` classes in favor of new AI_Text_Generation_Model classes. ([2f474aa](https://github.com/felixarntz/ai-services/commit/2f474aae98a626cad7cb8f94d320c5e8a924b263))
+* Deprecate `Generation_Config` class in favor of new Text_Generation_Config class. ([d39c135](https://github.com/felixarntz/ai-services/commit/d39c13565ecadcacfd5b9d3e4b253d980790a3ce))
+* Pass service slug to `ai_services_model_params` filter. Props [mslinnea](https://github.com/mslinnea). ([#23](https://github.com/felixarntz/ai-services/pull/23))
+* Update Google service to prefer newer `gemini-2.0` models over older `gemini-1.5` models. ([b01dc0b](https://github.com/felixarntz/ai-services/commit/b01dc0b8f3dc746de8e3b43bbc88bba02b857040))
+* Update OpenAI service to prefer newer `gpt-4o` models over more expensive `gpt-4` models and older `gpt-3.5` models. ([9b14367](https://github.com/felixarntz/ai-services/commit/9b14367fa90e7ef820f8e00d4130ae724884c44c))
+* Update Anthropic service to prefer newer `claude-3.5` models over `claude-3` models. ([04f1896](https://github.com/felixarntz/ai-services/commit/04f1896f6f1a21e2b3590af4fb8996533b826d9c))
+* Remove requirement of global `--user` argument for WP-CLI commands. Props [swissspidy](https://github.com/swissspidy). ([cd25081](https://github.com/felixarntz/ai-services/commit/cd250810fdd77201ee091fbb08268556f33d6496), [#25](https://github.com/felixarntz/ai-services/issues/25))
+* Display model name above AI Playground responses if available. ([04c673a](https://github.com/felixarntz/ai-services/commit/04c673a2b7cac046539c42bdf596dc4af5bd6676))
+* Implement new reusable components for common AI Playground use-cases and use `Flex` component in AI Playground where applicable. ([7c4f5d2](https://github.com/felixarntz/ai-services/commit/7c4f5d274643faa095a86d03e0151c1fd49a1fa0))
+* Implement new helper functions to create a multimodal `Content` object from a prompt and media file, and to get the base64 data URL for a file. ([e664197](https://github.com/felixarntz/ai-services/commit/e664197e96fa6eb823dc8f56d882ede81a18d76a))
+* Make `Parts` component publicly available via `aiServices.components`. ([3994156](https://github.com/felixarntz/ai-services/commit/39941566ee47f7a0089fe3018af8a264935d53ed))
+* Expand available AI capabilities to include `FUNCTION_CALLING` and add support to applicable services and models. ([4dc570a](https://github.com/felixarntz/ai-services/commit/4dc570ad2b6c00aed2a4344d2c7b6900fb6b354b))
+* Include name field in models data, retrieving it from the service API where available. ([40c4351](https://github.com/felixarntz/ai-services/commit/40c43510891d1c32cc8b07211c3b1e1081c32d3c))
+* Alter return shape of `Generative_AI_Service::list_models()` method in PHP, for a consistent model data shape across PHP and JavaScript. ([a9193f9](https://github.com/felixarntz/ai-services/commit/a9193f98ee1ff46197530047f5a309dca595bb0a))
+* Implement new helper function to get content object with text from a list of content objects. ([cf77062](https://github.com/felixarntz/ai-services/commit/cf77062343fef06bba280dbe2f24c0b465f06d20))
+
+**Bug Fixes:**
+
+* Fix bug where messages container in AI Playground could sometimes infinitely continue to scroll towards the bottom. ([f69fd30](https://github.com/felixarntz/ai-services/commit/f69fd309d752c3a1359bdd40f540d9a5daed3840))
+* Fix AI capabilities missing from OpenAI o1 models. ([94086b4](https://github.com/felixarntz/ai-services/commit/94086b4da586fa3ee9684c9b19746e6423ebb926))
+* Fix model response candidates to no longer include duplicate data that could inflate response size. ([3fc8422](https://github.com/felixarntz/ai-services/commit/3fc8422d7ab2f1df3ddf5f9c510c31c4f60d0203))
+* Fix region navigation after `@wordpress/interface` package update. ([88d2c13](https://github.com/felixarntz/ai-services/commit/88d2c1340a243a39042c2babda62c13f2b02171a))
+* Fix limited data URL regex to support MIME types that contain numbers or hyphens. ([c00e8be](https://github.com/felixarntz/ai-services/commit/c00e8bee4669fb5fe780fb950b8332a87db533d0))
+* Fix incorrect model capabilities being indicated for legacy Anthropic and legacy Google AI models. ([4cbabab](https://github.com/felixarntz/ai-services/commit/4cbababbb89786ae6e5eb1a450d1bbf40926746a))
+* Fix API request options not being passed in `Generative_AI_Service::list_models()` implementations. ([f50e46f](https://github.com/felixarntz/ai-services/commit/f50e46facbd67f8b79bdc49eeed19a88fc44605b))
+* Fix bug in `Service_Entity_Query::count()` method. ([08cb9ba](https://github.com/felixarntz/ai-services/commit/08cb9ba6e4657310ab97a327b16dd989cb655ffc))
+
+**Documentation:**
+
+* Expand PHP, JS, and WP-CLI documentation to cover how to generate images. ([34689f9](https://github.com/felixarntz/ai-services/commit/34689f979b64374cdf97fb420030f4dfe9721524))
+* Include documentation on how to use function calling in both PHP and JavaScript. ([4ded68f](https://github.com/felixarntz/ai-services/commit/4ded68f2d4e92cd067978ee4c41f2fff93610224))
+* Include intro section in JavaScript API documentation on how to enqueue the API. ([366d7ea](https://github.com/felixarntz/ai-services/commit/366d7ea2579fe42da7abe16d03d737e9153b250a))
+* Expand WP-CLI command documentation to cover how to send multimodal prompts and handle function calling. ([b7dd38b](https://github.com/felixarntz/ai-services/commit/b7dd38b2c07e93758e9e013905bb79a37134a9b4))
 
 = 0.4.0 =
 

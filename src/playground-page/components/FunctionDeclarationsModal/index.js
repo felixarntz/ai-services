@@ -32,7 +32,7 @@ const MIN_FUNCTION_DECLARATIONS_COUNT_FOR_FILTER = 8;
 /**
  * Converts an object of parameter schemas keyed by name to an array of objects with name and schema properties.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object} parameters The parameters object.
  * @return {Object[]} The array of objects with name and schema properties.
@@ -52,7 +52,7 @@ function parametersObjectToArray( parameters ) {
 /**
  * Converts an array of objects with name and schema properties to an object of parameter schemas keyed by name.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object[]} parameters The array of objects with name and schema properties.
  * @return {Object} The parameters object.
@@ -71,7 +71,7 @@ function parametersArrayToObject( parameters ) {
 /**
  * Renders a pattern validator that shows a notice if the given value does not match the pattern.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object} props         The component props.
  * @param {string} props.value   The value to validate.
@@ -108,7 +108,7 @@ const PARAMETER_ITEM_TYPE_OPTIONS = PARAMETER_TYPE_OPTIONS.filter(
 /**
  * Renders the group of input fields for a single function parameter.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object}   props          The component props.
  * @param {string}   props.name     The parameter name.
@@ -201,7 +201,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 /**
  * Renders the form for adding or editing a function declaration.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object}  props                     The component props.
  * @param {?Object} props.functionDeclaration The function declaration to edit, or null if adding a new function.
@@ -453,7 +453,7 @@ const SEARCH_FIELDS = [ 'name' ];
 /**
  * Renders the modal for managing the available function declarations.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @return {Component} The component to be rendered.
  */

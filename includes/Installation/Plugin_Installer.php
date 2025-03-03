@@ -40,7 +40,7 @@ class Plugin_Installer extends Abstract_Installer {
 	 * @throws Exception Thrown when upgrading fails.
 	 */
 	protected function upgrade_data( string $old_version ): void {
-		if ( version_compare( $old_version, 'n.e.x.t', '<' ) ) {
+		if ( version_compare( $old_version, '0.5.0', '<' ) ) {
 			// Invalidate all existing service caches since return shape of `list_models()` method changed.
 			Service_Request_Cache::invalidate_caches( 'anthropic' );
 			Service_Request_Cache::invalidate_caches( 'google' );

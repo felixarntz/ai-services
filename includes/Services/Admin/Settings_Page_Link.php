@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Admin\Settings_Page_Link
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Lin
 /**
  * Class representing a link to the plugin's admin settings page.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class Settings_Page_Link extends Admin_Page_Link {
 
 	/**
 	 * Gets the admin link label.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The admin link label.
 	 */

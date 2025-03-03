@@ -47,7 +47,7 @@ final class Helpers {
 	 * The text will be included as a prompt as the first part of the content, and the attachment (e.g. an image or
 	 * audio file) will be included as the second part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string      $text       The text.
 	 * @param int|WP_Post $attachment The attachment ID or object.
@@ -152,7 +152,7 @@ final class Helpers {
 	/**
 	 * Gets the first Content instance in the given list which contains text.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Content[] $contents The list of Content instances.
 	 * @return Content|null The Content instance, or null if no Content instance has text parts.
@@ -209,7 +209,7 @@ final class Helpers {
 	/**
 	 * Gets the history persistence instance, to load, save, and clear histories.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return History_Persistence The history persistence instance.
 	 */
@@ -229,7 +229,7 @@ final class Helpers {
 	/**
 	 * Returns the base64-encoded data URL representation of the given file URL.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $file      Absolute path to the file, or its URL.
 	 * @param string $mime_type Optional. The MIME type of the file. If provided, the base64-encoded data URL will
@@ -248,7 +248,7 @@ final class Helpers {
 	/**
 	 * Returns the binary data blob representation of the given file URL.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $file      Absolute path to the file, or its URL.
 	 * @param string $mime_type Optional. The MIME type of the file. If provided, the automatically detected MIME type
@@ -266,7 +266,7 @@ final class Helpers {
 	/**
 	 * Returns the base64-encoded data URL representation of the given binary data blob.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Blob $blob The binary data blob.
 	 * @return string The base64-encoded file data URL, or empty string on failure.
@@ -281,7 +281,7 @@ final class Helpers {
 	/**
 	 * Returns the binary data blob representation of the given base64-encoded data URL.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $base64_data_url The base64-encoded data URL.
 	 * @return Blob|null The binary data blob, or null on failure.

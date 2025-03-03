@@ -155,7 +155,7 @@ final class Candidate implements Arrayable {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

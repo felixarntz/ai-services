@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\REST_Routes\History_REST_Resource_Schema
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Rout
 /**
  * Class representing the schema for a history resource in the REST API.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class History_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 
 	/**
 	 * Prepares the given resource for inclusion in a response, based on the given fields.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param History_Entity $entity The entity to prepare.
 	 * @param string[]       $fields Fields to be included in the response.
@@ -39,7 +39,7 @@ class History_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 	/**
 	 * Prepares links for the given resource.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param History_Entity $entity The entity to prepare links for.
 	 * @return array<string, array<string, mixed>> Links for the given resource.
@@ -72,7 +72,7 @@ class History_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 	/**
 	 * Returns the full URL to the resource's collection route.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $params Optional. Current request parameters. Default empty array.
 	 * @return string Full collection route URL.
@@ -90,7 +90,7 @@ class History_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 	/**
 	 * Returns the internal resource schema definition.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> Internal resource schema definition.
 	 */

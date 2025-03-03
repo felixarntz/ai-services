@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Tool_Config
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -16,14 +16,14 @@ use InvalidArgumentException;
 /**
  * Class representing tool configuration for a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 final class Tool_Config implements Arrayable, With_JSON_Schema {
 
 	/**
 	 * The sanitized configuration arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var array<string, mixed>
 	 */
 	private $sanitized_args;
@@ -31,7 +31,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Type definitions for the supported arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var array<string, string>
 	 */
 	private $supported_args = array(
@@ -42,7 +42,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $args The configuration arguments.
 	 */
@@ -53,7 +53,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the function call mode.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The function call mode, or empty string if not set.
 	 */
@@ -64,7 +64,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the allowed function names.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string[] The allowed function names, or empty array if not set.
 	 */
@@ -75,7 +75,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -86,7 +86,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Creates a Tool_Config instance from an array of content data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The content data.
 	 * @return Tool_Config Tool_Config instance.
@@ -100,7 +100,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */
@@ -126,7 +126,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Sanitizes the given arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $args The arguments to sanitize.
 	 * @return array<string, mixed> Sanitized arguments.
@@ -154,7 +154,7 @@ final class Tool_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Sanitizies the given value based on the given type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param mixed  $value    The value to sanitize.
 	 * @param string $type     The type to sanitize the value to. Must be one of 'array', 'string', 'object',

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\History_Persistence
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Meta\Meta
 /**
  * Class for the history persistence layer.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class History_Persistence {
 
 	/**
 	 * The current user instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Current_User
 	 */
 	private $current_user;
@@ -30,7 +30,7 @@ class History_Persistence {
 	/**
 	 * User meta repository.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Meta_Repository
 	 */
 	private $meta_repository;
@@ -38,7 +38,7 @@ class History_Persistence {
 	/**
 	 * Internal cache for history slugs, keyed by feature.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var array<string, string[]>|null
 	 */
 	private $history_slugs;
@@ -46,7 +46,7 @@ class History_Persistence {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Current_User    $current_user    The current user instance.
 	 * @param Meta_Repository $meta_repository User meta repository.
@@ -59,7 +59,7 @@ class History_Persistence {
 	/**
 	 * Checks whether there is a history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @param string $slug    Unique identifier of the history within the feature. Must only contain lowercase letters,
@@ -78,7 +78,7 @@ class History_Persistence {
 	/**
 	 * Loads the history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @param string $slug    Unique identifier of the history within the feature. Must only contain lowercase letters,
@@ -110,7 +110,7 @@ class History_Persistence {
 	/**
 	 * Saves the history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param History $history The history to save. Must have a unique feature and history slug set.
 	 * @return bool True on success, false on failure.
@@ -145,7 +145,7 @@ class History_Persistence {
 	/**
 	 * Clears the history for a given feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @param string $slug    Unique identifier of the history within the feature. Must only contain lowercase letters,
@@ -178,7 +178,7 @@ class History_Persistence {
 	/**
 	 * Loads all histories for a given feature.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $feature Unique identifier of the feature. Must only contain lowercase letters, numbers, hyphens.
 	 * @return History[] All histories for the feature.
@@ -206,7 +206,7 @@ class History_Persistence {
 	/**
 	 * Gets all history slugs for all features from the database.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, string[]> All history slugs, keyed by feature.
 	 */
@@ -243,7 +243,7 @@ class History_Persistence {
 	/**
 	 * Amends the history slugs for all features and saved them in the database.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, string[]> $history_slugs All history slugs, keyed by feature.
 	 */
@@ -272,7 +272,7 @@ class History_Persistence {
 	/**
 	 * Gets the feature and history slug from an internal chat history key.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $key History key.
 	 * @return string[] Array with exactly two elements: feature and history slug.
@@ -286,7 +286,7 @@ class History_Persistence {
 	/**
 	 * Gets the internal chat history key from a feature and history slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $feature Feature identifier. Must only contain lowercase letters, numbers, hyphens.
 	 * @param string $slug    History slug. Must only contain lowercase letters, numbers, hyphens.
@@ -302,7 +302,7 @@ class History_Persistence {
 	 * This ensures that the key is unique across all sites in a multisite environment and therefore prevents histories
 	 * from one site to be shared with all other sites.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $key Key.
 	 * @return string Prefixed key.
@@ -316,7 +316,7 @@ class History_Persistence {
 	/**
 	 * Checks whether the given feature or chat identifier is valid.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string $identifier Identifier. Must only contain lowercase letters,  numbers, hyphens.
 	 * @return bool True if the identifier is valid, false otherwise.

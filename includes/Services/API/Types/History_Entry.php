@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\History_Entry
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Class representing a single entry in a chat history.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 final class History_Entry {
 
 	/**
 	 * The history entry's content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Content
 	 */
 	private $content;
@@ -28,7 +28,7 @@ final class History_Entry {
 	/**
 	 * Additional data for the history entry, if any.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var array<string, mixed>
 	 */
 	private $additional_data;
@@ -36,7 +36,7 @@ final class History_Entry {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Content              $content         The history entry content.
 	 * @param array<string, mixed> $additional_data Additional data for the history entry, if any.
@@ -52,7 +52,7 @@ final class History_Entry {
 	/**
 	 * Gets the history entry content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return Content The content.
 	 */
@@ -63,7 +63,7 @@ final class History_Entry {
 	/**
 	 * Gets the additional data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The additional data.
 	 */
@@ -74,7 +74,7 @@ final class History_Entry {
 	/**
 	 * Converts the candidate to an array.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The array representation of the candidate.
 	 */
@@ -90,7 +90,7 @@ final class History_Entry {
 	/**
 	 * Creates a History_Entry instance from an array of content data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The content data.
 	 * @return History_Entry History_Entry instance.
@@ -111,7 +111,7 @@ final class History_Entry {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

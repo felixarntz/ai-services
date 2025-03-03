@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Class for a function declarations tool for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 final class Function_Declarations_Tool extends Abstract_Tool {
 
 	/**
 	 * Gets the function declarations from the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed>[] The function declarations.
 	 */
@@ -31,7 +31,7 @@ final class Function_Declarations_Tool extends Abstract_Tool {
 	/**
 	 * Formats the data for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The tool data.
 	 * @return array<string, mixed> Formatted data.
@@ -65,7 +65,7 @@ final class Function_Declarations_Tool extends Abstract_Tool {
 	/**
 	 * Gets the default data for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> Default data.
 	 */
@@ -78,7 +78,7 @@ final class Function_Declarations_Tool extends Abstract_Tool {
 	/**
 	 * Sanitizes the parameters schema, ensuring every object property is required and additional properties are disallowed.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $schema The schema to sanitize.
 	 * @return array<string, mixed> Sanitized schema.
@@ -110,7 +110,7 @@ final class Function_Declarations_Tool extends Abstract_Tool {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

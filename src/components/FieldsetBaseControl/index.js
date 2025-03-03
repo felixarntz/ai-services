@@ -11,7 +11,7 @@ import './style.scss';
 /**
  * Renders a fieldset-based control.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object} props The component props. Matches the props supported by WordPress Core's `BaseControl` component.
  * @return {Component} The component to be rendered.

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Class representing image configuration options for a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 class Image_Generation_Config extends Generation_Config {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $args The configuration arguments.
 	 */
@@ -38,7 +38,7 @@ class Image_Generation_Config extends Generation_Config {
 	/**
 	 * Returns the response MIME type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The response MIME type, or empty string if not set.
 	 */
@@ -49,7 +49,7 @@ class Image_Generation_Config extends Generation_Config {
 	/**
 	 * Returns the candidate count.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return int The candidate count (default 1).
 	 */
@@ -60,7 +60,7 @@ class Image_Generation_Config extends Generation_Config {
 	/**
 	 * Returns the aspect ratio.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The aspect ratio, or empty string if not set.
 	 */
@@ -71,7 +71,7 @@ class Image_Generation_Config extends Generation_Config {
 	/**
 	 * Returns the response type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The quality, or empty string if not set.
 	 */
@@ -82,7 +82,7 @@ class Image_Generation_Config extends Generation_Config {
 	/**
 	 * Creates a Generation_Config instance from an array of content data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The content data.
 	 * @return Generation_Config Generation_Config instance.
@@ -98,7 +98,7 @@ class Image_Generation_Config extends Generation_Config {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

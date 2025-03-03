@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Tools
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -20,14 +20,14 @@ use Traversable;
 /**
  * Class representing a collection of content tools for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 final class Tools implements Collection, Arrayable, With_JSON_Schema {
 
 	/**
 	 * The tools.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 * @var Tool[]
 	 */
 	private $tools = array();
@@ -35,7 +35,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Adds a function declarations tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed>[] $function_declarations The function declarations.
 	 */
@@ -50,7 +50,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Adds a tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Tool $tool The tool.
 	 */
@@ -61,7 +61,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Returns an iterator for the tools collection.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return ArrayIterator<int, Tool> Collection iterator.
 	 */
@@ -72,7 +72,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the size of the tools collection.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return int Collection size.
 	 */
@@ -83,7 +83,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the tool at the given index.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param int $index The index.
 	 * @return Tool The tool.
@@ -102,7 +102,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return mixed[] Array representation.
 	 */
@@ -118,7 +118,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Creates a Tools instance from an array of tools data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param mixed[] $data The tools data.
 	 * @return Tools The Tools instance.
@@ -146,7 +146,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

@@ -152,7 +152,7 @@ export default class GenerativeAiModel {
 	/**
 	 * Generates an image using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
 	 *                                         history.

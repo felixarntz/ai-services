@@ -11,7 +11,7 @@ import './style.scss';
 /**
  * Renders a help text paragraph.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object}  props           The component props.
  * @param {string}  props.id        The ID for the help text.

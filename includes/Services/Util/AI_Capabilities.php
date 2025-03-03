@@ -57,7 +57,7 @@ final class AI_Capabilities {
 	/**
 	 * Gets the AI capabilities that the given model instance supports.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param Generative_AI_Model $model The model instance.
 	 * @return string[] The AI capabilities that the model instance supports, based on the interfaces it implements.
@@ -86,7 +86,7 @@ final class AI_Capabilities {
 	 * Gets the model slugs that satisfy the given capabilities.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t Now expects an array of model data shapes, mapped by model slug.
+	 * @since 0.5.0 Now expects an array of model data shapes, mapped by model slug.
 	 *
 	 * @param array<string, array{slug: string, name: string, capabilities: string[]}> $models       Data for each
 	 *                                                                                               model, mapped by

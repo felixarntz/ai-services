@@ -15,7 +15,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 /**
  * Renders a search control that filters options displayed elsewhere (e.g. in a checkbox list or radio list).
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object}   props              The component props.
  * @param {string}   props.label        The label for the search control.

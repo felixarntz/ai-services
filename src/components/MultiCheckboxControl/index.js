@@ -22,7 +22,7 @@ import './style.scss';
  * To group the checkboxes properly, they are wrapped in a fieldset element, where the overall label is used as legend.
  * Optionally, a search input can be rendered to filter which checkboxes are displayed.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  *
  * @param {Object}   props                     The component props.
  * @param {string}   props.label               The label for the checkbox list, used as legend.

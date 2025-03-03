@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Response_Part
  *
- * @since n.e.x.t
+ * @since 0.5.0
  * @package ai-services
  */
 
@@ -13,7 +13,7 @@ use InvalidArgumentException;
 /**
  * Class for a function response part of content for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.5.0
  */
 final class Function_Response_Part extends Abstract_Part {
 
@@ -23,7 +23,7 @@ final class Function_Response_Part extends Abstract_Part {
 	 * If present, this must match the function call ID.
 	 * Every function response must have at least one of 'id' or 'name' present.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The function response ID, or empty string if none set.
 	 */
@@ -41,7 +41,7 @@ final class Function_Response_Part extends Abstract_Part {
 	 * If present, this must match the name of the function called.
 	 * Every function response must have at least one of 'id' or 'name' present.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return string The function name, or empty string if none set.
 	 */
@@ -56,7 +56,7 @@ final class Function_Response_Part extends Abstract_Part {
 	/**
 	 * Gets the function output response from the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The function output response.
 	 */
@@ -67,7 +67,7 @@ final class Function_Response_Part extends Abstract_Part {
 	/**
 	 * Formats the data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param array<string, mixed> $data The part data.
 	 * @return array<string, mixed> Formatted data.
@@ -109,7 +109,7 @@ final class Function_Response_Part extends Abstract_Part {
 	/**
 	 * Gets the default data for the part.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> Default data.
 	 */
@@ -125,7 +125,7 @@ final class Function_Response_Part extends Abstract_Part {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

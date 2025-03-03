@@ -96,7 +96,7 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 	 *
 	 * Every function call must have at least one of $id and $name provided.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string               $id   The ID of the function call, or an empty string.
 	 * @param string               $name The name of the function, or an empty string.
@@ -124,7 +124,7 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 	 *
 	 * Every function response must have at least one of $id and $name provided.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.5.0
 	 *
 	 * @param string               $id       The ID of the function response, or an empty string. If present, this must
 	 *                                       match the function call ID.

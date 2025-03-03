@@ -140,7 +140,7 @@ class Service_Entity implements Entity {
 	 * Gets the available models for the service.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t Return type changed to a map of model data shapes.
+	 * @since 0.5.0 Return type changed to a map of model data shapes.
 	 *
 	 * @phpstan-return array<string, array{slug: string, name: string, capabilities: string[]}>
 	 *

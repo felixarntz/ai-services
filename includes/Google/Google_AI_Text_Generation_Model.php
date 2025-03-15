@@ -551,6 +551,9 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				}
 				return array();
 			},
+			'responseModalities' => static function ( Text_Generation_Config $config ) {
+				return array();
+			},
 			'candidateCount'   => static function ( Text_Generation_Config $config ) {
 				return $config->get_candidate_count();
 			},

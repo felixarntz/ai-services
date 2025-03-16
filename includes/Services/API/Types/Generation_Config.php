@@ -287,10 +287,9 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 					'additionalProperties' => true,
 				),
 				'responseModalities'   => array(
-					'description'          => __( 'Response modalities to expect.', 'ai-services' ),
+					'description'          => __( 'Response modalities for multimodal output.', 'ai-services' ),
 					'type'                 => 'array',
 					'items'                => array( 'type' => 'string' ),
-					'additionalProperties' => true,
 				),
 				'candidateCount'   => array(
 					'description' => __( 'Number of response candidates to generate.', 'ai-services' ),

@@ -23,10 +23,15 @@ import { store as playgroundStore } from '../../store';
  * @return {Component} The component to be rendered.
  */
 export default function PlaygroundStatus() {
-	const { service, model, messages, loading, serviceName } = useSelect(
-		( select ) => {
-			const { getService, getModel, getMessages, isLoading } =
-				select( playgroundStore );
+	const { service, model, messages, loading, serviceName, modelName } =
+		useSelect( ( select ) => {
+			const {
+				getService,
+				getModel,
+				getModelName,
+				getMessages,
+				isLoading,
+			} = select( playgroundStore );
 			const { getServiceName } = select( aiStore );
 
 			const currentService = getService();
@@ -39,9 +44,9 @@ export default function PlaygroundStatus() {
 				serviceName: currentService
 					? getServiceName( currentService )
 					: '',
+				modelName: getModelName(),
 			};
-		}
-	);
+		} );
 
 	const [ messageCount, setMessageCount ] = useState( false );
 	const [ messageStatus, setMessageStatus ] = useState( '' );
@@ -90,7 +95,7 @@ export default function PlaygroundStatus() {
 					/* translators: 1: service name, 2: model name */
 					__( 'Sending prompt to %1$s model "%2$s"…', 'ai-services' ),
 					serviceName,
-					model
+					modelName
 				) }
 			</p>
 		);
@@ -106,7 +111,7 @@ export default function PlaygroundStatus() {
 						'ai-services'
 					),
 					serviceName,
-					model
+					modelName
 				) }
 			</p>
 		);
@@ -122,7 +127,7 @@ export default function PlaygroundStatus() {
 						'ai-services'
 					),
 					serviceName,
-					model
+					modelName
 				) }
 			</p>
 		);
@@ -138,7 +143,7 @@ export default function PlaygroundStatus() {
 				/* translators: 1: service name, 2: model name */
 				__( 'Ready to use %1$s with model "%2$s".', 'ai-services' ),
 				serviceName,
-				model
+				modelName
 			) }
 		</p>
 	);

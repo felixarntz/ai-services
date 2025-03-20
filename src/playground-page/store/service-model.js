@@ -399,6 +399,24 @@ const selectors = {
 		return model;
 	} ),
 
+	getModelName: createRegistrySelector( ( select ) => () => {
+		const model = select( preferencesStore ).get(
+			'ai-services-playground',
+			'model'
+		);
+		if ( ! model ) {
+			return false;
+		}
+		const availableModels = select( STORE_NAME ).getAvailableModels();
+		if ( ! availableModels ) {
+			return false;
+		}
+		const modelData = availableModels.find(
+			( { identifier } ) => identifier === model
+		);
+		return modelData?.label || false;
+	} ),
+
 	getModelParam: createRegistrySelector( ( select ) => ( state, key ) => {
 		return select( preferencesStore ).get(
 			'ai-services-playground',

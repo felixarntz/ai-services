@@ -126,13 +126,13 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param string               $id       The ID of the function response, or an empty string. If present, this must
-	 *                                       match the function call ID.
-	 * @param string               $name     The name of the function, or an empty string. If present, this must match
-	 *                                       the name of the function called.
-	 * @param array<string, mixed> $response The function output response.
+	 * @param string $id       The ID of the function response, or an empty string. If present, this must match the
+	 *                         function call ID.
+	 * @param string $name     The name of the function, or an empty string. If present, this must match the name of
+	 *                         the function called.
+	 * @param mixed  $response The function output response.
 	 */
-	public function add_function_response_part( string $id, string $name, array $response ): void {
+	public function add_function_response_part( string $id, string $name, $response ): void {
 		$data = array();
 		if ( $id ) {
 			$data['id'] = $id;

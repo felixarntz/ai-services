@@ -516,7 +516,15 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 						$parts[] = array(
 							'functionResponse' => array(
 								'name'     => $part->get_name(),
-								'response' => $part->get_response(),
+
+								/*
+								 * The Google AI API requires function responses to be objects.
+								 * See also https://ai.google.dev/gemini-api/docs/function-calling#multi-turn-example-1
+								 */
+								'response' => array(
+									'name'    => $part->get_name(),
+									'content' => $part->get_response(),
+								),
 							),
 						);
 					} else {

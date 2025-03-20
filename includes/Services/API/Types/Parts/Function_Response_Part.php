@@ -58,9 +58,9 @@ final class Function_Response_Part extends Abstract_Part {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @return array<string, mixed> The function output response.
+	 * @return mixed The function output response.
 	 */
-	public function get_response(): array {
+	public function get_response() {
 		return $this->to_array()['functionResponse']['response'];
 	}
 
@@ -88,8 +88,8 @@ final class Function_Response_Part extends Abstract_Part {
 			throw new InvalidArgumentException( 'The function response part data must contain either a string id value or a string name value.' );
 		}
 
-		if ( ! isset( $function_response['response'] ) || ! is_array( $function_response['response'] ) ) {
-			throw new InvalidArgumentException( 'The function response part data must contain an object / associative array response value.' );
+		if ( ! isset( $function_response['response'] ) ) {
+			throw new InvalidArgumentException( 'The function response part data must contain a response value.' );
 		}
 
 		$function_response_formatted = array();
@@ -117,7 +117,7 @@ final class Function_Response_Part extends Abstract_Part {
 		return array(
 			'functionResponse' => array(
 				'name'     => '',
-				'response' => array(),
+				'response' => null,
 			),
 		);
 	}
@@ -147,7 +147,7 @@ final class Function_Response_Part extends Abstract_Part {
 						),
 						'response' => array(
 							'description'          => __( 'Response from the function called.', 'ai-services' ),
-							'type'                 => 'object',
+							'type'                 => array( 'string', 'number', 'boolean', 'array', 'object' ),
 							'additionalProperties' => true,
 						),
 					),

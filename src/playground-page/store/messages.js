@@ -16,15 +16,19 @@ const EMPTY_ARRAY = [];
 const FEATURE_SLUG = 'ai-playground';
 const HISTORY_SLUG = 'default';
 
-const prepareContentForCache = ( content, attachment ) => {
+const prepareContentForCache = ( content, attachments ) => {
 	return {
 		...content,
-		parts: content.parts.map( ( part ) => {
+		parts: content.parts.map( ( part, partIndex ) => {
 			/*
 			 * For inline data where the attachment is known, strip the actual base64 data to save space.
 			 * Otherwise, the data may be too large for session storage.
 			 */
-			if ( part.inlineData && part.inlineData.data && attachment ) {
+			if (
+				part.inlineData &&
+				part.inlineData.data &&
+				attachments[ partIndex ]
+			) {
 				const { data, ...otherInlineData } = part.inlineData;
 				return {
 					...part,
@@ -39,19 +43,24 @@ const prepareContentForCache = ( content, attachment ) => {
 	};
 };
 
-const parseContentFromCache = async ( content, attachment ) => {
+const parseContentFromCache = async ( content, attachments ) => {
 	return {
 		...content,
 		parts: await Promise.all(
-			content.parts.map( async ( part ) => {
+			content.parts.map( async ( part, partIndex ) => {
 				// For inline data where the attachment is known but base64 data was stripped before cache, restore it.
-				if ( part.inlineData && ! part.inlineData.data && attachment ) {
+				if (
+					part.inlineData &&
+					! part.inlineData.data &&
+					attachments[ partIndex ]
+				) {
 					return {
 						...part,
 						inlineData: {
 							...part.inlineData,
 							data: await helpers.fileToBase64DataUrl(
-								attachment.sizes?.large?.url || attachment.url
+								attachments[ partIndex ].sizes?.large?.url ||
+									attachments[ partIndex ].url
 							),
 						},
 					};
@@ -63,14 +72,33 @@ const parseContentFromCache = async ( content, attachment ) => {
 };
 
 const prepareMessageForCache = ( message ) => {
-	// We can only optimize messages with inline media if they have the attachment specified.
-	if ( ! message.attachment ) {
+	// Migrate old "attachment" property to new "attachments" array on-the-fly.
+	if ( ! message.attachments && message.attachment ) {
+		let partIndex = message.content.parts.findIndex(
+			( part ) => part.inlineData
+		);
+		if ( partIndex !== -1 ) {
+			partIndex = 0;
+		}
+		message = {
+			...message,
+			attachments: getFreshPartsAttachments(
+				message,
+				partIndex,
+				message.attachment
+			),
+		};
+		delete message.attachment;
+	}
+
+	// We can only optimize messages with inline media if they have the attachments specified.
+	if ( ! message.attachments ) {
 		return message;
 	}
 
 	const prepared = {
 		...message,
-		content: prepareContentForCache( message.content, message.attachment ),
+		content: prepareContentForCache( message.content, message.attachments ),
 	};
 	if ( prepared.rawData ) {
 		/*
@@ -94,8 +122,27 @@ const prepareMessageForCache = ( message ) => {
 };
 
 const parseMessageFromCache = async ( message ) => {
-	// We can only parse messages with inline media if they have the attachment specified.
-	if ( ! message.attachment ) {
+	// Migrate old "attachment" property to new "attachments" array on-the-fly.
+	if ( ! message.attachments && message.attachment ) {
+		let partIndex = message.content.parts.findIndex(
+			( part ) => part.inlineData
+		);
+		if ( partIndex !== -1 ) {
+			partIndex = 0;
+		}
+		message = {
+			...message,
+			attachments: getFreshPartsAttachments(
+				message,
+				partIndex,
+				message.attachment
+			),
+		};
+		delete message.attachment;
+	}
+
+	// We can only parse messages with inline media if they have the attachments specified.
+	if ( ! message.attachments ) {
 		return message;
 	}
 
@@ -103,7 +150,7 @@ const parseMessageFromCache = async ( message ) => {
 		...message,
 		content: await parseContentFromCache(
 			message.content,
-			message.attachment
+			message.attachments
 		),
 	};
 	if ( parsed.rawData ) {
@@ -243,6 +290,19 @@ const generateDateFileSuffix = () => {
 		.replace( /:/g, '' );
 };
 
+const getFreshPartsAttachments = ( message, partIndex, attachment ) => {
+	const attachments = [ ...( message.attachments || [] ) ];
+	if ( attachments.length < message.content.parts.length ) {
+		const missingIndexes =
+			message.content.parts.length - attachments.length;
+		for ( let i = 0; i < missingIndexes; i++ ) {
+			attachments.push( null );
+		}
+	}
+	attachments[ partIndex ] = attachment;
+	return attachments;
+};
+
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
 const RESET_MESSAGES = 'RESET_MESSAGES';
@@ -355,7 +415,11 @@ const actions = {
 				},
 			};
 			if ( attachment ) {
-				additionalPromptData.attachment = attachment;
+				additionalPromptData.attachments = getFreshPartsAttachments(
+					{ content: newContent },
+					1,
+					attachment
+				);
 			}
 
 			dispatch.receiveMessage( 'user', newContent, additionalPromptData );
@@ -417,10 +481,11 @@ const actions = {
 	 * @since 0.5.0
 	 *
 	 * @param {number} index      The index of the message.
+	 * @param {number} partIndex  The index of the part within the message.
 	 * @param {Object} inlineData The inline data object.
 	 * @return {Function} Action creator.
 	 */
-	uploadAttachment( index, inlineData ) {
+	uploadAttachment( index, partIndex, inlineData ) {
 		return async ( { dispatch, registry, select } ) => {
 			const messages = select.getMessages();
 			const message = messages?.[ index ];
@@ -429,19 +494,20 @@ const actions = {
 			}
 
 			// Sanity check that it's the correct message.
-			const inlineDataPart = message.content.parts.find(
-				( part ) => part.inlineData && part.inlineData.data
-			);
+			const inlineDataPart = message.content.parts?.[ partIndex ];
 			if ( inlineDataPart?.inlineData?.data !== inlineData.data ) {
 				return;
 			}
 
 			const fileBlob = await helpers.base64DataUrlToBlob(
-				inlineData.data
+				helpers.base64DataToBase64DataUrl(
+					inlineData.data,
+					inlineData.mimeType
+				)
 			);
 			const file = new File(
 				[ fileBlob ],
-				`ai-generated-${ generateDateFileSuffix() }.${
+				`ai-generated-${ partIndex }-${ generateDateFileSuffix() }.${
 					fileBlob.type.split( '/' )[ 1 ]
 				}`,
 				{
@@ -491,7 +557,11 @@ const actions = {
 							return;
 						}
 						if ( attachment.id ) {
-							dispatch.setMessageAttachment( index, attachment );
+							dispatch.setMessageAttachment(
+								index,
+								partIndex,
+								attachment
+							);
 							registry
 								.dispatch( noticesStore )
 								.createSuccessNotice(
@@ -598,13 +668,14 @@ const actions = {
 	 * @since 0.5.0
 	 *
 	 * @param {number} index      The index of the message.
+	 * @param {number} partIndex  The index of the part within the message.
 	 * @param {Object} attachment The attachment object.
 	 * @return {Object} Action creator.
 	 */
-	setMessageAttachment( index, attachment ) {
+	setMessageAttachment( index, partIndex, attachment ) {
 		return {
 			type: SET_MESSAGE_ATTACHMENT,
-			payload: { index, attachment },
+			payload: { index, partIndex, attachment },
 		};
 	},
 };
@@ -628,13 +699,13 @@ function reducer( state = initialState, action ) {
 					newMessage.service = additionalData.service;
 					newMessage.model = additionalData.model;
 					newMessage.rawData = additionalData.rawData;
-					if ( additionalData.attachment ) {
-						newMessage.attachment = additionalData.attachment;
+					if ( additionalData.attachments ) {
+						newMessage.attachments = additionalData.attachments;
 					}
 				} else if ( type === 'user' ) {
 					newMessage.rawData = additionalData.rawData;
-					if ( additionalData.attachment ) {
-						newMessage.attachment = additionalData.attachment;
+					if ( additionalData.attachments ) {
+						newMessage.attachments = additionalData.attachments;
 					}
 				}
 			}
@@ -668,12 +739,16 @@ function reducer( state = initialState, action ) {
 			};
 		}
 		case SET_MESSAGE_ATTACHMENT: {
-			const { index, attachment } = action.payload;
+			const { index, partIndex, attachment } = action.payload;
 			if ( state.messages?.[ index ] ) {
 				const messages = [ ...state.messages ];
 				messages[ index ] = {
 					...messages[ index ],
-					attachment,
+					attachments: getFreshPartsAttachments(
+						messages[ index ],
+						partIndex,
+						attachment
+					),
 				};
 				storeMessages( messages );
 				return {

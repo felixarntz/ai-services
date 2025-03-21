@@ -36,6 +36,21 @@ const getModelAuthor = ( additionalData ) => {
 	return __( 'AI Model', 'ai-services' );
 };
 
+const findMediaPartsToUpload = ( parts, existingAttachments ) => {
+	const mediaParts = [];
+	for ( let partIndex = 0; partIndex < parts.length; partIndex++ ) {
+		const part = parts[ partIndex ];
+		if (
+			part.inlineData &&
+			part.inlineData.data &&
+			! existingAttachments[ partIndex ]
+		) {
+			mediaParts.push( { partIndex, inlineData: part.inlineData } );
+		}
+	}
+	return mediaParts;
+};
+
 /**
  * Renders a single message.
  *
@@ -51,14 +66,16 @@ const getModelAuthor = ( additionalData ) => {
 function Message( { message, index, onUploadAttachment, onViewRawData } ) {
 	const { type, content, ...additionalData } = message;
 
-	const inlineData = useMemo(
-		() =>
-			content.parts.find(
-				( part ) => part.inlineData && part.inlineData.data
-			)?.inlineData,
-		[ content.parts ]
-	);
-	const allowUploadAttachment = !! inlineData && ! additionalData.attachment;
+	const mediaPartsToUpload = useMemo( () => {
+		if ( ! content.parts ) {
+			return [];
+		}
+		return findMediaPartsToUpload(
+			content.parts,
+			additionalData.attachments || []
+		);
+	}, [ content.parts, additionalData.attachments ] );
+	const allowUploadAttachment = mediaPartsToUpload.length > 0;
 	const hasRawData = !! additionalData.rawData;
 
 	const showActions = allowUploadAttachment || hasRawData;
@@ -98,10 +115,21 @@ function Message( { message, index, onUploadAttachment, onViewRawData } ) {
 								icon={ upload }
 								iconSize={ 18 }
 								onClick={ () => {
-									onUploadAttachment( index, inlineData );
+									for ( const {
+										partIndex,
+										inlineData,
+									} of mediaPartsToUpload ) {
+										onUploadAttachment(
+											index,
+											partIndex,
+											inlineData
+										);
+									}
 								} }
 							>
-								{ __( 'Save file', 'ai-services' ) }
+								{ mediaPartsToUpload.length > 1
+									? __( 'Save files', 'ai-services' )
+									: __( 'Save file', 'ai-services' ) }
 							</Button>
 						) }
 						{ hasRawData && (
@@ -172,8 +200,8 @@ export default function Messages() {
 	}, [ messages ] );
 
 	const onUploadAttachment = useCallback(
-		async ( index, inlineData ) => {
-			await uploadAttachment( index, inlineData );
+		async ( index, partIndex, inlineData ) => {
+			await uploadAttachment( index, partIndex, inlineData );
 		},
 		[ uploadAttachment ]
 	);

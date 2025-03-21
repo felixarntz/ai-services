@@ -178,7 +178,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 		if ( $this->generation_config ) {
 			$params               = array_merge( $this->generation_config->get_additional_args(), $params );
 			$params['parameters'] = Transformer::transform_generation_config_params(
-				array(),
+				isset( $params['generationConfig'] ) && is_array( $params['generationConfig'] ) ? $params['generationConfig'] : array(),
 				$this->generation_config,
 				self::get_generation_config_transformers()
 			);

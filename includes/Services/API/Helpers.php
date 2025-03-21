@@ -301,4 +301,41 @@ final class Helpers {
 
 		return new Blob( $binary_data, $matches[1] );
 	}
+
+	/**
+	 * Ensures the given base64 data is prefixed correctly to be a data URL.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $base64_data Base64-encoded data. If it is already a data URL, it will be returned as is.
+	 * @param string $mime_type   MIME type for the data.
+	 * @return string The base64 data URL.
+	 */
+	public static function base64_data_to_base64_data_url( string $base64_data, string $mime_type ): string {
+		if ( str_starts_with( $base64_data, 'data:' ) ) {
+			return $base64_data;
+		}
+
+		return 'data:' . $mime_type . ';base64,' . $base64_data;
+	}
+
+	/**
+	 * Ensures the given base64 data URL has its prefix removed to be just the base64 data.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $base64_data_url Base64 data URL. If it is already without prefix, it will be returned as is.
+	 * @return string The base64-encoded data.
+	 */
+	public static function base64_data_url_to_base64_data( string $base64_data_url ): string {
+		if ( ! str_starts_with( $base64_data_url, 'data:' ) ) {
+			return $base64_data_url;
+		}
+
+		return preg_replace(
+			'/^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/',
+			'',
+			$base64_data_url
+		);
+	}
 }

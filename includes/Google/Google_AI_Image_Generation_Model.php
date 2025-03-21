@@ -244,13 +244,10 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 		$mime_type = isset( $candidate_data['mimeType'] ) ? $candidate_data['mimeType'] : 'image/png';
 
 		if ( isset( $candidate_data['bytesBase64Encoded'] ) ) {
-			if ( ! str_starts_with( $candidate_data['bytesBase64Encoded'], 'data:' ) ) {
-				$candidate_data['bytesBase64Encoded'] = 'data:' . $mime_type . ';base64,' . $candidate_data['bytesBase64Encoded'];
-			}
 			$part = array(
 				'inlineData' => array(
 					'mimeType' => $mime_type,
-					'data'     => $candidate_data['bytesBase64Encoded'],
+					'data'     => Helpers::base64_data_to_base64_data_url( $candidate_data['bytesBase64Encoded'], $mime_type ),
 				),
 			);
 		} else {

@@ -500,11 +500,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 								'type'       => 'base64',
 								'media_type' => $mime_type,
 								// The Anthropic AI API expects inlineData blobs to be without the prefix.
-								'data'       => preg_replace(
-									'/^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/',
-									'',
-									$part->get_base64_data()
-								),
+								'data'       => Helpers::base64_data_url_to_base64_data( $part->get_base64_data() ),
 							),
 						);
 					} elseif ( $part instanceof Function_Call_Part ) {

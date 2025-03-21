@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Google;
 
 use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
+use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
@@ -387,6 +388,15 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			throw $this->api->create_missing_response_key_exception( "candidates.{$index}.content.parts" );
 		}
 
+		foreach ( $candidate_data['content']['parts'] as $index => $part ) {
+			if ( isset( $part['inlineData']['mimeType'] ) && isset( $part['inlineData']['data'] ) ) {
+				$candidate_data['content']['parts'][ $index ]['inlineData']['data'] = Helpers::base64_data_to_base64_data_url(
+					$part['inlineData']['data'],
+					$part['inlineData']['mimeType']
+				);
+			}
+		}
+
 		$role = isset( $candidate_data['content']['role'] ) && 'user' === $candidate_data['content']['role']
 			? Content_Role::USER
 			: Content_Role::MODEL;
@@ -476,11 +486,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 								'inlineData' => array(
 									'mimeType' => $mime_type,
 									// The Google AI API expects inlineData blobs to be without the prefix.
-									'data'     => preg_replace(
-										'/^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/',
-										'',
-										$part->get_base64_data()
-									),
+									'data'     => Helpers::base64_data_url_to_base64_data( $part->get_base64_data() ),
 								),
 							);
 						} else {

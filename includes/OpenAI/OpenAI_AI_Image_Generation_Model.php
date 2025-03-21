@@ -241,13 +241,10 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 		$mime_type = 'image/png';
 
 		if ( isset( $candidate_data['b64_json'] ) ) {
-			if ( ! str_starts_with( $candidate_data['b64_json'], 'data:' ) ) {
-				$candidate_data['b64_json'] = 'data:' . $mime_type . ';base64,' . $candidate_data['b64_json'];
-			}
 			$part = array(
 				'inlineData' => array(
 					'mimeType' => $mime_type,
-					'data'     => $candidate_data['b64_json'],
+					'data'     => Helpers::base64_data_to_base64_data_url( $candidate_data['b64_json'], $mime_type ),
 				),
 			);
 		} else {

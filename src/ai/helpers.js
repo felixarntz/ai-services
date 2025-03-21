@@ -275,3 +275,34 @@ export async function base64DataUrlToBlob( base64DataUrl ) {
 		type: prefixMatch[ 1 ],
 	} );
 }
+
+/**
+ * Ensures the given base64 data is prefixed correctly to be a data URL.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string} base64Data Base64-encoded data. If it is already a data URL, it will be returned as is.
+ * @param {string} mimeType   MIME type for the data.
+ * @return {string} The base64 data URL.
+ */
+export function base64DataToBase64DataUrl( base64Data, mimeType ) {
+	if ( base64Data.startsWith( 'data:' ) ) {
+		return base64Data;
+	}
+	return `data:${ mimeType };base64,${ base64Data }`;
+}
+
+/**
+ * Ensures the given base64 data URL has its prefix removed to be just the base64 data.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string} base64DataUrl Base64 data URL. If it is already without prefix, it will be returned as is.
+ * @return {string} The base64-encoded data.
+ */
+export function base64DataUrlToBase64Data( base64DataUrl ) {
+	if ( ! base64DataUrl.startsWith( 'data:' ) ) {
+		return base64DataUrl;
+	}
+	return base64DataUrl.replace( /^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/, '' );
+}

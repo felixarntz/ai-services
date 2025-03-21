@@ -3,6 +3,7 @@
  */
 import Markdown from 'markdown-to-jsx';
 import PropTypes from 'prop-types';
+import { helpers } from '@ai-services/ai';
 
 /**
  * WordPress dependencies
@@ -96,9 +97,7 @@ function Parts( { parts } ) {
 
 		if ( part.inlineData ) {
 			const { mimeType, data } = part.inlineData;
-			const base64 = /^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/.test( data )
-				? data
-				: `data:${ mimeType };base64,${ data }`;
+			const base64 = helpers.base64DataToBase64DataUrl( data, mimeType );
 			return (
 				<div className="ai-services-content-part" key={ index }>
 					<Media mimeType={ mimeType } src={ base64 } />

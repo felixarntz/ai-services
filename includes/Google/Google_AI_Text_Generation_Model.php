@@ -281,6 +281,11 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			);
 		}
 
+		$params['generationConfig']['responseModalities'] = array(
+			'Text',
+			'Image',
+		);
+
 		if ( $this->system_instruction ) {
 			$params['systemInstruction'] = $this->system_instruction->to_array();
 		}
@@ -563,6 +568,9 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				if ( $config->get_response_mime_type() === 'application/json' ) {
 					return $config->get_response_schema();
 				}
+				return array();
+			},
+			'responseModalities' => static function ( Text_Generation_Config $config ) {
 				return array();
 			},
 			'candidateCount'   => static function ( Text_Generation_Config $config ) {

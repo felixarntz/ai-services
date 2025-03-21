@@ -50,6 +50,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 		'responseMimeType' => 'string',
 		'responseSchema'   => 'object',
 		'candidateCount'   => 'integer',
+		'responseModalities' => 'array',
 		'maxOutputTokens'  => 'integer',
 		'temperature'      => 'float',
 		'topP'             => 'float',
@@ -284,6 +285,11 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 					'type'                 => 'object',
 					'properties'           => array(),
 					'additionalProperties' => true,
+				),
+				'responseModalities'   => array(
+					'description'          => __( 'Response modalities for multimodal output.', 'ai-services' ),
+					'type'                 => 'array',
+					'items'                => array( 'type' => 'string' ),
 				),
 				'candidateCount'   => array(
 					'description' => __( 'Number of response candidates to generate.', 'ai-services' ),

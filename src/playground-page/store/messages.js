@@ -281,13 +281,28 @@ const getLastMessageFunctionCall = ( messages ) => {
 	return lastMessage.content?.parts?.find( ( part ) => part.functionCall );
 };
 
-const generateDateFileSuffix = () => {
+const generateFilename = ( partIndex, mimeType, serviceSlug, modelSlug ) => {
+	let extension = mimeType.split( '/' )[ 1 ];
+	if ( extension === 'jpeg' ) {
+		extension = 'jpg';
+	}
+
+	let source = '';
+	if ( serviceSlug ) {
+		source = `${ serviceSlug }-`;
+		if ( modelSlug ) {
+			source += `${ modelSlug }-`;
+		}
+	}
+
 	const now = new Date();
-	return now
+	const dateSuffix = now
 		.toISOString()
 		.substring( 0, 19 )
 		.replace( 'T', '-' )
 		.replace( /:/g, '' );
+
+	return `ai-generated-${ partIndex }-${ source }${ dateSuffix }.${ extension }`;
 };
 
 const getFreshPartsAttachments = ( message, partIndex, attachment ) => {
@@ -507,9 +522,12 @@ const actions = {
 			);
 			const file = new File(
 				[ fileBlob ],
-				`ai-generated-${ partIndex }-${ generateDateFileSuffix() }.${
-					fileBlob.type.split( '/' )[ 1 ]
-				}`,
+				generateFilename(
+					partIndex,
+					fileBlob.type,
+					message.service?.slug,
+					message.model?.slug
+				),
 				{
 					type: fileBlob.type,
 					lastModified: new Date().getTime(),

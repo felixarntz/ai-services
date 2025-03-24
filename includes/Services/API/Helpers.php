@@ -25,6 +25,8 @@ use WP_Post;
  * Class providing static helper methods as part of the public API.
  *
  * @since 0.2.0
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 final class Helpers {
 

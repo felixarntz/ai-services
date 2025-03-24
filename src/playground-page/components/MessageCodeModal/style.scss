@@ -1,0 +1,29 @@
+.ai-services-playground {
+
+	&__message-code-modal.components-modal__frame {
+
+		@media (min-width: 600px) {
+			width: 80%;
+			min-width: 550px;
+			max-width: 900px;
+		}
+	}
+
+	&__message-code-tabs {
+		margin-bottom: 16px;
+
+		> button[role="tab"] {
+			font-weight: 500;
+
+			&[aria-selected="true"] {
+				border-bottom: var( --wp-admin-border-width-focus ) solid var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9));
+			}
+		}
+	}
+
+	&__code-textarea {
+		display: block;
+		width: 100%;
+		tab-size: 4;
+	}
+}

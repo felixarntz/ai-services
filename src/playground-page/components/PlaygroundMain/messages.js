@@ -60,10 +60,10 @@ const findMediaPartsToUpload = ( parts, existingAttachments ) => {
  * @param {Object}   props.message            The message object.
  * @param {number}   props.index              The index of the message within the list of messages.
  * @param {Function} props.onUploadAttachment The callback to upload an attachment.
- * @param {Function} props.onViewRawData      The callback to view the raw data.
+ * @param {Function} props.onViewMessageCode  The callback to view the message code.
  * @return {Component} The component to be rendered.
  */
-function Message( { message, index, onUploadAttachment, onViewRawData } ) {
+function Message( { message, index, onUploadAttachment, onViewMessageCode } ) {
 	const { type, content, ...additionalData } = message;
 
 	const mediaPartsToUpload = useMemo( () => {
@@ -139,10 +139,12 @@ function Message( { message, index, onUploadAttachment, onViewRawData } ) {
 								icon={ code }
 								iconSize={ 18 }
 								onClick={ () => {
-									onViewRawData( additionalData.rawData );
+									onViewMessageCode( message );
 								} }
 							>
-								{ __( 'View raw data', 'ai-services' ) }
+								{ type === 'user'
+									? __( 'View code', 'ai-services' )
+									: __( 'View raw data', 'ai-services' ) }
 							</Button>
 						) }
 					</Flex>
@@ -164,7 +166,7 @@ export default function Messages() {
 		select( playgroundStore ).getMessages()
 	);
 
-	const { uploadAttachment, setActiveRawData } =
+	const { uploadAttachment, setActiveMessage } =
 		useDispatch( playgroundStore );
 	const { openModal } = useDispatch( interfaceStore );
 
@@ -206,12 +208,12 @@ export default function Messages() {
 		[ uploadAttachment ]
 	);
 
-	const onViewRawData = useCallback(
-		( rawData ) => {
-			setActiveRawData( rawData );
-			openModal( 'raw-message-data' );
+	const onViewMessageCode = useCallback(
+		( message ) => {
+			setActiveMessage( message );
+			openModal( 'message-code' );
 		},
-		[ setActiveRawData, openModal ]
+		[ setActiveMessage, openModal ]
 	);
 
 	return (
@@ -226,7 +228,7 @@ export default function Messages() {
 						message={ message }
 						index={ index }
 						onUploadAttachment={ onUploadAttachment }
-						onViewRawData={ onViewRawData }
+						onViewMessageCode={ onViewMessageCode }
 					/>
 				) ) }
 			</div>

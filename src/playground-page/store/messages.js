@@ -179,9 +179,55 @@ const retrieveMessages = async () => {
 		.historyPersistence()
 		.loadHistory( FEATURE_SLUG, HISTORY_SLUG );
 	if ( history && history.entries ) {
-		return await Promise.all(
+		const entries = await Promise.all(
 			history.entries.map( parseMessageFromCache )
 		);
+
+		/*
+		 * For backward compatibility, populate the additional data for
+		 * `foundationalCapability`, `service`, and `model` for each user message that are missing them,
+		 * using a best guess based on the subsequent model response.
+		 */
+		for ( let index = 0; index < entries.length; index++ ) {
+			const entry = entries[ index ];
+			if (
+				entry.type === 'user' &&
+				( ! entry.foundationalCapability ||
+					! entry.service ||
+					! entry.model )
+			) {
+				const nextEntry = entries[ index + 1 ];
+				if ( nextEntry && nextEntry.type === 'model' ) {
+					if ( nextEntry.content.parts?.[ 0 ]?.inlineData ) {
+						entry.foundationalCapability =
+							enums.AiCapability.IMAGE_GENERATION;
+					} else {
+						entry.foundationalCapability =
+							enums.AiCapability.TEXT_GENERATION;
+					}
+					entry.service = nextEntry.service;
+					entry.model = nextEntry.model;
+				} else {
+					entry.foundationalCapability =
+						enums.AiCapability.TEXT_GENERATION;
+				}
+				entries[ index ] = entry;
+			} else if (
+				entry.type === 'model' &&
+				! entry.foundationalCapability
+			) {
+				if ( entry.content.parts?.[ 0 ]?.inlineData ) {
+					entry.foundationalCapability =
+						enums.AiCapability.IMAGE_GENERATION;
+				} else {
+					entry.foundationalCapability =
+						enums.AiCapability.TEXT_GENERATION;
+				}
+				entries[ index ] = entry;
+			}
+		}
+
+		return entries;
 	}
 	return EMPTY_ARRAY;
 };
@@ -321,7 +367,7 @@ const getFreshPartsAttachments = ( message, partIndex, attachment ) => {
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
 const RESET_MESSAGES = 'RESET_MESSAGES';
-const SET_ACTIVE_RAW_DATA = 'SET_ACTIVE_RAW_DATA';
+const SET_ACTIVE_MESSAGE = 'SET_ACTIVE_MESSAGE';
 const SET_MESSAGE_ATTACHMENT = 'SET_MESSAGE_ATTACHMENT';
 const LOAD_START = 'LOAD_START';
 const LOAD_FINISH = 'LOAD_FINISH';
@@ -331,7 +377,7 @@ const UPLOAD_ATTACHMENT_NOTICE_ID = 'UPLOAD_ATTACHMENT_NOTICE_ID';
 const initialState = {
 	messages: undefined,
 	loading: false,
-	activeRawData: null,
+	activeMessage: null,
 };
 
 const actions = {
@@ -423,7 +469,35 @@ const actions = {
 				}
 			}
 
+			await dispatch( {
+				type: LOAD_START,
+			} );
+
+			if ( registry.select( aiStore ).getServices() === undefined ) {
+				await resolveSelect( aiStore ).getServices();
+			}
+
+			const service = registry
+				.select( aiStore )
+				.getAvailableService( serviceSlug );
+			const model = service.getModel( modelParams );
+
+			const additionalData = {
+				foundationalCapability,
+				service: {
+					slug: serviceSlug,
+					name: registry
+						.select( aiStore )
+						.getServiceName( serviceSlug ),
+				},
+				model: {
+					slug: modelSlug,
+					name: model.name || modelSlug,
+				},
+			};
+
 			const additionalPromptData = {
+				...additionalData,
 				rawData: {
 					content: contentToSend,
 					modelParams,
@@ -439,19 +513,6 @@ const actions = {
 
 			dispatch.receiveMessage( 'user', newContent, additionalPromptData );
 
-			await dispatch( {
-				type: LOAD_START,
-			} );
-
-			if ( registry.select( aiStore ).getServices() === undefined ) {
-				await resolveSelect( aiStore ).getServices();
-			}
-
-			const service = registry
-				.select( aiStore )
-				.getAvailableService( serviceSlug );
-			const model = service.getModel( modelParams );
-
 			let candidates;
 			try {
 				if (
@@ -466,16 +527,7 @@ const actions = {
 				const responseContent =
 					helpers.getCandidateContents( candidates )[ 0 ];
 				dispatch.receiveMessage( 'model', responseContent, {
-					service: {
-						slug: serviceSlug,
-						name: registry
-							.select( aiStore )
-							.getServiceName( serviceSlug ),
-					},
-					model: {
-						slug: modelSlug,
-						name: model.name || modelSlug,
-					},
+					...additionalData,
 					rawData: candidates,
 				} );
 			} catch ( error ) {
@@ -666,17 +718,17 @@ const actions = {
 	},
 
 	/**
-	 * Sets the active raw data (to display in a modal).
+	 * Sets the active message (to display a modal for it).
 	 *
-	 * @since 0.4.0
+	 * @since n.e.x.t
 	 *
-	 * @param {Object} rawData Raw data to display.
+	 * @param {Object} message Message to display.
 	 * @return {Object} Action creator.
 	 */
-	setActiveRawData( rawData ) {
+	setActiveMessage( message ) {
 		return {
-			type: SET_ACTIVE_RAW_DATA,
-			payload: { rawData },
+			type: SET_ACTIVE_MESSAGE,
+			payload: { message },
 		};
 	},
 
@@ -713,18 +765,13 @@ function reducer( state = initialState, action ) {
 			const { type, content, additionalData } = action.payload;
 			const newMessage = { type, content };
 			if ( additionalData ) {
-				if ( type === 'model' ) {
-					newMessage.service = additionalData.service;
-					newMessage.model = additionalData.model;
-					newMessage.rawData = additionalData.rawData;
-					if ( additionalData.attachments ) {
-						newMessage.attachments = additionalData.attachments;
-					}
-				} else if ( type === 'user' ) {
-					newMessage.rawData = additionalData.rawData;
-					if ( additionalData.attachments ) {
-						newMessage.attachments = additionalData.attachments;
-					}
+				newMessage.foundationalCapability =
+					additionalData.foundationalCapability;
+				newMessage.service = additionalData.service;
+				newMessage.model = additionalData.model;
+				newMessage.rawData = additionalData.rawData;
+				if ( additionalData.attachments ) {
+					newMessage.attachments = additionalData.attachments;
 				}
 			}
 
@@ -749,11 +796,11 @@ function reducer( state = initialState, action ) {
 				messages: [],
 			};
 		}
-		case SET_ACTIVE_RAW_DATA: {
-			const { rawData } = action.payload;
+		case SET_ACTIVE_MESSAGE: {
+			const { message } = action.payload;
 			return {
 				...state,
-				activeRawData: rawData,
+				activeMessage: message,
 			};
 		}
 		case SET_MESSAGE_ATTACHMENT: {
@@ -818,8 +865,8 @@ const selectors = {
 		return state.loading || state.messages === undefined;
 	},
 
-	getActiveRawData: ( state ) => {
-		return state.activeRawData;
+	getActiveMessage: ( state ) => {
+		return state.activeMessage;
 	},
 };
 

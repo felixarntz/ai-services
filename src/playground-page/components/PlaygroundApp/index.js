@@ -25,7 +25,7 @@ import PlaygroundMoreMenu from '../PlaygroundMoreMenu';
 import PlaygroundStatus from '../PlaygroundStatus';
 import PlaygroundMain from '../PlaygroundMain';
 import FunctionDeclarationsModal from '../FunctionDeclarationsModal';
-import RawDataModal from '../RawDataModal';
+import MessageCodeModal from '../MessageCodeModal';
 import PlaygroundCapabilitiesPanel from '../PlaygroundCapabilitiesPanel';
 import PlaygroundServiceModelPanel from '../PlaygroundServiceModelPanel';
 import PlaygroundModelConfigPanel from '../PlaygroundModelConfigPanel';
@@ -74,7 +74,7 @@ export default function PlaygroundApp() {
 			</Header>
 			<PlaygroundMain />
 			<FunctionDeclarationsModal />
-			<RawDataModal />
+			<MessageCodeModal />
 			<Sidebar
 				identifier="ai-services/playground-sidebar"
 				title={ __( 'AI Configuration', 'ai-services' ) }

@@ -7,9 +7,9 @@ import { resolveSelect } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import ChatSession from './classes/chat-session';
-import * as enums from './enums';
-import { formatNewContent } from './util';
+import ChatSession from '../classes/chat-session';
+import * as enums from '../enums';
+import { formatNewContent } from '../util';
 
 const RECEIVE_CHAT = 'RECEIVE_CHAT';
 const RECEIVE_CONTENT = 'RECEIVE_CONTENT';

@@ -6,7 +6,7 @@ import { __, _x } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import * as enums from './enums';
+import * as enums from '../enums';
 
 let browser;
 

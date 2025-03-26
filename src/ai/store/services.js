@@ -9,8 +9,8 @@ import { createRegistrySelector } from '@wordpress/data';
  */
 import { STORE_NAME } from './name';
 import { getBrowserServiceData } from './browser';
-import GenerativeAiService from './classes/generative-ai-service';
-import BrowserGenerativeAiService from './classes/browser-generative-ai-service';
+import GenerativeAiService from '../classes/generative-ai-service';
+import BrowserGenerativeAiService from '../classes/browser-generative-ai-service';
 
 const RECEIVE_SERVICES = 'RECEIVE_SERVICES';
 

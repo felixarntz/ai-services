@@ -65,6 +65,10 @@ class Playground_Page extends Abstract_Admin_Page {
 				$this->script_registry->enqueue( 'ais-playground-page' );
 				$this->style_registry->enqueue( 'ais-playground-page' );
 
+				// Also enqueue the CodeMirror script for syntax highlighting source code in the code modal.
+				$this->script_registry->enqueue( 'wp-codemirror' );
+				$this->style_registry->enqueue( 'wp-codemirror' );
+
 				$this->preload_rest_api_data();
 			}
 		);

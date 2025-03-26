@@ -7,7 +7,12 @@ import { enums } from '@ai-services/ai';
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useMemo } from '@wordpress/element';
+import { useMemo, useRef } from '@wordpress/element';
+
+/**
+ * Internal dependencies
+ */
+import useCodeMirrorEffect from './use-codemirror-effect';
 
 const toPhpValue = ( input, rootIndentTabs = 0 ) => {
 	const lines = [];
@@ -185,16 +190,24 @@ export default function PhpCodeTextarea( {
 		return getPhpCode( rawData, service, foundationalCapability );
 	}, [ rawData, service, foundationalCapability ] );
 
+	const textareaRef = useRef();
+
+	// Initialize 'wp-codemirror'.
+	useCodeMirrorEffect( textareaRef, 'php' );
+
 	return (
-		<textarea
-			className="ai-services-playground__code-textarea code"
-			aria-label={ __(
-				'PHP code to implement the selected prompt',
-				'ai-services'
-			) }
-			value={ phpCode }
-			rows="14"
-			readOnly
-		/>
+		<div className="ai-services-playground__code-textarea-wrapper">
+			<textarea
+				ref={ textareaRef }
+				className="ai-services-playground__code-textarea code"
+				aria-label={ __(
+					'PHP code to implement the selected prompt',
+					'ai-services'
+				) }
+				value={ phpCode }
+				rows="14"
+				readOnly
+			/>
+		</div>
 	);
 }

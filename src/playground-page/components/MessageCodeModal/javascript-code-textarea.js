@@ -7,7 +7,12 @@ import { enums } from '@ai-services/ai';
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useMemo } from '@wordpress/element';
+import { useMemo, useRef } from '@wordpress/element';
+
+/**
+ * Internal dependencies
+ */
+import useCodeMirrorEffect from './use-codemirror-effect';
 
 const toJavaScriptValue = ( input, rootIndentTabs = 0 ) => {
 	const lines = [];
@@ -183,16 +188,24 @@ export default function JavaScriptCodeTextarea( {
 		return getJavaScriptCode( rawData, service, foundationalCapability );
 	}, [ rawData, service, foundationalCapability ] );
 
+	const textareaRef = useRef();
+
+	// Initialize 'wp-codemirror'.
+	useCodeMirrorEffect( textareaRef, 'javascript' );
+
 	return (
-		<textarea
-			className="ai-services-playground__code-textarea code"
-			aria-label={ __(
-				'JavaScript code to implement the selected prompt',
-				'ai-services'
-			) }
-			value={ jsCode }
-			rows="14"
-			readOnly
-		/>
+		<div className="ai-services-playground__code-textarea-wrapper">
+			<textarea
+				ref={ textareaRef }
+				className="ai-services-playground__code-textarea code"
+				aria-label={ __(
+					'JavaScript code to implement the selected prompt',
+					'ai-services'
+				) }
+				value={ jsCode }
+				rows="14"
+				readOnly
+			/>
+		</div>
 	);
 }

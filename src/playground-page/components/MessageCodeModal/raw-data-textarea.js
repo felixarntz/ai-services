@@ -2,7 +2,12 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useMemo } from '@wordpress/element';
+import { useMemo, useRef } from '@wordpress/element';
+
+/**
+ * Internal dependencies
+ */
+import useCodeMirrorEffect from './use-codemirror-effect';
 
 /**
  * Renders a textarea with the raw data for the selected message.
@@ -18,8 +23,14 @@ export default function RawDataTextarea( { rawData } ) {
 		return JSON.stringify( rawData, null, 2 );
 	}, [ rawData ] );
 
+	const textareaRef = useRef();
+
+	// Initialize 'wp-codemirror'.
+	useCodeMirrorEffect( textareaRef, 'json' );
+
 	return (
 		<textarea
+			ref={ textareaRef }
 			className="ai-services-playground__code-textarea code"
 			aria-label={ __(
 				'Raw data for the selected message',

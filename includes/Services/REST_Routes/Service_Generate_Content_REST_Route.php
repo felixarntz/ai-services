@@ -228,6 +228,9 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 			$param_key  = $data_obj_param['param_key'];
 			$class_name = $data_obj_param['class_name'];
 			if ( isset( $model_params[ $param_key ] ) && is_array( $model_params[ $param_key ] ) ) {
+				if ( 'generationConfig' === $param_key ) {
+					$model_params[ $param_key ]['generationConfig'] = array( 'responseModalities' => array( 'Text', 'Image' ) );
+				}
 				$model_params[ $param_key ] = $class_name::from_array( $model_params[ $param_key ] );
 			}
 		}

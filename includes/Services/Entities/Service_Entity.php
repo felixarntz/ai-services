@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Entities;
 
+use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Contracts\Entity;
@@ -117,6 +118,9 @@ class Service_Entity implements Entity {
 				return $this->get_available_models();
 			case 'has_forced_api_key':
 				return $this->has_forced_api_key();
+			case 'authentication_option_slugs':
+				// For now, API keys are the only supported authentication method. TODO: This needs to be revised.
+				return array_keys( API_Key_Authentication::get_option_definitions( $this->slug ) );
 		}
 		return null;
 	}

@@ -1,3 +1,4 @@
+export { default as ApiKeyControl } from './ApiKeyControl';
 export { default as FieldsetBaseControl } from './FieldsetBaseControl';
 export { default as HelpText } from './HelpText';
 export { default as MultiCheckboxControl } from './MultiCheckboxControl';

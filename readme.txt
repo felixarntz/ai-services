@@ -5,7 +5,7 @@ Plugin URI:   https://wordpress.org/plugins/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag:   0.5.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html

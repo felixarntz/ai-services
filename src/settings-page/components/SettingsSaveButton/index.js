@@ -37,6 +37,7 @@ export default function SettingsSaveButton() {
 			isBusy={ isSaving }
 			aria-disabled={ ! isSaveable }
 			// The prop accessibleWhenDisabled should be used here, but doesn't work.
+			__next40pxDefaultSize
 		>
 			{ __( 'Save', 'wp-starter-plugin' ) }
 		</Button>

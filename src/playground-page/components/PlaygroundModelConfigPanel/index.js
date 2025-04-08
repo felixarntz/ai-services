@@ -77,6 +77,7 @@ export default function PlaygroundModelConfigPanel() {
 							setModelParam( 'maxOutputTokens', value )
 						}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<TextControl
 						type="number"
@@ -98,6 +99,7 @@ export default function PlaygroundModelConfigPanel() {
 							setModelParam( 'temperature', value )
 						}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<TextControl
 						type="number"
@@ -111,6 +113,7 @@ export default function PlaygroundModelConfigPanel() {
 						value={ topP }
 						onChange={ ( value ) => setModelParam( 'topP', value ) }
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 				</Flex>
 			) }
@@ -157,6 +160,7 @@ export default function PlaygroundModelConfigPanel() {
 							setModelParam( 'aspectRatio', value )
 						}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 				</Flex>
 			) }

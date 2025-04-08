@@ -85,6 +85,7 @@ export default function PlaygroundCapabilitiesPanel() {
 					) }
 					onChange={ ( value ) => setFoundationalCapability( value ) }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				<MultiCheckboxControl
 					label={ __( 'Additional capabilities', 'ai-services' ) }

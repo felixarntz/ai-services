@@ -125,6 +125,7 @@ export default function PlaygroundFunctionDeclarationsPanel() {
 							openModal( 'function-declarations' );
 						} }
 						variant="link"
+						__next40pxDefaultSize
 					>
 						{ availableFunctionDeclarations.length > 0
 							? __(

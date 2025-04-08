@@ -30,6 +30,7 @@ function InputVisibleButton( { visible, setVisible, showLabel, hideLabel } ) {
 			className="ai-services-input-visible-button"
 			onClick={ () => setVisible( ! visible ) }
 			aria-label={ visible ? hideLabel : showLabel }
+			__next40pxDefaultSize
 		>
 			<Dashicon
 				icon={ visible ? 'hidden' : 'visibility' }

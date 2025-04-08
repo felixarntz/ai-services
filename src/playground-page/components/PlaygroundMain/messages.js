@@ -126,6 +126,7 @@ function Message( { message, index, onUploadAttachment, onViewMessageCode } ) {
 										);
 									}
 								} }
+								__next40pxDefaultSize
 							>
 								{ mediaPartsToUpload.length > 1
 									? __( 'Save files', 'ai-services' )
@@ -141,6 +142,7 @@ function Message( { message, index, onUploadAttachment, onViewMessageCode } ) {
 								onClick={ () => {
 									onViewMessageCode( message );
 								} }
+								__next40pxDefaultSize
 							>
 								{ type === 'user'
 									? __( 'View code', 'ai-services' )

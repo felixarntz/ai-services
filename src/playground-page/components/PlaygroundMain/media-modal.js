@@ -21,7 +21,7 @@ import { __ } from '@wordpress/i18n';
  */
 function DefaultMediaButton( { open } ) {
 	return (
-		<Button variant="secondary" onClick={ open }>
+		<Button variant="secondary" onClick={ open } __next40pxDefaultSize>
 			{ __( 'Media Library', 'ai-services' ) }
 		</Button>
 	);

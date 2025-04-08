@@ -111,6 +111,7 @@ export default function ApiKeyControl( {
 				service.name
 			) }
 			__nextHasNoMarginBottom
+			__next40pxDefaultSize
 		/>
 	);
 }

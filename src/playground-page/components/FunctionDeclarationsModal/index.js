@@ -133,6 +133,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 							onChange( { name: value, schema } )
 						}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<SelectControl
 						label={ _x( 'Type', 'parameter type', 'ai-services' ) }
@@ -149,6 +150,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 							onChange( { name, schema: newSchema } );
 						} }
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<TextControl
 						label={ _x(
@@ -165,6 +167,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 							} )
 						}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<Button
 						icon={ trash }
@@ -172,6 +175,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 						variant="secondary"
 						isDestructive
 						onClick={ onDelete }
+						__next40pxDefaultSize
 					/>
 				</Flex>
 				{ schema.type === 'array' && (
@@ -191,6 +195,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 							} )
 						}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 				) }
 			</Flex>
@@ -360,6 +365,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 									functionDeclaration.name
 								);
 							} }
+							__next40pxDefaultSize
 						/>
 					) }
 					<Button
@@ -367,6 +373,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 						variant="primary"
 						className="ai-services-playground-function-declarations-modal__submit"
 						disabled={ formSubmitDisabled }
+						__next40pxDefaultSize
 					>
 						{ !! functionDeclaration
 							? __( 'Save changes', 'ai-services' )
@@ -382,6 +389,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 					onChange={ setFunctionName }
 					pattern="[a-zA-Z][a-zA-Z0-9_]*"
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				<PatternValidator
 					value={ functionName }
@@ -397,6 +405,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 					value={ functionDescription }
 					onChange={ setFunctionDescription }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				{ functionParameters.map( ( parameter, index ) => (
 					<FunctionParameter
@@ -415,6 +424,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 						variant="secondary"
 						className="ai-services-playground-function-declarations-modal__add-parameter"
 						onClick={ addFunctionParameter }
+						__next40pxDefaultSize
 					>
 						{ __( 'Add parameter', 'ai-services' ) }
 					</Button>
@@ -423,6 +433,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 						variant="primary"
 						className="ai-services-playground-function-declarations-modal__submit"
 						disabled={ formSubmitDisabled }
+						__next40pxDefaultSize
 					>
 						{ !! functionDeclaration
 							? __( 'Save changes', 'ai-services' )

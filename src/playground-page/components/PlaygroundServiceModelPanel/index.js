@@ -138,6 +138,7 @@ export default function PlaygroundServiceModelPanel() {
 						options={ serviceSelectOptions }
 						onChange={ onChangeService }
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<SelectControl
 						className="ai-services-playground-model"
@@ -151,6 +152,7 @@ export default function PlaygroundServiceModelPanel() {
 						onChange={ setModel }
 						disabled={ modelSelectOptions.length <= 1 }
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 				</Flex>
 			) : (

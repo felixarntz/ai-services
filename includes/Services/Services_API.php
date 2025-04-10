@@ -15,6 +15,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\C
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Key_Value_Repository;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
 use InvalidArgumentException;
 
 /**
@@ -180,13 +181,18 @@ final class Services_API {
 				$this->option_encrypter->add_encryption_hooks( $option_slug );
 			}
 
-			// Ensure any service request caches are invalidated when the authentication credentials change.
-			$invalid_service_caches = static function () use ( $slug ) {
-				Service_Request_Cache::invalidate_caches( $slug );
-			};
-			add_action( "add_option_{$option_slug}", $invalid_service_caches );
-			add_action( "update_option_{$option_slug}", $invalid_service_caches );
-			add_action( "delete_option_{$option_slug}", $invalid_service_caches );
+			/*
+			 * If the repository uses WordPress options, ensure the authentication options are invalidated when the
+			 * credentials change.
+			 */
+			if ( $this->repository instanceof Option_Repository ) {
+				$invalid_service_caches = static function () use ( $slug ) {
+					Service_Request_Cache::invalidate_caches( $slug );
+				};
+				add_action( "add_option_{$option_slug}", $invalid_service_caches );
+				add_action( "update_option_{$option_slug}", $invalid_service_caches );
+				add_action( "delete_option_{$option_slug}", $invalid_service_caches );
+			}
 		}
 	}
 

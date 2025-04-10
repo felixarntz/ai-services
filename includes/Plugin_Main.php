@@ -17,7 +17,7 @@ use Felix_Arntz\AI_Services\Services\Services_API_Instance;
 use Felix_Arntz\AI_Services\Services\Services_Loader;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
 /**
@@ -259,8 +259,8 @@ class Plugin_Main implements With_Hooks {
 	private function register_default_services(): void {
 		$this->services_api->register_service(
 			'anthropic',
-			static function ( Authentication $authentication, HTTP $http ) {
-				return new Anthropic_AI_Service( $authentication, $http );
+			static function ( Authentication $authentication, Request_Handler $request_handler ) {
+				return new Anthropic_AI_Service( $authentication, $request_handler );
 			},
 			array(
 				'name'            => 'Anthropic (Claude)',
@@ -270,8 +270,8 @@ class Plugin_Main implements With_Hooks {
 		);
 		$this->services_api->register_service(
 			'google',
-			static function ( Authentication $authentication, HTTP $http ) {
-				return new Google_AI_Service( $authentication, $http );
+			static function ( Authentication $authentication, Request_Handler $request_handler ) {
+				return new Google_AI_Service( $authentication, $request_handler );
 			},
 			array(
 				'name'            => 'Google (Gemini, Imagen)',
@@ -281,8 +281,8 @@ class Plugin_Main implements With_Hooks {
 		);
 		$this->services_api->register_service(
 			'openai',
-			static function ( Authentication $authentication, HTTP $http ) {
-				return new OpenAI_AI_Service( $authentication, $http );
+			static function ( Authentication $authentication, Request_Handler $request_handler ) {
+				return new OpenAI_AI_Service( $authentication, $request_handler );
 			},
 			array(
 				'name'            => 'OpenAI (GPT, Dall-E)',

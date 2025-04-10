@@ -153,11 +153,12 @@ class Chatbot_AI {
 			$details .= '- ' . __( 'No plugins are active on the site.', 'ai-services' ) . "\n";
 		}
 
-		$current_user = $this->current_user->get();
-		if ( $current_user->exists() ) {
+		// TODO: This would ideally use `User_Entity` and `User_Repository` instead for a DI approach.
+		$wp_user = get_userdata( $this->current_user->get_id() );
+		if ( $wp_user->exists() ) {
 			$wp_roles = wp_roles();
-			if ( isset( $current_user->roles[0] ) && isset( $wp_roles->role_names[ $current_user->roles[0] ] ) ) {
-				$role_name = translate_user_role( $wp_roles->role_names[ $current_user->roles[0] ] );
+			if ( isset( $wp_user->roles[0] ) && isset( $wp_roles->role_names[ $wp_user->roles[0] ] ) ) {
+				$role_name = translate_user_role( $wp_roles->role_names[ $wp_user->roles[0] ] );
 				$details  .= '- ' . sprintf(
 					/* translators: %s theme */
 					__( 'The current user has the role %s.', 'ai-services' ),

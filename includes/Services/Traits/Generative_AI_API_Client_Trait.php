@@ -9,12 +9,12 @@
 namespace Felix_Arntz\AI_Services\Services\Traits;
 
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\HTTP\Contracts\Stream_Request_Handler;
 use Felix_Arntz\AI_Services\Services\HTTP\Contracts\With_Stream;
-use Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Response;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Generator;
 
 /**
@@ -35,25 +35,25 @@ trait Generative_AI_API_Client_Trait {
 	 * @throws Generative_AI_Exception If an error occurs while making the request.
 	 */
 	final public function make_request( Request $request ): Response {
-		$http = $this->get_http();
+		$request_handler = $this->get_request_handler();
 
 		$options = $request->get_options();
 		if ( isset( $options['stream'] ) && $options['stream'] ) {
-			if ( ! $http instanceof HTTP_With_Streams ) {
+			if ( ! $request_handler instanceof Stream_Request_Handler ) {
 				throw new Generative_AI_Exception(
 					esc_html__( 'Streaming requests are not supported by this API client.', 'ai-services' )
 				);
 			}
 
 			try {
-				$response = $http->request_stream( $request );
+				$response = $request_handler->request_stream( $request );
 			} catch ( Request_Exception $e ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				throw $this->create_request_exception( $e->getMessage() );
 			}
 		} else {
 			try {
-				$response = $this->get_http()->request( $request );
+				$response = $request_handler->request( $request );
 			} catch ( Request_Exception $e ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				throw $this->create_request_exception( $e->getMessage() );
@@ -241,13 +241,14 @@ trait Generative_AI_API_Client_Trait {
 	}
 
 	/**
-	 * Returns the HTTP instance to use for requests.
+	 * Returns the request handler instance to use for requests.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Renamed from `get_http()`.
 	 *
-	 * @return HTTP The HTTP instance.
+	 * @return Request_Handler The request handler instance.
 	 */
-	abstract protected function get_http(): HTTP;
+	abstract protected function get_request_handler(): Request_Handler;
 
 	/**
 	 * Returns the human readable API name (without the "API" suffix).

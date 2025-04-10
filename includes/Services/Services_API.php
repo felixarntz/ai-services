@@ -11,10 +11,10 @@ namespace Felix_Arntz\AI_Services\Services;
 use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Container;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Key_Value_Repository;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Repository;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
 use InvalidArgumentException;
 
 /**
@@ -49,20 +49,28 @@ final class Services_API {
 	private $current_user;
 
 	/**
-	 * The option container instance.
+	 * The request handler instance.
 	 *
 	 * @since 0.1.0
-	 * @var Option_Container
+	 * @var Request_Handler
 	 */
-	private $option_container;
+	private $request_handler;
 
 	/**
-	 * The option repository instance.
+	 * The container instance with data for the API key options.
 	 *
 	 * @since 0.1.0
-	 * @var Option_Repository
+	 * @var Container
 	 */
-	private $option_repository;
+	private $container;
+
+	/**
+	 * The repository instance to read API keys.
+	 *
+	 * @since 0.1.0
+	 * @var Key_Value_Repository
+	 */
+	private $repository;
 
 	/**
 	 * The option encrypter instance.
@@ -73,36 +81,30 @@ final class Services_API {
 	private $option_encrypter;
 
 	/**
-	 * The HTTP instance.
-	 *
-	 * @since 0.1.0
-	 * @var HTTP
-	 */
-	private $http;
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t The constructor parameters were updated.
 	 *
-	 * @param Current_User      $current_user      The current user instance.
-	 * @param Option_Container  $option_container  The option container instance.
-	 * @param Option_Repository $option_repository The option repository instance.
-	 * @param Option_Encrypter  $option_encrypter  The option encrypter instance.
-	 * @param HTTP              $http              The HTTP instance.
+	 * @param Current_User          $current_user     The current user instance.
+	 * @param Request_Handler       $request_handler  The request handler instance.
+	 * @param Container             $container        The container instance with data for the API key options.
+	 * @param Key_Value_Repository  $repository       The repository instance to read API keys.
+	 * @param Option_Encrypter|null $option_encrypter Optional. The option encrypter instance. If not provided, the
+	 *                                                API key options are assumed to not be encrypted. Default null.
 	 */
 	public function __construct(
 		Current_User $current_user,
-		Option_Container $option_container,
-		Option_Repository $option_repository,
-		Option_Encrypter $option_encrypter,
-		HTTP $http
+		Request_Handler $request_handler,
+		Container $container,
+		Key_Value_Repository $repository,
+		Option_Encrypter $option_encrypter = null
 	) {
-		$this->current_user      = $current_user;
-		$this->option_container  = $option_container;
-		$this->option_repository = $option_repository;
-		$this->option_encrypter  = $option_encrypter;
-		$this->http              = $http;
+		$this->current_user     = $current_user;
+		$this->request_handler  = $request_handler;
+		$this->container        = $container;
+		$this->repository       = $repository;
+		$this->option_encrypter = $option_encrypter;
 	}
 
 	/**
@@ -126,7 +128,7 @@ final class Services_API {
 	 *                                      must be unique and must match the service slug returned by the service
 	 *                                      class.
 	 * @param callable             $creator The service creator. Receives the Authentication instance as first
-	 *                                      parameter, the HTTP instance as second parameter, and must return a
+	 *                                      parameter, the request handler instance as second parameter, and must return a
 	 *                                      Generative_AI_Service instance.
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
@@ -165,16 +167,16 @@ final class Services_API {
 			);
 		}
 
-		$args['option_container']  = $this->option_container;
-		$args['option_repository'] = $this->option_repository;
-		$args['http']              = $this->http;
+		$args['request_handler'] = $this->request_handler;
+		$args['container']       = $this->container;
+		$args['repository']      = $this->repository;
 
 		$this->service_registrations[ $slug ] = new Service_Registration( $slug, $creator, $args );
 
 		$option_slugs = $this->service_registrations[ $slug ]->get_authentication_option_slugs();
 		foreach ( $option_slugs as $option_slug ) {
 			// Ensure the authentication options are encrypted.
-			if ( ! $this->option_encrypter->has_encryption( $option_slug ) ) {
+			if ( null !== $this->option_encrypter && ! $this->option_encrypter->has_encryption( $option_slug ) ) {
 				$this->option_encrypter->add_encryption_hooks( $option_slug );
 			}
 

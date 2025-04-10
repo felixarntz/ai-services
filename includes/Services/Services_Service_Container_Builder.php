@@ -128,10 +128,10 @@ final class Services_Service_Container_Builder {
 		$this->container['api'] = static function ( $cont ) {
 			return new Services_API(
 				$cont['current_user'],
+				$cont['http'],
 				$cont['option_container'],
 				$cont['option_repository'],
-				$cont['option_encrypter'],
-				$cont['http']
+				$cont['option_encrypter']
 			);
 		};
 

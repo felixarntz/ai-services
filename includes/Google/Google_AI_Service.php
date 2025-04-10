@@ -19,8 +19,9 @@ use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
 use InvalidArgumentException;
 
 /**
@@ -43,14 +44,15 @@ class Google_AI_Service implements Generative_AI_Service {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param Authentication $authentication The authentication credentials.
-	 * @param HTTP           $http           Optional. The HTTP instance to use for requests. Default is a new instance.
+	 * @param Authentication  $authentication  The authentication credentials.
+	 * @param Request_Handler $request_handler Optional. The request handler instance to use for requests. Default is a
+	 *                                         new HTTP_With_Streams instance.
 	 */
-	public function __construct( Authentication $authentication, HTTP $http = null ) {
-		if ( ! $http ) {
-			$http = new HTTP();
+	public function __construct( Authentication $authentication, Request_Handler $request_handler = null ) {
+		if ( ! $request_handler ) {
+			$request_handler = new HTTP_With_Streams();
 		}
-		$this->api = new Google_AI_API_Client( $authentication, $http );
+		$this->api = new Google_AI_API_Client( $authentication, $request_handler );
 	}
 
 	/**

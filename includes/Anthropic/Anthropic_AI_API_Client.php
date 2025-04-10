@@ -12,8 +12,8 @@ use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Traits\Generative_AI_API_Client_Trait;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Get_Request;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\HTTP;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\JSON_Post_Request;
 
 /**
@@ -36,24 +36,24 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 	private $authentication;
 
 	/**
-	 * The HTTP instance to use for requests.
+	 * The request handler instance.
 	 *
 	 * @since 0.1.0
-	 * @var HTTP
+	 * @var Request_Handler
 	 */
-	private $http;
+	private $request_handler;
 
 	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param Authentication $authentication The authentication credentials.
-	 * @param HTTP           $http           The HTTP instance to use for requests.
+	 * @param Authentication  $authentication  The authentication credentials.
+	 * @param Request_Handler $request_handler The request handler instance.
 	 */
-	public function __construct( Authentication $authentication, HTTP $http ) {
-		$this->authentication = $authentication;
-		$this->http           = $http;
+	public function __construct( Authentication $authentication, Request_Handler $request_handler ) {
+		$this->authentication  = $authentication;
+		$this->request_handler = $request_handler;
 
 		$this->authentication->set_header_name( 'x-api-key' );
 	}
@@ -104,14 +104,15 @@ class Anthropic_AI_API_Client implements Generative_AI_API_Client {
 	}
 
 	/**
-	 * Returns the HTTP instance to use for requests.
+	 * Returns the request handler instance to use for requests.
 	 *
 	 * @since 0.1.0
+	 * @since n.e.x.t Renamed from `get_http()`.
 	 *
-	 * @return HTTP The HTTP instance.
+	 * @return Request_Handler The request handler instance.
 	 */
-	protected function get_http(): HTTP {
-		return $this->http;
+	protected function get_request_handler(): Request_Handler {
+		return $this->request_handler;
 	}
 
 	/**

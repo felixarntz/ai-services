@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\HTTP;
 
+use Felix_Arntz\AI_Services\Services\HTTP\Contracts\Stream_Request_Handler;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Response;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
@@ -20,7 +21,7 @@ use Felix_Arntz\AI_Services_Dependencies\GuzzleHttp\Exception\ClientException;
  *
  * @since 0.3.0
  */
-final class HTTP_With_Streams extends HTTP {
+final class HTTP_With_Streams extends HTTP implements Stream_Request_Handler {
 
 	/**
 	 * Guzzle client instance.

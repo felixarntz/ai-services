@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { __, _x } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -30,11 +30,7 @@ export async function getBrowserServiceData() {
 					? {
 							default: {
 								slug: 'default',
-								name: _x(
-									'Default',
-									'model name',
-									'ai-services'
-								),
+								name: 'Gemini Nano', // The model used in Chrome under the hood.
 								capabilities,
 							},
 					  }

@@ -56,6 +56,7 @@ function prepareContentForBrowser( content ) {
  *
  * @since 0.3.0
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
+ * @since n.e.x.t Checks for newer `LanguageModel` property.
  *
  * @param {Object} modelParams Model parameters.
  * @return {Promise<Object>} The browser session.
@@ -80,7 +81,8 @@ async function createSession( modelParams ) {
 		}
 	}
 
-	const llm = window.ai.languageModel || window.ai.assistant;
+	const llm =
+		window.LanguageModel || window.ai.languageModel || window.ai.assistant;
 
 	if ( Object.keys( browserParams ).length === 0 ) {
 		return llm.create();

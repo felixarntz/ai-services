@@ -19,9 +19,7 @@ let browser;
  */
 export async function getBrowserServiceData() {
 	if ( ! browser ) {
-		const capabilities = window.ai
-			? await getBrowserAiCapabilities( window.ai )
-			: [];
+		const capabilities = await getBrowserAiCapabilities();
 		browser = {
 			slug: 'browser',
 			name: __( 'Browser built-in AI', 'ai-services' ),
@@ -51,21 +49,19 @@ export async function getBrowserServiceData() {
  *
  * @since 0.1.0
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
+ * @since n.e.x.t Checks for newer `LanguageModel` property.
  *
- * @param {Object} ai The browser AI API object.
  * @return {Promise<string[]>} The list of AI capabilities.
  */
-async function getBrowserAiCapabilities( ai ) {
+async function getBrowserAiCapabilities() {
 	const capabilities = [];
 
-	const llm = ai.languageModel || ai.assistant;
+	const llm =
+		window.LanguageModel || window.ai.languageModel || window.ai.assistant;
 
 	if ( llm ) {
-		const supportsTextGeneration = await llm.capabilities();
-		if (
-			supportsTextGeneration &&
-			supportsTextGeneration.available === 'readily'
-		) {
+		const availability = await llm.availability();
+		if ( availability === 'available' ) {
 			capabilities.push( enums.AiCapability.TEXT_GENERATION );
 		}
 	}

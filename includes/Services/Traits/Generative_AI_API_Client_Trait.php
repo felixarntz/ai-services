@@ -41,7 +41,7 @@ trait Generative_AI_API_Client_Trait {
 		if ( isset( $options['stream'] ) && $options['stream'] ) {
 			if ( ! $request_handler instanceof Stream_Request_Handler ) {
 				throw new Generative_AI_Exception(
-					esc_html__( 'Streaming requests are not supported by this API client.', 'ai-services' )
+					'Streaming requests are not supported by this API client.'
 				);
 			}
 
@@ -66,8 +66,7 @@ trait Generative_AI_API_Client_Trait {
 				$error_message = $data['error']['message'];
 			} else {
 				$error_message = sprintf(
-					/* translators: %d: HTTP status code */
-					__( 'Bad status code: %d', 'ai-services' ),
+					'Bad status code: %d',
 					$response->get_status()
 				);
 			}
@@ -95,12 +94,9 @@ trait Generative_AI_API_Client_Trait {
 	final public function process_response_data( Response $response, $process_callback ) {
 		if ( $response instanceof With_Stream ) {
 			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: With_Stream interface name */
-						__( 'Response must not implement %s.', 'ai-services' ),
-						With_Stream::class
-					)
+				sprintf(
+					'Response must not implement %s.',
+					With_Stream::class
 				)
 			);
 		}
@@ -108,14 +104,14 @@ trait Generative_AI_API_Client_Trait {
 		$data = $response->get_data();
 		if ( ! $data ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'No data received in response.', 'ai-services' )
+				'No data received in response.'
 			);
 		}
 
 		$processed_data = call_user_func( $process_callback, $data );
 		if ( ! $processed_data ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'No data returned by process callback.', 'ai-services' )
+				'No data returned by process callback.'
 			);
 		}
 
@@ -141,12 +137,9 @@ trait Generative_AI_API_Client_Trait {
 	final public function process_response_stream( Response $response, $process_callback ): Generator {
 		if ( ! $response instanceof With_Stream ) {
 			throw new Generative_AI_Exception(
-				esc_html(
-					sprintf(
-						/* translators: %s: With_Stream interface name */
-						__( 'Response does not implement %s.', 'ai-services' ),
-						With_Stream::class
-					)
+				sprintf(
+					'Response does not implement %s.',
+					With_Stream::class
 				)
 			);
 		}
@@ -176,13 +169,10 @@ trait Generative_AI_API_Client_Trait {
 	 */
 	final public function create_request_exception( string $message ): Generative_AI_Exception {
 		return new Generative_AI_Exception(
-			esc_html(
-				sprintf(
-					/* translators: 1: API name, 2: error message */
-					__( 'Error while making request to the %1$s API: %2$s ', 'ai-services' ),
-					$this->get_api_name(),
-					$message
-				)
+			sprintf(
+				'Error while making request to the %1$s API: %2$s ',
+				$this->get_api_name(),
+				$message
 			)
 		);
 	}
@@ -197,13 +187,10 @@ trait Generative_AI_API_Client_Trait {
 	 */
 	final public function create_response_exception( string $message ): Generative_AI_Exception {
 		return new Generative_AI_Exception(
-			esc_html(
-				sprintf(
-					/* translators: 1: API name, 2: error message */
-					__( 'Error in the response from the %1$s API: %2$s ', 'ai-services' ),
-					$this->get_api_name(),
-					$message
-				)
+			sprintf(
+				'Error in the response from the %1$s API: %2$s ',
+				$this->get_api_name(),
+				$message
 			)
 		);
 	}
@@ -219,8 +206,7 @@ trait Generative_AI_API_Client_Trait {
 	final public function create_missing_response_key_exception( string $key ): Generative_AI_Exception {
 		return $this->create_response_exception(
 			sprintf(
-				/* translators: %s: key name */
-				__( 'The response is missing the "%s" key.', 'ai-services' ),
+				'The response is missing the "%s" key.',
 				$key
 			)
 		);

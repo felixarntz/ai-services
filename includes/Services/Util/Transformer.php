@@ -38,12 +38,9 @@ final class Transformer {
 		foreach ( $transformers as $key => $transformer ) {
 			if ( ! is_callable( $transformer ) ) {
 				throw new InvalidArgumentException(
-					esc_html(
-						sprintf(
-							/* translators: %s: key */
-							__( 'The transformer for key %s is invalid.', 'ai-services' ),
-							$key
-						)
+					sprintf(
+						'The transformer for key %s is invalid.',
+						htmlspecialchars( $key ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					)
 				);
 			}
@@ -77,12 +74,9 @@ final class Transformer {
 		foreach ( $transformers as $key => $transformer ) {
 			if ( ! is_callable( $transformer ) ) {
 				throw new InvalidArgumentException(
-					esc_html(
-						sprintf(
-							/* translators: %s: key */
-							__( 'The transformer for key %s is invalid.', 'ai-services' ),
-							$key
-						)
+					sprintf(
+						'The transformer for key %s is invalid.',
+						htmlspecialchars( $key ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					)
 				);
 			}

@@ -49,12 +49,9 @@ final class Content implements Arrayable, With_JSON_Schema {
 	public function __construct( string $role, Parts $parts ) {
 		if ( ! Content_Role::is_valid_value( $role ) ) {
 			throw new InvalidArgumentException(
-				esc_html(
-					sprintf(
-						/* translators: %s: invalid role encountered */
-						__( 'The role %s is invalid.', 'ai-services' ),
-						$role
-					)
+				sprintf(
+					'The role %s is invalid.',
+					htmlspecialchars( $role ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}

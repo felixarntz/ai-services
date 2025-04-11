@@ -119,7 +119,7 @@ final class Candidates implements Collection, Arrayable {
 	public function get( int $index ): Candidate {
 		if ( ! isset( $this->candidates[ $index ] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'Index out of bounds.', 'ai-services' )
+				'Index out of bounds.'
 			);
 		}
 		return $this->candidates[ $index ];

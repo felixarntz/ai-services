@@ -37,7 +37,7 @@ final class Services_API_Instance {
 	public static function get(): Services_API {
 		if ( ! isset( self::$instance ) ) {
 			throw new RuntimeException(
-				esc_html__( 'Cannot get Services_API instance before it was set.', 'ai-services' )
+				'Cannot get Services_API instance before it was set.'
 			);
 		}
 
@@ -56,7 +56,7 @@ final class Services_API_Instance {
 	public static function set( Services_API $instance ): void {
 		if ( isset( self::$instance ) ) {
 			throw new RuntimeException(
-				esc_html__( 'Cannot set Services_API instance after it has already been set.', 'ai-services' )
+				'Cannot set Services_API instance after it has already been set.'
 			);
 		}
 

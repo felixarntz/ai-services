@@ -146,24 +146,18 @@ final class Services_API {
 	public function register_service( string $slug, callable $creator, array $args = array() ): void {
 		if ( 'browser' === $slug ) {
 			throw new InvalidArgumentException(
-				esc_html(
-					sprintf(
-						/* translators: %s: The service slug. */
-						esc_html__( 'Service %s is reserved for in-browser AI and cannot be registered.', 'ai-services' ),
-						$slug
-					)
+				sprintf(
+					'Service %s is reserved for in-browser AI and cannot be registered.',
+					htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
 
 		if ( isset( $this->service_registrations[ $slug ] ) && ! $this->service_registrations[ $slug ]->allows_override() ) {
 			throw new InvalidArgumentException(
-				esc_html(
-					sprintf(
-						/* translators: %s: The service slug. */
-						esc_html__( 'Service %s is already registered and cannot be overridden.', 'ai-services' ),
-						$slug
-					)
+				sprintf(
+					'Service %s is already registered and cannot be overridden.',
+					htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
@@ -308,12 +302,9 @@ final class Services_API {
 			$slug = $args;
 			if ( ! $this->is_service_available( $slug ) ) {
 				throw new InvalidArgumentException(
-					esc_html(
-						sprintf(
-							/* translators: %s: The service slug. */
-							__( 'Service %s is either not registered or not available.', 'ai-services' ),
-							$slug
-						)
+					sprintf(
+						'Service %s is either not registered or not available.',
+						htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					)
 				);
 			}
@@ -324,11 +315,11 @@ final class Services_API {
 		$slug = $this->get_available_service_slug( $args );
 		if ( '' === $slug ) {
 			if ( count( $args ) > 0 ) {
-				$message = __( 'No service satisfying the given arguments is registered and available.', 'ai-services' );
+				$message = 'No service satisfying the given arguments is registered and available.';
 			} else {
-				$message = __( 'No service is registered and available.', 'ai-services' );
+				$message = 'No service is registered and available.';
 			}
-			throw new InvalidArgumentException( esc_html( $message ) );
+			throw new InvalidArgumentException( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		return $this->service_instances[ $slug ];

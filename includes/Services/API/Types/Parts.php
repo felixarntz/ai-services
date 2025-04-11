@@ -232,7 +232,7 @@ final class Parts implements Collection, Arrayable, With_JSON_Schema {
 	public function get( int $index ): Part {
 		if ( ! isset( $this->parts[ $index ] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'Index out of bounds.', 'ai-services' )
+				'Index out of bounds.'
 			);
 		}
 		return $this->parts[ $index ];

@@ -139,7 +139,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	public function get_model( array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
 		if ( ! isset( $model_params['feature'] ) || ! preg_match( '/^[a-z0-9-]+$/', $model_params['feature'] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.', 'ai-services' )
+				'You must provide a "feature" identifier as part of the model parameters, which only contains lowercase letters, numbers, and hyphens.'
 			);
 		}
 
@@ -186,8 +186,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		) {
 			throw new InvalidArgumentException(
 				sprintf(
-					/* translators: %s: class name */
-					esc_html__( 'The tools argument must be an instance of %s.', 'ai-services' ),
+					'The tools argument must be an instance of %s.',
 					Tools::class
 				)
 			);
@@ -198,8 +197,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		) {
 			throw new InvalidArgumentException(
 				sprintf(
-					/* translators: %s: class name */
-					esc_html__( 'The tool config argument must be an instance of %s.', 'ai-services' ),
+					'The tool config argument must be an instance of %s.',
 					Tool_Config::class
 				)
 			);
@@ -210,8 +208,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		) {
 			throw new InvalidArgumentException(
 				sprintf(
-					/* translators: %s: class name */
-					esc_html__( 'The generation config argument must be an instance of %s.', 'ai-services' ),
+					'The generation config argument must be an instance of %s.',
 					Generation_Config::class
 				)
 			);
@@ -225,8 +222,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 		) {
 			throw new InvalidArgumentException(
 				sprintf(
-					/* translators: 1: class name, 2: another class name */
-					esc_html__( 'The system instruction argument must be either a string, or an instance of %1$s, or an instance of %2$s.', 'ai-services' ),
+					'The system instruction argument must be either a string, or an instance of %1$s, or an instance of %2$s.',
 					'Parts',
 					'Content'
 				)

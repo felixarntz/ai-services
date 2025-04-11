@@ -95,7 +95,7 @@ final class Chat_Session {
 
 		if ( count( $candidates ) === 0 ) {
 			throw new Generative_AI_Exception(
-				esc_html__( 'The response did not include any relevant candidates.', 'ai-services' )
+				'The response did not include any relevant candidates.'
 			);
 		}
 
@@ -141,7 +141,7 @@ final class Chat_Session {
 
 			if ( count( $candidates ) === 0 ) {
 				throw new Generative_AI_Exception(
-					esc_html__( 'The response did not include any relevant candidates.', 'ai-services' )
+					'The response did not include any relevant candidates.'
 				);
 			}
 
@@ -176,19 +176,19 @@ final class Chat_Session {
 		foreach ( $history as $content ) {
 			if ( ! $content instanceof Content ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The history must contain Content instances.', 'ai-services' )
+					'The history must contain Content instances.'
 				);
 			}
 
 			if ( $first && Content_Role::USER !== $content->get_role() ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The first Content instance in the history must be user content.', 'ai-services' )
+					'The first Content instance in the history must be user content.'
 				);
 			}
 
 			if ( $content->get_parts()->count() < 1 ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'Each Content instance must have at least one part.', 'ai-services' )
+					'Each Content instance must have at least one part.'
 				);
 			}
 

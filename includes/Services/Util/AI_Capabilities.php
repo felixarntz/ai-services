@@ -109,7 +109,7 @@ final class AI_Capabilities {
 
 		if ( ! $model_slugs ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'No model satisfies the given capabilities.', 'ai-services' )
+				'No model satisfies the given capabilities.'
 			);
 		}
 

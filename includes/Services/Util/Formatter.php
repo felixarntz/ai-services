@@ -47,19 +47,19 @@ final class Formatter {
 
 		if ( count( $contents ) === 0 ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'No prompt was provided.', 'ai-services' )
+				'No prompt was provided.'
 			);
 		}
 
 		if ( Content_Role::USER !== $contents[0]->get_role() ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The first Content instance in the conversation or prompt must be user content.', 'ai-services' )
+				'The first Content instance in the conversation or prompt must be user content.'
 			);
 		}
 
 		if ( ! in_array( AI_Capability::CHAT_HISTORY, $capabilities, true ) && count( $contents ) > 1 ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The model does not support chat history. Only one content prompt must be provided.', 'ai-services' )
+				'The model does not support chat history. Only one content prompt must be provided.'
 			);
 		}
 
@@ -70,7 +70,7 @@ final class Formatter {
 			$last_parts_text_only = $last_parts->filter( array( 'class_name' => Text_Part::class ) );
 			if ( count( $last_parts_text_only ) < count( $last_parts ) ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'The model does not support multimodal input. Only text parts must be provided.', 'ai-services' )
+					'The model does not support multimodal input. Only text parts must be provided.'
 				);
 			}
 		}
@@ -127,7 +127,7 @@ final class Formatter {
 
 		if ( ! $input instanceof Content ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The value must be a string, a Parts instance, or a Content instance.', 'ai-services' )
+				'The value must be a string, a Parts instance, or a Content instance.'
 			);
 		}
 

@@ -166,12 +166,9 @@ final class Service_Registration {
 		$api_key = $authentication_options[0]->get_value();
 		if ( ! $api_key ) {
 			throw new RuntimeException(
-				esc_html(
-					sprintf(
-						/* translators: %s: service slug */
-						__( 'Cannot instantiate service %s without an API key.', 'ai-services' ),
-						$this->slug
-					)
+				sprintf(
+					'Cannot instantiate service %s without an API key.',
+					htmlspecialchars( $this->slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
@@ -181,24 +178,18 @@ final class Service_Registration {
 		$instance = ( $this->creator )( $api_key_authentication, $this->args['request_handler'] );
 		if ( ! $instance instanceof Generative_AI_Service ) {
 			throw new RuntimeException(
-				esc_html(
-					sprintf(
-						/* translators: %s: service slug */
-						__( 'The service creator for %s must return an instance of Generative_AI_Service.', 'ai-services' ),
-						$this->slug
-					)
+				sprintf(
+					'The service creator for %s must return an instance of Generative_AI_Service.',
+					htmlspecialchars( $this->slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
 		if ( $instance->get_service_slug() !== $this->slug ) {
 			throw new RuntimeException(
-				esc_html(
-					sprintf(
-						/* translators: 1: service slug registered, 2: service slug returned by the class */
-						__( 'The service creator for %1$s must return an instance of Generative_AI_Service with the same slug, but instead it returned another slug %2$s.', 'ai-services' ),
-						$this->slug,
-						$instance->get_service_slug()
-					)
+				sprintf(
+					'The service creator for %1$s must return an instance of Generative_AI_Service with the same slug, but instead it returned another slug %2$s.',
+					htmlspecialchars( $this->slug ), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					htmlspecialchars( $instance->get_service_slug() ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
@@ -252,7 +243,7 @@ final class Service_Registration {
 	private function validate_slug( string $slug ): void {
 		if ( ! preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'The service slug must only contain lowercase letters, numbers, and hyphens.', 'ai-services' )
+				'The service slug must only contain lowercase letters, numbers, and hyphens.'
 			);
 		}
 	}
@@ -312,13 +303,10 @@ final class Service_Registration {
 			if ( isset( $args[ $key ] ) ) {
 				if ( ! $args[ $key ] instanceof $interface_name ) {
 					throw new InvalidArgumentException(
-						esc_html(
-							sprintf(
-								/* translators: 1: argument name, 2: class name */
-								__( 'The %1$s argument must be an instance of %2$s.', 'ai-services' ),
-								$key,
-								$interface_name
-							)
+						sprintf(
+							'The %1$s argument must be an instance of %2$s.',
+							htmlspecialchars( $key ), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+							htmlspecialchars( $interface_name ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 						)
 					);
 				}

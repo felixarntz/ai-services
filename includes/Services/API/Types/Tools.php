@@ -93,7 +93,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	public function get( int $index ): Tool {
 		if ( ! isset( $this->tools[ $index ] ) ) {
 			throw new InvalidArgumentException(
-				esc_html__( 'Index out of bounds.', 'ai-services' )
+				'Index out of bounds.'
 			);
 		}
 		return $this->tools[ $index ];

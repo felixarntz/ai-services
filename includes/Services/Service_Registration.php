@@ -266,7 +266,12 @@ final class Service_Registration {
 		}
 
 		if ( isset( $args['credentials_url'] ) ) {
-			$args['credentials_url'] = sanitize_url( (string) $args['credentials_url'] );
+			$args['credentials_url'] = (string) $args['credentials_url'];
+
+			// Basic sanity check to ensure a protocol is present.
+			if ( ! str_contains( $args['credentials_url'], ':' ) && ! in_array( $args['credentials_url'][0], array( '/', '#', '?' ), true ) ) {
+				$args['credentials_url'] = 'https://' . $args['credentials_url'];
+			}
 		} else {
 			$args['credentials_url'] = '';
 		}

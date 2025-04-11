@@ -82,6 +82,11 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 * @return bool True if the service is connected, false otherwise.
 	 */
 	public function is_connected(): bool {
+		if ( ! function_exists( 'get_transient' ) ) {
+			// If the transient function is not available, we cannot cache the result.
+			return $this->service->is_connected();
+		}
+
 		return Service_Request_Cache::wrap_transient(
 			$this->get_service_slug(),
 			array( $this->service, 'is_connected' )
@@ -102,6 +107,11 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
+		if ( ! function_exists( 'get_transient' ) ) {
+			// If the transient function is not available, we cannot cache the result.
+			return $this->service->list_models( $request_options );
+		}
+
 		return Service_Request_Cache::wrap_transient(
 			$this->get_service_slug(),
 			array( $this->service, 'list_models' ),

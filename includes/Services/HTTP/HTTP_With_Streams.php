@@ -93,7 +93,9 @@ final class HTTP_With_Streams extends HTTP implements Stream_Request_Handler {
 				$request_options
 			);
 		} catch ( ClientException $e ) {
-			throw new Request_Exception( esc_html( $e->getMessage() ) );
+			throw new Request_Exception(
+				htmlspecialchars( $e->getMessage() ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			);
 		}
 
 		$headers = $this->sanitize_headers( $response->getHeaders() );

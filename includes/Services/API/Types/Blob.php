@@ -84,7 +84,10 @@ final class Blob {
 		$blob = file_get_contents( $file );
 		if ( ! $blob ) {
 			throw new InvalidArgumentException(
-				sprintf( 'Could not read file %s.', esc_html( $file ) )
+				sprintf(
+					'Could not read file %s.',
+					htmlspecialchars( $file ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				)
 			);
 		}
 
@@ -92,7 +95,10 @@ final class Blob {
 			$file_type = wp_check_filetype( $file );
 			if ( ! $file_type['type'] ) {
 				throw new InvalidArgumentException(
-					sprintf( 'Could not determine MIME type of file %s.', esc_html( $file ) )
+					sprintf(
+						'Could not determine MIME type of file %s.',
+						htmlspecialchars( $file ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					)
 				);
 			}
 			$mime_type = $file_type['type'];

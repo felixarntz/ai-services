@@ -163,9 +163,9 @@ if ( ai_services()->is_service_available( 'google' ) ) {
 }
 `
 
-For complete examples such as entire plugins built on top of the AI Services infrastructure, please see the [examples directory on GitHub](https://github.com/felixarntz/ai-services/tree/main/examples).
+Refer to the [plugin documentation](https://felixarntz.github.io/ai-services/Documentation.html) for granular examples including explainers.
 
-Additionally, the [plugin documentation](https://github.com/felixarntz/ai-services/tree/main/docs/README.md) provides granular examples including explainers.
+For complete examples such as entire plugins built on top of the AI Services infrastructure, please see the [examples directory on GitHub](https://github.com/felixarntz/ai-services/tree/main/examples).
 
 == Installation ==
 
@@ -187,7 +187,7 @@ Once the plugin is active, you will find a new _Settings > AI Services_ submenu 
 
 If you have enabled the WordPress assistant chatbot via filter, you should see a small "Need help?" button in the lower right throughout WP Admin after you have configured at least one (valid) API key.
 
-Please refer to the [plugin documentation](https://github.com/felixarntz/ai-services/tree/main/docs/README.md) for instructions on how you can actually use the AI capabilities of the plugin in your own projects.
+Please refer to the [plugin documentation](https://felixarntz.github.io/ai-services/Documentation.html) for instructions on how you can actually use the AI capabilities of the plugin in your own projects.
 
 == Frequently Asked Questions ==
 
@@ -260,7 +260,7 @@ The same approach works for any other services too. Simply use the correct servi
 
 = Which user capabilities are available and how can I customize them? =
 
-[Please see the documentation article on customizing the available plugin capabilities.](https://github.com/felixarntz/ai-services/blob/main/docs/Customizing-the-Available-Capabilities.md)
+[Please see the documentation article on customizing the available plugin capabilities.](https://felixarntz.github.io/ai-services/Customizing-the-Available-Capabilities.html)
 
 = Should this be in WordPress Core? =
 

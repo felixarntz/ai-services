@@ -1,9 +1,17 @@
-title: "AI Services: Documentation"
+title: "AI Services: AI Client Plugin for WordPress"
 description: "Learn how to use the AI Services plugin, which makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider."
+twitter_username: "felixarntz"
+github_username: "felixarntz"
+
+header_pages:
+  - Documentation.md
+
+markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+
 minima:
   skin: auto
   nav_pages:

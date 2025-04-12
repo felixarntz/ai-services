@@ -276,7 +276,7 @@ for ( const part of candidates[ 0 ].content.parts ) {
 
 This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
 
-As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods via [`aiServices.ai.helpers`](../src/ai/helpers.js) from the `aiServices` JavaScript global.
+As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods via [`aiServices.ai.helpers`](https://github.com/felixarntz/ai-services/tree/main/src/ai/helpers.js) from the `aiServices` JavaScript global.
 
 The following example shows how you can accomplish the above in a safer, yet simpler way:
 ```js
@@ -368,7 +368,7 @@ Note that not all configuration arguments are supported by every service API. Ho
 * `topK` _(integer)_: The maximum number of tokens to consider when sampling.
 	* Supported by all except `openai`.
 
-Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
 
 ### Function calling
 
@@ -586,7 +586,7 @@ for ( const part of candidates[ 0 ].content.parts ) {
 
 By default, image models are configured to return inline data, i.e. a data URL with base64-encoded data.
 
-After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper functions related to transforming different representations of a file, via [`aiServices.ai.helpers`](../src/ai/helpers.js). For processing a data URL for a generated image, the most important helper function is `base64DataUrlToBlob()`. Here is the full list of relevant helper functions for file processing:
+After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper functions related to transforming different representations of a file, via [`aiServices.ai.helpers`](https://github.com/felixarntz/ai-services/tree/main/src/ai/helpers.js). For processing a data URL for a generated image, the most important helper function is `base64DataUrlToBlob()`. Here is the full list of relevant helper functions for file processing:
 
 * `fileToBase64DataUrl( file: string, mimeType: string = '' ): string`: Returns the base64-encoded data URL representation of the given file URL.
 * `fileToBlob( file: string, mimeType: string = '' ): Blob?`: Returns the binary data blob representation of the given file URL.
@@ -625,4 +625,4 @@ Note that not all configuration arguments are supported by every service API. He
 * `candidateCount` _(integer)_: Number of image candidates to generate.
 * `aspectRatio` _(string)_: Aspect ratio of the generated image.
 
-Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](../includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.

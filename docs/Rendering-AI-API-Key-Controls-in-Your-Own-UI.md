@@ -164,7 +164,7 @@ const onChangeApiKey = useCallback(
 
 ## Using a traditional PHP based administration screen
 
-For a traditional PHP based administration screen using the [WordPress Settings API](https://developer.wordpress.org/plugins/settings/settings-api/), the AI Services plugin provides the [`API_Key_Control` class](../includes/Services/API/Components/API_Key_Control.php) which renders relevant UI in PHP. It requires an instance of `Service_Entity` to access the service's metadata, and the current API key value which can be read via `get_option()`. You can either hard-code the underlying option name, or ideally retrieve it from the `Service_Entity` instance you create for the service.
+For a traditional PHP based administration screen using the [WordPress Settings API](https://developer.wordpress.org/plugins/settings/settings-api/), the AI Services plugin provides the [`API_Key_Control` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Components/API_Key_Control.php) which renders relevant UI in PHP. It requires an instance of `Service_Entity` to access the service's metadata, and the current API key value which can be read via `get_option()`. You can either hard-code the underlying option name, or ideally retrieve it from the `Service_Entity` instance you create for the service.
 
 Below you see an example for how to use the `API_Key_Control` class to display an API key control for the Google API key. In this example, it simply adds the field to WordPress's own _Settings > General_ screen.
 

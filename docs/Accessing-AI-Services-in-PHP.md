@@ -4,7 +4,7 @@
 
 This section provides some documentation on how to access AI services in PHP. This is relevant for any plugins that would like to generate content via server-side logic.
 
-The canonical entry point to all of the PHP public APIs is the `ai_services()` function in the global namespace, which returns the canonical instance of the [`Felix_Arntz\AI_Services\Services\Services_API` class](../includes/Services/Services_API.php). The concrete usage is best outlined by examples. For illustrative purposes, here is a full example of generating text content using the `google` service:
+The canonical entry point to all of the PHP public APIs is the `ai_services()` function in the global namespace, which returns the canonical instance of the [`Felix_Arntz\AI_Services\Services\Services_API` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/Services_API.php). The concrete usage is best outlined by examples. For illustrative purposes, here is a full example of generating text content using the `google` service:
 
 ```php
 if ( ai_services()->is_service_available( 'google' ) ) {
@@ -143,7 +143,7 @@ Note: Alongside the model key in the array, you may pass other configuration arg
 
 ### Sending multimodal prompts
 
-As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\API\Types\Content` class](../includes/Services/API/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\API\Types\Parts` class](../includes/Services/API/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
+As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\API\Types\Content` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\API\Types\Parts` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
 
 ```php
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
@@ -176,9 +176,9 @@ You can also pass an array of content objects. In this case, this will be interp
 
 ### Processing text responses
 
-The `generate_text()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](../includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
+The `generate_text()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
 
-Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidate` class](../includes/Services/API/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
+Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidate` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
 
 For example, you can use code as follows to retrieve the text content of the first candidate.
 
@@ -196,7 +196,7 @@ foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
 
 This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
 
-As this can be tedious, the AI Services API provides a class with static helper methods to make it extremely simple. You can access the helper methods via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](../includes/Services/API/Helpers.php).
+As this can be tedious, the AI Services API provides a class with static helper methods to make it extremely simple. You can access the helper methods via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Helpers.php).
 
 The following example shows how you can accomplish the above in a safer, yet simpler way:
 ```php
@@ -245,7 +245,7 @@ It's worth noting that streaming is likely more useful in JavaScript than in PHP
 
 ### Customizing the default text generation configuration
 
-When retrieving a model using the `get_model()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. For text generation, the `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
+When retrieving a model using the `get_model()` method, it is possible to provide a `generationConfig` argument to customize the model configuration. For text generation, the `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
 
 Additionally to `generationConfig`, you can pass a `systemInstruction` argument if you want to provide a custom instruction for how the model should behave. By setting a system instruction, you give the model additional context to understand its tasks, provide more customized responses, and adhere to specific guidelines over the full user interaction with the model.
 
@@ -290,7 +290,7 @@ Note that not all configuration arguments are supported by every service API. Ho
 * `topK` _(integer)_: The maximum number of tokens to consider when sampling.
 	* Supported by all except `openai`.
 
-Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](../includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
 
 ### Function calling
 
@@ -484,9 +484,9 @@ The signature of the `generate_image()` method is almost exactly the same as the
 
 ### Processing image responses
 
-Similar to `generate_text()`, the `generate_image()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](../includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
+Similar to `generate_text()`, the `generate_image()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - usually just one, but depending on the prompt and configuration there may be multiple alternatives.
 
-Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidate` class](../includes/Services/API/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
+Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidate` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
 
 For example, you can use code as follows to retrieve the generated image from the first candidate.
 
@@ -506,7 +506,7 @@ foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
 
 By default, image models are configured to return inline data, i.e. a data URL with base64-encoded data.
 
-After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper methods related to transforming different representations of a file, via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](../includes/Services/API/Helpers.php). Related to these is the [`Felix_Arntz\AI_Services\Services\API\Types\Blob` class](../includes/Services/API/Types/Blob.php), which represents a binary data blob and is inspired by the [native JavaScript `Blob` class](https://developer.mozilla.org/en-US/docs/Web/API/Blob). For processing a data URL for a generated image, the most important helper method is `Helpers::base64_data_url_to_blob()`. Here is the full list of relevant helper methods for file processing:
+After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper methods related to transforming different representations of a file, via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Helpers.php). Related to these is the [`Felix_Arntz\AI_Services\Services\API\Types\Blob` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Blob.php), which represents a binary data blob and is inspired by the [native JavaScript `Blob` class](https://developer.mozilla.org/en-US/docs/Web/API/Blob). For processing a data URL for a generated image, the most important helper method is `Helpers::base64_data_url_to_blob()`. Here is the full list of relevant helper methods for file processing:
 
 * `Helpers::file_to_base64_data_url( string $file, string $mime_type ): string`: Returns the base64-encoded data URL representation of the given file URL.
 * `Helpers::file_to_blob( string $file, string $mime_type = '' ): ?Blob`: Returns the binary data blob representation of the given file URL.
@@ -515,7 +515,7 @@ After retrieving the resulting image (data) URL, you can process it further - fo
 
 ### Customizing the default image generation configuration
 
-Similarly to how you can [customize the text generation configuration](#customizing-the-default-text-generation-configuration), you can customize the image generation configuration. For image generation, the `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](../includes/Services/API/Types/Image_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
+Similarly to how you can [customize the text generation configuration](#customizing-the-default-text-generation-configuration), you can customize the image generation configuration. For image generation, the `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Image_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
 
 Here is a code example using `generationConfig`:
 
@@ -549,4 +549,4 @@ Note that not all configuration arguments are supported by every service API. He
 * `candidateCount` _(integer)_: Number of image candidates to generate.
 * `aspectRatio` _(string)_: Aspect ratio of the generated image.
 
-Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](../includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.

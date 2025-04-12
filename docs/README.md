@@ -1,3 +1,5 @@
+# AI Services
+
 The AI Services plugin makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
 | AI Services: Settings screen | AI Services: Playground screen |

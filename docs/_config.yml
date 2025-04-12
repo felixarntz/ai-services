@@ -4,12 +4,15 @@ theme: minima
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
-skin: auto
-social_links:
-  - title: AI Services for WordPress
-    icon: wordpress
-    url: "https://wordpress.org/plugins/ai-services/"
-  - title: AI Services on GitHub
-    icon: github
-    url: "https://github.com/felixarntz/ai-services"
-hide_site_feed_link: true
+minima:
+  skin: auto
+  nav_pages:
+    - Documentation.md
+  social_links:
+    - title: AI Services for WordPress
+      icon: wordpress
+      url: "https://wordpress.org/plugins/ai-services/"
+    - title: AI Services on GitHub
+      icon: github
+      url: "https://github.com/felixarntz/ai-services"
+  hide_site_feed_link: true

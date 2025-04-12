@@ -1,4 +1,4 @@
-[Back to overview](./README.md)
+[Back to documentation overview](./Documentation.md)
 
 # Enabling the Assistant Chatbot Feature
 

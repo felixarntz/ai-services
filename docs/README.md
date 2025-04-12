@@ -1,3 +1,5 @@
+# AI Services
+
 The AI Services plugin makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
 | AI Services: Settings screen | AI Services: Playground screen |
@@ -8,14 +10,4 @@ This WordPress plugin introduces central infrastructure which allows other plugi
 
 The plugin does intentionally _not_ come with specific AI driven features built-in, except for an AI Playground screen to explore AI capabilities as well as a settings screen to configure AI service credentials. The purpose of this plugin is to facilitate use of AI by other plugins. As such, it is a perfect use-case for [plugin dependencies](https://make.wordpress.org/core/2024/03/05/introducing-plugin-dependencies-in-wordpress-6-5/).
 
-# Documentation
-
-* [Introduction to AI Services](./Introduction-to-AI-Services.md)
-* [Accessing AI Services in PHP](./Accessing-AI-Services-in-PHP.md)
-* [Accessing AI Services in JavaScript](./Accessing-AI-Services-in-JavaScript.md)
-* [Accessing AI Services with WP-CLI](./Accessing-AI-Services-with-WP-CLI.md)
-* [Implementing and Registering a New AI Service](./Implementing-and-Registering-a-New-AI-Service.md)
-* [Customizing AI Services Model Parameters](Customizing-AI-Services-Model-Parameters.md)
-* [Customizing the Available Capabilities](Customizing-the-Available-Capabilities.md)
-* [Enabling the Assistant Chatbot Feature](./Enabling-the-Assistant-Chatbot-Feature.md)
-* [Rendering AI API Key Controls in Your Own UI](./Rendering-AI-API-Key-Controls-in-Your-Own-UI.md)
+[Read the documentation to learn how to use the AI Services plugin.](./Documentation.md)

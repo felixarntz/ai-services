@@ -1,0 +1,3 @@
+name: "AI Services: Documentation"
+description: "Learn how to use the AI Services plugin, which makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider."
+theme: minima

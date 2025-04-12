@@ -1,3 +1,15 @@
-name: "AI Services: Documentation"
+title: "AI Services: Documentation"
 description: "Learn how to use the AI Services plugin, which makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider."
 theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+skin: auto
+social_links:
+  - title: AI Services for WordPress
+    icon: wordpress
+    url: "https://wordpress.org/plugins/ai-services/"
+  - title: AI Services on GitHub
+    icon: github
+    url: "https://github.com/felixarntz/ai-services"
+hide_site_feed_link: true

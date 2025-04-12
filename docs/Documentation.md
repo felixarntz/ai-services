@@ -1,5 +1,3 @@
-# Documentation
-
 * [Introduction to AI Services](./Introduction-to-AI-Services.md)
 * [Accessing AI Services in PHP](./Accessing-AI-Services-in-PHP.md)
 * [Accessing AI Services in JavaScript](./Accessing-AI-Services-in-JavaScript.md)

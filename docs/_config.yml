@@ -8,8 +8,9 @@ header_pages:
   - Documentation.md
 
 markdown: kramdown
-theme: minima
+remote_theme: jekyll/minima
 plugins:
+  - jekyll-remote-theme
   - jekyll-feed
   - jekyll-seo-tag
 

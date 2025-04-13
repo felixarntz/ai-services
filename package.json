@@ -15,7 +15,7 @@
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
     "@wordpress/env": "^10.16.0",
-    "@wordpress/scripts": "^30.9.0",
+    "@wordpress/scripts": "^30.14.0",
     "fast-glob": "^3.3.3"
   },
   "dependencies": {

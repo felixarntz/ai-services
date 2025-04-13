@@ -46,7 +46,7 @@ jobs:
             echo "version=$VERSION" >> $GITHUB_OUTPUT
           fi
 
-      - name: WordPress plugin deploy
+      - name: Deploy plugin to WordPress.org
         id: wporg-deployment
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:

@@ -1,8 +1,11 @@
-[Back to documentation overview](./Documentation.md)
-
-# Implementing and Registering a New AI Service
+---
+title: Implementing and Registering a New AI Service
+layout: page
+---
 
 It is possible to register custom AI services that will then be available alongside the built-in ones, behaving in a similar way.
+
+**Caution:** The underlying API for registering and implementing AI services is, more than anything else in this early version of the plugin, subject to change. Breaking changes may happen as long as the plugin is in an `0.x.y`.
 
 ## Implementing the service
 

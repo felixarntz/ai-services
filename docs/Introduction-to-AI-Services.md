@@ -1,6 +1,7 @@
-[Back to documentation overview](./Documentation.md)
-
-# Introduction to AI Services
+---
+title: Technical Concepts of AI Services
+layout: page
+---
 
 This section provides a more technical introduction about the plugin and its technical concepts.
 

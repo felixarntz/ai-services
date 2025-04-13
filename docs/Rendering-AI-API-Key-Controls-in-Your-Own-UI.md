@@ -1,6 +1,7 @@
-[Back to documentation overview](./Documentation.md)
-
-# Rendering AI API Key Controls in Your Own UI
+---
+title: Rendering AI API Key Controls in Your Own UI
+layout: page
+---
 
 Out of the box, the AI Services plugin allows managing API keys for all registered AI services on its own screen _Settings > AI Services_. Thanks to the plugin's central AI infrastructure, **users will only have to configure the AI API once**.
 

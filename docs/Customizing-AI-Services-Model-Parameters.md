@@ -1,6 +1,7 @@
-[Back to documentation overview](./Documentation.md)
-
-# Customizing AI Services Model Parameters
+---
+title: Customizing AI Services Model Parameters
+layout: page
+---
 
 You can use the `ai_services_model_params` filter in PHP to customize the model parameters before they are used to retrieve a given AI service model.
 

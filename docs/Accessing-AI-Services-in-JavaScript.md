@@ -1,6 +1,7 @@
-[Back to documentation overview](./Documentation.md)
-
-# Accessing AI Services in JavaScript
+---
+title: Accessing AI Services in JavaScript
+layout: page
+---
 
 This section provides some documentation on how to access AI services in JavaScript. This is relevant for any plugins that would like to generate content via client-side logic.
 
@@ -219,7 +220,7 @@ Note: Alongside the model property in the object, you may pass other configurati
 
 ### Sending multimodal prompts
 
-As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generateText()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use content objects or part arrays. For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
+As mentioned in the [technical concepts section about sending data to AI services](./Technical-Concepts-of-AI-Services.md#sending-data-to-AI-services), passing a string to the `generateText()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use content objects or part arrays. For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
 
 ```js
 const enums = aiServices.ai.enums;

@@ -1,6 +1,7 @@
-[Back to documentation overview](./Documentation.md)
-
-# Accessing AI Services in PHP
+---
+title: Accessing AI Services in PHP
+layout: page
+---
 
 This section provides some documentation on how to access AI services in PHP. This is relevant for any plugins that would like to generate content via server-side logic.
 
@@ -143,7 +144,7 @@ Note: Alongside the model key in the array, you may pass other configuration arg
 
 ### Sending multimodal prompts
 
-As mentioned in the [introduction section about sending data to AI services](./Introduction-to-AI-Services.md#sending-data-to-AI-services), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\API\Types\Content` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\API\Types\Parts` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
+As mentioned in the [technical concepts section about sending data to AI services](./Technical-Concepts-of-AI-Services.md#sending-data-to-AI-services), passing a string to the `generate_text()` method is effectively just a shorthand syntax for the more elaborate content format. To pass more elaborate content as a prompt, you can use instances of the [`Felix_Arntz\AI_Services\Services\API\Types\Content` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Content.php) or the [`Felix_Arntz\AI_Services\Services\API\Types\Parts` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Parts.php). For example, if the AI service supports multimodal content, you can ask it to describe a provided image:
 
 ```php
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;

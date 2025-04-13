@@ -1,6 +1,7 @@
-[Back to documentation overview](./Documentation.md)
-
-# Enabling the Assistant Chatbot Feature
+---
+title: Enabling the Assistant Chatbot Feature
+layout: page
+---
 
 There is a simple WordPress Assistant chatbot available as an experimental feature of the plugin, effectively acting as a proof of concept. Since the plugin is purely an infrastructure plugin that other plugins can use to access AI capabilities in WordPress, that chatbot feature is disabled by default.
 

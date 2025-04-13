@@ -1,11 +1,5 @@
 title: "AI Services: AI Client Plugin for WordPress"
 description: "Learn how to use the AI Services plugin, which makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider."
-github_username: "felixarntz"
-linkedin_username: "felixarntz"
-twitter_username: "felixarntz"
-
-header_pages:
-  - Documentation.md
 
 markdown: kramdown
 remote_theme: jekyll/minima

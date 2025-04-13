@@ -1,6 +1,7 @@
-[Back to documentation overview](./Documentation.md)
-
-# Accessing AI Services with WP-CLI
+---
+title: Accessing AI Services with WP-CLI
+layout: page
+---
 
 This section provides some documentation on how to access AI services through the command line with WP-CLI.
 

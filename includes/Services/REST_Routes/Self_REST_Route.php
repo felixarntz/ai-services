@@ -268,7 +268,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 					$value = $this->plugin_env->version();
 					break;
 				case 'plugin_homepage_url':
-					$value = __( 'https://wordpress.org/plugins/ai-services/', 'ai-services' );
+					$value = __( 'https://felixarntz.github.io/ai-services/', 'ai-services' );
 					break;
 				case 'plugin_support_url':
 					$value = __( 'https://wordpress.org/support/plugin/ai-services/', 'ai-services' );

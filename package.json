@@ -11,7 +11,7 @@
     "function calling",
     "multimodal"
   ],
-  "homepage": "https://wordpress.org/plugins/ai-services/",
+  "homepage": "https://felixarntz.github.io/ai-services/",
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^6.5.0",
     "@wordpress/env": "^10.16.0",

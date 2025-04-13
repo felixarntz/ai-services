@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Write Excerpt Plugin
- * Plugin URI: https://wordpress.org/plugins/ai-services/
+ * Plugin URI: https://felixarntz.github.io/ai-services/
  * Description: Example plugin using AI Services to implement a command to write a post excerpt.
  * Requires at least: 6.0
  * Requires PHP: 7.2

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: AI Services
- * Plugin URI: https://wordpress.org/plugins/ai-services/
+ * Plugin URI: https://felixarntz.github.io/ai-services/
  * Description: Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
  * Requires at least: 6.0
  * Requires PHP: 7.2

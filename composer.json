@@ -12,7 +12,7 @@
     "function calling",
     "multimodal"
   ],
-  "homepage": "https://wordpress.org/plugins/ai-services/",
+  "homepage": "https://felixarntz.github.io/ai-services/",
   "require": {
     "composer/installers": "~1.0",
     "felixarntz/wp-oop-plugin-lib": "dev-main",

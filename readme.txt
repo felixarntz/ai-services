@@ -1,7 +1,7 @@
 === AI Services ===
 
 Plugin Name:  AI Services
-Plugin URI:   https://wordpress.org/plugins/ai-services/
+Plugin URI:   https://felixarntz.github.io/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90

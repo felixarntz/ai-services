@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Add Image Alt Text Plugin
- * Plugin URI: https://wordpress.org/plugins/ai-services/
+ * Plugin URI: https://felixarntz.github.io/ai-services/
  * Description: Example plugin using AI Services to implement an image control to generate image alt text.
  * Requires at least: 6.0
  * Requires PHP: 7.2

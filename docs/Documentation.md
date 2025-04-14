@@ -12,3 +12,4 @@ layout: page
 * [Customizing the Available Capabilities](Customizing-the-Available-Capabilities.md)
 * [Enabling the Assistant Chatbot Feature](./Enabling-the-Assistant-Chatbot-Feature.md)
 * [Rendering AI API Key Controls in Your Own UI](./Rendering-AI-API-Key-Controls-in-Your-Own-UI.md)
+* [Technical Architecture Overview](./Technical-Architecture-Overview.md)

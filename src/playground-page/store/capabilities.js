@@ -208,6 +208,10 @@ const resolvers = {
 					identifier: enums.AiCapability.MULTIMODAL_INPUT,
 					label: __( 'Multimodal input', 'ai-services' ),
 				},
+				{
+					identifier: enums.AiCapability.MULTIMODAL_OUTPUT,
+					label: __( 'Multimodal output', 'ai-services' ),
+				},
 			];
 
 			dispatch.receiveAdditionalCapabilities( capabilities );

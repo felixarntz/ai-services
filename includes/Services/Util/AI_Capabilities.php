@@ -14,6 +14,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Output;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use InvalidArgumentException;
 
@@ -48,6 +49,9 @@ final class AI_Capabilities {
 		if ( isset( $interfaces[ With_Multimodal_Input::class ] ) ) {
 			$capabilities[] = AI_Capability::MULTIMODAL_INPUT;
 		}
+		if ( isset( $interfaces[ With_Multimodal_Output::class ] ) ) {
+			$capabilities[] = AI_Capability::MULTIMODAL_OUTPUT;
+		}
 		if ( isset( $interfaces[ With_Text_Generation::class ] ) ) {
 			$capabilities[] = AI_Capability::TEXT_GENERATION;
 		}
@@ -75,6 +79,9 @@ final class AI_Capabilities {
 		}
 		if ( $model instanceof With_Multimodal_Input ) {
 			$capabilities[] = AI_Capability::MULTIMODAL_INPUT;
+		}
+		if ( $model instanceof With_Multimodal_Output ) {
+			$capabilities[] = AI_Capability::MULTIMODAL_OUTPUT;
 		}
 		if ( $model instanceof With_Text_Generation ) {
 			$capabilities[] = AI_Capability::TEXT_GENERATION;

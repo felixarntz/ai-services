@@ -28,6 +28,7 @@ use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Output;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
@@ -43,7 +44,7 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since 0.5.0 Renamed from `Google_AI_Model`.
  */
-class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input, With_Multimodal_Output {
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
 
@@ -553,45 +554,58 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 */
 	private static function get_generation_config_transformers(): array {
 		return array(
-			'stopSequences'    => static function ( Text_Generation_Config $config ) {
+			'stopSequences'      => static function ( Text_Generation_Config $config ) {
 				return $config->get_stop_sequences();
 			},
-			'responseMimeType' => static function ( Text_Generation_Config $config ) {
+			'responseMimeType'   => static function ( Text_Generation_Config $config ) {
 				return $config->get_response_mime_type();
 			},
-			'responseSchema'   => static function ( Text_Generation_Config $config ) {
+			'responseSchema'     => static function ( Text_Generation_Config $config ) {
 				if ( $config->get_response_mime_type() === 'application/json' ) {
 					return $config->get_response_schema();
 				}
 				return array();
 			},
-			'candidateCount'   => static function ( Text_Generation_Config $config ) {
+			'candidateCount'     => static function ( Text_Generation_Config $config ) {
 				return $config->get_candidate_count();
 			},
-			'maxOutputTokens'  => static function ( Text_Generation_Config $config ) {
+			'maxOutputTokens'    => static function ( Text_Generation_Config $config ) {
 				return $config->get_max_output_tokens();
 			},
-			'temperature'      => static function ( Text_Generation_Config $config ) {
+			'temperature'        => static function ( Text_Generation_Config $config ) {
 				// In the Google AI API temperature ranges from 0.0 to 2.0.
 				return $config->get_temperature() * 2.0;
 			},
-			'topP'             => static function ( Text_Generation_Config $config ) {
+			'topP'               => static function ( Text_Generation_Config $config ) {
 				return $config->get_top_p();
 			},
-			'topK'             => static function ( Text_Generation_Config $config ) {
+			'topK'               => static function ( Text_Generation_Config $config ) {
 				return $config->get_top_k();
 			},
-			'presencePenalty'  => static function ( Text_Generation_Config $config ) {
+			'presencePenalty'    => static function ( Text_Generation_Config $config ) {
 				return $config->get_presence_penalty();
 			},
-			'frequencyPenalty' => static function ( Text_Generation_Config $config ) {
+			'frequencyPenalty'   => static function ( Text_Generation_Config $config ) {
 				return $config->get_frequency_penalty();
 			},
-			'responseLogprobs' => static function ( Text_Generation_Config $config ) {
+			'responseLogprobs'   => static function ( Text_Generation_Config $config ) {
 				return $config->get_response_logprobs();
 			},
-			'logprobs'         => static function ( Text_Generation_Config $config ) {
+			'logprobs'           => static function ( Text_Generation_Config $config ) {
 				return $config->get_logprobs();
+			},
+			'responseModalities' => static function ( Text_Generation_Config $config ) {
+				$modalities = $config->get_output_modalities();
+				if ( count( $modalities ) > 0 ) {
+					return array_map(
+						static function ( $modality ) {
+							// Change "text" to "Text" and "image" to "Image".
+							return ucfirst( $modality );
+						},
+						$modalities
+					);
+				}
+				return $modalities;
 			},
 		);
 	}

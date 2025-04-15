@@ -2,6 +2,7 @@ export const CHAT_HISTORY = 'chat_history';
 export const FUNCTION_CALLING = 'function_calling';
 export const IMAGE_GENERATION = 'image_generation';
 export const MULTIMODAL_INPUT = 'multimodal_input';
+export const MULTIMODAL_OUTPUT = 'multimodal_output';
 export const TEXT_GENERATION = 'text_generation';
 
 const VALUE_MAP = {
@@ -9,6 +10,7 @@ const VALUE_MAP = {
 	[ FUNCTION_CALLING ]: true,
 	[ IMAGE_GENERATION ]: true,
 	[ MULTIMODAL_INPUT ]: true,
+	[ MULTIMODAL_OUTPUT ]: true,
 	[ TEXT_GENERATION ]: true,
 };
 

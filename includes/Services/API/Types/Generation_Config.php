@@ -58,6 +58,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 		'frequencyPenalty' => 'float',
 		'responseLogprobs' => 'boolean',
 		'logprobs'         => 'integer',
+		'outputModalities' => 'array',
 	);
 
 	/**
@@ -223,6 +224,17 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	}
 
 	/**
+	 * Returns the output modalities.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string[] The output modalities, or empty array if not set.
+	 */
+	public function get_output_modalities(): array {
+		return $this->sanitized_args['outputModalities'] ?? array();
+	}
+
+	/**
 	 * Returns the additional arguments.
 	 *
 	 * @since 0.2.0
@@ -329,6 +341,14 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 				'logprobs'         => array(
 					'description' => __( 'The number of top logprobs to return at each decoding step.', 'ai-services' ),
 					'type'        => 'integer',
+					),
+				'outputModalities' => array(
+					'description' => __( 'The modalities that the response can contain.', 'ai-services' ),
+					'type'        => 'array',
+					'items'       => array(
+						'type' => 'string',
+						'enum' => array( 'text', 'image' ),
+					),
 				),
 			),
 			'additionalProperties' => true,
@@ -385,7 +405,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	 * @param string $arg_name The name of the argument being sanitized.
 	 * @return mixed The sanitized value.
 	 *
-	 * @throws InvalidArgumentException Thrown if the type is not supported.
+	 * @throws InvalidArgumentException Thrown if the type is not supported or the value is invalid.
 	 */
 	private function sanitize_arg( $value, string $type, string $arg_name ) {
 		if ( 'temperature' === $arg_name && ( (float) $value < 0.0 || (float) $value > 1.0 ) ) {

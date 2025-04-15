@@ -341,7 +341,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 				'logprobs'         => array(
 					'description' => __( 'The number of top logprobs to return at each decoding step.', 'ai-services' ),
 					'type'        => 'integer',
-					),
+				),
 				'outputModalities' => array(
 					'description' => __( 'The modalities that the response can contain.', 'ai-services' ),
 					'type'        => 'array',

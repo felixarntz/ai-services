@@ -1,4 +1,7 @@
-# Technical Architecture Overview
+---
+title: Technical Architecture Overview
+layout: page
+---
 
 This document outlines the technical architecture of the AI Services WordPress plugin.
 

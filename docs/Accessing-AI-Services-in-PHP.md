@@ -293,6 +293,40 @@ Note that not all configuration arguments are supported by every service API. Ho
 
 Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
 
+### Expecting multimodal output
+
+As of March 2025, [Google has introduced support for multimodal output to its first model](https://developers.googleblog.com/en/experiment-with-gemini-20-flash-native-image-generation/). This is still an early implementation, and no other service supports it yet (at the time of writing).
+
+The AI Services plugin allows you to use this feature via the `MULTIMODAL_OUTPUT` capability. Use this capability to find a service and model that supports it. To actually enable that for the model, you need to specify which output modalities you would like to expect for your prompt, by setting the generation configuration argument `outputModalities`.
+
+For now this only works in combination with text generation, and the only supported modalities are "text" and "image". Support will be expanded in the future as more models add support for it and eventually other combinations of modalities.
+
+Here is a code example:
+
+```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
+
+try {
+	$model = $service
+		->get_model(
+			array(
+				'feature'           => 'my-test-feature',
+				'capabilities'      => array( AI_Capability::TEXT_GENERATION, AI_Capability::MULTIMODAL_OUTPUT ),
+				'generationConfig'  => Text_Generation_Config::from_array(
+					array(
+						'outputModalities' => array( 'text', 'image' ),
+					)
+				),
+			)
+		);
+
+	// Generate text and images using the model.
+} catch ( Exception $e ) {
+	// Handle the exception.
+}
+```
+
 ### Function calling
 
 Several AI services and their models support function calling. Using this feature, you can provide custom function definitions to the model via JSON schema. The model cannot directly invoke these functions, but it can generate structured output suggesting a specific function to call with specific arguments. You can then handle calling the corresponding function with the suggested arguments in your business logic and provide the resulting output to the AI model as part of a subsequent prompt. This powerful feature can help the AI model to gather additional context for the user prompts and better integrate it into your processes.

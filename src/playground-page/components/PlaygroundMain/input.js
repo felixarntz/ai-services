@@ -91,7 +91,7 @@ const matchLastMessage = (
  */
 export default function Input() {
 	const [ prompt, setPrompt ] = useState( '' );
-	const [ attachment, setAttachment ] = useState( undefined );
+	const [ attachments, setAttachments ] = useState( [] );
 	const [ includeHistory, setIncludeHistory ] = useState( false );
 	const [ promptToMatch, setPromptToMatch ] = useState( false );
 	const [ matchedIndex, setMatchedIndex ] = useState( -1 );
@@ -137,7 +137,10 @@ export default function Input() {
 
 	const { sendMessage } = useDispatch( playgroundStore );
 
-	const disabled = ! service || ! model || ( ! prompt && ! attachment );
+	const disabled =
+		! service ||
+		! model ||
+		( ! prompt && ( ! attachments || ! attachments.length ) );
 
 	const sendPrompt = async () => {
 		if ( disabled ) {
@@ -147,11 +150,11 @@ export default function Input() {
 		setPromptToMatch( false );
 		setMatchedIndex( -1 );
 		setPrompt( '' );
-		setAttachment( undefined );
+		setAttachments( [] );
 		await sendMessage(
 			prompt,
 			capabilities.includes( enums.AiCapability.MULTIMODAL_INPUT )
-				? attachment
+				? attachments
 				: undefined,
 			capabilities.includes( enums.AiCapability.CHAT_HISTORY )
 				? includeHistory
@@ -241,6 +244,17 @@ export default function Input() {
 		);
 	}
 
+	const attachmentIds = useMemo(
+		() => attachments.map( ( attachment ) => attachment.id ),
+		[ attachments ]
+	);
+
+	const removeAttachment = ( indexToRemove ) => {
+		setAttachments( ( prevAttachments ) =>
+			prevAttachments.filter( ( _, index ) => index !== indexToRemove )
+		);
+	};
+
 	return (
 		<div className="ai-services-playground__input-backdrop">
 			<div className="ai-services-playground__input-container">
@@ -257,36 +271,45 @@ export default function Input() {
 					{ capabilities.includes(
 						enums.AiCapability.MULTIMODAL_INPUT
 					) &&
-						attachment && (
-							<div className="ai-services-playground__input-attachment">
-								<img
-									className="attachment-preview"
-									src={
-										attachment.sizes?.thumbnail?.url ||
-										attachment.icon
-									}
-									alt={ sprintf(
-										/* translators: %s: attachment filename */
-										__(
-											'Selected file: %s',
-											'ai-services'
-										),
-										attachment.filename
-									) }
-									width="80"
-									height="80"
-								/>
-								<button
-									className="attachment-remove-button"
-									aria-label={ __(
-										'Remove selected media',
-										'ai-services'
-									) }
-									onClick={ () => setAttachment( undefined ) }
-								>
-									{ close }
-								</button>
-							</div>
+						attachments.length > 0 && (
+							<Flex justify="flex-start" gap="2">
+								{ attachments.map( ( attachment, index ) => (
+									<div
+										key={ attachment.id || index }
+										className="ai-services-playground__input-attachment"
+									>
+										<img
+											className="attachment-preview"
+											src={
+												attachment.sizes?.thumbnail
+													?.url || attachment.icon
+											}
+											alt={ sprintf(
+												/* translators: %s: attachment filename */
+												__(
+													'Selected file: %s',
+													'ai-services'
+												),
+												attachment.filename
+											) }
+											width="80"
+											height="80"
+										/>
+										<button
+											className="attachment-remove-button"
+											aria-label={ __(
+												'Remove selected media',
+												'ai-services'
+											) }
+											onClick={ () =>
+												removeAttachment( index )
+											}
+										>
+											{ close }
+										</button>
+									</div>
+								) ) }
+							</Flex>
 						) }
 					{ !! ( allowFunctionResponse && ! includeHistory ) && (
 						<div className="ai-services-playground__input-notices">
@@ -305,9 +328,10 @@ export default function Input() {
 							) &&
 								canUploadMedia && (
 									<MediaModal
-										attachmentId={ attachment?.id }
-										onSelect={ setAttachment }
+										onSelect={ setAttachments }
 										allowedTypes={ [ 'image' ] }
+										multiple={ true }
+										attachmentIds={ attachmentIds }
 										render={ ( { open } ) => (
 											<button
 												className="ai-services-playground__input-action ai-services-playground__input-action--secondary"

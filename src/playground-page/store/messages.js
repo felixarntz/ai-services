@@ -77,7 +77,7 @@ const prepareMessageForCache = ( message ) => {
 		let partIndex = message.content.parts.findIndex(
 			( part ) => part.inlineData
 		);
-		if ( partIndex !== -1 ) {
+		if ( partIndex === -1 ) {
 			partIndex = 0;
 		}
 		message = {
@@ -127,7 +127,7 @@ const parseMessageFromCache = async ( message ) => {
 		let partIndex = message.content.parts.findIndex(
 			( part ) => part.inlineData
 		);
-		if ( partIndex !== -1 ) {
+		if ( partIndex === -1 ) {
 			partIndex = 0;
 		}
 		message = {
@@ -250,7 +250,7 @@ const clearMessages = async () => {
 
 const formatNewContent = async (
 	prompt,
-	attachment,
+	attachments,
 	includeHistory,
 	messages
 ) => {
@@ -287,8 +287,8 @@ const formatNewContent = async (
 		}
 	}
 
-	if ( attachment ) {
-		return helpers.textAndAttachmentToContent( prompt, attachment );
+	if ( attachments && attachments.length ) {
+		return helpers.textAndAttachmentsToContent( prompt, attachments );
 	}
 	return helpers.textToContent( prompt );
 };
@@ -385,13 +385,14 @@ const actions = {
 	 * Sends a message.
 	 *
 	 * @since 0.4.0
+	 * @since n.e.x.t Now expects an array of attachments instead of a single attachment.
 	 *
-	 * @param {string}  prompt         Message prompt.
-	 * @param {Object?} attachment     Optional attachment object.
-	 * @param {boolean} includeHistory Whether to include the message history before the prompt. Default false.
+	 * @param {string}   prompt         Message prompt.
+	 * @param {Object[]} attachments    Optional array of attachment objects.
+	 * @param {boolean}  includeHistory Whether to include the message history before the prompt. Default false.
 	 * @return {Function} Action creator.
 	 */
-	sendMessage( prompt, attachment, includeHistory ) {
+	sendMessage( prompt, attachments, includeHistory ) {
 		return async ( { registry, dispatch, select } ) => {
 			const serviceSlug = select.getService();
 			const modelSlug = select.getModel();
@@ -469,7 +470,7 @@ const actions = {
 
 			const newContent = await formatNewContent(
 				prompt,
-				attachment,
+				attachments,
 				includeHistory,
 				originalMessages
 			);
@@ -520,12 +521,11 @@ const actions = {
 					modelParams,
 				},
 			};
-			if ( attachment ) {
-				additionalPromptData.attachments = getFreshPartsAttachments(
-					{ content: newContent },
-					1,
-					attachment
-				);
+			if ( attachments && attachments.length ) {
+				additionalPromptData.attachments = [
+					null, // Based on `formatNewContent()`, the first part is always text, i.e. no related attachment.
+					...attachments,
+				];
 			}
 
 			dispatch.receiveMessage( 'user', newContent, additionalPromptData );

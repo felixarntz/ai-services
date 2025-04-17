@@ -39,14 +39,41 @@ export async function textAndAttachmentToContent(
 	attachment,
 	role = ContentRole.USER
 ) {
-	const mimeType = attachment.mime;
-	const data = await fileToBase64DataUrl(
-		attachment.sizes?.large?.url || attachment.url
-	);
+	return textAndAttachmentsToContent( text, [ attachment ], role );
+}
 
+/**
+ * Converts a text string and an array of attachments to a multimodal Content instance.
+ *
+ * The text will be included as a prompt as the first part of the content, and the attachments (e.g. image or audio
+ * files) will be included as the subsequent parts.
+ *
+ * @since n.e.x.t
+ *
+ * @param {string}   text        The text.
+ * @param {Object[]} attachments The attachment objects.
+ * @param {string}   role        Optional. The role to use for the content. Default 'user'.
+ * @return {Object} The Content object.
+ */
+export async function textAndAttachmentsToContent(
+	text,
+	attachments,
+	role = ContentRole.USER
+) {
 	return {
 		role,
-		parts: [ { text }, { inlineData: { mimeType, data } } ],
+		parts: [
+			{ text },
+			...( await Promise.all(
+				attachments.map( async ( attachment ) => {
+					const mimeType = attachment.mime;
+					const data = await fileToBase64DataUrl(
+						attachment.sizes?.large?.url || attachment.url
+					);
+					return { inlineData: { mimeType, data } };
+				} )
+			) ),
+		],
 	};
 }
 

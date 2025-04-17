@@ -57,38 +57,70 @@ final class Helpers {
 	 * @return Content The content instance.
 	 */
 	public static function text_and_attachment_to_content( string $text, $attachment, string $role = Content_Role::USER ): Content {
-		if ( $attachment instanceof WP_Post ) {
-			$attachment_id = (int) $attachment->ID;
-		} else {
-			$attachment_id = (int) $attachment;
-			$attachment    = get_post( $attachment_id );
-		}
+		return self::text_and_attachments_to_content( $text, array( $attachment ), $role );
+	}
 
-		$file       = get_attached_file( $attachment_id );
-		$large_size = image_get_intermediate_size( $attachment_id, 'large' );
-		if ( $large_size && isset( $large_size['path'] ) ) {
-			// To get the absolute path to a sub-size file, we need to prepend the uploads dir.
-			if ( str_starts_with( $large_size['path'], '/' ) ) {
-				$file = $large_size['path'];
-			} else {
-				$uploads = wp_get_upload_dir();
-				if ( false === $uploads['error'] ) {
-					$file = "{$uploads['basedir']}/{$large_size['path']}";
+	/**
+	 * Converts a text string and an array of attachments to a multimodal Content instance.
+	 *
+	 * The text will be included as a prompt as the first part of the content, and the attachments (e.g. image or audio
+	 * files) will be included as the subsequent parts.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string             $text        The text.
+	 * @param array<int|WP_Post> $attachments The attachment IDs or objects.
+	 * @param string             $role        Optional. The role to use for the content. Default 'user'.
+	 * @return Content The content instance.
+	 */
+	public static function text_and_attachments_to_content( string $text, array $attachments, string $role = Content_Role::USER ): Content {
+		$attachments_data = array_map(
+			static function ( $attachment ) {
+				if ( $attachment instanceof WP_Post ) {
+					$attachment_id = (int) $attachment->ID;
+				} else {
+					$attachment_id = (int) $attachment;
+					$attachment    = get_post( $attachment_id );
 				}
-			}
-		}
 
-		$mime_type = wp_check_filetype( $file );
-		if ( isset( $mime_type['type'] ) ) {
-			$mime_type = $mime_type['type'];
-		} else {
-			// Fallback that should never be needed.
-			$mime_type = $attachment->post_mime_type;
-		}
+				$file       = get_attached_file( $attachment_id );
+				$large_size = image_get_intermediate_size( $attachment_id, 'large' );
+				if ( $large_size && isset( $large_size['path'] ) ) {
+					// To get the absolute path to a sub-size file, we need to prepend the uploads dir.
+					if ( str_starts_with( $large_size['path'], '/' ) ) {
+						$file = $large_size['path'];
+					} else {
+						$uploads = wp_get_upload_dir();
+						if ( false === $uploads['error'] ) {
+							$file = "{$uploads['basedir']}/{$large_size['path']}";
+						}
+					}
+				}
+
+				$mime_type = wp_check_filetype( $file );
+				if ( isset( $mime_type['type'] ) ) {
+					$mime_type = $mime_type['type'];
+				} else {
+					// Fallback that should never be needed.
+					$mime_type = $attachment->post_mime_type;
+				}
+
+				return array(
+					'file'      => $file,
+					'mime_type' => $mime_type,
+				);
+			},
+			$attachments
+		);
 
 		$parts = new Parts();
 		$parts->add_text_part( $text );
-		$parts->add_inline_data_part( $mime_type, self::file_to_base64_data_url( $file, $mime_type ) );
+		foreach ( $attachments_data as $attachment_data ) {
+			$parts->add_inline_data_part(
+				$attachment_data['mime_type'],
+				self::file_to_base64_data_url( $attachment_data['file'], $attachment_data['mime_type'] )
+			);
+		}
 
 		return Formatter::format_content( $parts, $role );
 	}

@@ -46,7 +46,8 @@ export default function Interface( { className, labels, children } ) {
 
 	const {
 		isDistractionFree,
-		navigateRegionsShortcuts,
+		navigatePreviousRegionShortcut,
+		navigateNextRegionShortcut,
 		activeSidebar,
 		defaultSidebar,
 	} = useSelect( ( select ) => {
@@ -58,14 +59,12 @@ export default function Interface( { className, labels, children } ) {
 
 		return {
 			isDistractionFree: getPreference( 'distractionFree' ),
-			navigateRegionsShortcuts: {
-				previous: getAllShortcutKeyCombinations(
-					'ai-services/previous-region'
-				),
-				next: getAllShortcutKeyCombinations(
-					'ai-services/next-region'
-				),
-			},
+			navigatePreviousRegionShortcut: getAllShortcutKeyCombinations(
+				'ai-services/previous-region'
+			),
+			navigateNextRegionShortcut: getAllShortcutKeyCombinations(
+				'ai-services/next-region'
+			),
 			activeSidebar: getActiveSidebar(),
 			defaultSidebar: getDefaultSidebar(),
 		};
@@ -88,7 +87,10 @@ export default function Interface( { className, labels, children } ) {
 		toggleDefaultSidebar();
 	} );
 
-	const navigateRegionsProps = useNavigateRegions( navigateRegionsShortcuts );
+	const navigateRegionsProps = useNavigateRegions( {
+		previous: navigatePreviousRegionShortcut,
+		next: navigateNextRegionShortcut,
+	} );
 
 	const hasHeader = useHasHeader();
 	const header = hasHeader && (

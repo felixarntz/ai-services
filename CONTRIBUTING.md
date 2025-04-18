@@ -48,6 +48,7 @@ The following linting commands are available:
 * `npm run format-js`: Formats the JavaScript code using the Prettier requirements.
 * `npm run lint-css`: Checks the CSS code with [Stylelint](https://stylelint.io/).
 * `npm run format-css`: Formats the CSS code using the Stylelint requirements.
+* `npm run lint-md`: Checks Markdown docs.
 
 The following commands allow running PHPUnit tests using the built-in environment:
 

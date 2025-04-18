@@ -1,10 +1,10 @@
 {
-  "require-dev": {
-    "humbug/php-scoper": "^0.18"
-  },
-  "config": {
-    "platform": {
-      "php": "8.2"
-    }
-  }
+	"require-dev": {
+		"humbug/php-scoper": "^0.18"
+	},
+	"config": {
+		"platform": {
+			"php": "8.2"
+		}
+	}
 }

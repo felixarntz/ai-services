@@ -1,22 +1,22 @@
-title: "AI Services: AI Client Plugin for WordPress"
-description: "Learn how to use the AI Services plugin, which makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider."
+title: 'AI Services: AI Client Plugin for WordPress'
+description: 'Learn how to use the AI Services plugin, which makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.'
 
 markdown: kramdown
 remote_theme: jekyll/minima
 plugins:
-  - jekyll-remote-theme
-  - jekyll-feed
-  - jekyll-seo-tag
+    - jekyll-remote-theme
+    - jekyll-feed
+    - jekyll-seo-tag
 
 minima:
-  skin: auto
-  nav_pages:
-    - Documentation.md
-  social_links:
-    - title: AI Services for WordPress
-      icon: wordpress
-      url: "https://wordpress.org/plugins/ai-services/"
-    - title: AI Services on GitHub
-      icon: github
-      url: "https://github.com/felixarntz/ai-services"
-  hide_site_feed_link: true
+    skin: auto
+    nav_pages:
+        - Documentation.md
+    social_links:
+        - title: AI Services for WordPress
+          icon: wordpress
+          url: 'https://wordpress.org/plugins/ai-services/'
+        - title: AI Services on GitHub
+          icon: github
+          url: 'https://github.com/felixarntz/ai-services'
+    hide_site_feed_link: true

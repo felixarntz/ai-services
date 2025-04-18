@@ -2,5 +2,3 @@ build
 examples
 third-party
 vendor
-**/*.json
-**/*.yml

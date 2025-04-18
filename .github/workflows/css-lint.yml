@@ -1,56 +1,56 @@
 name: CSS Code Linting
 
 on:
-  push:
-    branches:
-      - main
-    # Only run if CSS/Lint/NVM files changed.
-    paths:
-      - '.github/workflows/css-lint.yml'
-      - '**.css'
-      - '**.scss'
-      - '.nvmrc'
-      - '**/package.json'
-      - 'package-lock.json'
-  pull_request:
-    branches:
-      - main
-      - 'feature/**'
-    # Only run if CSS/Lint/NVM files changed.
-    paths:
-      - '.github/workflows/css-lint.yml'
-      - '**.css'
-      - '**.scss'
-      - '.nvmrc'
-      - '**/package.json'
-      - 'package-lock.json'
-    types:
-      - opened
-      - reopened
-      - synchronize
+    push:
+        branches:
+            - main
+        # Only run if CSS/Lint/NVM files changed.
+        paths:
+            - '.github/workflows/css-lint.yml'
+            - '**.css'
+            - '**.scss'
+            - '.nvmrc'
+            - '**/package.json'
+            - 'package-lock.json'
+    pull_request:
+        branches:
+            - main
+            - 'feature/**'
+        # Only run if CSS/Lint/NVM files changed.
+        paths:
+            - '.github/workflows/css-lint.yml'
+            - '**.css'
+            - '**.scss'
+            - '.nvmrc'
+            - '**/package.json'
+            - 'package-lock.json'
+        types:
+            - opened
+            - reopened
+            - synchronize
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  js-lint:
-    name: CSS Lint
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: styfle/cancel-workflow-action@0.12.1
+    js-lint:
+        name: CSS Lint
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            - uses: styfle/cancel-workflow-action@0.12.1
 
-      - uses: actions/checkout@v4
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js (via .nvmrc)
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: npm
+            - name: Setup Node.js (via .nvmrc)
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
 
-      - name: npm install
-        run: npm ci
+            - name: npm install
+              run: npm ci
 
-      - name: CSS Lint
-        run: npm run lint-css
+            - name: CSS Lint
+              run: npm run lint-css

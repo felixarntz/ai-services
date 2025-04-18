@@ -6,6 +6,8 @@
 			width: 80%;
 			min-width: 550px;
 			max-width: 900px;
+			height: 80%;
+			max-height: 600px;
 		}
 	}
 
@@ -18,6 +20,13 @@
 			&[aria-selected="true"] {
 				border-bottom: var(--wp-admin-border-width-focus) solid var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9));
 			}
+		}
+	}
+
+	&__code-textarea-wrapper {
+
+		.CodeMirror {
+			height: auto;
 		}
 	}
 

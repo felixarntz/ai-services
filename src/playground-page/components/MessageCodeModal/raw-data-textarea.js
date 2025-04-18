@@ -26,19 +26,21 @@ export default function RawDataTextarea( { rawData } ) {
 	const textareaRef = useRef();
 
 	// Initialize 'wp-codemirror'.
-	useCodeMirrorEffect( textareaRef, 'json' );
+	useCodeMirrorEffect( textareaRef, 'javascript' );
 
 	return (
-		<textarea
-			ref={ textareaRef }
-			className="ai-services-playground__code-textarea code"
-			aria-label={ __(
-				'Raw data for the selected message',
-				'ai-services'
-			) }
-			value={ rawDataJson }
-			rows="14"
-			readOnly
-		/>
+		<div className="ai-services-playground__code-textarea-wrapper">
+			<textarea
+				ref={ textareaRef }
+				className="ai-services-playground__code-textarea code"
+				aria-label={ __(
+					'Raw data for the selected message',
+					'ai-services'
+				) }
+				value={ rawDataJson }
+				rows="14"
+				readOnly
+			/>
+		</div>
 	);
 }

@@ -1,56 +1,56 @@
 name: Bump Tested up to on WordPress.org
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  bump-tested-up-to:
-    name: Bump "Tested up to" version
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    bump-tested-up-to:
+        name: Bump "Tested up to" version
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Download WordPress.org readme
-        env:
-          SLUG: ${{ github.event.repository.name }}
-        run: |
-          # Download the current readme.txt from WordPress.org
-          curl -sSL --retry 3 --retry-delay 5 --retry-all-errors --fail -o /tmp/wp-org-readme.txt "https://plugins.svn.wordpress.org/$SLUG/trunk/readme.txt"
-          if [ $? -ne 0 ]; then
-            echo "::error::Could not fetch readme.txt from WordPress.org for $SLUG"
-            exit 1
-          fi
+            - name: Download WordPress.org readme
+              env:
+                  SLUG: ${{ github.event.repository.name }}
+              run: |
+                  # Download the current readme.txt from WordPress.org
+                  curl -sSL --retry 3 --retry-delay 5 --retry-all-errors --fail -o /tmp/wp-org-readme.txt "https://plugins.svn.wordpress.org/$SLUG/trunk/readme.txt"
+                  if [ $? -ne 0 ]; then
+                    echo "::error::Could not fetch readme.txt from WordPress.org for $SLUG"
+                    exit 1
+                  fi
 
-      - name: Extract local "Tested up to" version
-        id: extract-tested-up-to
-        run: |
-          LOCAL_TESTED_UP_TO=$(grep -E "^Tested up to:" "./readme.txt" | awk -F ': +' '{print $2}')
-          if [ -z "$LOCAL_TESTED_UP_TO" ]; then
-            echo "::error::Unable to parse local Tested up to version from readme.txt"
-            exit 1
-          fi
+            - name: Extract local "Tested up to" version
+              id: extract-tested-up-to
+              run: |
+                  LOCAL_TESTED_UP_TO=$(grep -E "^Tested up to:" "./readme.txt" | awk -F ': +' '{print $2}')
+                  if [ -z "$LOCAL_TESTED_UP_TO" ]; then
+                    echo "::error::Unable to parse local Tested up to version from readme.txt"
+                    exit 1
+                  fi
 
-          echo "version=$LOCAL_TESTED_UP_TO" >> $GITHUB_OUTPUT
+                  echo "version=$LOCAL_TESTED_UP_TO" >> $GITHUB_OUTPUT
 
-      - name: Prepare and update readme.txt
-        env:
-          LOCAL_TESTED_UP_TO: ${{ steps.extract-tested-up-to.outputs.version }}
-        run: |
-          # Replace local readme.txt with WordPress.org version, updating only the "Tested up to" line.
-          cp /tmp/wp-org-readme.txt "./readme.txt"
-          sed -i -E 's/^(Tested up to:[[:space:]]*).+/\1'"$LOCAL_TESTED_UP_TO"'/' "./readme.txt"
+            - name: Prepare and update readme.txt
+              env:
+                  LOCAL_TESTED_UP_TO: ${{ steps.extract-tested-up-to.outputs.version }}
+              run: |
+                  # Replace local readme.txt with WordPress.org version, updating only the "Tested up to" line.
+                  cp /tmp/wp-org-readme.txt "./readme.txt"
+                  sed -i -E 's/^(Tested up to:[[:space:]]*).+/\1'"$LOCAL_TESTED_UP_TO"'/' "./readme.txt"
 
-          # Show the diff of what's being updated.
-          # If there is no change, the following deployment step will simply bail, so we don't need to worry about it.
-          echo "Changes made to readme.txt:"
-          diff -u /tmp/wp-org-readme.txt "./readme.txt" || true
+                  # Show the diff of what's being updated.
+                  # If there is no change, the following deployment step will simply bail, so we don't need to worry about it.
+                  echo "Changes made to readme.txt:"
+                  diff -u /tmp/wp-org-readme.txt "./readme.txt" || true
 
-      - name: Deploy readme.txt to WordPress.org
-        uses: 10up/action-wordpress-plugin-asset-update@stable
-        env:
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SLUG: ${{ github.event.repository.name }}
-          SKIP_ASSETS: true
-          IGNORE_OTHER_FILES: true
+            - name: Deploy readme.txt to WordPress.org
+              uses: 10up/action-wordpress-plugin-asset-update@stable
+              env:
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SLUG: ${{ github.event.repository.name }}
+                  SKIP_ASSETS: true
+                  IGNORE_OTHER_FILES: true

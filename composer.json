@@ -1,89 +1,89 @@
 {
-  "name": "vendor-ns/wp-starter-plugin",
-  "description": "The plugin description.",
-  "type": "wordpress-plugin",
-  "license": "GPL-2.0-or-later",
-  "keywords": [
-    "wordpress",
-    "plugin",
-    "boilerplate",
-    "starter",
-    "oop"
-  ],
-  "homepage": "https://the-plugin.com",
-  "require": {
-    "composer/installers": "~1.0",
-    "felixarntz/wp-oop-plugin-lib": "dev-main",
-    "php": ">=7.2"
-  },
-  "config": {
-    "platform": {
-      "php": "7.2.34"
-    },
-    "allow-plugins": {
-      "composer/installers": true
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "Vendor_NS\\WP_Starter_Plugin\\": "includes/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Vendor_NS\\WP_Starter_Plugin\\PHPUnit\\Includes\\": "tests/phpunit/includes"
-    }
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "@prefix-dependencies"
-    ],
-    "post-update-cmd": [
-      "@prefix-dependencies"
-    ],
-    "autoload-includes": [
-      "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > includes/composer.json",
-      "@composer --working-dir=includes dump-autoload --classmap-authoritative --no-interaction",
-      "cp includes/vendor/composer/autoload_classmap.php includes/",
-      "rm -rf includes/vendor && rm includes/composer.json",
-      "mkdir -p includes/vendor/composer && mv includes/autoload_classmap.php includes/vendor/composer/"
-    ],
-    "autoload-third-party": [
-      "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > third-party/composer.json",
-      "@composer --working-dir=third-party dump-autoload --classmap-authoritative --no-interaction",
-      "cp third-party/vendor/composer/autoload_classmap.php third-party/",
-      "rm -rf third-party/vendor && rm third-party/composer.json",
-      "mkdir -p third-party/vendor/composer && mv third-party/autoload_classmap.php third-party/vendor/composer/"
-    ],
-    "format": [
-      "composer --working-dir=php-tools/lint update",
-      "php-tools/lint/vendor/bin/phpcbf --standard=phpcs.xml.dist"
-    ],
-    "lint": [
-      "composer --working-dir=php-tools/lint update",
-      "php-tools/lint/vendor/bin/phpcs --standard=phpcs.xml.dist"
-    ],
-    "phpmd": [
-      "composer --working-dir=php-tools/lint update",
-      "php-tools/lint/vendor/bin/phpmd . text phpmd.xml"
-    ],
-    "phpstan": [
-      "composer --working-dir=php-tools/lint update",
-      "php-tools/lint/vendor/bin/phpstan analyse --memory-limit=2048M"
-    ],
-    "prefix-dependencies": [
-      "composer --working-dir=php-tools/prefix update",
-      "php-tools/prefix/vendor/bin/php-scoper add --output-dir=./third-party --force --quiet",
-      "@autoload-includes",
-      "@autoload-third-party"
-    ],
-    "test": [
-      "composer --working-dir=php-tools/test update",
-      "php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --verbose"
-    ],
-    "test-multisite": [
-      "composer --working-dir=php-tools/test update",
-      "WP_MULTISITE=1 php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --exclude-group=ms-excluded --verbose"
-    ]
-  }
+	"name": "vendor-ns/wp-starter-plugin",
+	"description": "The plugin description.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"boilerplate",
+		"starter",
+		"oop"
+	],
+	"homepage": "https://the-plugin.com",
+	"require": {
+		"composer/installers": "~1.0",
+		"felixarntz/wp-oop-plugin-lib": "dev-main",
+		"php": ">=7.2"
+	},
+	"config": {
+		"platform": {
+			"php": "7.2.34"
+		},
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"Vendor_NS\\WP_Starter_Plugin\\": "includes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Vendor_NS\\WP_Starter_Plugin\\PHPUnit\\Includes\\": "tests/phpunit/includes"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"@prefix-dependencies"
+		],
+		"post-update-cmd": [
+			"@prefix-dependencies"
+		],
+		"autoload-includes": [
+			"echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > includes/composer.json",
+			"@composer --working-dir=includes dump-autoload --classmap-authoritative --no-interaction",
+			"cp includes/vendor/composer/autoload_classmap.php includes/",
+			"rm -rf includes/vendor && rm includes/composer.json",
+			"mkdir -p includes/vendor/composer && mv includes/autoload_classmap.php includes/vendor/composer/"
+		],
+		"autoload-third-party": [
+			"echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > third-party/composer.json",
+			"@composer --working-dir=third-party dump-autoload --classmap-authoritative --no-interaction",
+			"cp third-party/vendor/composer/autoload_classmap.php third-party/",
+			"rm -rf third-party/vendor && rm third-party/composer.json",
+			"mkdir -p third-party/vendor/composer && mv third-party/autoload_classmap.php third-party/vendor/composer/"
+		],
+		"format": [
+			"composer --working-dir=php-tools/lint update",
+			"php-tools/lint/vendor/bin/phpcbf --standard=phpcs.xml.dist"
+		],
+		"lint": [
+			"composer --working-dir=php-tools/lint update",
+			"php-tools/lint/vendor/bin/phpcs --standard=phpcs.xml.dist"
+		],
+		"phpmd": [
+			"composer --working-dir=php-tools/lint update",
+			"php-tools/lint/vendor/bin/phpmd . text phpmd.xml"
+		],
+		"phpstan": [
+			"composer --working-dir=php-tools/lint update",
+			"php-tools/lint/vendor/bin/phpstan analyse --memory-limit=2048M"
+		],
+		"prefix-dependencies": [
+			"composer --working-dir=php-tools/prefix update",
+			"php-tools/prefix/vendor/bin/php-scoper add --output-dir=./third-party --force --quiet",
+			"@autoload-includes",
+			"@autoload-third-party"
+		],
+		"test": [
+			"composer --working-dir=php-tools/test update",
+			"php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --verbose"
+		],
+		"test-multisite": [
+			"composer --working-dir=php-tools/test update",
+			"WP_MULTISITE=1 php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --exclude-group=ms-excluded --verbose"
+		]
+	}
 }

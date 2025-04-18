@@ -1,60 +1,60 @@
 name: Plugin Check
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - reopened
-      - synchronize
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+        types:
+            - opened
+            - reopened
+            - synchronize
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  plugin-check:
-    name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      fail-fast: true
-      matrix:
-        php:
-        - '8.3' # Currently the wordpress/plugin-check-action always uses the latest PHP version anyway.
-        wordpress: [ 'latest' ] # Currently the wordpress/plugin-check-action only supports 'latest' or 'trunk'.
-    steps:
-      #- uses: styfle/cancel-workflow-action@0.12.1
+    plugin-check:
+        name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        strategy:
+            fail-fast: true
+            matrix:
+                php:
+                    - '8.3' # Currently the wordpress/plugin-check-action always uses the latest PHP version anyway.
+                wordpress: ['latest'] # Currently the wordpress/plugin-check-action only supports 'latest' or 'trunk'.
+        steps:
+            #- uses: styfle/cancel-workflow-action@0.12.1
 
-      - uses: actions/checkout@v4
+            - uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Composer dependencies
-        run: composer install
+            - name: Install Composer dependencies
+              run: composer install
 
-      - name: Setup Node.js (.nvmrc)
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: npm
+            - name: Setup Node.js (.nvmrc)
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
 
-      - name: npm install
-        run: npm ci
+            - name: npm install
+              run: npm ci
 
-      - name: Build assets
-        run: npm run build
+            - name: Build assets
+              run: npm run build
 
-      - name: Run plugin check
-        uses: wordpress/plugin-check-action@v1
-        with:
-          wp-version: ${{ matrix.wordpress }}
-          exclude-checks: 'file_type' # Exclude file_type because of the dev files present in the repository.
+            - name: Run plugin check
+              uses: wordpress/plugin-check-action@v1
+              with:
+                  wp-version: ${{ matrix.wordpress }}
+                  exclude-checks: 'file_type' # Exclude file_type because of the dev files present in the repository.

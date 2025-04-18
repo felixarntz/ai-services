@@ -1,72 +1,72 @@
 name: Deploy to WordPress.org
 
 on:
-  release:
-    types:
-      - published
-  workflow_dispatch:
+    release:
+        types:
+            - published
+    workflow_dispatch:
 
 jobs:
-  release:
-    name: New Release${{ github.event_name == 'workflow_dispatch' && ' (dry run)' || '' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    release:
+        name: New Release${{ github.event_name == 'workflow_dispatch' && ' (dry run)' || '' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js (.nvmrc)
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: npm
+            - name: Setup Node.js (.nvmrc)
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
 
-      - name: Build plugin
-        run: |
-          composer update --no-dev
-          composer prefix-dependencies
-          npm install
-          npm run build
+            - name: Build plugin
+              run: |
+                  composer update --no-dev
+                  composer prefix-dependencies
+                  npm install
+                  npm run build
 
-      - name: Get plugin version
-        id: get-version
-        env:
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-        run: |
-          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
-            echo "version=$(awk '/Stable tag:   /{print $NF}' readme.txt)" >> $GITHUB_OUTPUT
-          else
-            VERSION="${GITHUB_REF#refs/tags/}"
-            VERSION="${VERSION#v}"
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
-          fi
+            - name: Get plugin version
+              id: get-version
+              env:
+                  GITHUB_EVENT_NAME: ${{ github.event_name }}
+              run: |
+                  if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+                    echo "version=$(awk '/Stable tag:   /{print $NF}' readme.txt)" >> $GITHUB_OUTPUT
+                  else
+                    VERSION="${GITHUB_REF#refs/tags/}"
+                    VERSION="${VERSION#v}"
+                    echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  fi
 
-      - name: Deploy plugin to WordPress.org
-        id: wporg-deployment
-        uses: 10up/action-wordpress-plugin-deploy@stable
-        with:
-          generate-zip: true
-          dry-run: ${{ github.event_name == 'workflow_dispatch' }}
-        env:
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SLUG: ${{ github.event.repository.name }}
-          VERSION: ${{ steps.get-version.outputs.version }}
+            - name: Deploy plugin to WordPress.org
+              id: wporg-deployment
+              uses: 10up/action-wordpress-plugin-deploy@stable
+              with:
+                  generate-zip: true
+                  dry-run: ${{ github.event_name == 'workflow_dispatch' }}
+              env:
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SLUG: ${{ github.event.repository.name }}
+                  VERSION: ${{ steps.get-version.outputs.version }}
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}
-          # This will unfortunately become a ZIP of the ZIP. See https://github.com/actions/upload-artifact/issues/39.
-          path: ${{ steps.wporg-deployment.outputs.zip-path }}
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ github.event.repository.name }}
+                  # This will unfortunately become a ZIP of the ZIP. See https://github.com/actions/upload-artifact/issues/39.
+                  path: ${{ steps.wporg-deployment.outputs.zip-path }}
 
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: ${{ steps.wporg-deployment.outputs.zip-path }}
+            - name: Upload release assets
+              uses: softprops/action-gh-release@v1
+              if: startsWith(github.ref, 'refs/tags/')
+              with:
+                  files: ${{ steps.wporg-deployment.outputs.zip-path }}

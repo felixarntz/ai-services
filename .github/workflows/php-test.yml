@@ -1,112 +1,112 @@
 name: PHP Unit Testing
 
 on:
-  push:
-    branches:
-      - main
-    # Only run if PHP-related files changed.
-    paths:
-      - '.github/workflows/php-test.yml'
-      - '**.php'
-      - '.wp-env.json'
-      - '**/package.json'
-      - 'package-lock.json'
-      - 'phpunit.xml.dist'
-      - 'composer.json'
-      - 'composer.lock'
-  pull_request:
-    branches:
-      - main
-    # Only run if PHP-related files changed.
-    paths:
-      - '.github/workflows/php-test.yml'
-      - '**.php'
-      - '.wp-env.json'
-      - '**/package.json'
-      - 'package-lock.json'
-      - 'phpunit.xml.dist'
-      - 'composer.json'
-      - 'composer.lock'
-    types:
-      - opened
-      - reopened
-      - synchronize
+    push:
+        branches:
+            - main
+        # Only run if PHP-related files changed.
+        paths:
+            - '.github/workflows/php-test.yml'
+            - '**.php'
+            - '.wp-env.json'
+            - '**/package.json'
+            - 'package-lock.json'
+            - 'phpunit.xml.dist'
+            - 'composer.json'
+            - 'composer.lock'
+    pull_request:
+        branches:
+            - main
+        # Only run if PHP-related files changed.
+        paths:
+            - '.github/workflows/php-test.yml'
+            - '**.php'
+            - '.wp-env.json'
+            - '**/package.json'
+            - 'package-lock.json'
+            - 'phpunit.xml.dist'
+            - 'composer.json'
+            - 'composer.lock'
+        types:
+            - opened
+            - reopened
+            - synchronize
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  php-test:
-    name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }} - ${{ matrix.multisite && 'Multisite' || 'Single site' }}${{ matrix.experimental && ' (experimental)' || '' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      fail-fast: true
-      matrix:
-        php:
-        - '7.2'
-        - '7.3'
-        - '7.4'
-        - '8.0'
-        - '8.1'
-        - '8.2'
-        wordpress: [ 'latest' ]
-        multisite: [ false, true ]
-        experimental: [false]
-        include:
-          - php: '8.0'
-            wordpress: '6.0'
-            multisite: false
-          - php: '8.0'
-            wordpress: '6.0'
-            multisite: true
-          - php: '8.0'
-            wordpress: '6.1'
-            multisite: false
-          - php: '8.0'
-            wordpress: '6.1'
-            multisite: true
-          - php: '8.2'
-            wordpress: 'trunk'
-            multisite: false
-            experimental: true
-          - php: '8.2'
-            wordpress: 'trunk'
-            multisite: true
-            experimental: true
-    env:
-      WP_ENV_PHP_VERSION: ${{ matrix.php }}
-      WP_ENV_CORE: ${{ matrix.wordpress == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wordpress ) }}
-    continue-on-error: ${{ matrix.experimental == true }}
-    steps:
-      #- uses: styfle/cancel-workflow-action@0.12.1
-
-      - uses: actions/checkout@v4
-
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
+    php-test:
+        name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }} - ${{ matrix.multisite && 'Multisite' || 'Single site' }}${{ matrix.experimental && ' (experimental)' || '' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        strategy:
+            fail-fast: true
+            matrix:
+                php:
+                    - '7.2'
+                    - '7.3'
+                    - '7.4'
+                    - '8.0'
+                    - '8.1'
+                    - '8.2'
+                wordpress: ['latest']
+                multisite: [false, true]
+                experimental: [false]
+                include:
+                    - php: '8.0'
+                      wordpress: '6.0'
+                      multisite: false
+                    - php: '8.0'
+                      wordpress: '6.0'
+                      multisite: true
+                    - php: '8.0'
+                      wordpress: '6.1'
+                      multisite: false
+                    - php: '8.0'
+                      wordpress: '6.1'
+                      multisite: true
+                    - php: '8.2'
+                      wordpress: 'trunk'
+                      multisite: false
+                      experimental: true
+                    - php: '8.2'
+                      wordpress: 'trunk'
+                      multisite: true
+                      experimental: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            WP_ENV_PHP_VERSION: ${{ matrix.php }}
+            WP_ENV_CORE: ${{ matrix.wordpress == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wordpress ) }}
+        continue-on-error: ${{ matrix.experimental == true }}
+        steps:
+            #- uses: styfle/cancel-workflow-action@0.12.1
 
-      - name: Install Composer dependencies
-        run: composer install
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js (.nvmrc)
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: npm
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: npm install
-        run: npm ci
+            - name: Install Composer dependencies
+              run: composer install
 
-      - name: Build assets
-        run: npm run build
+            - name: Setup Node.js (.nvmrc)
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
 
-      - name: Install WordPress
-        run: npm run wp-env start
+            - name: npm install
+              run: npm ci
 
-      - name: Running ${{ matrix.multisite && 'multisite' || 'single site' }} unit tests
-        run: npm run test-php${{ matrix.multisite && '-multisite' || '' }}
+            - name: Build assets
+              run: npm run build
+
+            - name: Install WordPress
+              run: npm run wp-env start
+
+            - name: Running ${{ matrix.multisite && 'multisite' || 'single site' }} unit tests
+              run: npm run test-php${{ matrix.multisite && '-multisite' || '' }}

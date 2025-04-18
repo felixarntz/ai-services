@@ -22,25 +22,25 @@ The plugin does intentionally _not_ come with specific AI driven features built-
 Here's a (non-comprehensive) feature list:
 
 * Abstraction layer and APIs to communicate with any AI service in a uniform way
-  * APIs are available in both PHP and in JavaScript, as well as via the WordPress REST API and WP-CLI commands
-  * Currently supports the following AI capabilities (with more on the way!):
-    * text generation (including text streaming for more immediate feedback to users)
-    * text chats with history
-    * multimodal input
-    * function calling
-    * image generation
+    * APIs are available in both PHP and in JavaScript, as well as via the WordPress REST API and WP-CLI commands
+    * Currently supports the following AI capabilities (with more on the way!):
+        * text generation (including text streaming for more immediate feedback to users)
+        * text chats with history
+        * multimodal input
+        * function calling
+        * image generation
 * AI Playground administration screen (in the Tools menu) allows exploring the different AI capabilities
-  * Explore all AI capabilities supported by the plugin via user interface
-  * Select which AI service and model to use and set a few advanced configuration parameters
-  * Define your own function declarations used for AI function calling
-  * Generate images and save them to the WordPress media library
-  * Exchange the AI service or model on the fly to continue a chat started with one model with another one
+    * Explore all AI capabilities supported by the plugin via user interface
+    * Select which AI service and model to use and set a few advanced configuration parameters
+    * Define your own function declarations used for AI function calling
+    * Generate images and save them to the WordPress media library
+    * Exchange the AI service or model on the fly to continue a chat started with one model with another one
 * AI Services settings screen to configure services with API credentials
 * Built-in AI service implementations
-  * [Anthropic (Claude)](https://www.anthropic.com/claude)
-  * [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
-  * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
-  * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
+    * [Anthropic (Claude)](https://www.anthropic.com/claude)
+    * [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
+    * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
+    * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 
 **Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set and more being added. A crucial part of refining the plugin is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the AI services offer in a uniform way. That's why your feedback is much appreciated!
@@ -60,16 +60,16 @@ While the plugin APIs allow registering custom AI services, the plugin comes wit
 The use of the third party AI services is subject to the respective terms of service. The following third party services are supported out of the box:
 
 * [Anthropic (Claude)](https://www.anthropic.com/claude)
-  * [Anthropic Consumer Terms of Service](https://www.anthropic.com/legal/consumer-terms)
-  * [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms)
-  * [Anthropic Privacy Policy](https://www.anthropic.com/legal/privacy)
+    * [Anthropic Consumer Terms of Service](https://www.anthropic.com/legal/consumer-terms)
+    * [Anthropic Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms)
+    * [Anthropic Privacy Policy](https://www.anthropic.com/legal/privacy)
 * [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
-  * [Google Terms of Service](https://policies.google.com/terms)
-  * [Google AI Terms of Service](https://policies.google.com/terms/generative-ai)
-  * [Google Privacy Policy](https://policies.google.com/privacy)
+    * [Google Terms of Service](https://policies.google.com/terms)
+    * [Google AI Terms of Service](https://policies.google.com/terms/generative-ai)
+    * [Google Privacy Policy](https://policies.google.com/privacy)
 * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
-  * [OpenAI Terms of Use](https://openai.com/policies/row-terms-of-use/)
-  * [OpenAI Privacy Policy](https://openai.com/policies/row-privacy-policy/)
+    * [OpenAI Terms of Use](https://openai.com/policies/row-terms-of-use/)
+    * [OpenAI Privacy Policy](https://openai.com/policies/row-privacy-policy/)
 
 = Code examples for using the API =
 

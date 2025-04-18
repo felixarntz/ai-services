@@ -1,6 +1,7 @@
 # WP Starter Plugin
 
 This starter plugin provides a headstart for writing object-oriented WordPress plugins following best practices for both PHP and JavaScript:
+
 * On the PHP side, it serves as a reference and starting point for using the [WP OOP Plugin Lib library](https://github.com/felixarntz/wp-oop-plugin-lib), which facilitates best practices such as dependency injection in a WordPress context. The plugin includes the library in a way that prevents conflicts with other plugins that may include it, by prefixing the classes.
 * On the JavaScript side, it provides scaffolding for a comprehensive UI application using React and WordPress components, following established Gutenberg patterns and best practices.
 
@@ -54,6 +55,7 @@ In order to create a new plugin based on this foundation, perform the following 
 * `npm run lint-css`: Checks the CSS code.
 * `npm run format-css`: Automatically fixes CSS code detected.
 * `npm run lint-js`: Checks the JavaScript code.
+* `npm run lint-md`: Checks Markdown docs.
 * `npm run format-js`: Automatically fixes JavaScript code detected.
 
 ## License

@@ -12,10 +12,12 @@ It is possible to register custom AI services that will then be available alongs
 In order to implement a custom AI service, at the very minimum you need to implement two PHP classes, a service class and a model class. Don't worry, even though you define these in PHP, the service will be accessible through the JavaScript API as well.
 
 The two classes must implement the following two interfaces respectively:
+
 * [`Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service`](https://github.com/felixarntz/ai-services/tree/main/includes/Services/Contracts/Generative_AI_Service.php)
 * [`Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model`](https://github.com/felixarntz/ai-services/tree/main/includes/Services/Contracts/Generative_AI_Model.php)
 
 Additionally, the model class should implement at least one of the following interfaces to indicate which capabilities it supports:
+
 * [`Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation`](https://github.com/felixarntz/ai-services/tree/main/includes/Services/Contracts/With_Text_Generation.php)
 * [`Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation`](https://github.com/felixarntz/ai-services/tree/main/includes/Services/Contracts/With_Image_Generation.php)
 

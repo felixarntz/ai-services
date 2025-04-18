@@ -10,17 +10,17 @@ The AI Services plugin comes with several custom user capabilities which are gra
 Here is a list of the available user capabilities, what they are for, and how they are granted by default:
 
 * `ais_manage_services`: Base capability which controls which users can access the _Settings > AI Services_ screen and configure AI service credentials.
-  * By default, all users with the `manage_options` WordPress Core capability (typically users with the administrator role) are granted this capability.
-  * Example check: `current_user_can( 'ais_manage_services' )`
+    * By default, all users with the `manage_options` WordPress Core capability (typically users with the administrator role) are granted this capability.
+    * Example check: `current_user_can( 'ais_manage_services' )`
 * `ais_access_services`: Base capability which controls which users can use AI features using any of the configured AI services.
-  * By default, all users with the `edit_posts` WordPress Core capability (typically users with the contributor role or higher) are granted this capability.
-  * Example check: `current_user_can( 'ais_access_services' )`
+    * By default, all users with the `edit_posts` WordPress Core capability (typically users with the contributor role or higher) are granted this capability.
+    * Example check: `current_user_can( 'ais_access_services' )`
 * `ais_access_service`: Meta capability which controls which users can use AI features using a _specific_ configured AI service.
-  * By default, any user with the `ais_access_services` base capability will also be granted this meta capability.
-  * Example check: `current_user_can( 'ais_access_service', 'google' )`
+    * By default, any user with the `ais_access_services` base capability will also be granted this meta capability.
+    * Example check: `current_user_can( 'ais_access_service', 'google' )`
 * `ais_use_playground`: Meta capability which controls which users can access and use the _Tools > AI Playground_ screen.
-  * By default, any user with the `ais_access_services` base capability will also be granted this meta capability.
-  * Example check: `current_user_can( 'ais_use_playground' )`
+    * By default, any user with the `ais_access_services` base capability will also be granted this meta capability.
+    * Example check: `current_user_can( 'ais_use_playground' )`
 
 ## How to customize the default behavior
 

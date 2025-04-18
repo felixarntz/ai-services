@@ -12,16 +12,18 @@ This section provides a more technical introduction about the plugin and its tec
 In order to provide a uniform way of communicating with AI services, this plugin defines several data types that facilitate sending and receiving content of various kinds. For instance, while a simple "send a string, get a string response" may seem intuitive at first, such an approach would not allow to leverage the advanced capabilities of some AI services, such as generating images or processing multi-modal content (e.g. sending an image as well as a text prompt asking to describe the image).
 
 This centerpiece is the "Content" data type, which has two properties:
+
 * `role`: The role of who the content comes from (one of `user`, `model`, or `system`).
 * `parts`: The array of content parts.
-	* In many cases, this will be just one, but as mentioned before, more complex multi-modal prompts may require sending multiple content parts of different kinds in a single prompt.
-	* Various types of parts are supported, e.g. text, inline data, or file data.
+    * In many cases, this will be just one, but as mentioned before, more complex multi-modal prompts may require sending multiple content parts of different kinds in a single prompt.
+    * Various types of parts are supported, e.g. text, inline data, or file data.
 
 When you send an AI prompt, you don't _have_ to use this verbose format if your prompt is simple. You may alternatively send just the array of parts, or simply a string, which is sufficient for the common scenario of sending a text prompt. Under the hood, the prompt will still be parsed into the "Content" data type.
 
-#### Examples (in JSON format)
+#### Prompt examples (in JSON format)
 
 A simple text prompt:
+
 ```json
 {
 	"role": "user",
@@ -34,6 +36,7 @@ A simple text prompt:
 ```
 
 A multi-modal prompt asking to describe an image:
+
 ```json
 {
 	"role": "user",
@@ -55,9 +58,10 @@ Responses from an AI service use the same "Content" object format that is used t
 
 When receiving the response from an AI model, in most cases the "Content" object will be wrapped in an array of "Candidates". This is relevant because sometimes the model may return a few alternative responses that could be chosen from. If so, the content will be found under the "content" property of the candidate.
 
-#### Examples (in JSON format)
+#### Response examples (in JSON format)
 
 A simple text response from the AI model:
+
 ```json
 {
 	"role": "model",
@@ -70,6 +74,7 @@ A simple text response from the AI model:
 ```
 
 The same text response within a set of candidates:
+
 ```json
 [
 	{

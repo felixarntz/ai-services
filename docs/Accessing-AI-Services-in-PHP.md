@@ -200,6 +200,7 @@ This code example realistically should work in 99% of use-cases. However, there 
 As this can be tedious, the AI Services API provides a class with static helper methods to make it extremely simple. You can access the helper methods via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Helpers.php).
 
 The following example shows how you can accomplish the above in a safer, yet simpler way:
+
 ```php
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 
@@ -281,15 +282,15 @@ try {
 Note that not all configuration arguments are supported by every service API. However, a good number of arguments _is_ supported consistently, so here is a list of common configuration arguments that are widely supported:
 
 * `stopSequences` _(string)_: Set of character sequences that will stop output generation.
-	* Supported by all.
+    * Supported by all.
 * `maxOutputTokens` _(integer)_: The maximum number of tokens to include in a response candidate.
-	* Supported by all.
+    * Supported by all.
 * `temperature` _(float)_: Floating point value to control the randomness of the output, between 0.0 and 1.0.
-	* Supported by all.
+    * Supported by all.
 * `topP` _(float)_: The maximum cumulative probability of tokens to consider when sampling.
-	* Supported by all.
+    * Supported by all.
 * `topK` _(integer)_: The maximum number of tokens to consider when sampling.
-	* Supported by all except `openai`.
+    * Supported by all except `openai`.
 
 Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
 

@@ -31,7 +31,7 @@ Use `wp help ai-services` or `wp help ai-services <command>` to get detailed usa
 
 The following examples cover the `wp ai-services generate-text` command.
 
-### Using a specific AI service
+### Using a specific AI service for text generation
 
 You can provide the slug of a specific AI service as first positional argument to the `wp ai-services generate-text` command, for example the `google` service:
 
@@ -49,7 +49,7 @@ else
 fi
 ```
 
-### Using a specific AI model
+### Using a specific AI model for text generation
 
 If you want to go more granular and also specify which exact model to use from the service, you can specify the model slug after the service slug in the `wp ai-services generate-text` command. The following example specifies to use the `gemini-1.5-pro` model from the `google` service:
 
@@ -57,7 +57,7 @@ If you want to go more granular and also specify which exact model to use from t
 wp ai-services generate-text google gemini-1.5-pro "What can I do with WordPress?" --feature=my-test-feature
 ```
 
-### Using any available AI service
+### Using any available AI service for text generation
 
 For many AI use-cases, relying on different AI services may be feasible. For example, to respond to a simple text prompt, you could use _any_ AI service that supports text generation. If so, it is advised to not require usage of a _specific_ AI service, so that the end user can configure whichever service they prefer and still use the relevant command. You can do so by simply omitting both the service and model positional arguments from the `wp ai-services generate-text` command:
 
@@ -116,7 +116,7 @@ wp ai-services generate-text "What is the weather today in Austin?" --feature=we
 
 The following examples cover the `wp ai-services generate-image` command.
 
-### Using a specific AI service
+### Using a specific AI service for image generation
 
 You can provide the slug of a specific AI service as first positional argument to the `wp ai-services generate-image` command, for example the `google` service:
 
@@ -134,7 +134,7 @@ else
 fi
 ```
 
-### Using a specific AI model
+### Using a specific AI model for image generation
 
 If you want to go more granular and also specify which exact model to use from the service, you can specify the model slug after the service slug in the `wp ai-services generate-image` command. The following example specifies to use the `dall-e-2` model from the `openai` service:
 
@@ -142,7 +142,7 @@ If you want to go more granular and also specify which exact model to use from t
 wp ai-services generate-image openai dall-e-2 "Photorealistic image with an aerial shot of a Cavalier King Charles Spaniel tanning himself at an oasis in a desert." --feature=my-test-feature
 ```
 
-### Using any available AI service
+### Using any available AI service for image generation
 
 If it is feasible for your use-case to rely on different AI services, it is advised to not require usage of a _specific_ AI service, so that the end user can configure whichever service they prefer and still use the relevant command. You can do so by simply omitting both the service and model positional arguments from the `wp ai-services generate-image` command:
 

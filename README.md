@@ -22,7 +22,7 @@ You can install [the latest built release from the WordPress plugin directory](h
 
 Alternatively, especially in this early development stage of the plugin, feel free to test the plugin by cloning the GitHub repository. Afterwards, please run the following commands to make sure the dependencies are installed and the plugin build is complete:
 
-```
+```sh
 git clone https://github.com/felixarntz/ai-services.git wp-content/plugins/ai-services
 cd wp-content/plugins/ai-services
 composer install

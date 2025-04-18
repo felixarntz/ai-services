@@ -3,6 +3,7 @@
 Thank you for your interest in contributing to this plugin! At this point, it is still in an early development stage, but especially because of that feedback is much appreciated!
 
 Just two general guidelines:
+
 * All contributors are expected to follow the [WordPress Code of Conduct](https://make.wordpress.org/handbook/community-code-of-conduct/).
 * All contributors who submit a pull request are agreeing to release their contribution under the [GPLv2+ license](https://github.com/felixarntz/ai-services/blob/main/LICENSE).
 
@@ -28,13 +29,15 @@ If you're interested in contributing code, please consider the following guideli
 For the linting tools to work, you'll need to have [Composer](https://getcomposer.org/) and [Node.js](https://nodejs.org/) installed on your machine. In order to make use of the built-in development environment including the ability to run the PHPUnit tests, you'll also need [Docker](https://www.docker.com/).
 
 To set up the plugin for the very first time, please run the following:
-```
+
+```sh
 composer install
 npm install
 npm run build
 ```
 
 The following commands are relevant to build the plugin:
+
 * `composer prefix-dependencies`: Prefixes the production dependencies and regenerates the autoloader class map. This is run automatically after `composer install` and `composer update`.
 * `npm run build`: Builds the JavaScript and CSS assets.
 

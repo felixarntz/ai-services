@@ -292,6 +292,7 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 1. The AI Services settings screen where users can paste their AI service credentials
 2. Multimodal text generation in the AI Playground where users can explore the different AI model capabilities
 3. Image generation in the AI Playground where users can explore the different AI model capabilities
+4. AI Playground code modal showing PHP and JavaScript code for the current prompt and configuration
 
 == Changelog ==
 

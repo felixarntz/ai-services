@@ -22,43 +22,43 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 20
         strategy:
-        fail-fast: true
-        matrix:
-        php:
-            - '8.3' # Currently the wordpress/plugin-check-action always uses the latest PHP version anyway.
-        wordpress: ['latest'] # Currently the wordpress/plugin-check-action only supports 'latest' or 'trunk'.
-    steps:
-        - uses: styfle/cancel-workflow-action@0.12.1
+            fail-fast: true
+            matrix:
+                php:
+                    - '8.3' # Currently the wordpress/plugin-check-action always uses the latest PHP version anyway.
+                wordpress: ['latest'] # Currently the wordpress/plugin-check-action only supports 'latest' or 'trunk'.
+        steps:
+            - uses: styfle/cancel-workflow-action@0.12.1
 
-        - uses: actions/checkout@v4
+            - uses: actions/checkout@v4
 
-        - uses: shivammathur/setup-php@v2
-          with:
-              php-version: ${{ matrix.php }}
-          env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Install Composer dependencies
-          run: composer install
+            - name: Install Composer dependencies
+              run: composer install
 
-        - name: Setup Node.js (.nvmrc)
-          uses: actions/setup-node@v4
-          with:
-              node-version-file: '.nvmrc'
-              cache: npm
+            - name: Setup Node.js (.nvmrc)
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
 
-        - name: npm install
-          run: npm ci
+            - name: npm install
+              run: npm ci
 
-        - name: Build assets
-          run: npm run build
+            - name: Build assets
+              run: npm run build
 
-        - name: Run plugin check
-          uses: wordpress/plugin-check-action@v1
-          with:
-              wp-version: ${{ matrix.wordpress }}
-              # Exclude file_type because of the dev files present in the repository.
-              # Exclude late_escaping because it unnecessarily flags unescaped exceptions in third-party code.
-              exclude-checks: |
-                  file_type
-                  late_escaping
+            - name: Run plugin check
+              uses: wordpress/plugin-check-action@v1
+              with:
+                  wp-version: ${{ matrix.wordpress }}
+                  # Exclude file_type because of the dev files present in the repository.
+                  # Exclude late_escaping because it unnecessarily flags unescaped exceptions in third-party code.
+                  exclude-checks: |
+                      file_type
+                      late_escaping

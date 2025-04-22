@@ -88,37 +88,25 @@ jobs:
               with:
                   php-version: '8.2'
               env:
-                  WP_ENV_PHP_VERSION: ${{ matrix.php }}
-                  WP_ENV_CORE: ${{ matrix.wordpress == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wordpress ) }}
-              continue-on-error: ${{ matrix.experimental == true }}
-              steps:
-                  - uses: styfle/cancel-workflow-action@0.12.1
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-                  - uses: actions/checkout@v4
+            - name: Install Composer dependencies
+              run: composer install
 
-                  - uses: shivammathur/setup-php@v2
-                    with:
-                        php-version: '8.2'
-                    env:
-                        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Setup Node.js (.nvmrc)
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
 
-                  - name: Install Composer dependencies
-                    run: composer install
+            - name: npm install
+              run: npm ci
 
-                  - name: Setup Node.js (.nvmrc)
-                    uses: actions/setup-node@v4
-                    with:
-                        node-version-file: '.nvmrc'
-                        cache: npm
+            - name: Build assets
+              run: npm run build
 
-                  - name: npm install
-                    run: npm ci
+            - name: Install WordPress
+              run: npm run wp-env start
 
-                  - name: Build assets
-                    run: npm run build
-
-                  - name: Install WordPress
-                    run: npm run wp-env start
-
-                  - name: Running ${{ matrix.multisite && 'multisite' || 'single site' }} unit tests
-                    run: npm run test-php${{ matrix.multisite && '-multisite' || '' }}
+            - name: Running ${{ matrix.multisite && 'multisite' || 'single site' }} unit tests
+              run: npm run test-php${{ matrix.multisite && '-multisite' || '' }}

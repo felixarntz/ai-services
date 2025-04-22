@@ -11,15 +11,57 @@ import { __ } from '@wordpress/i18n';
  */
 import { STORE_NAME } from './name';
 import camelCase from '../utils/camel-case';
+import logError from '../utils/log-error';
+import type { StoreConfig, Action, ThunkArgs } from '../utils/store-types';
 
 const PLUGIN_SETTINGS_PREFIX = 'wpsp_';
-
-const RECEIVE_SETTINGS = 'RECEIVE_SETTINGS';
-const SAVE_SETTINGS_START = 'SAVE_SETTINGS_START';
-const SAVE_SETTINGS_FINISH = 'SAVE_SETTINGS_FINISH';
-const SET_SETTING = 'SET_SETTING';
-
 const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
+
+type Settings = Record< string, string | boolean >;
+
+export enum ActionType {
+	Unknown = 'REDUX_UNKNOWN',
+	ReceiveSettings = 'RECEIVE_SETTINGS',
+	SaveSettingsStart = 'SAVE_SETTINGS_START',
+	SaveSettingsFinish = 'SAVE_SETTINGS_FINISH',
+	SetSetting = 'SET_SETTING',
+}
+
+type UnknownAction = Action< ActionType.Unknown >;
+type ReceiveSettingsAction = Action<
+	ActionType.ReceiveSettings,
+	{ settings: Settings }
+>;
+type SaveSettingsStartAction = Action< ActionType.SaveSettingsStart >;
+type SaveSettingsFinishAction = Action< ActionType.SaveSettingsFinish >;
+type SetSettingAction = Action<
+	ActionType.SetSetting,
+	{ setting: string; value: string | boolean }
+>;
+
+export type CombinedAction =
+	| UnknownAction
+	| ReceiveSettingsAction
+	| SaveSettingsStartAction
+	| SaveSettingsFinishAction
+	| SetSettingAction;
+
+export type State = {
+	savedSettings: Settings | undefined;
+	modifiedSettings: Settings;
+	optionNameMap: Record< string, string >;
+	isSavingSettings: boolean;
+};
+
+export type ActionCreators = typeof actions;
+export type Selectors = typeof selectors;
+
+type DispatcherArgs = ThunkArgs<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+>;
 
 /**
  * Updates the modified settings object with the new settings, if they differ from the saved settings.
@@ -29,16 +71,16 @@ const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
  *
  * @since n.e.x.t
  *
- * @param {Object} modifiedSettings The modified settings object, as key value pairs.
- * @param {Object} savedSettings    The saved settings object, as key value pairs.
- * @param {Object} newSettings      The new settings object, as key value pairs.
- * @return {Object} The updated modified settings object.
+ * @param modifiedSettings - The modified settings object, as key value pairs.
+ * @param savedSettings    - The saved settings object, as key value pairs.
+ * @param newSettings      - The new settings object, as key value pairs.
+ * @returns The updated modified settings object.
  */
 function updateModifiedSettings(
-	modifiedSettings,
-	savedSettings,
-	newSettings
-) {
+	modifiedSettings: Settings,
+	savedSettings: Settings,
+	newSettings: Settings
+): Settings {
 	const updatedSettings = { ...modifiedSettings };
 
 	let hasChanges = false;
@@ -66,7 +108,7 @@ function updateModifiedSettings(
 	return updatedSettings;
 }
 
-const initialState = {
+const initialState: State = {
 	savedSettings: undefined,
 	modifiedSettings: {},
 	optionNameMap: {},
@@ -79,13 +121,13 @@ const actions = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {Object} settings Settings received from the server, as key value pairs.
-	 * @return {Function} Action creator.
+	 * @param settings - Settings received from the server, as key value pairs.
+	 * @returns Action creator.
 	 */
-	receiveSettings( settings ) {
-		return ( { dispatch } ) => {
+	receiveSettings( settings: Settings ) {
+		return ( { dispatch }: DispatcherArgs ) => {
 			dispatch( {
-				type: RECEIVE_SETTINGS,
+				type: ActionType.ReceiveSettings,
 				payload: {
 					settings,
 				},
@@ -98,21 +140,24 @@ const actions = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	saveSettings() {
-		return async ( { dispatch, select, registry } ) => {
+		return async ( { dispatch, select, registry }: DispatcherArgs ) => {
 			if ( ! select.areSettingsSaveable() ) {
 				return;
 			}
 
-			const settings = select.getSettings();
-			const options = {};
+			const settings: Settings | undefined = select.getSettings();
+			if ( settings === undefined ) {
+				return;
+			}
+
+			const options: Settings = {};
 			Object.keys( settings ).forEach( ( localName ) => {
 				const optionName = select.getOptionName( localName );
 				if ( ! optionName ) {
-					// eslint-disable-next-line no-console
-					console.error(
+					logError(
 						`Setting ${ localName } does not correspond to a WordPress option.`
 					);
 					return;
@@ -125,12 +170,12 @@ const actions = {
 				options[ optionName ] = settings[ localName ];
 			} );
 
-			await dispatch( {
-				type: SAVE_SETTINGS_START,
+			dispatch( {
+				type: ActionType.SaveSettingsStart,
 				payload: {},
 			} );
 
-			let updatedSettings;
+			let updatedSettings: Settings = settings;
 			try {
 				updatedSettings = await apiFetch( {
 					path: '/wp/v2/settings',
@@ -138,15 +183,15 @@ const actions = {
 					data: options,
 				} );
 			} catch ( error ) {
-				console.error( error?.message || error ); // eslint-disable-line no-console
+				logError( error );
 			}
 
 			if ( updatedSettings ) {
-				await dispatch.receiveSettings( updatedSettings );
+				dispatch.receiveSettings( updatedSettings );
 			}
 
-			await dispatch( {
-				type: SAVE_SETTINGS_FINISH,
+			dispatch( {
+				type: ActionType.SaveSettingsFinish,
 				payload: {},
 			} );
 
@@ -184,14 +229,16 @@ const actions = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {string} setting The setting name.
-	 * @param {*}      value   The new value for the setting.
-	 * @return {Object} Action object.
+	 * @param setting - The setting name.
+	 * @param value   - The new value for the setting.
+	 * @returns Action creator.
 	 */
-	setSetting( setting, value ) {
-		return {
-			type: SET_SETTING,
-			payload: { setting, value },
+	setSetting( setting: string, value: string | boolean ) {
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.SetSetting,
+				payload: { setting, value },
+			} );
 		};
 	},
 
@@ -200,10 +247,10 @@ const actions = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {boolean} deleteData The new deleteData value.
-	 * @return {Object} Action object.
+	 * @param deleteData - The new deleteData value.
+	 * @returns Action creator.
 	 */
-	setDeleteData( deleteData ) {
+	setDeleteData( deleteData: boolean ) {
 		return actions.setSetting( 'deleteData', deleteData );
 	},
 };
@@ -213,16 +260,16 @@ const actions = {
  *
  * @since n.e.x.t
  *
- * @param {Object} state  Current state.
- * @param {Object} action Action object.
- * @return {Object} New state.
+ * @param state  - Current state.
+ * @param action - Action object.
+ * @returns New state.
  */
-function reducer( state = initialState, action ) {
+function reducer( state: State = initialState, action: CombinedAction ): State {
 	switch ( action.type ) {
-		case RECEIVE_SETTINGS: {
+		case ActionType.ReceiveSettings: {
 			const { settings } = action.payload;
-			const pluginSettings = {};
-			const optionNameMap = {};
+			const pluginSettings: Settings = {};
+			const optionNameMap: Record< string, string > = {};
 			Object.keys( settings ).forEach( ( optionName ) => {
 				// Skip settings that are not part of the plugin.
 				if ( ! optionName.startsWith( PLUGIN_SETTINGS_PREFIX ) ) {
@@ -242,30 +289,28 @@ function reducer( state = initialState, action ) {
 				optionNameMap,
 			};
 		}
-		case SAVE_SETTINGS_START: {
+		case ActionType.SaveSettingsStart: {
 			return {
 				...state,
 				isSavingSettings: true,
 			};
 		}
-		case SAVE_SETTINGS_FINISH: {
+		case ActionType.SaveSettingsFinish: {
 			return {
 				...state,
 				isSavingSettings: false,
 			};
 		}
-		case SET_SETTING: {
+		case ActionType.SetSetting: {
 			const { setting, value } = action.payload;
 			if ( state.savedSettings === undefined ) {
-				// eslint-disable-next-line no-console
-				console.error(
+				logError(
 					`Setting ${ setting } cannot be set before settings are loaded.`
 				);
 				return state;
 			}
 			if ( state.savedSettings[ setting ] === undefined ) {
-				// eslint-disable-next-line no-console
-				console.error( `Invalid setting ${ setting }.` );
+				logError( `Invalid setting ${ setting }.` );
 				return state;
 			}
 			return {
@@ -288,11 +333,13 @@ const resolvers = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	getSettings() {
-		return async ( { dispatch } ) => {
-			const settings = await apiFetch( { path: '/wp/v2/settings' } );
+		return async ( { dispatch }: DispatcherArgs ) => {
+			const settings: Settings = await apiFetch( {
+				path: '/wp/v2/settings',
+			} );
 			dispatch.receiveSettings( settings );
 		};
 	},
@@ -300,7 +347,7 @@ const resolvers = {
 
 const selectors = {
 	getSettings: createSelector(
-		( state ) => {
+		( state: State ) => {
 			if ( ! state.savedSettings ) {
 				return undefined;
 			}
@@ -313,13 +360,13 @@ const selectors = {
 	),
 
 	hasModifiedSettings: createSelector(
-		( state ) => {
+		( state: State ) => {
 			return Object.keys( state.modifiedSettings ).length > 0;
 		},
 		( state ) => [ state.modifiedSettings ]
 	),
 
-	isSavingSettings: ( state ) => {
+	isSavingSettings: ( state: State ) => {
 		return state.isSavingSettings;
 	},
 
@@ -339,33 +386,39 @@ const selectors = {
 		);
 	} ),
 
-	getSetting: createRegistrySelector( ( select ) => ( state, setting ) => {
-		const settings = select( STORE_NAME ).getSettings();
-		if ( settings === undefined ) {
-			return undefined;
+	getSetting: createRegistrySelector(
+		( select ) => ( _state: State, setting: string ) => {
+			const settings = select( STORE_NAME ).getSettings();
+			if ( settings === undefined ) {
+				return undefined;
+			}
+			if ( settings[ setting ] === undefined ) {
+				logError( `Invalid setting ${ setting }.` );
+				return undefined;
+			}
+			return settings[ setting ];
 		}
-		if ( settings[ setting ] === undefined ) {
-			// eslint-disable-next-line no-console
-			console.error( `Invalid setting ${ setting }.` );
-			return undefined;
-		}
-		return settings[ setting ];
-	} ),
+	),
 
-	getDeleteData: ( state ) => {
+	getDeleteData: ( state: State ) => {
 		return selectors.getSetting( state, 'deleteData' );
 	},
 
-	isSettingModified: ( state, setting ) => {
+	isSettingModified: ( state: State, setting: string ) => {
 		return state.modifiedSettings[ setting ] !== undefined;
 	},
 
-	getOptionName: ( state, setting ) => {
+	getOptionName: ( state: State, setting: string ) => {
 		return state.optionNameMap[ setting ];
 	},
 };
 
-const storeConfig = {
+const storeConfig: StoreConfig<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+> = {
 	initialState,
 	actions,
 	reducer,

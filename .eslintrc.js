@@ -5,6 +5,10 @@ const config = require( '@wordpress/scripts/config/.eslintrc' );
 
 module.exports = {
 	...config,
+	extends: [
+		...( config.extends || [] ),
+		'plugin:@wordpress/eslint-plugin/i18n',
+	],
 	rules: {
 		...config.rules,
 		'import/no-unresolved': [
@@ -35,4 +39,48 @@ module.exports = {
 		'jsdoc/require-returns-type': 'error',
 		'jsdoc/require-returns': 'error',
 	},
+	overrides: [
+		...( config.overrides || [] ),
+		{
+			files: [ '**/*.ts', '**/*.tsx' ],
+			extends: [
+				...( config.extends || [] ),
+				'plugin:@wordpress/eslint-plugin/i18n',
+				'plugin:@typescript-eslint/recommended',
+			],
+			plugins: [
+				...( config.plugins || [] ),
+				'eslint-plugin-tsdoc',
+				'@typescript-eslint',
+			],
+			parser: '@typescript-eslint/parser',
+			parserOptions: {
+				tsconfigRootDir: __dirname,
+			},
+			settings: {
+				jsdoc: {
+					// TSDoc expects `@returns` and `@yields`.
+					tagNamePreference: {
+						returns: 'returns',
+						yields: 'yields',
+					},
+				},
+			},
+			rules: {
+				'no-duplicate-imports': 'off',
+				'import/no-duplicates': 'error',
+				'jsdoc/require-param-type': 'off',
+				'jsdoc/require-returns-type': 'off',
+				'no-unused-vars': 'off',
+				'@typescript-eslint/no-unused-vars': [
+					'error',
+					{ ignoreRestSiblings: true },
+				],
+				'no-shadow': 'off',
+				'@typescript-eslint/no-shadow': 'error',
+				'@typescript-eslint/method-signature-style': 'error',
+				'tsdoc/syntax': 'error',
+			},
+		},
+	],
 };

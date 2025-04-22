@@ -157,7 +157,10 @@ class Google_AI_Service implements Generative_AI_Service {
 					} else {
 						$model_caps = $gemini_capabilities;
 					}
-					if ( str_contains( $model_slug, 'image-generation' ) ) { // New experimental multimodal output model.
+					if ( // New experimental multimodal output model.
+						str_contains( $model_slug, 'image-generation' ) ||
+						str_starts_with( $model_slug, 'gemini-2.0-flash-exp' )
+					) {
 						$model_caps[] = AI_Capability::MULTIMODAL_OUTPUT;
 					}
 				} elseif (

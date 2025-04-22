@@ -300,7 +300,7 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 
 **Bug Fixes:**
 
-* Ensure regular gemini-2.0-flash-exp model is annotated with multimodal output. ([8f2d7ea](https://github.com/felixarntz/ai-services/commit/8f2d7ea65057a6736f504efbf7a77fab5f95b976))
+* Ensure regular `gemini-2.0-flash-exp` model is annotated with multimodal output. ([8f2d7ea](https://github.com/felixarntz/ai-services/commit/8f2d7ea65057a6736f504efbf7a77fab5f95b976))
 
 = 0.6.0 =
 

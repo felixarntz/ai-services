@@ -6,7 +6,7 @@ Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
 Tested up to: 6.8
-Stable tag:   0.5.0
+Stable tag:   0.6.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Tags:         ai, text generation, image generation, function calling, multimodal
@@ -294,6 +294,44 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 3. Image generation in the AI Playground where users can explore the different AI model capabilities
 
 == Changelog ==
+
+= 0.6.0 =
+
+**Features:**
+
+* Add support for multimodal output (text and images) and implement it in new Google Gemini model that supports it. Props [swissspidy](https://github.com/swissspidy). ([33d7f16](https://github.com/felixarntz/ai-services/commit/33d7f16bc81c84b86e1f528bff888beb266d917e), [#27](https://github.com/felixarntz/ai-services/pull/27))
+* Add the ability to view fully functional PHP and JavaScript code for each prompt in the AI Playground. ([f99f964](https://github.com/felixarntz/ai-services/commit/f99f964fa9e496f418e2723609c1117f3c0e13cf))
+
+**Enhancements:**
+
+* Add support for including multiple images in prompts on the AI Playground. Props [fellyph](https://github.com/fellyph). ([e943cf1](https://github.com/felixarntz/ai-services/commit/e943cf1f2a8f83511eb513f8df4db66abddc29c5), [#28](https://github.com/felixarntz/ai-services/issues/28))
+* Update Chrome built-in AI implementation to support latest entry points starting with Chrome 136. ([c4ff704](https://github.com/felixarntz/ai-services/commit/c4ff704cde8682aac95766d3e83ad6965cc203f6))
+* Update model name used for Chrome built-in AI. ([58850d2](https://github.com/felixarntz/ai-services/commit/58850d2ccff0e18f949f63f16c933b5414ce5b73))
+* Implement reusable `ApiKeyControl` component in JavaScript and `API_Key_Control` class in PHP to allow easy rendering of API key controls in custom settings UI. ([2d23b0a](https://github.com/felixarntz/ai-services/commit/2d23b0aaa1b775876b0915559abea4e40e179074))
+* Support content with multiple files (e.g. images) to be uploaded at the same time in AI Playground. ([31f830f](https://github.com/felixarntz/ai-services/commit/31f830fd4cadb66c35c25cab230d28c772120abc))
+* Enhance attachment filename generation for AI Playground uploaded files to include source. ([0d399af](https://github.com/felixarntz/ai-services/commit/0d399af85c1513e9e31c5f4bd2572b0b8b5213c3))
+* Implement new helper function in PHP and JavaScript to create a content object from a prompt and multiple attachments. ([0138cb3](https://github.com/felixarntz/ai-services/commit/0138cb321be9214292c7770bd68b29154314e2f3))
+* Implement helper functions to transform base64 data URLs in PHP and JavaScript. ([fe83f7b](https://github.com/felixarntz/ai-services/commit/fe83f7b3912b6a8c257a35abc869e994a511be2c))
+* Reserve more vertical space for modals in AI Playground on larger viewports. ([2c4e3aa](https://github.com/felixarntz/ai-services/commit/2c4e3aaca2efc242e666c5db3cf987e55abdf166))
+* Allow passing through custom model parameters as part of generationConfig API field for Google AI models. ([ff4ed12](https://github.com/felixarntz/ai-services/commit/ff4ed12a7adc418c6bd48f5cba722dc77ad7cef3))
+* Use `__next40pxDefaultSize` prop in compliance with WordPress 6.8 requirements. ([28a1f60](https://github.com/felixarntz/ai-services/commit/28a1f606c337186110573738a248e7f14589596b))
+* Remove usage of WordPress functions and expect interfaces rather than concrete implementations in core AI API implementation to decouple from WordPress. ([8fd6d91](https://github.com/felixarntz/ai-services/commit/8fd6d91d0be3eda0fa9d9f7bbff176368fc23386), [6f2a7c2](https://github.com/felixarntz/ai-services/commit/6f2a7c25c128a6bc7240e57bfc3b0129b23672d4), [081e406](https://github.com/felixarntz/ai-services/commit/081e4064908e26d625a4c555eedadda37549db2a), [3dd51c2](https://github.com/felixarntz/ai-services/commit/3dd51c21c4afe6c556007fc8729081d22e580498), [#29](https://github.com/felixarntz/ai-services/issues/29))
+* Remove deprecated `aiServices.aiStore` from AI package. ([372d750](https://github.com/felixarntz/ai-services/commit/372d750b3462c7f4227b575d69605ba90d76d171))
+* Move AI store files into a separate directory within the package. ([6d18048](https://github.com/felixarntz/ai-services/commit/6d18048028b5cdcab3b1e3efb88c33c2771bdce3))
+
+**Bug Fixes:**
+
+* Fix issue in `Interface` component with `useSelect` not returning consistent result. ([cc31d7a](https://github.com/felixarntz/ai-services/commit/cc31d7a019ce093f01287523faf6c6dd3081e876))
+* Fix some styling issues in `Parts` component. ([767fd5b](https://github.com/felixarntz/ai-services/commit/767fd5b3d41b6a9d6061599db2a6b838132f1d0f))
+* Fix confusing limitation of function response parts only allowing objects as response. Props [swissspidy](https://github.com/swissspidy). ([650c0d2](https://github.com/felixarntz/ai-services/commit/650c0d2111187df4e550b78a8130f25953342d35))
+* Fix AI Playground footer status text to show model name instead of model slug. ([d5ee4e0](https://github.com/felixarntz/ai-services/commit/d5ee4e07b71113c50faed376cdf71695936b7339))
+
+**Documentation:**
+
+* Document how to use multimodal output (text and images for now). ([e7a0d0e](https://github.com/felixarntz/ai-services/commit/e7a0d0ed57968b9fd9dd9ebd60da7db54aaee3b7))
+* Add documentation about technical architecture. ([ca75eaa](https://github.com/felixarntz/ai-services/commit/ca75eaaf5dceefd378b6ad3e323c9e624e21095c))
+* Provide documentation on how to render AI Services API key settings field in custom UI anywhere in WP Admin. ([557eca6](https://github.com/felixarntz/ai-services/commit/557eca61136aefda5d6a300c8063b29d86cdb8ac))
+* Update documentation regarding Chrome built-in AI. ([a95eb62](https://github.com/felixarntz/ai-services/commit/a95eb62627cc8056c1bc5abc9842e8e225e4c2f8))
 
 = 0.5.0 =
 

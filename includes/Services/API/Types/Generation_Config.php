@@ -226,7 +226,7 @@ class Generation_Config implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the output modalities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 *
 	 * @return string[] The output modalities, or empty array if not set.
 	 */

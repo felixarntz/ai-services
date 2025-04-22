@@ -170,7 +170,7 @@ ${ functionDeclarations }
 /**
  * Renders a textarea with the PHP code for the selected message.
  *
- * @since n.e.x.t
+ * @since 0.6.0
  *
  * @param {Object} props                        The component properties.
  * @param {Object} props.rawData                The raw data for the selected message.

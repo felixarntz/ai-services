@@ -230,7 +230,7 @@ trait Generative_AI_API_Client_Trait {
 	 * Returns the request handler instance to use for requests.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t Renamed from `get_http()`.
+	 * @since 0.6.0 Renamed from `get_http()`.
 	 *
 	 * @return Request_Handler The request handler instance.
 	 */

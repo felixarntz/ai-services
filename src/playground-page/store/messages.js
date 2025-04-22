@@ -385,7 +385,7 @@ const actions = {
 	 * Sends a message.
 	 *
 	 * @since 0.4.0
-	 * @since n.e.x.t Now expects an array of attachments instead of a single attachment.
+	 * @since 0.6.0 Now expects an array of attachments instead of a single attachment.
 	 *
 	 * @param {string}   prompt         Message prompt.
 	 * @param {Object[]} attachments    Optional array of attachment objects.
@@ -737,7 +737,7 @@ const actions = {
 	/**
 	 * Sets the active message (to display a modal for it).
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 *
 	 * @param {Object} message Message to display.
 	 * @return {Object} Action creator.

@@ -66,7 +66,7 @@ final class Helpers {
 	 * The text will be included as a prompt as the first part of the content, and the attachments (e.g. image or audio
 	 * files) will be included as the subsequent parts.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 *
 	 * @param string             $text        The text.
 	 * @param array<int|WP_Post> $attachments The attachment IDs or objects.
@@ -339,7 +339,7 @@ final class Helpers {
 	/**
 	 * Ensures the given base64 data is prefixed correctly to be a data URL.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 *
 	 * @param string $base64_data Base64-encoded data. If it is already a data URL, it will be returned as is.
 	 * @param string $mime_type   MIME type for the data.
@@ -356,7 +356,7 @@ final class Helpers {
 	/**
 	 * Ensures the given base64 data URL has its prefix removed to be just the base64 data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 *
 	 * @param string $base64_data_url Base64 data URL. If it is already without prefix, it will be returned as is.
 	 * @return string The base64-encoded data.

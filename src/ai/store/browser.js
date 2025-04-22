@@ -45,7 +45,7 @@ export async function getBrowserServiceData() {
  *
  * @since 0.1.0
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
- * @since n.e.x.t Checks for newer `LanguageModel` property.
+ * @since 0.6.0 Checks for newer `LanguageModel` property.
  *
  * @return {Promise<string[]>} The list of AI capabilities.
  */

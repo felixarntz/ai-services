@@ -66,7 +66,7 @@ final class Service_Registration {
 	 * Constructor.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t The service argument keys were updated.
+	 * @since 0.6.0 The service argument keys were updated.
 	 *
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
 	 * @param callable             $creator The service creator. Receives the Authentication instance as first

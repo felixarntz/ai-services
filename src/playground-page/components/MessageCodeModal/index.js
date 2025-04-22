@@ -24,7 +24,7 @@ import './style.scss';
  * Renders the modal displaying the code for a message.
  *
  * @since 0.4.0
- * @since n.e.x.t Renamed from `RawDataModal` and expanded scope.
+ * @since 0.6.0 Renamed from `RawDataModal` and expanded scope.
  *
  * @return {Component} The component to be rendered.
  */

@@ -56,7 +56,7 @@ function prepareContentForBrowser( content ) {
  *
  * @since 0.3.0
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
- * @since n.e.x.t Checks for newer `LanguageModel` property.
+ * @since 0.6.0 Checks for newer `LanguageModel` property.
  *
  * @param {Object} modelParams Model parameters.
  * @return {Promise<Object>} The browser session.

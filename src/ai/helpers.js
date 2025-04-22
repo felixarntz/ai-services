@@ -48,7 +48,7 @@ export async function textAndAttachmentToContent(
  * The text will be included as a prompt as the first part of the content, and the attachments (e.g. image or audio
  * files) will be included as the subsequent parts.
  *
- * @since n.e.x.t
+ * @since 0.6.0
  *
  * @param {string}   text        The text.
  * @param {Object[]} attachments The attachment objects.
@@ -306,7 +306,7 @@ export async function base64DataUrlToBlob( base64DataUrl ) {
 /**
  * Ensures the given base64 data is prefixed correctly to be a data URL.
  *
- * @since n.e.x.t
+ * @since 0.6.0
  *
  * @param {string} base64Data Base64-encoded data. If it is already a data URL, it will be returned as is.
  * @param {string} mimeType   MIME type for the data.
@@ -322,7 +322,7 @@ export function base64DataToBase64DataUrl( base64Data, mimeType ) {
 /**
  * Ensures the given base64 data URL has its prefix removed to be just the base64 data.
  *
- * @since n.e.x.t
+ * @since 0.6.0
  *
  * @param {string} base64DataUrl Base64 data URL. If it is already without prefix, it will be returned as is.
  * @return {string} The base64-encoded data.

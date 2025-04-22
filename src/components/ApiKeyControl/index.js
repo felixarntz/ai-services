@@ -16,7 +16,7 @@ import SensitiveTextControl from '../SensitiveTextControl';
  * The field will by default look like a password input, i.e. the API key is not shown. A button is available next to
  * the field to toggle showing the actual API key.
  *
- * @since n.e.x.t
+ * @since 0.6.0
  *
  * @param {Object}   props                     The component props.
  * @param {Object}   props.service             Metadata for the relevant AI service that the API key is for. It is

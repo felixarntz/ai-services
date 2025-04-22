@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Components\API_Key_Control
  *
- * @since n.e.x.t
+ * @since 0.6.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
 /**
  * Class for an API key input control component.
  *
- * @since n.e.x.t
+ * @since 0.6.0
  */
 class API_Key_Control {
 
 	/**
 	 * The service entity.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 * @var Service_Entity
 	 */
 	private $service_entity;
@@ -29,7 +29,7 @@ class API_Key_Control {
 	/**
 	 * The API key.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 * @var string
 	 */
 	private $api_key;
@@ -37,7 +37,7 @@ class API_Key_Control {
 	/**
 	 * Additional configuration arguments for the control.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 * @var array<string, mixed>
 	 */
 	private $args;
@@ -45,7 +45,7 @@ class API_Key_Control {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 *
 	 * @param Service_Entity       $service_entity The service entity.
 	 * @param string               $api_key       The API key.
@@ -82,7 +82,7 @@ class API_Key_Control {
 	/**
 	 * Renders the entire API key input control, including wrapper element and label.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 */
 	public function render(): void {
 		?>
@@ -96,7 +96,7 @@ class API_Key_Control {
 	/**
 	 * Renders the label for the API key input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 */
 	public function render_label(): void {
 		?>
@@ -111,7 +111,7 @@ class API_Key_Control {
 	 *
 	 * It also renders the description text, and is such is suitable as a callback for `add_settings_field()`.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 */
 	public function render_input(): void {
 		$service_name     = $this->service_entity->get_field_value( 'name' );

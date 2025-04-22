@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\HTTP\Contracts\Stream_Request_Handler
  *
- * @since n.e.x.t
+ * @since 0.6.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exce
 /**
  * Interface for a request handler that can stream responses.
  *
- * @since n.e.x.t
+ * @since 0.6.0
  */
 interface Stream_Request_Handler {
 
 	/**
 	 * Sends an HTTP request and streams the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.6.0
 	 *
 	 * @param Request $request The request to send.
 	 * @return Stream_Response The stream response.

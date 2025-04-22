@@ -85,7 +85,7 @@ final class Services_API {
 	 * Constructor.
 	 *
 	 * @since 0.1.0
-	 * @since n.e.x.t The constructor parameters were updated.
+	 * @since 0.6.0 The constructor parameters were updated.
 	 *
 	 * @param Current_User          $current_user     The current user instance.
 	 * @param Request_Handler       $request_handler  The request handler instance.

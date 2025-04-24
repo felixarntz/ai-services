@@ -11,12 +11,12 @@ jobs:
         name: New Release${{ github.event_name == 'workflow_dispatch' && ' (dry run)' || '' }}
         runs-on: ubuntu-latest
         permissions:
-          attestations: write
-          contents: read
-          id-token: write
+            attestations: write
+            contents: read
+            id-token: write
         environment:
-          name: WordPress.org
-          url: "https://wordpress.org/plugins/${{ github.event.repository.name }}/"
+            name: WordPress.org
+            url: 'https://wordpress.org/plugins/${{ github.event.repository.name }}/'
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -80,6 +80,6 @@ jobs:
             - name: Generate build provenance attestation
               uses: johnbillion/action-wordpress-plugin-attestation@0.7.0
               with:
-                zip-path: ${{ steps.wporg-deployment.outputs.zip-path }}
-                version: ${{ steps.get-version.outputs.version }}
-                dry-run: ${{ github.event_name == 'workflow_dispatch' }}
+                  zip-path: ${{ steps.wporg-deployment.outputs.zip-path }}
+                  version: ${{ steps.get-version.outputs.version }}
+                  dry-run: ${{ github.event_name == 'workflow_dispatch' }}

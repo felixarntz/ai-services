@@ -3,13 +3,14 @@
  */
 import { Tabs } from '@ai-services/components';
 import { Modal } from '@ai-services/interface';
+import { store as aiStore } from '@ai-services/ai';
 
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -29,12 +30,32 @@ import './style.scss';
  * @return {Component} The component to be rendered.
  */
 export default function MessageCodeModal() {
-	const message = useSelect( ( select ) =>
-		select( playgroundStore ).getActiveMessage()
-	);
+	// For 'client' type services, PHP code is irrelevant because they cannot be used on the server.
+	const { message, hasPhpCode } = useSelect( ( select ) => {
+		const theMessage = select( playgroundStore ).getActiveMessage();
+		const serviceSlug = theMessage?.service?.slug;
+		if ( ! serviceSlug ) {
+			return {
+				message: theMessage,
+				hasPhpCode: true,
+			};
+		}
+		const services = select( aiStore ).getServices();
+		return {
+			message: theMessage,
+			hasPhpCode: services?.[ serviceSlug ]?.type !== 'client',
+		};
+	} );
+
 	const { type, content, ...additionalData } = message || {};
 
 	const [ selectedTabId, setSelectedTabId ] = useState( 'php-code' );
+
+	useEffect( () => {
+		if ( type === 'user' && selectedTabId === 'php-code' && ! hasPhpCode ) {
+			setSelectedTabId( 'javascript-code' );
+		}
+	}, [ type, hasPhpCode, selectedTabId ] );
 
 	return (
 		<Modal
@@ -53,12 +74,14 @@ export default function MessageCodeModal() {
 					orientation="horizontal"
 				>
 					<Tabs.TabList className="ai-services-playground__message-code-tabs">
-						<Tabs.Tab
-							tabId="php-code"
-							title={ __( 'PHP code', 'ai-services' ) }
-						>
-							{ __( 'PHP code', 'ai-services' ) }
-						</Tabs.Tab>
+						{ hasPhpCode && (
+							<Tabs.Tab
+								tabId="php-code"
+								title={ __( 'PHP code', 'ai-services' ) }
+							>
+								{ __( 'PHP code', 'ai-services' ) }
+							</Tabs.Tab>
+						) }
 						<Tabs.Tab
 							tabId="javascript-code"
 							title={ __( 'JavaScript code', 'ai-services' ) }
@@ -72,15 +95,17 @@ export default function MessageCodeModal() {
 							{ __( 'Raw JSON data', 'ai-services' ) }
 						</Tabs.Tab>
 					</Tabs.TabList>
-					<Tabs.TabPanel tabId="php-code">
-						<PhpCodeTextarea
-							rawData={ additionalData.rawData }
-							service={ additionalData.service }
-							foundationalCapability={
-								additionalData.foundationalCapability
-							}
-						/>
-					</Tabs.TabPanel>
+					{ hasPhpCode && (
+						<Tabs.TabPanel tabId="php-code">
+							<PhpCodeTextarea
+								rawData={ additionalData.rawData }
+								service={ additionalData.service }
+								foundationalCapability={
+									additionalData.foundationalCapability
+								}
+							/>
+						</Tabs.TabPanel>
+					) }
 					<Tabs.TabPanel tabId="javascript-code">
 						<JavaScriptCodeTextarea
 							rawData={ additionalData.rawData }

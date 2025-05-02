@@ -109,7 +109,7 @@ class Image_Generation_Config extends Generation_Config {
 				'responseMimeType' => array(
 					'description' => __( 'MIME type of the generated candidate text.', 'ai-services' ),
 					'type'        => 'string',
-					'enum'        => array( 'image/png', 'image/jpeg' ),
+					'enum'        => array( 'image/png', 'image/jpeg', 'image/webp' ),
 				),
 				'candidateCount'   => array(
 					'description' => __( 'Number of image candidates to generate.', 'ai-services' ),

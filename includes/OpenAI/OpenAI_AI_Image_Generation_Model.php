@@ -125,6 +125,8 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	protected function send_generate_image_request( array $contents, array $request_options ): Candidates {
 		$params = $this->prepare_generate_image_params( $contents );
 
+		$expected_mime_type = isset( $params['output_format'] ) ? "image/{$params['output_format']}" : 'image/png';
+
 		$request  = $this->api->create_generate_images_request(
 			$this->get_model_slug(),
 			$params,
@@ -137,8 +139,8 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 
 		return $this->api->process_response_data(
 			$response,
-			function ( $response_data ) {
-				return $this->get_response_candidates( $response_data );
+			function ( $response_data ) use ( $expected_mime_type ) {
+				return $this->get_response_candidates( $response_data, $expected_mime_type );
 			}
 		);
 	}
@@ -150,6 +152,8 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating an image.
+	 *
+	 * @throws InvalidArgumentException Thrown if configuration values are not supported by the model.
 	 */
 	private function prepare_generate_image_params( array $contents ): array {
 		if ( count( $contents ) > 1 ) {
@@ -175,12 +179,14 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 			$params = Transformer::transform_generation_config_params(
 				array_merge( $this->generation_config->get_additional_args(), $params ),
 				$this->generation_config,
-				self::get_generation_config_transformers()
+				self::get_generation_config_transformers( $this->get_model_slug() )
 			);
 		} else {
 			// Override some API defaults.
-			$params['n']               = 1;
-			$params['response_format'] = 'b64_json';
+			$params['n'] = 1;
+			if ( ! str_starts_with( $this->get_model_slug(), 'gpt-image-' ) ) {
+				$params['response_format'] = 'b64_json';
+			}
 		}
 
 		return $params;
@@ -191,12 +197,13 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param array<string, mixed> $response_data The response data.
+	 * @param array<string, mixed> $response_data      The response data.
+	 * @param string               $expected_mime_type Optional. The expected MIME type of the response. Default 'image/png'.
 	 * @return Candidates The candidates with content parts.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the response does not have any candidates with content.
 	 */
-	private function get_response_candidates( array $response_data ): Candidates {
+	private function get_response_candidates( array $response_data, string $expected_mime_type = 'image/png' ): Candidates {
 		if ( ! isset( $response_data['data'] ) ) {
 			throw $this->api->create_missing_response_key_exception( 'data' );
 		}
@@ -211,7 +218,7 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 
 			$candidates->add_candidate(
 				new Candidate(
-					$this->prepare_candidate_content( $candidate_data, $index ),
+					$this->prepare_candidate_content( $candidate_data, $index, $expected_mime_type ),
 					array_merge( $other_candidate_data, $other_data )
 				)
 			);
@@ -225,32 +232,30 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param array<string, mixed> $candidate_data The API response candidate data.
-	 * @param int                  $index       The index of the candidate in the response.
+	 * @param array<string, mixed> $candidate_data     The API response candidate data.
+	 * @param int                  $index              The index of the candidate in the response.
+	 * @param string               $expected_mime_type Optional. The expected MIME type of the response. Default 'image/png'.
 	 * @return Content The Content instance.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the response is invalid.
 	 */
-	private function prepare_candidate_content( array $candidate_data, int $index ): Content {
+	private function prepare_candidate_content( array $candidate_data, int $index, string $expected_mime_type = 'image/png' ): Content {
 		if ( ! isset( $candidate_data['b64_json'] ) && ! isset( $candidate_data['url'] ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 			throw $this->api->create_missing_response_key_exception( "data.{$index}.b64_json" );
 		}
 
-		// The MIME type 'image/png' is hardcoded here because the OpenAI API only supports PNG images.
-		$mime_type = 'image/png';
-
 		if ( isset( $candidate_data['b64_json'] ) ) {
 			$part = array(
 				'inlineData' => array(
-					'mimeType' => $mime_type,
-					'data'     => Helpers::base64_data_to_base64_data_url( $candidate_data['b64_json'], $mime_type ),
+					'mimeType' => $expected_mime_type,
+					'data'     => Helpers::base64_data_to_base64_data_url( $candidate_data['b64_json'], $expected_mime_type ),
 				),
 			);
 		} else {
 			$part = array(
 				'fileData' => array(
-					'mimeType' => $mime_type,
+					'mimeType' => $expected_mime_type,
 					'fileUri'  => $candidate_data['url'],
 				),
 			);
@@ -267,34 +272,59 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
+	 * @param string $model_slug The model slug. Needed because the API works differently for 'gpt-image-*' models.
 	 * @return array<string, callable> The generation configuration transformers.
 	 */
-	private static function get_generation_config_transformers(): array {
+	private static function get_generation_config_transformers( string $model_slug ): array {
+		$is_gpt = str_starts_with( $model_slug, 'gpt-image-' );
+
 		return array(
+			'output_format'   => static function ( Image_Generation_Config $config ) use ( $is_gpt ) {
+				$output_mime = $config->get_response_mime_type();
+				if ( ! $is_gpt ) {
+					if ( $output_mime && 'image/png' !== $output_mime ) {
+						throw new InvalidArgumentException(
+							esc_html__( 'Only "image/png" is supported as the output MIME.', 'ai-services' )
+						);
+					}
+					return '';
+				}
+				if ( ! $output_mime ) {
+					return '';
+				}
+				return preg_replace( '/^image\//', '', $output_mime );
+			},
 			'n'               => static function ( Image_Generation_Config $config ) {
 				return $config->get_candidate_count();
 			},
-			'size'            => static function ( Image_Generation_Config $config ) {
-				$ratio = $config->get_aspect_ratio();
+			'size'            => static function ( Image_Generation_Config $config ) use ( $is_gpt ) {
+				$ratio       = $config->get_aspect_ratio();
+				$larger_side = $is_gpt ? '1536' : '1792';
 				switch ( $ratio ) {
 					case '1:1':
 						return '1024x1024';
+					// Unfortunately, each model only supports either 16:9 or 4:3, not both.
 					case '16:9':
-						return '1792x1024';
-					case '9:16':
-						return '1024x1792';
 					case '4:3':
-						// This is 16:9 instead of 4:3, which is the closest aspect ratio supported by the API.
-						return '1792x1024';
+						return "{$larger_side}x1024";
+					// Unfortunately, each model only supports either 9:16 or 3:4, not both.
+					case '9:16':
 					case '3:4':
-						// This is 9:16 instead of 3:4, which is the closest aspect ratio supported by the API.
-						return '1024x1792';
+						return "1024x{$larger_side}";
 				}
 				return '';
 			},
-			'response_format' => static function ( Image_Generation_Config $config ) {
+			'response_format' => static function ( Image_Generation_Config $config ) use ( $is_gpt ) {
 				// The default in the API is to return URLs, but we want to return base64-encoded data by default.
 				$response_type = $config->get_response_type();
+				if ( $is_gpt ) {
+					if ( $response_type && 'inline_data' !== $response_type ) {
+						throw new InvalidArgumentException(
+							esc_html__( 'Only base64-encoded data is supported as the response type.', 'ai-services' )
+						);
+					}
+					return '';
+				}
 				if ( ! $response_type ) {
 					return 'b64_json';
 				}

@@ -133,16 +133,21 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 			AI_Capability::MULTIMODAL_INPUT,
 			AI_Capability::TEXT_GENERATION,
 		);
-		$dalle_capabilities          = array(
+		$image_capabilities          = array(
 			AI_Capability::IMAGE_GENERATION,
 		);
 
 		return array_reduce(
 			$response_data['data'],
-			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities, $dalle_capabilities ) {
+			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities, $image_capabilities ) {
 				$model_slug = $model_data['id'];
 
 				if (
+					str_starts_with( $model_slug, 'dall-e-' ) ||
+					str_starts_with( $model_slug, 'gpt-image-' )
+				) {
+					$model_caps = $image_capabilities;
+				} elseif (
 					( str_starts_with( $model_slug, 'gpt-' ) || str_starts_with( $model_slug, 'o1-' ) )
 					&& ! str_contains( $model_slug, '-instruct' )
 					&& ! str_contains( $model_slug, '-realtime' )
@@ -153,8 +158,6 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 					} else {
 						$model_caps = $gpt_capabilities;
 					}
-				} elseif ( str_starts_with( $model_slug, 'dall-e-' ) ) {
-					$model_caps = $dalle_capabilities;
 				} else {
 					$model_caps = array();
 				}

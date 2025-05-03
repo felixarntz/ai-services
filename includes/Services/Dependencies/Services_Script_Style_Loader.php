@@ -73,9 +73,6 @@ class Services_Script_Style_Loader {
 			)
 		);
 
-		// For backward compatibility, keep this as an alias for 'ais-ai' (which is however deprecated). TODO: Remove.
-		wp_register_script( 'ais-ai-store', false, array( 'ais-ai' ), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-
 		$this->script_registry->register(
 			'ais-settings',
 			array(

@@ -106,4 +106,4 @@ The JavaScript code is located in the `src` directory. Each folder within `src` 
 
 The plugin's JavaScript codebase follows modern JavaScript best practices used in WordPress, using React for UI components (via [`wp.element`](https://www.npmjs.com/package/@wordpress/element)) and Redux datastores for state management (via [`wp.data`](https://www.npmjs.com/package/@wordpress/data)).
 
-If you are interested in reviewing the JavaScript code in more depth, it is recommended that you focus primarily on the `src/ai-store` asset. This represents the datastore where the AI infrastructure foundation is implemented.
+If you are interested in reviewing the JavaScript code in more depth, it is recommended that you focus primarily on the `src/ai` asset. This represents the API and datastore where the AI infrastructure foundation is implemented.

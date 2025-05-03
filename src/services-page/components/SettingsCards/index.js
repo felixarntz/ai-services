@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import memoize from 'memize';
 import { ApiKeyControl } from '@ai-services/components';
 import { store as pluginSettingsStore } from '@ai-services/settings';
 
@@ -24,6 +25,38 @@ import './style.scss';
 
 const EMPTY_ARRAY = [];
 
+const mapValuesToArray = memoize( ( map ) => Object.values( map ) );
+
+/**
+ * Renders the API key control for a specific service.
+ *
+ * This is needed to avoid merging the API key into the service object.
+ *
+ * @param {Object} props         The component props.
+ * @param {Object} props.service The service object.
+ * @return {Component} The component to be rendered.
+ */
+function ServiceApiKeyControl( { service } ) {
+	const apiKey = useSelect( ( select ) =>
+		select( pluginSettingsStore ).getApiKey( service.slug )
+	);
+
+	const { setApiKey } = useDispatch( pluginSettingsStore );
+
+	const onChangeApiKey = useCallback(
+		( newApiKey, serviceSlug ) => setApiKey( serviceSlug, newApiKey ),
+		[ setApiKey ]
+	);
+
+	return (
+		<ApiKeyControl
+			service={ service }
+			apiKey={ apiKey }
+			onChangeApiKey={ onChangeApiKey }
+		/>
+	);
+}
+
 /**
  * Renders the cards for all the settings controls.
  *
@@ -34,37 +67,22 @@ const EMPTY_ARRAY = [];
 export default function SettingsCards() {
 	const { isLoadingSettings, services, deleteData } = useSelect(
 		( select ) => {
-			const {
-				getServices,
-				getSettings,
-				isResolving,
-				getApiKey,
-				getDeleteData,
-			} = select( pluginSettingsStore );
+			const { getServices, getSettings, isResolving, getDeleteData } =
+				select( pluginSettingsStore );
 
 			return {
 				isLoadingSettings:
 					getSettings() === undefined || isResolving( 'getSettings' ),
 				services:
 					getServices() !== undefined
-						? Object.values( getServices() ).map( ( service ) => {
-								return {
-									...service,
-									apiKey: getApiKey( service.slug ),
-								};
-						  } )
+						? mapValuesToArray( getServices() )
 						: EMPTY_ARRAY,
 				deleteData: getDeleteData(),
 			};
 		}
 	);
 
-	const { setApiKey, setDeleteData } = useDispatch( pluginSettingsStore );
-
-	const onChangeApiKey = useCallback(
-		( newApiKey, serviceSlug ) => setApiKey( serviceSlug, newApiKey ),
-		[ setApiKey ]
-	);
+	const { setDeleteData } = useDispatch( pluginSettingsStore );
 
 	return (
 		<div className="ais-settings-cards">
@@ -76,11 +94,9 @@ export default function SettingsCards() {
 				</CardHeader>
 				<CardBody>
 					{ services.map( ( { apiKey, ...service } ) => (
-						<ApiKeyControl
+						<ServiceApiKeyControl
 							key={ service.slug }
 							service={ service }
-							apiKey={ apiKey }
-							onChangeApiKey={ onChangeApiKey }
 						/>
 					) ) }
 				</CardBody>

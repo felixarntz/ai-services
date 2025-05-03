@@ -10,11 +10,11 @@ namespace Felix_Arntz\AI_Services\OpenAI;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
+use Felix_Arntz\AI_Services\Services\Contracts\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;

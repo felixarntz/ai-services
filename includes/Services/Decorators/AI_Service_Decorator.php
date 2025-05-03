@@ -9,11 +9,11 @@
 namespace Felix_Arntz\AI_Services\Services\Decorators;
 
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
+use Felix_Arntz\AI_Services\Services\Contracts\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;

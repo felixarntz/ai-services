@@ -8,32 +8,15 @@
 
 namespace Felix_Arntz\AI_Services\Services\API\Types;
 
-use InvalidArgumentException;
+use Felix_Arntz\AI_Services\Services\Base\Abstract_Generation_Config;
 
 /**
  * Class representing image configuration options for a generative AI model.
  *
  * @since 0.5.0
+ * @since n.e.x.t Now extends `Abstract_Generation_Config`.
  */
-class Image_Generation_Config extends Generation_Config {
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 0.5.0
-	 *
-	 * @param array<string, mixed> $args The configuration arguments.
-	 */
-	public function __construct( array $args ) {
-		$this->supported_args = array(
-			'responseMimeType' => 'string',
-			'candidateCount'   => 'integer',
-			'aspectRatio'      => 'string',
-			'responseType'     => 'string',
-		);
-
-		parent::__construct( $args );
-	}
+class Image_Generation_Config extends Abstract_Generation_Config {
 
 	/**
 	 * Returns the response MIME type.
@@ -43,7 +26,7 @@ class Image_Generation_Config extends Generation_Config {
 	 * @return string The response MIME type, or empty string if not set.
 	 */
 	public function get_response_mime_type(): string {
-		return $this->sanitized_args['responseMimeType'] ?? '';
+		return $this->get_arg( 'responseMimeType' );
 	}
 
 	/**
@@ -54,7 +37,7 @@ class Image_Generation_Config extends Generation_Config {
 	 * @return int The candidate count (default 1).
 	 */
 	public function get_candidate_count(): int {
-		return $this->sanitized_args['candidateCount'] ?? 1;
+		return $this->get_arg( 'candidateCount' );
 	}
 
 	/**
@@ -65,7 +48,7 @@ class Image_Generation_Config extends Generation_Config {
 	 * @return string The aspect ratio, or empty string if not set.
 	 */
 	public function get_aspect_ratio(): string {
-		return $this->sanitized_args['aspectRatio'] ?? '';
+		return $this->get_arg( 'aspectRatio' );
 	}
 
 	/**
@@ -76,23 +59,19 @@ class Image_Generation_Config extends Generation_Config {
 	 * @return string The quality, or empty string if not set.
 	 */
 	public function get_response_type(): string {
-		return $this->sanitized_args['responseType'] ?? 'inline_data';
+		return $this->get_arg( 'responseType' );
 	}
 
 	/**
-	 * Creates a Generation_Config instance from an array of content data.
+	 * Gets the definition for the supported arguments.
 	 *
-	 * @since 0.5.0
+	 * @since n.e.x.t
 	 *
-	 * @param array<string, mixed> $data The content data.
-	 * @return Generation_Config Generation_Config instance.
-	 *
-	 * @phpstan-return Image_Generation_Config
-	 *
-	 * @throws InvalidArgumentException Thrown if the data is missing required fields.
+	 * @return array<string, mixed> The supported arguments definition.
 	 */
-	public static function from_array( array $data ): Generation_Config {
-		return new Image_Generation_Config( $data );
+	protected function get_supported_args_definition(): array {
+		$schema = self::get_json_schema();
+		return $schema['properties'];
 	}
 
 	/**
@@ -115,6 +94,7 @@ class Image_Generation_Config extends Generation_Config {
 					'description' => __( 'Number of image candidates to generate.', 'ai-services' ),
 					'type'        => 'integer',
 					'minimum'     => 1,
+					'default'     => 1,
 				),
 				'aspectRatio'      => array(
 					'description' => __( 'Aspect ratio of the generated image.', 'ai-services' ),
@@ -125,6 +105,7 @@ class Image_Generation_Config extends Generation_Config {
 					'description' => __( 'Response type in which the image is returned.', 'ai-services' ),
 					'type'        => 'string',
 					'enum'        => array( 'inline_data', 'file_data' ),
+					'default'     => 'inline_data',
 				),
 			),
 			'additionalProperties' => true,

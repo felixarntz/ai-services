@@ -9,7 +9,6 @@
 namespace Felix_Arntz\AI_Services\Services\Contracts;
 
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
-use Felix_Arntz\AI_Services\Services\API\Types\Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;

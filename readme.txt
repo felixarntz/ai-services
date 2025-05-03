@@ -6,7 +6,7 @@ Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
 Tested up to: 6.8
-Stable tag:   0.6.1
+Stable tag:   0.6.2
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Tags:         ai, text generation, image generation, function calling, multimodal
@@ -295,6 +295,18 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 4. AI Playground code modal showing PHP and JavaScript code for the current prompt and configuration
 
 == Changelog ==
+
+= 0.6.2 =
+
+**Enhancements:**
+
+* Support new `gpt-image-1` model for image generation. ([66afb78](https://github.com/felixarntz/ai-services/commit/66afb78f773f8a588f0a6578b167967cc30e0085))
+* Generate build provenance attestation. Props [johnbillion](https://github.com/johnbillion). ([#30](https://github.com/felixarntz/ai-services/pull/30))
+
+**Bug Fixes:**
+
+* Avoid showing PHP code in AI Playground modal when using client-side AI service (like Chrome built-in AI). ([b25e392](https://github.com/felixarntz/ai-services/commit/b25e392108c213f0bf7d747b9c509bbd8b02e2e2))
+* Fix issue in `SettingsCards` component with `useSelect` not returning consistent result. ([24ab0cf](https://github.com/felixarntz/ai-services/commit/24ab0cf62134ddcfae061b9cdcac5b39f4ce354a))
 
 = 0.6.1 =
 

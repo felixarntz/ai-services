@@ -93,7 +93,7 @@ export default function SettingsCards() {
 					</h2>
 				</CardHeader>
 				<CardBody>
-					{ services.map( ( { apiKey, ...service } ) => (
+					{ services.map( ( service ) => (
 						<ServiceApiKeyControl
 							key={ service.slug }
 							service={ service }

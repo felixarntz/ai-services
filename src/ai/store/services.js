@@ -82,6 +82,7 @@ function getAvailableServiceSlug( services, args ) {
 
 const initialState = {
 	services: undefined,
+	serviceSlugs: undefined,
 };
 
 const actions = {
@@ -118,12 +119,14 @@ function reducer( state = initialState, action ) {
 	switch ( action.type ) {
 		case RECEIVE_SERVICES: {
 			const { services } = action.payload;
+			const servicesMap = services.reduce( ( acc, service ) => {
+				acc[ service.slug ] = service;
+				return acc;
+			}, {} );
 			return {
 				...state,
-				services: services.reduce( ( acc, service ) => {
-					acc[ service.slug ] = service;
-					return acc;
-				}, {} ),
+				services: servicesMap,
+				serviceSlugs: Object.keys( servicesMap ),
 			};
 		}
 	}
@@ -212,23 +215,43 @@ const selectors = {
 		}
 	),
 
-	getServiceName: createRegistrySelector( ( select ) => ( state, slug ) => {
-		const services = select( STORE_NAME ).getServices();
-		if ( services === undefined ) {
-			return undefined;
-		}
-		return services[ slug ]?.name || '';
-	} ),
-
-	getServiceCredentialsUrl: createRegistrySelector(
+	getServiceMetadata: createRegistrySelector(
 		( select ) => ( state, slug ) => {
 			const services = select( STORE_NAME ).getServices();
 			if ( services === undefined ) {
 				return undefined;
 			}
-			return services[ slug ]?.credentials_url || '';
+			return services[ slug ]?.metadata || null;
 		}
 	),
+
+	getServiceName: createRegistrySelector( ( select ) => ( state, slug ) => {
+		const metadata = select( STORE_NAME ).getServiceMetadata( slug );
+		if ( metadata === undefined ) {
+			return undefined;
+		}
+		if ( metadata === null ) {
+			return '';
+		}
+		return metadata.name;
+	} ),
+
+	getServiceCredentialsUrl: createRegistrySelector(
+		( select ) => ( state, slug ) => {
+			const metadata = select( STORE_NAME ).getServiceMetadata( slug );
+			if ( metadata === undefined ) {
+				return undefined;
+			}
+			if ( metadata === null ) {
+				return '';
+			}
+			return metadata.credentials_url;
+		}
+	),
+
+	getRegisteredServiceSlugs: ( state ) => {
+		return state.serviceSlugs;
+	},
 };
 
 const storeConfig = {

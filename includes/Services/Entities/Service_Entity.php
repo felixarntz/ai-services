@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Entities;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Services_API;
@@ -103,13 +104,17 @@ class Service_Entity implements Entity {
 	 * @return mixed Value for the field, `null` if not set.
 	 */
 	public function get_field_value( string $field ) {
+		$metadata_schema = Service_Metadata::get_json_schema();
+
 		switch ( $field ) {
 			case 'slug':
 				return $this->slug;
-			case 'name':
-				return $this->services_api->get_service_name( $this->slug );
-			case 'credentials_url':
-				return $this->services_api->get_service_credentials_url( $this->slug );
+			case 'metadata':
+				$metadata = $this->services_api->get_service_metadata( $this->slug );
+				if ( ! $metadata ) {
+					return null;
+				}
+				return $metadata->to_array();
 			case 'is_available':
 				return $this->services_api->is_service_available( $this->slug );
 			case 'capabilities':
@@ -121,6 +126,15 @@ class Service_Entity implements Entity {
 			case 'authentication_option_slugs':
 				// For now, API keys are the only supported authentication method. TODO: This needs to be revised.
 				return array_keys( API_Key_Authentication::get_option_definitions( $this->slug ) );
+			default:
+				if ( isset( $metadata_schema['properties'][ $field ] ) ) {
+					$metadata = $this->services_api->get_service_metadata( $this->slug );
+					if ( ! $metadata ) {
+						return '';
+					}
+					$metadata = $metadata->to_array();
+					return isset( $metadata[ $field ] ) ? $metadata[ $field ] : '';
+				}
 		}
 		return null;
 	}

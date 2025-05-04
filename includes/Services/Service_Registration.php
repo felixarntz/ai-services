@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Decorators\AI_Service_Decorator;
@@ -31,12 +32,20 @@ use RuntimeException;
 final class Service_Registration {
 
 	/**
-	 * The service slug.
+	 * The service metadata.
 	 *
-	 * @since 0.1.0
-	 * @var string
+	 * @since n.e.x.t
+	 * @var Service_Metadata
 	 */
-	private $slug;
+	private $metadata;
+
+	/**
+	 * Whether the service can be overridden through another registration with the same slug.
+	 *
+	 * @since n.e.x.t
+	 * @var bool
+	 */
+	private $allow_override;
 
 	/**
 	 * The service creator.
@@ -47,12 +56,12 @@ final class Service_Registration {
 	private $creator;
 
 	/**
-	 * The service arguments.
+	 * The service instance arguments.
 	 *
 	 * @since 0.1.0
 	 * @var array<string, mixed>
 	 */
-	private $args;
+	private $instance_args;
 
 	/**
 	 * The authentication option slugs.
@@ -90,20 +99,20 @@ final class Service_Registration {
 	 * }
 	 */
 	public function __construct( string $slug, callable $creator, array $args = array() ) {
-		$this->validate_slug( $slug );
+		$this->metadata = Service_Metadata::from_array( array_merge( array( 'slug' => $slug ), $args ) );
 
-		$this->slug    = $slug;
-		$this->creator = $creator;
-		$this->args    = $this->parse_args( $args );
+		$this->creator        = $creator;
+		$this->allow_override = isset( $args['allow_override'] ) ? (bool) $args['allow_override'] : true;
+		$this->instance_args  = $this->parse_instance_args( $args );
 
 		$option_definitions = API_Key_Authentication::get_option_definitions( $slug );
 
 		$this->authentication_option_slugs = array();
 		foreach ( $option_definitions as $option_slug => $option_args ) {
-			$this->authentication_option_slugs[]     = $option_slug;
-			$this->args['container'][ $option_slug ] = function () use ( $option_slug, $option_args ) {
+			$this->authentication_option_slugs[]              = $option_slug;
+			$this->instance_args['container'][ $option_slug ] = function () use ( $option_slug, $option_args ) {
 				return new Option(
-					$this->args['repository'],
+					$this->instance_args['repository'],
 					$option_slug,
 					$option_args
 				);
@@ -112,14 +121,14 @@ final class Service_Registration {
 	}
 
 	/**
-	 * Gets the service slug.
+	 * Gets the service metadata.
 	 *
-	 * @since 0.1.0
+	 * @since n.e.x.t
 	 *
-	 * @return string The service slug.
+	 * @return Service_Metadata The service metadata.
 	 */
-	public function get_slug(): string {
-		return $this->slug;
+	public function get_metadata(): Service_Metadata {
+		return $this->metadata;
 	}
 
 	/**
@@ -132,7 +141,7 @@ final class Service_Registration {
 	public function get_authentication_options(): array {
 		return array_map(
 			function ( string $option_slug ) {
-				return $this->args['container'][ $option_slug ];
+				return $this->instance_args['container'][ $option_slug ];
 			},
 			$this->authentication_option_slugs
 		);
@@ -162,33 +171,35 @@ final class Service_Registration {
 	public function create_instance(): Generative_AI_Service {
 		$authentication_options = $this->get_authentication_options();
 
+		$slug = $this->metadata->get_slug();
+
 		// For now an API key is the only authentication method supported.
 		$api_key = $authentication_options[0]->get_value();
 		if ( ! $api_key ) {
 			throw new RuntimeException(
 				sprintf(
 					'Cannot instantiate service %s without an API key.',
-					htmlspecialchars( $this->slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
 
 		$api_key_authentication = new API_Key_Authentication( $api_key );
 
-		$instance = ( $this->creator )( $api_key_authentication, $this->args['request_handler'] );
+		$instance = ( $this->creator )( $api_key_authentication, $this->instance_args['request_handler'] );
 		if ( ! $instance instanceof Generative_AI_Service ) {
 			throw new RuntimeException(
 				sprintf(
 					'The service creator for %s must return an instance of Generative_AI_Service.',
-					htmlspecialchars( $this->slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
-		if ( $instance->get_service_slug() !== $this->slug ) {
+		if ( $instance->get_service_slug() !== $slug ) {
 			throw new RuntimeException(
 				sprintf(
 					'The service creator for %1$s must return an instance of Generative_AI_Service with the same slug, but instead it returned another slug %2$s.',
-					htmlspecialchars( $this->slug ), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					htmlspecialchars( $slug ), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					htmlspecialchars( $instance->get_service_slug() ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
@@ -199,28 +210,6 @@ final class Service_Registration {
 	}
 
 	/**
-	 * Gets the service name.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string The service name.
-	 */
-	public function get_name(): string {
-		return $this->args['name'];
-	}
-
-	/**
-	 * Gets the service credentials URL, if specified.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string The service credentials URL, or empty string if not specified.
-	 */
-	public function get_credentials_url(): string {
-		return $this->args['credentials_url'];
-	}
-
-	/**
 	 * Checks whether the service can be overridden.
 	 *
 	 * @since 0.1.0
@@ -228,61 +217,7 @@ final class Service_Registration {
 	 * @return bool True if the service can be overridden, false otherwise.
 	 */
 	public function allows_override(): bool {
-		return $this->args['allow_override'];
-	}
-
-	/**
-	 * Validates the service slug.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param string $slug The service slug.
-	 *
-	 * @throws InvalidArgumentException Thrown if the service slug contains disallowed characters.
-	 */
-	private function validate_slug( string $slug ): void {
-		if ( ! preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
-			throw new InvalidArgumentException(
-				'The service slug must only contain lowercase letters, numbers, and hyphens.'
-			);
-		}
-	}
-
-	/**
-	 * Parses the service registration arguments.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param array<string, mixed> $args The service registration arguments.
-	 * @return array<string, mixed> The parsed service registration arguments.
-	 *
-	 * @throws InvalidArgumentException Thrown if an invalid argument is provided.
-	 */
-	private function parse_args( array $args ): array {
-		if ( isset( $args['name'] ) ) {
-			$args['name'] = (string) $args['name'];
-		} else {
-			$args['name'] = ucwords( str_replace( array( '-', '_' ), ' ', $this->slug ) );
-		}
-
-		if ( isset( $args['credentials_url'] ) ) {
-			$args['credentials_url'] = (string) $args['credentials_url'];
-
-			// Basic sanity check to ensure a protocol is present.
-			if ( ! str_contains( $args['credentials_url'], ':' ) && ! in_array( $args['credentials_url'][0], array( '/', '#', '?' ), true ) ) {
-				$args['credentials_url'] = 'https://' . $args['credentials_url'];
-			}
-		} else {
-			$args['credentials_url'] = '';
-		}
-
-		if ( isset( $args['allow_override'] ) ) {
-			$args['allow_override'] = (bool) $args['allow_override'];
-		} else {
-			$args['allow_override'] = true;
-		}
-
-		return $this->parse_instance_args( $args );
+		return $this->allow_override;
 	}
 
 	/**
@@ -302,6 +237,7 @@ final class Service_Registration {
 			'repository'      => array( Key_Value_Repository::class, Option_Repository::class ),
 		);
 
+		$instance_args = array();
 		foreach ( $requirements_map as $key => $requirements ) {
 			list( $interface_name, $class_name ) = $requirements;
 
@@ -315,11 +251,12 @@ final class Service_Registration {
 						)
 					);
 				}
+				$instance_args[ $key ] = $args[ $key ];
 			} else {
-				$args[ $key ] = new $class_name();
+				$instance_args[ $key ] = new $class_name();
 			}
 		}
 
-		return $args;
+		return $instance_args;
 	}
 }

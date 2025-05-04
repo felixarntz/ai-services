@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Resource_Schema;
 
@@ -86,18 +87,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'name'               => array(
-					'description' => __( 'User-facing service name.', 'ai-services' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'credentials_url'    => array(
-					'description' => __( 'Service credentials URL, or empty string if not specified.', 'ai-services' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
+				'metadata'           => Service_Metadata::get_json_schema(),
 				'is_available'       => array(
 					'description' => __( 'Whether the service is fully configured and available.', 'ai-services' ),
 					'type'        => 'boolean',

@@ -28,10 +28,10 @@ const filterAvailableServices = memoize(
 					service.capabilities.includes( capability )
 				);
 			} )
-			.map( ( { slug, name } ) => {
+			.map( ( { slug, metadata } ) => {
 				return {
 					identifier: slug,
-					label: name,
+					label: metadata?.name || slug,
 				};
 			} );
 	}

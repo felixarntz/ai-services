@@ -22,7 +22,11 @@ export async function getBrowserServiceData() {
 		const capabilities = await getBrowserAiCapabilities();
 		browser = {
 			slug: 'browser',
-			name: __( 'Browser built-in AI', 'ai-services' ),
+			metadata: {
+				slug: 'browser',
+				name: __( 'Browser built-in AI', 'ai-services' ),
+				credentials_url: '',
+			},
 			is_available: capabilities.length > 0,
 			type: 'client', // TODO: Introduce a proper type for this differentiation.
 			capabilities,

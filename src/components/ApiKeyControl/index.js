@@ -19,7 +19,7 @@ import SensitiveTextControl from '../SensitiveTextControl';
  * @since 0.6.0
  *
  * @param {Object}   props                     The component props.
- * @param {Object}   props.service             Metadata for the relevant AI service that the API key is for. It is
+ * @param {Object}   props.service             Data for the relevant AI service that the API key is for. It is
  *                                             recommended to retrieve this data from the `getService( slug )` selector
  *                                             of the 'ai-services/settings' store.
  * @param {string}   props.apiKey              The AI service's API key.
@@ -46,7 +46,7 @@ export default function ApiKeyControl( {
 	return (
 		<SensitiveTextControl
 			className={ className }
-			label={ service.name }
+			label={ service.metadata?.name }
 			HelpContent={ () => (
 				<>
 					{ service.has_forced_api_key
@@ -56,7 +56,7 @@ export default function ApiKeyControl( {
 									'The API key for %s cannot be modified as its value is enforced via filter.',
 									'ai-services'
 								),
-								service.name
+								service.metadata?.name
 						  )
 						: sprintf(
 								/* translators: %s: service name */
@@ -64,36 +64,39 @@ export default function ApiKeyControl( {
 									'Enter the API key for %s.',
 									'ai-services'
 								),
-								service.name
+								service.metadata?.name
 						  ) }{ ' ' }
-					{ ! omitCredentialsLink && !! service.credentials_url && (
-						<ExternalLink href={ service.credentials_url }>
-							{ createInterpolateElement(
-								!! apiKey
-									? sprintf(
-											/* translators: %s: service name */
-											__(
-												'Manage<span> %s</span> API keys',
-												'ai-services'
-											),
-											service.name
-									  )
-									: sprintf(
-											/* translators: %s: service name */
-											__(
-												'Get<span> %s</span> API key',
-												'ai-services'
-											),
-											service.name
-									  ),
-								{
-									span: (
-										<span className="screen-reader-text" />
-									),
-								}
-							) }
-						</ExternalLink>
-					) }
+					{ ! omitCredentialsLink &&
+						!! service.metadata?.credentials_url && (
+							<ExternalLink
+								href={ service.metadata?.credentials_url }
+							>
+								{ createInterpolateElement(
+									!! apiKey
+										? sprintf(
+												/* translators: %s: service name */
+												__(
+													'Manage<span> %s</span> API keys',
+													'ai-services'
+												),
+												service.metadata?.name
+										  )
+										: sprintf(
+												/* translators: %s: service name */
+												__(
+													'Get<span> %s</span> API key',
+													'ai-services'
+												),
+												service.metadata?.name
+										  ),
+									{
+										span: (
+											<span className="screen-reader-text" />
+										),
+									}
+								) }
+							</ExternalLink>
+						) }
 				</>
 			) }
 			readOnly={ service.has_forced_api_key }
@@ -103,12 +106,12 @@ export default function ApiKeyControl( {
 			buttonShowLabel={ sprintf(
 				/* translators: %s: service name */
 				__( 'Show API key for %s.', 'ai-services' ),
-				service.name
+				service.metadata?.name
 			) }
 			buttonHideLabel={ sprintf(
 				/* translators: %s: service name */
 				__( 'Hide API key for %s.', 'ai-services' ),
-				service.name
+				service.metadata?.name
 			) }
 			__nextHasNoMarginBottom
 			__next40pxDefaultSize

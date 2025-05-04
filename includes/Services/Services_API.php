@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Options\Option_Encrypter;
@@ -326,36 +327,54 @@ final class Services_API {
 	}
 
 	/**
+	 * Gets the service metadata for a given service slug.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $slug The service slug.
+	 * @return Service_Metadata|null The service metadata, or null if the service is not registered.
+	 */
+	public function get_service_metadata( string $slug ): ?Service_Metadata {
+		if ( ! isset( $this->service_registrations[ $slug ] ) ) {
+			return null;
+		}
+
+		return $this->service_registrations[ $slug ]->get_metadata();
+	}
+
+	/**
 	 * Gets the service name.
 	 *
 	 * @since 0.1.0
+	 * @deprecated n.e.x.t Use {@see Services_API::get_service_metadata()} instead.
 	 *
 	 * @param string $slug The service slug.
 	 * @return string The service name, or empty string if the service is not registered.
 	 */
 	public function get_service_name( string $slug ): string {
-		if ( ! isset( $this->service_registrations[ $slug ] ) ) {
+		$metadata = $this->get_service_metadata( $slug );
+		if ( null === $metadata ) {
 			return '';
 		}
-
-		return $this->service_registrations[ $slug ]->get_name();
+		return $metadata->get_name();
 	}
 
 	/**
 	 * Gets the service credentials URL.
 	 *
 	 * @since 0.1.0
+	 * @deprecated n.e.x.t Use {@see Services_API::get_service_metadata()} instead.
 	 *
 	 * @param string $slug The service slug.
 	 * @return string The service credentials URL, or empty string if the service is not registered or if no
 	 *                credentials URL is specified.
 	 */
 	public function get_service_credentials_url( string $slug ): string {
-		if ( ! isset( $this->service_registrations[ $slug ] ) ) {
+		$metadata = $this->get_service_metadata( $slug );
+		if ( null === $metadata ) {
 			return '';
 		}
-
-		return $this->service_registrations[ $slug ]->get_credentials_url();
+		return $metadata->get_credentials_url();
 	}
 
 	/**

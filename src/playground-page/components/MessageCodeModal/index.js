@@ -3,7 +3,7 @@
  */
 import { Tabs } from '@ai-services/components';
 import { Modal } from '@ai-services/interface';
-import { store as aiStore } from '@ai-services/ai';
+import { enums, store as aiStore } from '@ai-services/ai';
 
 /**
  * WordPress dependencies
@@ -43,7 +43,9 @@ export default function MessageCodeModal() {
 		const services = select( aiStore ).getServices();
 		return {
 			message: theMessage,
-			hasPhpCode: services?.[ serviceSlug ]?.type !== 'client',
+			hasPhpCode:
+				services?.[ serviceSlug ]?.metadata?.type !==
+				enums.ServiceType.CLIENT,
 		};
 	} );
 

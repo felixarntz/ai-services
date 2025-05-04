@@ -638,6 +638,7 @@ final class AI_Services_Command {
 			'slug'               => $service_entity->get_field_value( 'slug' ),
 			'name'               => $service_entity->get_field_value( 'name' ),
 			'credentials_url'    => $service_entity->get_field_value( 'credentials_url' ),
+			'type'               => $service_entity->get_field_value( 'type' ),
 			'is_available'       => $service_entity->get_field_value( 'is_available' ) ? 'true' : 'false',
 			'capabilities'       => $service_entity->get_field_value( 'capabilities' ),
 			'has_forced_api_key' => $service_entity->get_field_value( 'has_forced_api_key' ) ? 'true' : 'false',

@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\API\Types;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Service_Type;
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use InvalidArgumentException;
@@ -44,6 +45,14 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	private $credentials_url;
 
 	/**
+	 * The service type.
+	 *
+	 * @since n.e.x.t
+	 * @var string
+	 */
+	private $type;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
@@ -52,8 +61,9 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	 *     The arguments for the service metadata.
 	 *
 	 *     @type string $slug            The service slug.
-	 *     @type string $name            Optional. The service name.
-	 *     @type string $credentials_url Optional. The service credentials URL.
+	 *     @type string $name            Optional. The service name. Default will be generated from the slug.
+	 *     @type string $credentials_url Optional. The service credentials URL. Default empty string.
+	 *     @type string $type            Optional. The service type. Default `Service_Type::CLOUD`.
 	 * }
 	 *
 	 * @throws InvalidArgumentException Thrown if the given slug is invalid.
@@ -64,6 +74,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 		$this->slug            = $args['slug'];
 		$this->name            = $args['name'];
 		$this->credentials_url = $args['credentials_url'];
+		$this->type            = $args['type'];
 	}
 
 	/**
@@ -100,6 +111,17 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	}
 
 	/**
+	 * Gets the service type.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The service type.
+	 */
+	public function get_type(): string {
+		return $this->type;
+	}
+
+	/**
 	 * Returns the array representation.
 	 *
 	 * @since n.e.x.t
@@ -111,6 +133,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 			'slug'            => $this->slug,
 			'name'            => $this->name,
 			'credentials_url' => $this->credentials_url,
+			'type'            => $this->type,
 		);
 	}
 
@@ -164,6 +187,15 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 			$args['credentials_url'] = '';
 		}
 
+		if ( isset( $args['type'] ) ) {
+			if ( ! Service_Type::is_valid_value( $args['type'] ) ) {
+				throw new InvalidArgumentException( 'The service type is invalid.' );
+			}
+			$args['type'] = $args['type'];
+		} else {
+			$args['type'] = Service_Type::CLOUD;
+		}
+
 		return $args;
 	}
 
@@ -191,6 +223,12 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 				'credentials_url' => array(
 					'description' => __( 'Service credentials URL, or empty string if not specified.', 'ai-services' ),
 					'type'        => 'string',
+					'readonly'    => true,
+				),
+				'type'            => array(
+					'description' => __( 'Service type.', 'ai-services' ),
+					'type'        => 'string',
+					'enum'        => Service_Type::get_values(),
 					'readonly'    => true,
 				),
 			),

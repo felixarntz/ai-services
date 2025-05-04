@@ -21,9 +21,9 @@ abstract class Abstract_Enum implements Enum {
 	 * The value map, to store in memory which values are valid.
 	 *
 	 * @since 0.2.0
-	 * @var array<string, bool>|null
+	 * @var array<string, array<string, bool>>
 	 */
-	private static $value_map = null;
+	private static $value_map = array();
 
 	/**
 	 * Checks if the given value is valid for the enum.
@@ -34,10 +34,8 @@ abstract class Abstract_Enum implements Enum {
 	 * @return bool True if the value is valid, false otherwise.
 	 */
 	final public static function is_valid_value( string $value ): bool {
-		if ( null === self::$value_map ) {
-			self::$value_map = array_fill_keys( static::get_all_values(), true );
-		}
-		return isset( self::$value_map[ $value ] );
+		$value_map = self::get_value_map_for_class( static::class );
+		return isset( $value_map[ $value ] );
 	}
 
 	/**
@@ -48,10 +46,23 @@ abstract class Abstract_Enum implements Enum {
 	 * @return string[] The list of valid values.
 	 */
 	final public static function get_values(): array {
-		if ( null === self::$value_map ) {
-			self::$value_map = array_fill_keys( static::get_all_values(), true );
+		$value_map = self::get_value_map_for_class( static::class );
+		return array_keys( $value_map );
+	}
+
+	/**
+	 * Gets the value map for the given child class name.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $class_name The child class name.
+	 * @return array<string, bool> The value map.
+	 */
+	private static function get_value_map_for_class( string $class_name ): array {
+		if ( ! isset( self::$value_map[ $class_name ] ) ) {
+			self::$value_map[ $class_name ] = array_fill_keys( call_user_func( array( $class_name, 'get_all_values' ) ), true );
 		}
-		return array_keys( self::$value_map );
+		return self::$value_map[ $class_name ];
 	}
 
 	/**

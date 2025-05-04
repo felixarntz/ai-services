@@ -85,21 +85,14 @@ import { useCallback } from '@wordpress/element';
 const { store: aiSettingsStore } = window.aiServices.settings;
 const { ApiKeyControl } = window.aiServices.components;
 
-const EMPTY_ARRAY = [];
+const EMPTY_OBJECT = {};
 
-function MyApiKeyControlList() {
-	const services = useSelect( ( select ) => {
-		const { getServices, getApiKey } = select( aiSettingsStore );
-		if ( getServices() === undefined ) { // Loading state.
-			return EMPTY_ARRAY;
-		}
-		return Object.values( getServices() ).map( ( service ) => {
-			return {
-				...service,
-				apiKey: getApiKey( service.slug ),
-			};
-		} );
+function MyApiKeyControl( { service } ) {
+	const apiKey = useSelect( ( select ) => {
+		const { getApiKey } = select( aiSettingsStore );
+		return getApiKey( service.slug );
 	} );
+
 	const { setApiKey } = useDispatch( aiSettingsStore );
 
 	// The callback receives the service slug as second parameter.
@@ -109,13 +102,29 @@ function MyApiKeyControlList() {
 	);
 
 	return (
+		<ApiKeyControl
+			service={ service }
+			apiKey={ apiKey }
+			onChangeApiKey={ onChangeApiKey }
+		/>
+	);
+}
+
+function MyApiKeyControlList() {
+	const services = useSelect( ( select ) => {
+		const { getServices, getApiKey } = select( aiSettingsStore );
+		if ( getServices() === undefined ) { // Loading state.
+			return EMPTY_OBJECT;
+		}
+		return getServices();
+	} );
+
+	return (
 		<>
-			{ services.map( ( { apiKey, ...service } ) => (
-				<ApiKeyControl
+			{ Object.values( services ).map( ( service ) => (
+				<MyApiKeyControl
 					key={ service.slug }
 					service={ service }
-					apiKey={ apiKey }
-					onChangeApiKey={ onChangeApiKey }
 				/>
 			) ) }
 		</>

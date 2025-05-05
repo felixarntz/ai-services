@@ -14,8 +14,10 @@ use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
+use Felix_Arntz\AI_Services\Services\Base\Generic_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generation_Config;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -31,6 +33,9 @@ use InvalidArgumentException;
  */
 class OpenAI_AI_Service implements Generative_AI_Service {
 
+	const DEFAULT_API_BASE_URL = 'https://api.openai.com';
+	const DEFAULT_API_VERSION  = 'v1';
+
 	/**
 	 * The service metadata.
 	 *
@@ -40,10 +45,10 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	private $metadata;
 
 	/**
-	 * The OpenAI AI API instance.
+	 * The AI API client instance.
 	 *
 	 * @since 0.1.0
-	 * @var OpenAI_AI_API_Client
+	 * @var Generative_AI_API_Client
 	 */
 	private $api;
 
@@ -62,7 +67,13 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 			$request_handler = new HTTP_With_Streams();
 		}
 		$this->metadata = $metadata;
-		$this->api      = new OpenAI_AI_API_Client( $authentication, $request_handler );
+		$this->api      = new Generic_AI_API_Client(
+			self::DEFAULT_API_BASE_URL,
+			self::DEFAULT_API_VERSION,
+			'OpenAI',
+			$request_handler,
+			$authentication
+		);
 	}
 
 	/**
@@ -136,7 +147,7 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		$request       = $this->api->create_list_models_request( array(), $request_options );
+		$request       = $this->api->create_get_request( 'models', array(), $request_options );
 		$response_data = $this->api->make_request( $request )->get_data();
 
 		if ( ! isset( $response_data['data'] ) || ! $response_data['data'] ) {

@@ -213,20 +213,6 @@ trait Generative_AI_API_Client_Trait {
 	}
 
 	/**
-	 * Adds default options to the given request.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param Request $request The request instance to add the options to.
-	 */
-	final protected function add_default_options( Request $request ): void {
-		$options = $request->get_options();
-		if ( ! isset( $options['timeout'] ) ) {
-			$request->add_option( 'timeout', 15 );
-		}
-	}
-
-	/**
 	 * Returns the request handler instance to use for requests.
 	 *
 	 * @since 0.1.0

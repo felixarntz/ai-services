@@ -21,6 +21,30 @@ use Generator;
 interface Generative_AI_API_Client {
 
 	/**
+	 * Creates a GET request instance for the given parameters.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Request The request instance.
+	 */
+	public function create_get_request( string $path, array $params, array $request_options = array() ): Request;
+
+	/**
+	 * Creates a POST request instance for the given parameters.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
+	 * @param array<string, mixed> $params          The request parameters.
+	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @return Request The request instance.
+	 */
+	public function create_post_request( string $path, array $params, array $request_options = array() ): Request;
+
+	/**
 	 * Sends the given request to the API and returns the response data.
 	 *
 	 * @since 0.1.0

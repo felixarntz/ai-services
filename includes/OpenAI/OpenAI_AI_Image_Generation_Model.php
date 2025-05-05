@@ -16,6 +16,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\With_Image_Generation_Trait;
@@ -32,10 +33,10 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	use With_Image_Generation_Trait;
 
 	/**
-	 * The OpenAI AI API instance.
+	 * The AI API client instance.
 	 *
 	 * @since 0.5.0
-	 * @var OpenAI_AI_API_Client
+	 * @var Generative_AI_API_Client
 	 */
 	protected $api;
 
@@ -60,16 +61,16 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param OpenAI_AI_API_Client $api             The OpenAI AI API instance.
-	 * @param string               $model           The model slug.
-	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. See
-	 *                                              {@see OpenAI_AI_Service::get_model()} for the list of available
-	 *                                              parameters. Default empty array.
-	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @param Generative_AI_API_Client $api             The AI API client instance.
+	 * @param string                   $model           The model slug.
+	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
+	 *                                                  {@see OpenAI_AI_Service::get_model()} for the list of available
+	 *                                                  parameters. Default empty array.
+	 * @param array<string, mixed>     $request_options Optional. The request options. Default empty array.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( OpenAI_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
+	public function __construct( Generative_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		$this->api = $api;
 
 		// Since image generation can be heavy, increase default request timeout to 30 seconds.
@@ -127,8 +128,10 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 
 		$expected_mime_type = isset( $params['output_format'] ) ? "image/{$params['output_format']}" : 'image/png';
 
-		$request  = $this->api->create_generate_images_request(
-			$this->get_model_slug(),
+		$params['model'] = $this->get_model_slug();
+
+		$request  = $this->api->create_post_request(
+			'images/generations',
 			$params,
 			array_merge(
 				$this->get_request_options(),

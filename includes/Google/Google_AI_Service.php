@@ -17,6 +17,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generation_Config;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -32,6 +33,9 @@ use InvalidArgumentException;
  */
 class Google_AI_Service implements Generative_AI_Service {
 
+	const DEFAULT_API_BASE_URL = 'https://generativelanguage.googleapis.com';
+	const DEFAULT_API_VERSION  = 'v1beta';
+
 	/**
 	 * The service metadata.
 	 *
@@ -41,10 +45,10 @@ class Google_AI_Service implements Generative_AI_Service {
 	private $metadata;
 
 	/**
-	 * The Google AI API instance.
+	 * The AI API client instance.
 	 *
 	 * @since 0.1.0
-	 * @var Google_AI_API_Client
+	 * @var Generative_AI_API_Client
 	 */
 	private $api;
 
@@ -63,7 +67,13 @@ class Google_AI_Service implements Generative_AI_Service {
 			$request_handler = new HTTP_With_Streams();
 		}
 		$this->metadata = $metadata;
-		$this->api      = new Google_AI_API_Client( $authentication, $request_handler );
+		$this->api      = new Google_AI_API_Client(
+			self::DEFAULT_API_BASE_URL,
+			self::DEFAULT_API_VERSION,
+			'Google Generative Language',
+			$request_handler,
+			$authentication
+		);
 	}
 
 	/**
@@ -137,7 +147,7 @@ class Google_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		$request       = $this->api->create_list_models_request( array(), $request_options );
+		$request       = $this->api->create_get_request( 'models', array(), $request_options );
 		$response_data = $this->api->make_request( $request )->get_data();
 
 		if ( ! isset( $response_data['models'] ) || ! $response_data['models'] ) {

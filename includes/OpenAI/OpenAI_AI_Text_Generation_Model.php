@@ -23,6 +23,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
@@ -46,10 +47,10 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	use With_Chat_History_Trait;
 
 	/**
-	 * The OpenAI AI API instance.
+	 * The AI API client instance.
 	 *
 	 * @since 0.1.0
-	 * @var OpenAI_AI_API_Client
+	 * @var Generative_AI_API_Client
 	 */
 	protected $api;
 
@@ -90,16 +91,16 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param OpenAI_AI_API_Client $api             The OpenAI AI API instance.
-	 * @param string               $model           The model slug.
-	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. See
-	 *                                              {@see OpenAI_AI_Service::get_model()} for the list of available
-	 *                                              parameters. Default empty array.
-	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
+	 * @param Generative_AI_API_Client $api             The AI API client instance.
+	 * @param string                   $model           The model slug.
+	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
+	 *                                                  {@see OpenAI_AI_Service::get_model()} for the list of available
+	 *                                                  parameters. Default empty array.
+	 * @param array<string, mixed>     $request_options Optional. The request options. Default empty array.
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( OpenAI_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
+	public function __construct( Generative_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
 		$this->api = $api;
 
 		parent::__construct( $model, $model_params, $request_options );
@@ -170,8 +171,10 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
 		$params = $this->prepare_generate_text_params( $contents );
 
-		$request  = $this->api->create_generate_content_request(
-			$this->get_model_slug(),
+		$params['model'] = $this->get_model_slug();
+
+		$request  = $this->api->create_post_request(
+			'chat/completions',
 			$params,
 			array_merge(
 				$this->get_request_options(),
@@ -203,12 +206,16 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
 		$params = $this->prepare_generate_text_params( $contents );
 
-		$request  = $this->api->create_stream_generate_content_request(
-			$this->get_model_slug(),
+		$params['model']  = $this->get_model_slug();
+		$params['stream'] = true;
+
+		$request  = $this->api->create_post_request(
+			'chat/completions',
 			$params,
 			array_merge(
 				$this->get_request_options(),
-				$request_options
+				$request_options,
+				array( 'stream' => true )
 			)
 		);
 		$response = $this->api->make_request( $request );

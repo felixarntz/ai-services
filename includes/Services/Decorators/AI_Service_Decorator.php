@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Services\Decorators;
 
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Cache\Service_Request_Cache;
@@ -58,6 +59,17 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 */
 	public function get_service_slug(): string {
 		return $this->service->get_service_slug();
+	}
+
+	/**
+	 * Gets the service metadata.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Service_Metadata The service metadata.
+	 */
+	public function get_service_metadata(): Service_Metadata {
+		return $this->service->get_service_metadata();
 	}
 
 	/**

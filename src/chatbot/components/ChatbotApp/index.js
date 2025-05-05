@@ -189,7 +189,7 @@ export default function ChatbotApp() {
 				);
 			} else if ( service ) {
 				startChat( CHAT_ID, {
-					service: service.slug,
+					service: service.getServiceSlug(),
 					modelParams: {
 						feature: 'ai-services-chatbot',
 					},
@@ -219,7 +219,7 @@ export default function ChatbotApp() {
 	}, [ chatbotRef, toggleVisibility ] );
 
 	const config = useMemo(
-		() => getChatbotConfig( service?.name ),
+		() => getChatbotConfig( service?.getServiceMetadata()?.name ),
 		[ service ]
 	);
 

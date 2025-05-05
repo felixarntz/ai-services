@@ -20,20 +20,18 @@ export default class GenerativeAiService {
 	 * @since 0.1.0
 	 *
 	 * @param {Object}   service                  Service object.
-	 * @param {string}   service.slug             Service slug.
-	 * @param {string}   service.name             Service name.
+	 * @param {string}   service.metadata         Service metadata.
 	 * @param {string[]} service.capabilities     AI capabilities that the service supports.
 	 * @param {Object}   service.available_models Data for each model, mapped by model slug.
 	 */
-	constructor( { slug, name, capabilities, available_models: models } ) {
+	constructor( { metadata, capabilities, available_models: models } ) {
 		if ( ! models || ! Object.keys( models ).length ) {
 			throw new Error(
-				`No models available for the service ${ slug }. Is it available?`
+				`No models available for the service ${ metadata.slug }. Is it available?`
 			);
 		}
 
-		this.slug = slug;
-		this.name = name;
+		this.metadata = metadata;
 		this.capabilities = capabilities;
 		this.models = models;
 	}
@@ -43,10 +41,21 @@ export default class GenerativeAiService {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return {string} Service name.
+	 * @return {string} Service slug.
 	 */
 	getServiceSlug() {
-		return this.slug;
+		return this.metadata.slug;
+	}
+
+	/**
+	 * Gets the service metadata.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return {string} Service metadata.
+	 */
+	getServiceMetadata() {
+		return this.metadata;
 	}
 
 	/**
@@ -87,7 +96,7 @@ export default class GenerativeAiService {
 
 		return new GenerativeAiModel(
 			{
-				serviceSlug: this.slug,
+				serviceSlug: this.metadata.slug,
 				...model,
 			},
 			modelParams

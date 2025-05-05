@@ -11,6 +11,7 @@ namespace Felix_Arntz\AI_Services\OpenAI;
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
@@ -31,6 +32,14 @@ use InvalidArgumentException;
 class OpenAI_AI_Service implements Generative_AI_Service {
 
 	/**
+	 * The service metadata.
+	 *
+	 * @since n.e.x.t
+	 * @var Service_Metadata
+	 */
+	private $metadata;
+
+	/**
 	 * The OpenAI AI API instance.
 	 *
 	 * @since 0.1.0
@@ -43,15 +52,17 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param Authentication  $authentication  The authentication credentials.
-	 * @param Request_Handler $request_handler Optional. The request handler instance to use for requests. Default is a
-	 *                                         new HTTP_With_Streams instance.
+	 * @param Service_Metadata $metadata        The service metadata.
+	 * @param Authentication   $authentication  The authentication credentials.
+	 * @param Request_Handler  $request_handler Optional. The request handler instance to use for requests. Default is a
+	 *                                          new HTTP_With_Streams instance.
 	 */
-	public function __construct( Authentication $authentication, Request_Handler $request_handler = null ) {
+	public function __construct( Service_Metadata $metadata, Authentication $authentication, Request_Handler $request_handler = null ) {
 		if ( ! $request_handler ) {
 			$request_handler = new HTTP_With_Streams();
 		}
-		$this->api = new OpenAI_AI_API_Client( $authentication, $request_handler );
+		$this->metadata = $metadata;
+		$this->api      = new OpenAI_AI_API_Client( $authentication, $request_handler );
 	}
 
 	/**
@@ -62,7 +73,18 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	 * @return string The service slug.
 	 */
 	public function get_service_slug(): string {
-		return 'openai';
+		return $this->metadata->get_slug();
+	}
+
+	/**
+	 * Gets the service metadata.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Service_Metadata The service metadata.
+	 */
+	public function get_service_metadata(): Service_Metadata {
+		return $this->metadata;
 	}
 
 	/**

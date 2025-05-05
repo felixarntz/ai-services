@@ -10,6 +10,7 @@ namespace Felix_Arntz\AI_Services\Services\Contracts;
 
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
+use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -31,6 +32,15 @@ interface Generative_AI_Service {
 	 * @return string The service slug.
 	 */
 	public function get_service_slug(): string;
+
+	/**
+	 * Gets the service metadata.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Service_Metadata The service metadata.
+	 */
+	public function get_service_metadata(): Service_Metadata;
 
 	/**
 	 * Gets the list of AI capabilities that the service and its models support.

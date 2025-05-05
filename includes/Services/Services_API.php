@@ -129,9 +129,9 @@ final class Services_API {
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens. It
 	 *                                      must be unique and must match the service slug returned by the service
 	 *                                      class.
-	 * @param callable             $creator The service creator. Receives the Authentication instance as first
-	 *                                      parameter, the request handler instance as second parameter, and must return a
-	 *                                      Generative_AI_Service instance.
+	 * @param callable             $creator The service creator. Receives the Service_Registration_Context as sole
+	 *                                      parameter and must return a Generative_AI_Service instance. The parameter
+	 *                                      provides access to the service metadata and other relevant dependencies.
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *

@@ -25,13 +25,17 @@ For a better idea on what such an implementation could look like, please review 
 
 ## Registering the service
 
-To register the service, you need to use the `Services_API::register_service()` method, available via the `ai_services()` function in the global namespace. In the following example, let's assume we register a service called "demo-service", with the service class having the name `Demo_Service_AI_Service`.
+To register the service, you need to use the `Services_API::register_service()` method, available via the `ai_services()` function in the global namespace. In the following example, let's assume we register a service called "demo-service", with the service class having the name `Demo_Service_AI_Service`. As mentioned above, the `Demo_Service_AI_Service` class must implement the `Generative_AI_Service` interface.
 
 ```php
 ai_services()->register_service(
   'demo-service',
-  static function ( $authentication, $http ) {
-    return new Demo_Service_AI_Service( $authentication, $http );
+  static function ( $context ) {
+    return new Demo_Service_AI_Service(
+        $context->get_metadata(),
+        $context->get_authentication(),
+        $context->get_request_handler()
+    );
   },
   array(
     'name' => 'Demo Service',

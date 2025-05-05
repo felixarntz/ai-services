@@ -78,9 +78,9 @@ final class Service_Registration {
 	 * @since 0.6.0 The service argument keys were updated.
 	 *
 	 * @param string               $slug    The service slug. Must only contain lowercase letters, numbers, hyphens.
-	 * @param callable             $creator The service creator. Receives the Authentication instance as first
-	 *                                      parameter, the request handler instance as second parameter, and must
-	 *                                      return a Generative_AI_Service instance.
+	 * @param callable             $creator The service creator. Receives the Service_Registration_Context as sole
+	 *                                      parameter and must return a Generative_AI_Service instance. The parameter
+	 *                                      provides access to the service metadata and other relevant dependencies.
 	 * @param array<string, mixed> $args    {
 	 *     Optional. The service arguments. Default empty array.
 	 *
@@ -165,8 +165,8 @@ final class Service_Registration {
 	 *
 	 * @return Generative_AI_Service The service instance.
 	 *
-	 * @throws RuntimeException Thrown if no API key is set for the service or if the service creator does not return a
-	 *                          Generative_AI_Service instance.
+	 * @throws RuntimeException Thrown if no API key is set for the service or if the service creator's return value is
+	 *                          not a valid Generative_AI_Service instance.
 	 */
 	public function create_instance(): Generative_AI_Service {
 		$authentication_options = $this->get_authentication_options();
@@ -183,10 +183,16 @@ final class Service_Registration {
 				)
 			);
 		}
+		$authentication = new API_Key_Authentication( $api_key );
 
-		$api_key_authentication = new API_Key_Authentication( $api_key );
+		$context = new Service_Registration_Context(
+			$slug,
+			$this->metadata,
+			$this->instance_args['request_handler'],
+			$authentication
+		);
 
-		$instance = ( $this->creator )( $api_key_authentication, $this->instance_args['request_handler'] );
+		$instance = ( $this->creator )( $context );
 		if ( ! $instance instanceof Generative_AI_Service ) {
 			throw new RuntimeException(
 				sprintf(
@@ -201,6 +207,14 @@ final class Service_Registration {
 					'The service creator for %1$s must return an instance of Generative_AI_Service with the same slug, but instead it returned another slug %2$s.',
 					htmlspecialchars( $slug ), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					htmlspecialchars( $instance->get_service_slug() ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				)
+			);
+		}
+		if ( $instance->get_service_metadata() !== $this->metadata ) {
+			throw new RuntimeException(
+				sprintf(
+					'The service creator for %s must return an instance of Generative_AI_Service with the same metadata, but instead it returned different metadata.',
+					htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}

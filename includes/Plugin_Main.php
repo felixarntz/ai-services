@@ -11,13 +11,12 @@ namespace Felix_Arntz\AI_Services;
 use Felix_Arntz\AI_Services\Anthropic\Anthropic_AI_Service;
 use Felix_Arntz\AI_Services\Google\Google_AI_Service;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Service;
-use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
+use Felix_Arntz\AI_Services\Services\Service_Registration_Context;
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services\Services\Services_API_Instance;
 use Felix_Arntz\AI_Services\Services\Services_Loader;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
-use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
 
 /**
@@ -259,8 +258,12 @@ class Plugin_Main implements With_Hooks {
 	private function register_default_services(): void {
 		$this->services_api->register_service(
 			'anthropic',
-			static function ( Authentication $authentication, Request_Handler $request_handler ) {
-				return new Anthropic_AI_Service( $authentication, $request_handler );
+			static function ( Service_Registration_Context $context ) {
+				return new Anthropic_AI_Service(
+					$context->get_metadata(),
+					$context->get_authentication(),
+					$context->get_request_handler()
+				);
 			},
 			array(
 				'name'            => 'Anthropic (Claude)',
@@ -270,8 +273,12 @@ class Plugin_Main implements With_Hooks {
 		);
 		$this->services_api->register_service(
 			'google',
-			static function ( Authentication $authentication, Request_Handler $request_handler ) {
-				return new Google_AI_Service( $authentication, $request_handler );
+			static function ( Service_Registration_Context $context ) {
+				return new Google_AI_Service(
+					$context->get_metadata(),
+					$context->get_authentication(),
+					$context->get_request_handler()
+				);
 			},
 			array(
 				'name'            => 'Google (Gemini, Imagen)',
@@ -281,8 +288,12 @@ class Plugin_Main implements With_Hooks {
 		);
 		$this->services_api->register_service(
 			'openai',
-			static function ( Authentication $authentication, Request_Handler $request_handler ) {
-				return new OpenAI_AI_Service( $authentication, $request_handler );
+			static function ( Service_Registration_Context $context ) {
+				return new OpenAI_AI_Service(
+					$context->get_metadata(),
+					$context->get_authentication(),
+					$context->get_request_handler()
+				);
 			},
 			array(
 				'name'            => 'OpenAI (GPT, Dall-E)',

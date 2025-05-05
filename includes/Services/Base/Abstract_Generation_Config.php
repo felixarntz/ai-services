@@ -167,6 +167,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 					case 'integer':
 						$defaults[ $key ] = 0;
 						break;
+					case 'number':
 					case 'float':
 						$defaults[ $key ] = 0.0;
 						break;

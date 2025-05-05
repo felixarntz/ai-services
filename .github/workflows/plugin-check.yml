@@ -16,10 +16,17 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
+# Disable permissions for all available scopes by default.
+# Any needed permissions should be configured at the job level.
+permissions: {}
+
 jobs:
     plugin-check:
         name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }}
         runs-on: ubuntu-latest
+        permissions:
+            actions: write
+            contents: read
         timeout-minutes: 20
         strategy:
             fail-fast: true

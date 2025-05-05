@@ -39,10 +39,17 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
+# Disable permissions for all available scopes by default.
+# Any needed permissions should be configured at the job level.
+permissions: {}
+
 jobs:
     js-lint:
         name: JS Lint
         runs-on: ubuntu-latest
+        permissions:
+            actions: write
+            contents: read
         timeout-minutes: 20
         steps:
             - uses: styfle/cancel-workflow-action@0.12.1

@@ -407,7 +407,12 @@ final class Services_API {
 			}
 
 			if ( isset( $args['capabilities'] ) ) {
-				$missing_capabilities = array_diff( $args['capabilities'], $this->service_instances[ $slug ]->get_capabilities() );
+				$metadata = $this->get_service_metadata( $slug );
+				if ( ! $metadata ) {
+					continue;
+				}
+
+				$missing_capabilities = array_diff( $args['capabilities'], $metadata->get_capabilities() );
 				if ( count( $missing_capabilities ) > 0 ) {
 					continue;
 				}

@@ -94,16 +94,6 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'capabilities'       => array(
-					'description' => __( 'List of the AI capabilities that the service supports (empty if the service is not available).', 'ai-services' ),
-					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-					'items'       => array(
-						'type' => 'string',
-						'enum' => array( AI_Capability::TEXT_GENERATION, AI_Capability::IMAGE_GENERATION ),
-					),
-				),
 				'available_models'   => array(
 					'description'          => __( 'Data for each model, mapped by model slug (or empty if the service is not available).', 'ai-services' ),
 					'type'                 => 'object',

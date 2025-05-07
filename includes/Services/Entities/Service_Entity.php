@@ -144,14 +144,15 @@ class Service_Entity implements Entity {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return string[] List of the AI capabilities, or empty array if the service is not available.
+	 * @return string[] List of the AI capabilities.
 	 */
 	private function get_capabilities(): array {
-		if ( ! $this->services_api->is_service_available( $this->slug ) ) {
+		$metadata = $this->services_api->get_service_metadata( $this->slug );
+		if ( ! $metadata ) {
 			return array();
 		}
 
-		return $this->services_api->get_available_service( $this->slug )->get_capabilities();
+		return $metadata->get_capabilities();
 	}
 
 	/**

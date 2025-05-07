@@ -99,23 +99,6 @@ class OpenAI_AI_Service implements Generative_AI_Service {
 	}
 
 	/**
-	 * Gets the list of AI capabilities that the service and its models support.
-	 *
-	 * @since 0.1.0
-	 * @see AI_Capabilities
-	 *
-	 * @return string[] The list of AI capabilities.
-	 */
-	public function get_capabilities(): array {
-		return array_unique(
-			array_merge(
-				AI_Capabilities::get_model_class_capabilities( OpenAI_AI_Text_Generation_Model::class ),
-				AI_Capabilities::get_model_class_capabilities( OpenAI_AI_Image_Generation_Model::class )
-			)
-		);
-	}
-
-	/**
 	 * Checks whether the service is connected.
 	 *
 	 * This is typically used to check whether the current service credentials are valid.

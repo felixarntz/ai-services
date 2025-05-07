@@ -67,7 +67,9 @@ function getAvailableServiceSlug( services, args ) {
 		if ( args?.capabilities ) {
 			const missingCapabilities = args.capabilities.filter(
 				( capability ) =>
-					! services[ slug ].capabilities.includes( capability )
+					! (
+						services[ slug ].metadata?.capabilities || []
+					).includes( capability )
 			);
 			if ( missingCapabilities.length ) {
 				continue;

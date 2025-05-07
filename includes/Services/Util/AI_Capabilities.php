@@ -26,6 +26,25 @@ use InvalidArgumentException;
 final class AI_Capabilities {
 
 	/**
+	 * Gets the combined AI capabilities that the given model classes support.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string[] $model_classes The model class names.
+	 * @return string[] The AI capabilities that the model classes support, based on the interfaces they implement.
+	 */
+	public static function get_model_classes_capabilities( array $model_classes ): array {
+		$capabilities = array();
+		foreach ( $model_classes as $model_class ) {
+			$model_capabilities = self::get_model_class_capabilities( $model_class );
+			foreach ( $model_capabilities as $capability ) {
+				$capabilities[] = $capability;
+			}
+		}
+		return array_unique( $capabilities );
+	}
+
+	/**
 	 * Gets the AI capabilities that the given model class supports.
 	 *
 	 * @since 0.1.0
@@ -121,5 +140,29 @@ final class AI_Capabilities {
 		}
 
 		return $model_slugs;
+	}
+
+	/**
+	 * Gets the model class name from the given model class names that satisfies the given capabilities.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string[] $model_classes The model class names.
+	 * @param string[] $capabilities  The required capabilities that the models should satisfy.
+	 * @return string The model class name that satisfies the given capabilities.
+	 *
+	 * @throws InvalidArgumentException Thrown if no model satisfies the given capabilities.
+	 */
+	public static function get_model_class_for_capabilities( array $model_classes, array $capabilities ): string {
+		foreach ( $model_classes as $model_class ) {
+			$model_capabilities = self::get_model_class_capabilities( $model_class );
+			if ( ! array_diff( $capabilities, $model_capabilities ) ) {
+				return $model_class;
+			}
+		}
+
+		throw new InvalidArgumentException(
+			'No model class satisfies the given capabilities.'
+		);
 	}
 }

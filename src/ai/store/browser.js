@@ -27,9 +27,9 @@ export async function getBrowserServiceData() {
 				name: __( 'Browser built-in AI', 'ai-services' ),
 				credentials_url: '',
 				type: enums.ServiceType.CLIENT,
+				capabilities,
 			},
 			is_available: capabilities.length > 0,
-			capabilities,
 			available_models:
 				capabilities.length > 0
 					? {

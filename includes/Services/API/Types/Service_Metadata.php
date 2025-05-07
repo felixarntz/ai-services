@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\API\Types;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Enums\Service_Type;
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
@@ -53,6 +54,14 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	private $type;
 
 	/**
+	 * List of AI capabilities supported by the service and its models.
+	 *
+	 * @since n.e.x.t
+	 * @var string[]
+	 */
+	private $capabilities;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since n.e.x.t
@@ -60,10 +69,12 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	 * @param array<string, mixed> $args {
 	 *     The arguments for the service metadata.
 	 *
-	 *     @type string $slug            The service slug.
-	 *     @type string $name            Optional. The service name. Default will be generated from the slug.
-	 *     @type string $credentials_url Optional. The service credentials URL. Default empty string.
-	 *     @type string $type            Optional. The service type. Default `Service_Type::CLOUD`.
+	 *     @type string   $slug            The service slug.
+	 *     @type string   $name            Optional. The service name. Default will be generated from the slug.
+	 *     @type string   $credentials_url Optional. The service credentials URL. Default empty string.
+	 *     @type string   $type            Optional. The service type. Default `Service_Type::CLOUD`.
+	 *     @type string[] $capabilities    Optional. The list of AI capabilities supported by the service and its
+	 *                                     models. Default empty array.
 	 * }
 	 *
 	 * @throws InvalidArgumentException Thrown if the given slug is invalid.
@@ -75,6 +86,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 		$this->name            = $args['name'];
 		$this->credentials_url = $args['credentials_url'];
 		$this->type            = $args['type'];
+		$this->capabilities    = $args['capabilities'];
 	}
 
 	/**
@@ -122,6 +134,17 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	}
 
 	/**
+	 * Gets the list of AI capabilities supported by the service and its models.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string[] List of AI capabilities supported by the service and its models.
+	 */
+	public function get_capabilities(): array {
+		return $this->capabilities;
+	}
+
+	/**
 	 * Returns the array representation.
 	 *
 	 * @since n.e.x.t
@@ -134,6 +157,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 			'name'            => $this->name,
 			'credentials_url' => $this->credentials_url,
 			'type'            => $this->type,
+			'capabilities'    => $this->capabilities,
 		);
 	}
 
@@ -158,6 +182,8 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	 * @return array<string, mixed> The parsed service metadata arguments.
 	 *
 	 * @throws InvalidArgumentException Thrown if an invalid argument is provided.
+	 *
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 */
 	private function parse_args( array $args ): array {
 		if ( ! isset( $args['slug'] ) ) {
@@ -191,9 +217,21 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 			if ( ! Service_Type::is_valid_value( $args['type'] ) ) {
 				throw new InvalidArgumentException( 'The service type is invalid.' );
 			}
-			$args['type'] = $args['type'];
 		} else {
 			$args['type'] = Service_Type::CLOUD;
+		}
+
+		if ( isset( $args['capabilities'] ) ) {
+			if ( ! is_array( $args['capabilities'] ) ) {
+				throw new InvalidArgumentException( 'The capabilities must be an array.' );
+			}
+			foreach ( $args['capabilities'] as $capability ) {
+				if ( ! AI_Capability::is_valid_value( $capability ) ) {
+					throw new InvalidArgumentException( 'The capabilities contain an invalid value.' );
+				}
+			}
+		} else {
+			$args['capabilities'] = array();
 		}
 
 		return $args;
@@ -229,6 +267,15 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 					'description' => __( 'Service type.', 'ai-services' ),
 					'type'        => 'string',
 					'enum'        => Service_Type::get_values(),
+					'readonly'    => true,
+				),
+				'capabilities'    => array(
+					'description' => __( 'List of AI capabilities supported by the service and its models.', 'ai-services' ),
+					'type'        => 'array',
+					'items'       => array(
+						'type' => 'string',
+						'enum' => AI_Capability::get_values(),
+					),
 					'readonly'    => true,
 				),
 			),

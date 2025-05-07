@@ -25,7 +25,9 @@ const filterAvailableServices = memoize(
 					return false;
 				}
 				return requiredCapabilities.every( ( capability ) =>
-					service.capabilities.includes( capability )
+					( service.metadata?.capabilities || [] ).includes(
+						capability
+					)
 				);
 			} )
 			.map( ( { slug, metadata } ) => {

@@ -18,7 +18,6 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generation_Config;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
-use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use InvalidArgumentException;
 
 /**
@@ -70,18 +69,6 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 */
 	public function get_service_metadata(): Service_Metadata {
 		return $this->service->get_service_metadata();
-	}
-
-	/**
-	 * Gets the list of AI capabilities that the service and its models support.
-	 *
-	 * @since 0.1.0
-	 * @see AI_Capabilities
-	 *
-	 * @return string[] The list of AI capabilities.
-	 */
-	public function get_capabilities(): array {
-		return $this->service->get_capabilities();
 	}
 
 	/**

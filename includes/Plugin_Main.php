@@ -9,12 +9,19 @@
 namespace Felix_Arntz\AI_Services;
 
 use Felix_Arntz\AI_Services\Anthropic\Anthropic_AI_Service;
+use Felix_Arntz\AI_Services\Anthropic\Anthropic_AI_Text_Generation_Model;
+use Felix_Arntz\AI_Services\Google\Google_AI_Image_Generation_Model;
 use Felix_Arntz\AI_Services\Google\Google_AI_Service;
+use Felix_Arntz\AI_Services\Google\Google_AI_Text_Generation_Model;
+use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Image_Generation_Model;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Service;
+use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Text_Generation_Model;
+use Felix_Arntz\AI_Services\Services\API\Enums\Service_Type;
 use Felix_Arntz\AI_Services\Services\Service_Registration_Context;
 use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services\Services\Services_API_Instance;
 use Felix_Arntz\AI_Services\Services\Services_Loader;
+use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
@@ -268,6 +275,10 @@ class Plugin_Main implements With_Hooks {
 			array(
 				'name'            => 'Anthropic (Claude)',
 				'credentials_url' => 'https://console.anthropic.com/settings/keys',
+				'type'            => Service_Type::CLOUD,
+				'capabilities'    => AI_Capabilities::get_model_classes_capabilities(
+					array( Anthropic_AI_Text_Generation_Model::class )
+				),
 				'allow_override'  => false,
 			)
 		);
@@ -283,6 +294,13 @@ class Plugin_Main implements With_Hooks {
 			array(
 				'name'            => 'Google (Gemini, Imagen)',
 				'credentials_url' => 'https://aistudio.google.com/app/apikey',
+				'type'            => Service_Type::CLOUD,
+				'capabilities'    => AI_Capabilities::get_model_classes_capabilities(
+					array(
+						Google_AI_Text_Generation_Model::class,
+						Google_AI_Image_Generation_Model::class,
+					)
+				),
 				'allow_override'  => false,
 			)
 		);
@@ -298,6 +316,13 @@ class Plugin_Main implements With_Hooks {
 			array(
 				'name'            => 'OpenAI (GPT, Dall-E)',
 				'credentials_url' => 'https://platform.openai.com/api-keys',
+				'type'            => Service_Type::CLOUD,
+				'capabilities'    => AI_Capabilities::get_model_classes_capabilities(
+					array(
+						OpenAI_AI_Text_Generation_Model::class,
+						OpenAI_AI_Image_Generation_Model::class,
+					)
+				),
 				'allow_override'  => false,
 			)
 		);

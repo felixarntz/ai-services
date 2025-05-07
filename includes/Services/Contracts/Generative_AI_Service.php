@@ -14,7 +14,6 @@ use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
-use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use InvalidArgumentException;
 
 /**
@@ -41,16 +40,6 @@ interface Generative_AI_Service {
 	 * @return Service_Metadata The service metadata.
 	 */
 	public function get_service_metadata(): Service_Metadata;
-
-	/**
-	 * Gets the list of AI capabilities that the service and its models support.
-	 *
-	 * @since 0.1.0
-	 * @see AI_Capabilities
-	 *
-	 * @return string[] The list of AI capabilities.
-	 */
-	public function get_capabilities(): array;
 
 	/**
 	 * Checks whether the service is connected.

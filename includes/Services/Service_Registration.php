@@ -88,6 +88,9 @@ final class Service_Registration {
 	 *                                                 first letters.
 	 *     @type string               $credentials_url The URL to manage credentials for the service. Default empty
 	 *                                                 string.
+	 *     @type string               $type            The service type. Default is Service_Type::CLOUD.
+	 *     @type string[]             $capabilities    The list of AI capabilities supported by the service and its
+	 *                                                 models. Default empty array.
 	 *     @type bool                 $allow_override  Whether the service can be overridden by another service with
 	 *                                                 the same slug. Default true.
 	 *     @type Request_Handler      $request_handler The request handler instance. Default is a new HTTP_With_Streams

@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services\Decorators;
 
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
@@ -93,15 +94,14 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	}
 
 	/**
-	 * Lists the available generative model slugs and their capabilities.
+	 * Lists the available generative model slugs and their metadata.
 	 *
 	 * @since 0.1.0
 	 * @since 0.5.0 Return type changed to a map of model data shapes.
-	 *
-	 * @phpstan-return array<string, array{slug: string, name: string, capabilities: string[]}>
+	 * @since n.e.x.t Return type changed to a map of model metadata objects.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return array<string, mixed>                 Data for each model, mapped by model slug.
+	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.
 	 *
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */

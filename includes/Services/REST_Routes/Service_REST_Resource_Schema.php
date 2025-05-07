@@ -95,7 +95,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'readonly'    => true,
 				),
 				'available_models'   => array(
-					'description'          => __( 'Data for each model, mapped by model slug (or empty if the service is not available).', 'ai-services' ),
+					'description'          => __( 'Metadata for each model, mapped by model slug (or empty if the service is not available).', 'ai-services' ),
 					'type'                 => 'object',
 					'context'              => array( 'view', 'edit' ),
 					'readonly'             => true,

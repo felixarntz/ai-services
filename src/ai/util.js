@@ -201,7 +201,7 @@ export function detectRequestedCapabilitiesFromContent(
  *
  * @since 0.3.0
  *
- * @param {Object} availableModels Data for each model, mapped by model slug.
+ * @param {Object} availableModels Metadata for each model, mapped by model slug.
  * @param {Object} modelParams     Model parameters. Should contain either a 'model' slug or requested 'capabilities'.
  * @return {Object} Model data object.
  */

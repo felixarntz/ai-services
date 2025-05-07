@@ -11,7 +11,9 @@ namespace Felix_Arntz\AI_Services\Services\Cache;
 use Exception;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Class that allows to wrap service method calls so that their return values are cached.
@@ -156,12 +158,29 @@ final class Service_Request_Cache {
 	 * @return mixed Sanitized value.
 	 */
 	private static function sanitize_value_for_cache( $value ) {
+		// Exception thrown.
 		if ( is_object( $value ) && $value instanceof Exception ) {
 			return array(
 				'classname' => get_class( $value ),
 				'message'   => $value->getMessage(),
 			);
 		}
+
+		// Arrayable class object.
+		if ( is_object( $value ) && $value instanceof Arrayable && method_exists( get_class( $value ), 'from_array' ) ) {
+			return array(
+				'classname' => get_class( $value ),
+				'data'      => $value->to_array(),
+			);
+		}
+
+		// Array (recursion necessary).
+		if ( is_array( $value ) ) {
+			foreach ( $value as $key => $item ) {
+				$value[ $key ] = self::sanitize_value_for_cache( $item );
+			}
+		}
+
 		return $value;
 	}
 
@@ -174,8 +193,11 @@ final class Service_Request_Cache {
 	 *
 	 * @param mixed $value Value from the cache.
 	 * @return mixed Parsed value.
+	 *
+	 * @throws RuntimeException Thrown if the cached value uses an invalid class.
 	 */
 	private static function parse_value_from_cache( $value ) {
+		// Exception thrown.
 		if ( is_array( $value ) && isset( $value['classname'], $value['message'] ) ) {
 			$class = $value['classname'];
 			if ( ! class_exists( $class ) ) { // This should never be true, but a reasonable safeguard.
@@ -184,6 +206,30 @@ final class Service_Request_Cache {
 			$message = $value['message'];
 			return new $class( $message );
 		}
+
+		// Arrayable class object.
+		if ( is_array( $value ) && isset( $value['classname'], $value['data'] ) ) {
+			$class = $value['classname'];
+			if ( ! class_exists( $class ) || ! method_exists( $class, 'from_array' ) ) { // This should never be true, but a reasonable safeguard.
+				throw new RuntimeException(
+					sprintf(
+						/* translators: %s: class name */
+						esc_html__( 'The class %s from the cached value does not exist or does not have a from_array method.', 'ai-services' ),
+						esc_html( $class )
+					)
+				);
+			}
+			$data = $value['data'];
+			return call_user_func( array( $class, 'from_array' ), $data );
+		}
+
+		// Array (recursion necessary).
+		if ( is_array( $value ) ) {
+			foreach ( $value as $key => $item ) {
+				$value[ $key ] = self::parse_value_from_cache( $item );
+			}
+		}
+
 		return $value;
 	}
 

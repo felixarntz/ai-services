@@ -21,7 +21,7 @@ export default class GenerativeAiService {
 	 *
 	 * @param {Object} service                  Service object.
 	 * @param {Object} service.metadata         Service metadata.
-	 * @param {Object} service.available_models Data for each model, mapped by model slug.
+	 * @param {Object} service.available_models Metadata for each model, mapped by model slug.
 	 */
 	constructor( { metadata, available_models: models } ) {
 		if ( ! models || ! Object.keys( models ).length ) {
@@ -61,7 +61,7 @@ export default class GenerativeAiService {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return {Object} Data for each model, mapped by model slug.
+	 * @return {Object} Metadata for each model, mapped by model slug.
 	 */
 	listModels() {
 		return this.models;

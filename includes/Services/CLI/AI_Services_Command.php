@@ -12,6 +12,7 @@ use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
 use Felix_Arntz\AI_Services\Services\API\Helpers;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Text_Part;
@@ -407,6 +408,15 @@ final class AI_Services_Command {
 		}
 
 		$models = $this->get_service_models( $slug );
+		$models = array_map(
+			static function ( $model_metadata ) {
+				if ( $model_metadata instanceof Model_Metadata ) {
+					return $model_metadata->to_array();
+				}
+				return $model_metadata;
+			},
+			$models
+		);
 		if ( count( $assoc_args['slugs'] ) > 0 ) {
 			$models = array_intersect_key( $models, array_flip( $assoc_args['slugs'] ) );
 		}
@@ -652,11 +662,10 @@ final class AI_Services_Command {
 	 *
 	 * @since 0.2.0
 	 * @since 0.5.0 Return type changed to a map of model data shapes.
-	 *
-	 * @phpstan-return array<string, array{slug: string, name: string, capabilities: string[]}>
+	 * @since n.e.x.t Return type changed to a map of model metadata objects.
 	 *
 	 * @param string $service_slug The service slug.
-	 * @return array<string, mixed> Data for each model, mapped by model slug.
+	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.
 	 */
 	private function get_service_models( string $service_slug ): array {
 		$service = $this->services_api->get_available_service( $service_slug );

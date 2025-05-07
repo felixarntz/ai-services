@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\Entities;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
@@ -120,7 +121,16 @@ class Service_Entity implements Entity {
 			case 'capabilities':
 				return $this->get_capabilities();
 			case 'available_models':
-				return $this->get_available_models();
+				$models = $this->get_available_models();
+				return array_map(
+					static function ( $model_metadata ) {
+						if ( $model_metadata instanceof Model_Metadata ) {
+							return $model_metadata->to_array();
+						}
+						return $model_metadata;
+					},
+					$models
+				);
 			case 'has_forced_api_key':
 				return $this->has_forced_api_key();
 			case 'authentication_option_slugs':
@@ -160,10 +170,9 @@ class Service_Entity implements Entity {
 	 *
 	 * @since 0.1.0
 	 * @since 0.5.0 Return type changed to a map of model data shapes.
+	 * @since n.e.x.t Return type changed to a map of model metadata objects.
 	 *
-	 * @phpstan-return array<string, array{slug: string, name: string, capabilities: string[]}>
-	 *
-	 * @return array<string, mixed> Data for each model, mapped by model slug.
+	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.
 	 */
 	private function get_available_models(): array {
 		if ( ! $this->services_api->is_service_available( $this->slug ) ) {

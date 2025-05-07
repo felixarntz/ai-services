@@ -9,6 +9,7 @@
 namespace Felix_Arntz\AI_Services\Services\Util;
 
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
@@ -113,22 +114,19 @@ final class AI_Capabilities {
 	 *
 	 * @since 0.1.0
 	 * @since 0.5.0 Now expects an array of model data shapes, mapped by model slug.
+	 * @since n.e.x.t Now expects a map of model metadata objects.
 	 *
-	 * @param array<string, array{slug: string, name: string, capabilities: string[]}> $models       Data for each
-	 *                                                                                               model, mapped by
-	 *                                                                                               model slug.
-	 * @param string[]                                                                 $capabilities The required
-	 *                                                                                               capabilities that
-	 *                                                                                               the models should
-	 *                                                                                               satisfy.
+	 * @param array<string, Model_Metadata> $models       Metadata for each model, mapped by model slug.
+	 * @param string[]                      $capabilities The required capabilities that the models should  satisfy.
 	 * @return string[] Slugs of all models that satisfy the given capabilities.
 	 *
 	 * @throws InvalidArgumentException Thrown if no model satisfies the given capabilities.
 	 */
 	public static function get_model_slugs_for_capabilities( array $models, array $capabilities ): array {
 		$model_slugs = array();
-		foreach ( $models as $model_slug => $model_data ) {
-			if ( ! array_diff( $capabilities, $model_data['capabilities'] ) ) {
+		foreach ( $models as $model_slug => $model_metadata ) {
+			$model_capabilities = $model_metadata->get_capabilities();
+			if ( ! array_diff( $capabilities, $model_capabilities ) ) {
 				$model_slugs[] = $model_slug;
 			}
 		}

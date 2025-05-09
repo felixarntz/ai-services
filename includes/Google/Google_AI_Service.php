@@ -178,15 +178,16 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	 * @return string[] The model slugs, sorted by preference.
 	 */
 	protected function sort_models_by_preference( array $model_slugs ): array {
+		// Prioritize latest, non-experimental models, preferring cheaper ones.
 		$get_preference_group = static function ( $model_slug ) {
 			if ( str_starts_with( $model_slug, 'gemini-2.0' ) ) {
-				if ( str_contains( $model_slug, '-flash' ) ) {
+				if ( str_ends_with( $model_slug, '-flash' ) ) {
 					return 0;
 				}
 				return 1;
 			}
 			if ( str_starts_with( $model_slug, 'gemini-' ) ) {
-				if ( str_contains( $model_slug, '-flash' ) ) {
+				if ( str_ends_with( $model_slug, '-flash' ) ) {
 					return 2;
 				}
 				return 3;

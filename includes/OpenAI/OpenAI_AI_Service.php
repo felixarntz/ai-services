@@ -170,26 +170,33 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	 * @return string[] The model slugs, sorted by preference.
 	 */
 	protected function sort_models_by_preference( array $model_slugs ): array {
+		// Prioritize latest, non-experimental models, preferring cheaper ones.
 		$get_preference_group = static function ( $model_slug ) {
-			if ( 'gpt-4o' === $model_slug ) {
-				return 0;
-			}
-			if ( str_starts_with( $model_slug, 'gpt-4o' ) ) {
+			if ( str_starts_with( $model_slug, 'gpt-4.1' ) ) {
+				if ( str_ends_with( $model_slug, '-mini' ) ) {
+					return 0;
+				}
 				return 1;
 			}
-			if ( str_starts_with( $model_slug, 'gpt-4' ) ) {
-				if ( str_ends_with( $model_slug, '-turbo' ) ) {
+			if ( str_starts_with( $model_slug, 'gpt-4o' ) ) {
+				if ( str_ends_with( $model_slug, '-mini' ) ) {
 					return 2;
 				}
 				return 3;
 			}
-			if ( str_starts_with( $model_slug, 'gpt-' ) ) {
+			if ( str_starts_with( $model_slug, 'gpt-4' ) ) {
 				if ( str_ends_with( $model_slug, '-turbo' ) ) {
 					return 4;
 				}
 				return 5;
 			}
-			return 6;
+			if ( str_starts_with( $model_slug, 'gpt-' ) ) {
+				if ( str_ends_with( $model_slug, '-turbo' ) ) {
+					return 6;
+				}
+				return 7;
+			}
+			return 8;
 		};
 
 		$preference_groups = array_fill( 0, 6, array() );

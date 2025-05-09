@@ -142,20 +142,27 @@ class Anthropic_AI_Service extends Abstract_AI_Service implements With_API_Clien
 	 * @return string[] The model slugs, sorted by preference.
 	 */
 	protected function sort_models_by_preference( array $model_slugs ): array {
+		// Prioritize latest, non-experimental models, preferring Sonnet.
 		$get_preference_group = static function ( $model_slug ) {
-			if ( str_starts_with( $model_slug, 'claude-3-5' ) ) {
+			if ( str_starts_with( $model_slug, 'claude-3-7' ) ) {
 				if ( str_contains( $model_slug, '-sonnet' ) ) {
 					return 0;
 				}
 				return 1;
 			}
-			if ( str_starts_with( $model_slug, 'claude-' ) ) {
+			if ( str_starts_with( $model_slug, 'claude-3-5' ) ) {
 				if ( str_contains( $model_slug, '-sonnet' ) ) {
 					return 2;
 				}
 				return 3;
 			}
-			return 4;
+			if ( str_starts_with( $model_slug, 'claude-' ) ) {
+				if ( str_contains( $model_slug, '-sonnet' ) ) {
+					return 4;
+				}
+				return 5;
+			}
+			return 6;
 		};
 
 		$preference_groups = array_fill( 0, 5, array() );

@@ -17,8 +17,10 @@ use Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Image_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Felix_Arntz\AI_Services\Services\Util\Transformer;
@@ -29,16 +31,9 @@ use InvalidArgumentException;
  *
  * @since 0.5.0
  */
-class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With_Image_Generation {
+class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Image_Generation {
+	use With_API_Client_Trait;
 	use With_Image_Generation_Trait;
-
-	/**
-	 * The AI API client instance.
-	 *
-	 * @since 0.5.0
-	 * @var Generative_AI_API_Client
-	 */
-	protected $api;
 
 	/**
 	 * The generation configuration.
@@ -61,7 +56,7 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param Generative_AI_API_Client $api             The AI API client instance.
+	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param string                   $model           The model slug.
 	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
 	 *                                                  {@see OpenAI_AI_Service::get_model()} for the list of available
@@ -70,8 +65,8 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( Generative_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
-		$this->api = $api;
+	public function __construct( Generative_AI_API_Client $api_client, string $model, array $model_params = array(), array $request_options = array() ) {
+		$this->set_api_client( $api_client );
 
 		// Since image generation can be heavy, increase default request timeout to 30 seconds.
 		if ( ! isset( $request_options['timeout'] ) ) {
@@ -124,13 +119,14 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_image_request( array $contents, array $request_options ): Candidates {
+		$api    = $this->get_api_client();
 		$params = $this->prepare_generate_image_params( $contents );
 
 		$expected_mime_type = isset( $params['output_format'] ) ? "image/{$params['output_format']}" : 'image/png';
 
 		$params['model'] = $this->get_model_slug();
 
-		$request  = $this->api->create_post_request(
+		$request  = $api->create_post_request(
 			'images/generations',
 			$params,
 			array_merge(
@@ -138,9 +134,9 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				$request_options
 			)
 		);
-		$response = $this->api->make_request( $request );
+		$response = $api->make_request( $request );
 
-		return $this->api->process_response_data(
+		return $api->process_response_data(
 			$response,
 			function ( $response_data ) use ( $expected_mime_type ) {
 				return $this->get_response_candidates( $response_data, $expected_mime_type );
@@ -208,7 +204,7 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 */
 	private function get_response_candidates( array $response_data, string $expected_mime_type = 'image/png' ): Candidates {
 		if ( ! isset( $response_data['data'] ) ) {
-			throw $this->api->create_missing_response_key_exception( 'data' );
+			throw $this->get_api_client()->create_missing_response_key_exception( 'data' );
 		}
 
 		$other_data = $response_data;
@@ -245,7 +241,7 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	private function prepare_candidate_content( array $candidate_data, int $index, string $expected_mime_type = 'image/png' ): Content {
 		if ( ! isset( $candidate_data['b64_json'] ) && ! isset( $candidate_data['url'] ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->api->create_missing_response_key_exception( "data.{$index}.b64_json" );
+			throw $this->get_api_client()->create_missing_response_key_exception( "data.{$index}.b64_json" );
 		}
 
 		if ( isset( $candidate_data['b64_json'] ) ) {

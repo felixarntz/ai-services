@@ -24,11 +24,13 @@ use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
@@ -42,17 +44,10 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since 0.5.0 Renamed from `OpenAI_AI_Model`.
  */
-class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+	use With_API_Client_Trait;
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
-
-	/**
-	 * The AI API client instance.
-	 *
-	 * @since 0.1.0
-	 * @var Generative_AI_API_Client
-	 */
-	protected $api;
 
 	/**
 	 * The tools available to use for the model.
@@ -91,7 +86,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param Generative_AI_API_Client $api             The AI API client instance.
+	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param string                   $model           The model slug.
 	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
 	 *                                                  {@see OpenAI_AI_Service::get_model()} for the list of available
@@ -100,8 +95,8 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( Generative_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
-		$this->api = $api;
+	public function __construct( Generative_AI_API_Client $api_client, string $model, array $model_params = array(), array $request_options = array() ) {
+		$this->set_api_client( $api_client );
 
 		parent::__construct( $model, $model_params, $request_options );
 	}
@@ -169,11 +164,12 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
+		$api    = $this->get_api_client();
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$params['model'] = $this->get_model_slug();
 
-		$request  = $this->api->create_post_request(
+		$request  = $api->create_post_request(
 			'chat/completions',
 			$params,
 			array_merge(
@@ -181,9 +177,9 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				$request_options
 			)
 		);
-		$response = $this->api->make_request( $request );
+		$response = $api->make_request( $request );
 
-		return $this->api->process_response_data(
+		return $api->process_response_data(
 			$response,
 			function ( $response_data ) {
 				return $this->get_response_candidates( $response_data );
@@ -204,12 +200,13 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
+		$api    = $this->get_api_client();
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$params['model']  = $this->get_model_slug();
 		$params['stream'] = true;
 
-		$request  = $this->api->create_post_request(
+		$request  = $api->create_post_request(
 			'chat/completions',
 			$params,
 			array_merge(
@@ -218,9 +215,9 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				array( 'stream' => true )
 			)
 		);
-		$response = $this->api->make_request( $request );
+		$response = $api->make_request( $request );
 
-		return $this->api->process_response_stream(
+		return $api->process_response_stream(
 			$response,
 			function ( $response_data, $prev_chunk_candidates ) {
 				return $this->get_response_candidates( $response_data, $prev_chunk_candidates );
@@ -287,7 +284,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		if ( null === $prev_chunk_candidates ) {
 			// Regular (non-streaming) response, or first chunk of a streaming response.
 			if ( ! isset( $response_data['choices'] ) ) {
-				throw $this->api->create_missing_response_key_exception( 'choices' );
+				throw $this->get_api_client()->create_missing_response_key_exception( 'choices' );
 			}
 
 			$other_data = $response_data;
@@ -336,7 +333,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 */
 	private function merge_candidates_chunk( array $candidates_data, array $chunk_data ): array {
 		if ( ! isset( $chunk_data['choices'] ) ) {
-			throw $this->api->create_missing_response_key_exception( 'choices' );
+			throw $this->get_api_client()->create_missing_response_key_exception( 'choices' );
 		}
 
 		$other_data = $chunk_data;
@@ -381,7 +378,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	private function prepare_choice_content( array $choice_data, int $index ): Content {
 		if ( ! isset( $choice_data['message'] ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->api->create_missing_response_key_exception( "choices.{$index}.message" );
+			throw $this->get_api_client()->create_missing_response_key_exception( "choices.{$index}.message" );
 		}
 
 		$role = isset( $choice_data['message']['role'] ) && 'user' === $choice_data['message']['role']
@@ -412,7 +409,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		if ( isset( $choice_data['message']['tool_calls'] ) && is_array( $choice_data['message']['tool_calls'] ) ) {
 			foreach ( $choice_data['message']['tool_calls'] as $tool_call ) {
 				if ( ! isset( $tool_call['type'] ) || 'function' !== $tool_call['type'] || ! isset( $tool_call['function'] ) ) {
-					throw $this->api->create_response_exception(
+					throw $this->get_api_client()->create_response_exception(
 						// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 						__( 'The response includes a tool of an unexpected type.', 'ai-services' )
 					);
@@ -429,7 +426,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			}
 		}
 		if ( count( $parts ) === 0 ) {
-			throw $this->api->create_response_exception(
+			throw $this->get_api_client()->create_response_exception(
 				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				__( 'The response includes unexpected content.', 'ai-services' )
 			);

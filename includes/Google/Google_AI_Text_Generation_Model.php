@@ -26,12 +26,14 @@ use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Output;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
@@ -45,17 +47,10 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since 0.5.0 Renamed from `Google_AI_Model`.
  */
-class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input, With_Multimodal_Output {
+class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input, With_Multimodal_Output {
+	use With_API_Client_Trait;
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
-
-	/**
-	 * The AI API client instance.
-	 *
-	 * @since 0.1.0
-	 * @var Generative_AI_API_Client
-	 */
-	protected $api;
 
 	/**
 	 * The tools available to use for the model.
@@ -102,7 +97,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param Generative_AI_API_Client $api             The AI API client instance.
+	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param string                   $model           The model slug.
 	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
 	 *                                                  {@see Google_AI_Service::get_model()} for the list of available
@@ -111,8 +106,8 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( Generative_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
-		$this->api = $api;
+	public function __construct( Generative_AI_API_Client $api_client, string $model, array $model_params = array(), array $request_options = array() ) {
+		$this->set_api_client( $api_client );
 
 		parent::__construct( $model, $model_params, $request_options );
 	}
@@ -193,6 +188,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
+		$api    = $this->get_api_client();
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$model = $this->get_model_slug();
@@ -200,7 +196,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			$model = 'models/' . $model;
 		}
 
-		$request  = $this->api->create_post_request(
+		$request  = $api->create_post_request(
 			"{$model}:generateContent",
 			$params,
 			array_merge(
@@ -208,9 +204,9 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				$request_options
 			)
 		);
-		$response = $this->api->make_request( $request );
+		$response = $api->make_request( $request );
 
-		return $this->api->process_response_data(
+		return $api->process_response_data(
 			$response,
 			function ( $response_data ) {
 				return $this->get_response_candidates( $response_data );
@@ -231,6 +227,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
+		$api    = $this->get_api_client();
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$model = $this->get_model_slug();
@@ -238,7 +235,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			$model = 'models/' . $model;
 		}
 
-		$request  = $this->api->create_post_request(
+		$request  = $api->create_post_request(
 			"{$model}:streamGenerateContent",
 			$params,
 			array_merge(
@@ -247,9 +244,9 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				array( 'stream' => true )
 			)
 		);
-		$response = $this->api->make_request( $request );
+		$response = $api->make_request( $request );
 
-		return $this->api->process_response_stream(
+		return $api->process_response_stream(
 			$response,
 			function ( $response_data, $prev_chunk_candidates ) {
 				return $this->get_response_candidates( $response_data, $prev_chunk_candidates );
@@ -324,7 +321,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 */
 	private function get_response_candidates( array $response_data, ?Candidates $prev_chunk_candidates = null ): Candidates {
 		if ( ! isset( $response_data['candidates'] ) ) {
-			throw $this->api->create_missing_response_key_exception( 'candidates' );
+			throw $this->get_api_client()->create_missing_response_key_exception( 'candidates' );
 		}
 
 		$this->check_non_empty_candidates( $response_data['candidates'] );
@@ -371,7 +368,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 */
 	private function merge_candidates_chunk( array $candidates_data, array $chunk_data ): array {
 		if ( ! isset( $chunk_data['candidates'] ) ) {
-			throw $this->api->create_missing_response_key_exception( 'candidates' );
+			throw $this->get_api_client()->create_missing_response_key_exception( 'candidates' );
 		}
 
 		$other_data = $chunk_data;
@@ -398,7 +395,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	private function prepare_candidate_content( array $candidate_data, int $index ): Content {
 		if ( ! isset( $candidate_data['content']['parts'] ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->api->create_missing_response_key_exception( "candidates.{$index}.content.parts" );
+			throw $this->get_api_client()->create_missing_response_key_exception( "candidates.{$index}.content.parts" );
 		}
 
 		foreach ( $candidate_data['content']['parts'] as $index => $part ) {
@@ -464,7 +461,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			}
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->api->create_response_exception( $message );
+			throw $this->get_api_client()->create_response_exception( $message );
 		}
 	}
 

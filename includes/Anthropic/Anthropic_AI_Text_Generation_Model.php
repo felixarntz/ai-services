@@ -24,11 +24,13 @@ use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Felix_Arntz\AI_Services\Services\Util\Formatter;
@@ -42,17 +44,10 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since 0.5.0 Renamed from `Anthropic_AI_Model`.
  */
-class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+	use With_API_Client_Trait;
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
-
-	/**
-	 * The AI API client instance.
-	 *
-	 * @since 0.1.0
-	 * @var Generative_AI_API_Client
-	 */
-	protected $api;
 
 	/**
 	 * The tools available to use for the model.
@@ -91,7 +86,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param Generative_AI_API_Client $api             The AI API client instance.
+	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param string                   $model           The model slug.
 	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
 	 *                                                  {@see Anthropic_AI_Service::get_model()} for the list of
@@ -100,8 +95,8 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( Generative_AI_API_Client $api, string $model, array $model_params = array(), array $request_options = array() ) {
-		$this->api = $api;
+	public function __construct( Generative_AI_API_Client $api_client, string $model, array $model_params = array(), array $request_options = array() ) {
+		$this->set_api_client( $api_client );
 
 		parent::__construct( $model, $model_params, $request_options );
 	}
@@ -169,11 +164,12 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_generate_text_request( array $contents, array $request_options ): Candidates {
+		$api    = $this->get_api_client();
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$params['model'] = $this->get_model_slug();
 
-		$request  = $this->api->create_post_request(
+		$request  = $api->create_post_request(
 			'messages',
 			$params,
 			array_merge(
@@ -181,9 +177,9 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				$request_options
 			)
 		);
-		$response = $this->api->make_request( $request );
+		$response = $api->make_request( $request );
 
-		return $this->api->process_response_data(
+		return $api->process_response_data(
 			$response,
 			function ( $response_data ) {
 				return $this->get_response_candidates( $response_data );
@@ -204,12 +200,13 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	protected function send_stream_generate_text_request( array $contents, array $request_options ): Generator {
+		$api    = $this->get_api_client();
 		$params = $this->prepare_generate_text_params( $contents );
 
 		$params['model']  = $this->get_model_slug();
 		$params['stream'] = true;
 
-		$request  = $this->api->create_post_request(
+		$request  = $api->create_post_request(
 			'messages',
 			$params,
 			array_merge(
@@ -218,9 +215,9 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				array( 'stream' => true )
 			)
 		);
-		$response = $this->api->make_request( $request );
+		$response = $api->make_request( $request );
 
-		return $this->api->process_response_stream(
+		return $api->process_response_stream(
 			$response,
 			function ( $response_data, $prev_chunk_candidates ) {
 				if (
@@ -305,11 +302,11 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 			} elseif ( isset( $response_data['type'] ) ) {
 				// First chunk of a streaming response.
 				if ( ! isset( $response_data['message'] ) ) {
-					throw $this->api->create_missing_response_key_exception( 'message' );
+					throw $this->get_api_client()->create_missing_response_key_exception( 'message' );
 				}
 				$chunk_data = $response_data['message'];
 			} else {
-				throw $this->api->create_response_exception(
+				throw $this->get_api_client()->create_response_exception(
 					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					__( 'Unexpected response missing previous stream chunk.', 'ai-services' )
 				);
@@ -355,14 +352,14 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	private function merge_candidate_chunk( array $candidate_data, array $chunk_data ): array {
 		if ( ! isset( $chunk_data['type'] ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->api->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
+			throw $this->get_api_client()->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
 		}
 
 		switch ( $chunk_data['type'] ) {
 			case 'content_block_start':
 				// First chunk of a new content part in a streaming response.
 				if ( ! isset( $chunk_data['content_block'] ) ) {
-					throw $this->api->create_missing_response_key_exception( 'content_block' );
+					throw $this->get_api_client()->create_missing_response_key_exception( 'content_block' );
 				}
 				$candidate_data['content']['parts'] = array(
 					array( 'text' => $chunk_data['content_block']['text'] ),
@@ -370,13 +367,13 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				break;
 			case 'content_block_delta':
 				if ( ! isset( $chunk_data['delta']['text'] ) ) {
-					throw $this->api->create_missing_response_key_exception( 'delta.text' );
+					throw $this->get_api_client()->create_missing_response_key_exception( 'delta.text' );
 				}
 				$candidate_data['content']['parts'][0]['text'] = $chunk_data['delta']['text'];
 				break;
 			case 'message_delta':
 				if ( ! isset( $chunk_data['delta'] ) ) {
-					throw $this->api->create_missing_response_key_exception( 'delta' );
+					throw $this->get_api_client()->create_missing_response_key_exception( 'delta' );
 				}
 				$candidate_data['content']['parts'][0]['text'] = '';
 				$candidate_data                                = array_merge(
@@ -402,7 +399,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				break;
 			default:
 				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-				throw $this->api->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
+				throw $this->get_api_client()->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
 		}
 
 		return $candidate_data;
@@ -420,7 +417,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 */
 	private function prepare_api_response_for_content( array $response_data ): Content {
 		if ( ! isset( $response_data['content'] ) ) {
-			throw $this->api->create_missing_response_key_exception( 'content' );
+			throw $this->get_api_client()->create_missing_response_key_exception( 'content' );
 		}
 
 		$role = isset( $response_data['role'] ) && 'user' === $response_data['role']
@@ -457,7 +454,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 					),
 				);
 			} else {
-				throw $this->api->create_response_exception(
+				throw $this->get_api_client()->create_response_exception(
 					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 					__( 'The response includes an unexpected content part.', 'ai-services' )
 				);

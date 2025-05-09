@@ -8,50 +8,30 @@
 
 namespace Felix_Arntz\AI_Services\Google;
 
-use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
-use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
-use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
-use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
-use Felix_Arntz\AI_Services\Services\API\Types\Tools;
+use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Service;
 use Felix_Arntz\AI_Services\Services\Contracts\Authentication;
-use Felix_Arntz\AI_Services\Services\Contracts\Generation_Config;
-use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
-use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
+use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\HTTP\HTTP_With_Streams;
+use Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Request_Handler;
-use InvalidArgumentException;
 
 /**
  * Class for the Google AI service.
  *
  * @since 0.1.0
+ * @since n.e.x.t Now extends `Abstract_AI_Service`.
  */
-class Google_AI_Service implements Generative_AI_Service {
+class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
+	use With_API_Client_Trait;
 
 	const DEFAULT_API_BASE_URL = 'https://generativelanguage.googleapis.com';
 	const DEFAULT_API_VERSION  = 'v1beta';
-
-	/**
-	 * The service metadata.
-	 *
-	 * @since n.e.x.t
-	 * @var Service_Metadata
-	 */
-	private $metadata;
-
-	/**
-	 * The AI API client instance.
-	 *
-	 * @since 0.1.0
-	 * @var Generative_AI_API_Client
-	 */
-	private $api;
 
 	/**
 	 * Constructor.
@@ -64,57 +44,16 @@ class Google_AI_Service implements Generative_AI_Service {
 	 *                                          new HTTP_With_Streams instance.
 	 */
 	public function __construct( Service_Metadata $metadata, Authentication $authentication, Request_Handler $request_handler = null ) {
-		if ( ! $request_handler ) {
-			$request_handler = new HTTP_With_Streams();
-		}
-		$this->metadata = $metadata;
-		$this->api      = new Google_AI_API_Client(
-			self::DEFAULT_API_BASE_URL,
-			self::DEFAULT_API_VERSION,
-			'Google Generative Language',
-			$request_handler,
-			$authentication
+		$this->set_service_metadata( $metadata );
+		$this->set_api_client(
+			new Google_AI_API_Client(
+				self::DEFAULT_API_BASE_URL,
+				self::DEFAULT_API_VERSION,
+				'Google Generative Language',
+				$request_handler ?? new HTTP_With_Streams(),
+				$authentication
+			)
 		);
-	}
-
-	/**
-	 * Gets the service slug.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return string The service slug.
-	 */
-	public function get_service_slug(): string {
-		return $this->metadata->get_slug();
-	}
-
-	/**
-	 * Gets the service metadata.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @return Service_Metadata The service metadata.
-	 */
-	public function get_service_metadata(): Service_Metadata {
-		return $this->metadata;
-	}
-
-	/**
-	 * Checks whether the service is connected.
-	 *
-	 * This is typically used to check whether the current service credentials are valid.
-	 *
-	 * @since 0.2.0
-	 *
-	 * @return bool True if the service is connected, false otherwise.
-	 */
-	public function is_connected(): bool {
-		try {
-			$this->list_models();
-			return true;
-		} catch ( Generative_AI_Exception $e ) {
-			return false;
-		}
 	}
 
 	/**
@@ -130,11 +69,13 @@ class Google_AI_Service implements Generative_AI_Service {
 	 * @throws Generative_AI_Exception Thrown if the request fails or the response is invalid.
 	 */
 	public function list_models( array $request_options = array() ): array {
-		$request       = $this->api->create_get_request( 'models', array(), $request_options );
-		$response_data = $this->api->make_request( $request )->get_data();
+		$api = $this->get_api_client();
+
+		$request       = $api->create_get_request( 'models', array(), $request_options );
+		$response_data = $api->make_request( $request )->get_data();
 
 		if ( ! isset( $response_data['models'] ) || ! $response_data['models'] ) {
-			throw $this->api->create_missing_response_key_exception( 'models' );
+			throw $api->create_missing_response_key_exception( 'models' );
 		}
 
 		$gemini_legacy_capabilities = array(
@@ -201,60 +142,31 @@ class Google_AI_Service implements Generative_AI_Service {
 	}
 
 	/**
-	 * Gets a generative model instance for the provided model parameters.
+	 * Creates a new model instance for the provided model metadata and parameters.
 	 *
-	 * @since 0.1.0
-	 * @since 0.5.0 Support for the $tools and $toolConfig arguments was added.
+	 * @since n.e.x.t
 	 *
-	 * @param array<string, mixed> $model_params    {
-	 *     Optional. Model parameters. Default empty array.
-	 *
-	 *     @type string                 $feature           Required. Unique identifier of the feature that the model
-	 *                                                     will be used for. Must only contain lowercase letters,
-	 *                                                     numbers, hyphens.
-	 *     @type string                 $model             The model slug. By default, the model will be determined
-	 *                                                     based on heuristics such as the requested capabilities.
-	 *     @type string[]               $capabilities      Capabilities requested for the model to support. It is
-	 *                                                     recommended to specify this if you do not explicitly specify
-	 *                                                     a model slug.
-	 *     @type Tools|null             $tools             The tools to use for the model. Default none.
-	 *     @type Tool_Config|null       $toolConfig        Tool configuration options. Default none.
-	 *     @type Generation_Config|null $generationConfig  Model generation configuration options. Default none.
-	 *     @type string|Parts|Content   $systemInstruction The system instruction for the model. Default none.
-	 *     @type Safety_Setting[]       $safetySettings    Optional. The safety settings for the model. Default empty
-	 *                                                     array.
-	 * }
-	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
-	 * @return Generative_AI_Model The generative model.
-	 *
-	 * @throws InvalidArgumentException Thrown if the model slug or parameters are invalid.
-	 * @throws Generative_AI_Exception Thrown if getting the model fails.
+	 * @param Model_Metadata       $model_metadata  The model metadata.
+	 * @param array<string, mixed> $model_params    Model parameters. See {@see Generative_AI_Service::get_model()} for
+	 *                                              a list of available parameters.
+	 * @param array<string, mixed> $request_options The request options.
+	 * @return Generative_AI_Model The new model instance.
 	 */
-	public function get_model( array $model_params = array(), array $request_options = array() ): Generative_AI_Model {
-		if ( isset( $model_params['model'] ) ) {
-			$model = $model_params['model'];
-			unset( $model_params['model'] );
-		} else {
-			if ( isset( $model_params['capabilities'] ) ) {
-				$model_slugs = AI_Capabilities::get_model_slugs_for_capabilities(
-					$this->list_models( $request_options ),
-					$model_params['capabilities']
-				);
-			} else {
-				$model_slugs = array_keys( $this->list_models( $request_options ) );
-			}
-			$model = $this->sort_models_by_preference( $model_slugs )[0];
-		}
+	protected function create_model_instance( Model_Metadata $model_metadata, array $model_params, array $request_options ): Generative_AI_Model {
+		$model_class = AI_Capabilities::get_model_class_for_capabilities(
+			array(
+				Google_AI_Text_Generation_Model::class,
+				Google_AI_Image_Generation_Model::class,
+			),
+			$model_metadata->get_capabilities()
+		);
 
-		// TODO: Not ideal to have this hard-coded. Refactor.
-		if (
-			str_starts_with( $model, 'imagen-' ) ||
-			( isset( $model_params['capabilities'] ) && in_array( AI_Capability::IMAGE_GENERATION, $model_params['capabilities'], true ) )
-		) {
-			return new Google_AI_Image_Generation_Model( $this->api, $model, $model_params, $request_options );
-		}
-
-		return new Google_AI_Text_Generation_Model( $this->api, $model, $model_params, $request_options );
+		return new $model_class(
+			$this->get_api_client(),
+			$model_metadata->get_slug(),
+			$model_params,
+			$request_options
+		);
 	}
 
 	/**
@@ -265,7 +177,7 @@ class Google_AI_Service implements Generative_AI_Service {
 	 * @param string[] $model_slugs The model slugs to sort.
 	 * @return string[] The model slugs, sorted by preference.
 	 */
-	private function sort_models_by_preference( array $model_slugs ): array {
+	protected function sort_models_by_preference( array $model_slugs ): array {
 		$get_preference_group = static function ( $model_slug ) {
 			if ( str_starts_with( $model_slug, 'gemini-2.0' ) ) {
 				if ( str_contains( $model_slug, '-flash' ) ) {

@@ -410,9 +410,12 @@ final class AI_Services_Command {
 		$models = $this->get_service_models( $slug );
 		$models = array_map(
 			static function ( $model_metadata ) {
+				// @phpstan-ignore-next-line
 				if ( $model_metadata instanceof Model_Metadata ) {
+					// This check is only here for backward compatibility. TODO: Remove in the next major.
 					return $model_metadata->to_array();
 				}
+				// @phpstan-ignore-next-line
 				return $model_metadata;
 			},
 			$models

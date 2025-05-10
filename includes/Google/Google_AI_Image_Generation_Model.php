@@ -14,6 +14,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config;
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
@@ -57,7 +58,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 * @since 0.5.0
 	 *
 	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
-	 * @param string                   $model           The model slug.
+	 * @param Model_Metadata           $metadata        The model metadata.
 	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
 	 *                                                  {@see Google_AI_Service::get_model()} for the list of available
 	 *                                                  parameters. Default empty array.
@@ -65,7 +66,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( Generative_AI_API_Client $api_client, string $model, array $model_params = array(), array $request_options = array() ) {
+	public function __construct( Generative_AI_API_Client $api_client, Model_Metadata $metadata, array $model_params = array(), array $request_options = array() ) {
 		$this->set_api_client( $api_client );
 
 		// Since image generation can be heavy, increase default request timeout to 30 seconds.
@@ -73,7 +74,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 			$request_options['timeout'] = 30;
 		}
 
-		parent::__construct( $model, $model_params, $request_options );
+		parent::__construct( $metadata, $model_params, $request_options );
 	}
 
 	/**

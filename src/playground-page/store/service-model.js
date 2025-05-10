@@ -42,15 +42,15 @@ const filterAvailableServices = memoize(
 const filterAvailableModels = memoize(
 	( availableModels, requiredCapabilities ) => {
 		return Object.values( availableModels )
-			.filter( ( modelData ) => {
+			.filter( ( modelMetadata ) => {
 				return requiredCapabilities.every( ( capability ) =>
-					modelData.capabilities.includes( capability )
+					modelMetadata.capabilities.includes( capability )
 				);
 			} )
-			.map( ( modelData ) => {
+			.map( ( modelMetadata ) => {
 				return {
-					identifier: modelData.slug,
-					label: modelData.name,
+					identifier: modelMetadata.slug,
+					label: modelMetadata.name,
 				};
 			} );
 	}

@@ -12,6 +12,7 @@ use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part;
 use Felix_Arntz\AI_Services\Services\API\Types\Parts\Function_Call_Part;
@@ -87,7 +88,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @since 0.1.0
 	 *
 	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
-	 * @param string                   $model           The model slug.
+	 * @param Model_Metadata           $metadata        The model metadata.
 	 * @param array<string, mixed>     $model_params    Optional. Additional model parameters. See
 	 *                                                  {@see OpenAI_AI_Service::get_model()} for the list of available
 	 *                                                  parameters. Default empty array.
@@ -95,10 +96,10 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( Generative_AI_API_Client $api_client, string $model, array $model_params = array(), array $request_options = array() ) {
+	public function __construct( Generative_AI_API_Client $api_client, Model_Metadata $metadata, array $model_params = array(), array $request_options = array() ) {
 		$this->set_api_client( $api_client );
 
-		parent::__construct( $model, $model_params, $request_options );
+		parent::__construct( $metadata, $model_params, $request_options );
 	}
 
 	/**

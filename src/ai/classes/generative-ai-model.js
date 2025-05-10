@@ -28,22 +28,18 @@ export default class GenerativeAiModel {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {Object}   model              Model object.
-	 * @param {string}   model.serviceSlug  Service slug.
-	 * @param {string}   model.slug         Model slug.
-	 * @param {string}   model.name         Model name.
-	 * @param {string[]} model.capabilities AI capabilities that the model supports.
-	 * @param {Object}   modelParams        Model parameters passed. At a minimum this must include the unique
-	 *                                      "feature" identifier. It can also include the model slug and other optional
-	 *                                      parameters.
+	 * @param {Object} model             Model object.
+	 * @param {string} model.serviceSlug Service slug.
+	 * @param {Object} model.metadata    Model metadata.
+	 * @param {Object} modelParams       Model parameters passed. At a minimum this must include the unique
+	 *                                   "feature" identifier. It can also include the model slug and other optional
+	 *                                   parameters.
 	 */
-	constructor( { serviceSlug, slug, name, capabilities }, modelParams ) {
+	constructor( { serviceSlug, metadata }, modelParams ) {
 		validateModelParams( modelParams );
 
 		this.serviceSlug = serviceSlug;
-		this.slug = slug;
-		this.name = name;
-		this.capabilities = capabilities;
+		this.metadata = metadata;
 		this.modelParams = modelParams || EMPTY_OBJECT;
 	}
 
@@ -60,7 +56,18 @@ export default class GenerativeAiModel {
 		 * The client-side GenerativeAiService class still attempts to find a suitable model based on the model slug or
 		 * capabilities, but it is only done to provide parity with the server-side API.
 		 */
-		return this.slug;
+		return this.metadata.slug;
+	}
+
+	/**
+	 * Gets the model metadata.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return {Object} Model metadata.
+	 */
+	getModelMetadata() {
+		return this.metadata;
 	}
 
 	/**
@@ -73,7 +80,7 @@ export default class GenerativeAiModel {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( content ) {
-		validateCapabilities( this.capabilities, [
+		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 		] );
 
@@ -107,7 +114,7 @@ export default class GenerativeAiModel {
 	 *                           content.
 	 */
 	async streamGenerateText( content ) {
-		validateCapabilities( this.capabilities, [
+		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 		] );
 
@@ -141,7 +148,7 @@ export default class GenerativeAiModel {
 	 * @return {ChatSession} Chat session.
 	 */
 	startChat( history ) {
-		validateCapabilities( this.capabilities, [
+		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 			enums.AiCapability.CHAT_HISTORY,
 		] );
@@ -159,7 +166,7 @@ export default class GenerativeAiModel {
 	 * @return {Promise<Object[]>} Model response candidates with the generated image.
 	 */
 	async generateImage( content ) {
-		validateCapabilities( this.capabilities, [
+		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.IMAGE_GENERATION,
 		] );
 

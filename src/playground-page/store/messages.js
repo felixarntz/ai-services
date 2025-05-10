@@ -510,7 +510,7 @@ const actions = {
 				},
 				model: {
 					slug: modelSlug,
-					name: model.name || modelSlug,
+					name: model.metadata?.name || modelSlug,
 				},
 			};
 

@@ -143,7 +143,7 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
 	 */
 	async generateText( content ) {
-		validateCapabilities( this.capabilities, [
+		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 		] );
 
@@ -173,7 +173,7 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 	 *                           content.
 	 */
 	async streamGenerateText( content ) {
-		validateCapabilities( this.capabilities, [
+		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 		] );
 

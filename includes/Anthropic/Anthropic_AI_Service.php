@@ -127,7 +127,7 @@ class Anthropic_AI_Service extends Abstract_AI_Service implements With_API_Clien
 	protected function create_model_instance( Model_Metadata $model_metadata, array $model_params, array $request_options ): Generative_AI_Model {
 		return new Anthropic_AI_Text_Generation_Model(
 			$this->get_api_client(),
-			$model_metadata->get_slug(),
+			$model_metadata,
 			$model_params,
 			$request_options
 		);

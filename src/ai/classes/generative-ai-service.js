@@ -50,7 +50,7 @@ export default class GenerativeAiService {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return {string} Service metadata.
+	 * @return {Object} Service metadata.
 	 */
 	getServiceMetadata() {
 		return this.metadata;
@@ -84,7 +84,7 @@ export default class GenerativeAiService {
 		return new GenerativeAiModel(
 			{
 				serviceSlug: this.metadata.slug,
-				...model,
+				metadata: { ...model },
 			},
 			modelParams
 		);

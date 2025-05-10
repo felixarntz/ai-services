@@ -163,7 +163,7 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 
 		return new $model_class(
 			$this->get_api_client(),
-			$model_metadata->get_slug(),
+			$model_metadata,
 			$model_params,
 			$request_options
 		);

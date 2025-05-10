@@ -8,8 +8,10 @@
 
 namespace Felix_Arntz\AI_Services\Services\Base;
 
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Model;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Base class for an AI model.
@@ -19,12 +21,12 @@ use InvalidArgumentException;
 abstract class Abstract_AI_Model implements Generative_AI_Model {
 
 	/**
-	 * The model slug.
+	 * The model metadata.
 	 *
-	 * @since 0.5.0
-	 * @var string
+	 * @since n.e.x.t
+	 * @var Model_Metadata
 	 */
-	private $model;
+	private $metadata;
 
 	/**
 	 * The request options.
@@ -38,8 +40,9 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	 * Constructor.
 	 *
 	 * @since 0.5.0
+	 * @since n.e.x.t Now requires model metadata to be passed as first parameter instead of model slug.
 	 *
-	 * @param string               $model           The model slug.
+	 * @param Model_Metadata       $metadata        The model metadata.
 	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. See
 	 *                                              {@see Generative_AI_Service::get_model()} for the list of available
 	 *                                              parameters. Default empty array.
@@ -47,9 +50,9 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	 *
 	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
 	 */
-	public function __construct( string $model, array $model_params = array(), array $request_options = array() ) {
+	public function __construct( Model_Metadata $metadata, array $model_params = array(), array $request_options = array() ) {
 		$this->request_options = $request_options;
-		$this->model           = $model;
+		$this->set_model_metadata( $metadata );
 		$this->set_model_params( $model_params );
 	}
 
@@ -61,7 +64,24 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	 * @return string The model slug.
 	 */
 	final public function get_model_slug(): string {
-		return $this->model;
+		return $this->get_model_metadata()->get_slug();
+	}
+
+	/**
+	 * Gets the model metadata.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return Model_Metadata The model metadata.
+	 *
+	 * @throws RuntimeException Thrown if the model metadata is not set.
+	 */
+	final public function get_model_metadata(): Model_Metadata {
+		if ( ! $this->metadata instanceof Model_Metadata ) {
+			throw new RuntimeException( 'Model metadata must be set in the constructor.' );
+		}
+
+		return $this->metadata;
 	}
 
 	/**
@@ -108,5 +128,16 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sets the model metadata.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Model_Metadata $metadata The model metadata.
+	 */
+	final protected function set_model_metadata( Model_Metadata $metadata ): void {
+		$this->metadata = $metadata;
 	}
 }

@@ -24,24 +24,24 @@ const serviceInstances = {};
  * @since 0.1.0
  *
  * @param {Object} serviceData                  Service data.
- * @param {string} serviceData.slug             Service slug.
- * @param {string} serviceData.name             Service name.
+ * @param {Object} serviceData.metadata         Service metadata.
  * @param {Object} serviceData.available_models Metadata for each model, mapped by model slug.
  * @return {GenerativeAiService} Generative AI service instance.
  */
 function getGenerativeAiService( serviceData ) {
-	if ( ! serviceInstances[ serviceData.slug ] ) {
-		if ( serviceData.slug === 'browser' ) {
-			serviceInstances[ serviceData.slug ] =
-				new BrowserGenerativeAiService( serviceData );
-		} else {
-			serviceInstances[ serviceData.slug ] = new GenerativeAiService(
+	const slug = serviceData.metadata.slug;
+
+	if ( ! serviceInstances[ slug ] ) {
+		if ( slug === 'browser' ) {
+			serviceInstances[ slug ] = new BrowserGenerativeAiService(
 				serviceData
 			);
+		} else {
+			serviceInstances[ slug ] = new GenerativeAiService( serviceData );
 		}
 	}
 
-	return serviceInstances[ serviceData.slug ];
+	return serviceInstances[ slug ];
 }
 
 /**

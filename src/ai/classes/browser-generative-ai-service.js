@@ -31,7 +31,7 @@ export default class BrowserGenerativeAiService extends GenerativeAiService {
 		return new BrowserGenerativeAiModel(
 			{
 				serviceSlug: this.metadata.slug,
-				...model,
+				metadata: { ...model },
 			},
 			modelParams
 		);

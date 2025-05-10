@@ -8,7 +8,6 @@
 
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
-use Felix_Arntz\AI_Services\Google\Types\Safety_Setting;
 use Felix_Arntz\AI_Services\Services\API\Enums\Content_Role;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidate;
 use Felix_Arntz\AI_Services\Services\API\Types\Candidates;
@@ -237,15 +236,6 @@ abstract class Service_Generate_Content_REST_Route extends Abstract_REST_Route {
 				$model_params['systemInstruction'] = Content::from_array( $model_params['systemInstruction'] );
 			} else {
 				$model_params['systemInstruction'] = Parts::from_array( $model_params['systemInstruction'] );
-			}
-		}
-
-		// This is Google specific. TODO: Handle this via filter callback or similar.
-		if ( isset( $model_params['safetySettings'] ) && is_array( $model_params['safetySettings'] ) ) {
-			foreach ( $model_params['safetySettings'] as $index => $safety_setting ) {
-				if ( is_array( $safety_setting ) ) {
-					$model_params['safetySettings'][ $index ] = Safety_Setting::from_array( $safety_setting );
-				}
 			}
 		}
 

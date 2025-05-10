@@ -90,21 +90,37 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		$this->set_tool_config_from_model_params( $model_params );
 		$this->set_tools_from_model_params( $model_params );
 		$this->set_system_instruction_from_model_params( $model_params );
-
-		if ( isset( $model_params['safetySettings'] ) ) {
-			foreach ( $model_params['safetySettings'] as $safety_setting ) {
-				if ( ! $safety_setting instanceof Safety_Setting ) {
-					throw new InvalidArgumentException(
-						'The safetySettings parameter must contain Safety_Setting instances.'
-					);
-				}
-			}
-			$this->safety_settings = $model_params['safetySettings'];
-		} else {
-			$this->safety_settings = array();
-		}
+		$this->set_safety_settings_from_model_params( $model_params );
 
 		$this->set_request_options( $request_options );
+	}
+
+	/**
+	 * Sets the safety settings if provided in the `safetySettings` model parameter.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $model_params The model parameters.
+	 *
+	 * @throws InvalidArgumentException Thrown if the `safetySettings` model parameter is invalid.
+	 */
+	protected function set_safety_settings_from_model_params( array $model_params ): void {
+		$this->safety_settings = array();
+		if ( ! isset( $model_params['safetySettings'] ) ) {
+			return;
+		}
+
+		foreach ( $model_params['safetySettings'] as $safety_setting ) {
+			if ( is_array( $safety_setting ) ) {
+				$safety_setting = Safety_Setting::from_array( $safety_setting );
+			}
+			if ( ! $safety_setting instanceof Safety_Setting ) {
+				throw new InvalidArgumentException(
+					'The safetySettings parameter must contain Safety_Setting instances.'
+				);
+			}
+			$this->safety_settings[] = $safety_setting;
+		}
 	}
 
 	/**

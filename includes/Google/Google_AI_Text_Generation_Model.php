@@ -34,10 +34,13 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Output;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\Model_Param_System_Instruction_Trait;
+use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Text_Generation_Config_Trait;
+use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Tool_Config_Trait;
+use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Tools_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
-use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use Generator;
 use InvalidArgumentException;
@@ -52,30 +55,10 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	use With_API_Client_Trait;
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
-
-	/**
-	 * The tools available to use for the model.
-	 *
-	 * @since 0.5.0
-	 * @var Tools|null
-	 */
-	protected $tools;
-
-	/**
-	 * The tool configuration, if applicable.
-	 *
-	 * @since 0.5.0
-	 * @var Tool_Config|null
-	 */
-	protected $tool_config;
-
-	/**
-	 * The generation configuration.
-	 *
-	 * @since 0.1.0
-	 * @var Text_Generation_Config|null
-	 */
-	protected $generation_config;
+	use Model_Param_Text_Generation_Config_Trait;
+	use Model_Param_Tool_Config_Trait;
+	use Model_Param_Tools_Trait;
+	use Model_Param_System_Instruction_Trait;
 
 	/**
 	 * The safety settings.
@@ -84,14 +67,6 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @var Safety_Setting[]
 	 */
 	protected $safety_settings;
-
-	/**
-	 * The system instruction.
-	 *
-	 * @since 0.1.0
-	 * @var Content|null
-	 */
-	protected $system_instruction;
 
 	/**
 	 * Constructor.
@@ -109,59 +84,12 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 */
 	public function __construct( Generative_AI_API_Client $api_client, Model_Metadata $metadata, array $model_params = array(), array $request_options = array() ) {
 		$this->set_api_client( $api_client );
+		$this->set_model_metadata( $metadata );
 
-		parent::__construct( $metadata, $model_params, $request_options );
-	}
-
-	/**
-	 * Sets the model parameters on the class instance.
-	 *
-	 * @since 0.5.0
-	 *
-	 * @param array<string, mixed> $model_params The model parameters.
-	 *
-	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
-	 */
-	protected function set_model_params( array $model_params ): void {
-		$this->set_props_from_args(
-			array(
-				array(
-					'arg_key'           => 'tools',
-					'property_name'     => 'tools',
-					'sanitize_callback' => static function ( $tools ) {
-						if ( $tools instanceof Tools ) {
-							return $tools;
-						}
-						return Tools::from_array( $tools );
-					},
-				),
-				array(
-					'arg_key'           => 'toolConfig',
-					'property_name'     => 'tool_config',
-					'sanitize_callback' => static function ( $tool_config ) {
-						if ( $tool_config instanceof Tool_Config ) {
-							return $tool_config;
-						}
-						return Tool_Config::from_array( $tool_config );
-					},
-				),
-				array(
-					'arg_key'           => 'generationConfig',
-					'property_name'     => 'generation_config',
-					'sanitize_callback' => static function ( $generation_config ) {
-						if ( $generation_config instanceof Text_Generation_Config ) {
-							return $generation_config;
-						}
-						return Text_Generation_Config::from_array( $generation_config );
-					},
-				),
-			),
-			$model_params
-		);
-
-		if ( isset( $model_params['systemInstruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
-		}
+		$this->set_text_generation_config_from_model_params( $model_params );
+		$this->set_tool_config_from_model_params( $model_params );
+		$this->set_tools_from_model_params( $model_params );
+		$this->set_system_instruction_from_model_params( $model_params );
 
 		if ( isset( $model_params['safetySettings'] ) ) {
 			foreach ( $model_params['safetySettings'] as $safety_setting ) {
@@ -175,6 +103,8 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		} else {
 			$this->safety_settings = array();
 		}
+
+		$this->set_request_options( $request_options );
 	}
 
 	/**
@@ -275,25 +205,26 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			),
 		);
 
-		if ( $this->tools ) {
-			$params['tools'] = $this->prepare_tools_param( $this->tools );
+		if ( $this->get_tools() ) {
+			$params['tools'] = $this->prepare_tools_param( $this->get_tools() );
 		}
 
-		if ( $this->tool_config ) {
-			$params['toolConfig'] = $this->prepare_tool_config_param( $this->tool_config );
+		if ( $this->get_tool_config() ) {
+			$params['toolConfig'] = $this->prepare_tool_config_param( $this->get_tool_config() );
 		}
 
-		if ( $this->generation_config ) {
-			$params                     = array_merge( $this->generation_config->get_additional_args(), $params );
+		$generation_config = $this->get_text_generation_config();
+		if ( $generation_config ) {
+			$params                     = array_merge( $generation_config->get_additional_args(), $params );
 			$params['generationConfig'] = Transformer::transform_generation_config_params(
 				isset( $params['generationConfig'] ) && is_array( $params['generationConfig'] ) ? $params['generationConfig'] : array(),
-				$this->generation_config,
+				$generation_config,
 				self::get_generation_config_transformers()
 			);
 		}
 
-		if ( $this->system_instruction ) {
-			$params['systemInstruction'] = $this->system_instruction->to_array();
+		if ( $this->get_system_instruction() ) {
+			$params['systemInstruction'] = $this->get_system_instruction()->to_array();
 		}
 
 		if ( $this->safety_settings ) {

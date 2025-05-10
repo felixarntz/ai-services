@@ -21,9 +21,10 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
+use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Image_Generation_Config_Trait;
+use Felix_Arntz\AI_Services\Services\Traits\Model_Param_System_Instruction_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Image_Generation_Trait;
-use Felix_Arntz\AI_Services\Services\Util\Formatter;
 use Felix_Arntz\AI_Services\Services\Util\Transformer;
 use InvalidArgumentException;
 
@@ -35,22 +36,8 @@ use InvalidArgumentException;
 class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Image_Generation {
 	use With_API_Client_Trait;
 	use With_Image_Generation_Trait;
-
-	/**
-	 * The generation configuration.
-	 *
-	 * @since 0.5.0
-	 * @var Image_Generation_Config|null
-	 */
-	protected $generation_config;
-
-	/**
-	 * The system instruction.
-	 *
-	 * @since 0.5.0
-	 * @var Content|null
-	 */
-	protected $system_instruction;
+	use Model_Param_Image_Generation_Config_Trait;
+	use Model_Param_System_Instruction_Trait;
 
 	/**
 	 * Constructor.
@@ -68,44 +55,16 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 */
 	public function __construct( Generative_AI_API_Client $api_client, Model_Metadata $metadata, array $model_params = array(), array $request_options = array() ) {
 		$this->set_api_client( $api_client );
+		$this->set_model_metadata( $metadata );
+
+		$this->set_image_generation_config_from_model_params( $model_params );
+		$this->set_system_instruction_from_model_params( $model_params );
 
 		// Since image generation can be heavy, increase default request timeout to 30 seconds.
 		if ( ! isset( $request_options['timeout'] ) ) {
 			$request_options['timeout'] = 30;
 		}
-
-		parent::__construct( $metadata, $model_params, $request_options );
-	}
-
-	/**
-	 * Sets the model parameters on the class instance.
-	 *
-	 * @since 0.5.0
-	 *
-	 * @param array<string, mixed> $model_params The model parameters.
-	 *
-	 * @throws InvalidArgumentException Thrown if the model parameters are invalid.
-	 */
-	protected function set_model_params( array $model_params ): void {
-		$this->set_props_from_args(
-			array(
-				array(
-					'arg_key'           => 'generationConfig',
-					'property_name'     => 'generation_config',
-					'sanitize_callback' => static function ( $generation_config ) {
-						if ( $generation_config instanceof Image_Generation_Config ) {
-							return $generation_config;
-						}
-						return Image_Generation_Config::from_array( $generation_config );
-					},
-				),
-			),
-			$model_params
-		);
-
-		if ( isset( $model_params['systemInstruction'] ) ) {
-			$this->system_instruction = Formatter::format_system_instruction( $model_params['systemInstruction'] );
-		}
+		$this->set_request_options( $request_options );
 	}
 
 	/**
@@ -159,8 +118,8 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 		if ( count( $contents ) > 1 ) {
 			$contents = array( $contents[ count( $contents ) - 1 ] );
 		}
-		if ( $this->system_instruction ) {
-			$contents = array_merge( array( $this->system_instruction ), $contents );
+		if ( $this->get_system_instruction() ) {
+			$contents = array_merge( array( $this->get_system_instruction() ), $contents );
 		}
 
 		$params = array(
@@ -175,10 +134,11 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 			),
 		);
 
-		if ( $this->generation_config ) {
+		$generation_config = $this->get_image_generation_config();
+		if ( $generation_config ) {
 			$params = Transformer::transform_generation_config_params(
-				array_merge( $this->generation_config->get_additional_args(), $params ),
-				$this->generation_config,
+				array_merge( $generation_config->get_additional_args(), $params ),
+				$generation_config,
 				self::get_generation_config_transformers( $this->get_model_slug() )
 			);
 		} else {

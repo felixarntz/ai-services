@@ -227,30 +227,6 @@ const selectors = {
 		}
 	),
 
-	getServiceName: createRegistrySelector( ( select ) => ( state, slug ) => {
-		const metadata = select( STORE_NAME ).getServiceMetadata( slug );
-		if ( metadata === undefined ) {
-			return undefined;
-		}
-		if ( metadata === null ) {
-			return '';
-		}
-		return metadata.name;
-	} ),
-
-	getServiceCredentialsUrl: createRegistrySelector(
-		( select ) => ( state, slug ) => {
-			const metadata = select( STORE_NAME ).getServiceMetadata( slug );
-			if ( metadata === undefined ) {
-				return undefined;
-			}
-			if ( metadata === null ) {
-				return '';
-			}
-			return metadata.credentials_url;
-		}
-	),
-
 	getRegisteredServiceSlugs: ( state ) => {
 		return state.serviceSlugs;
 	},

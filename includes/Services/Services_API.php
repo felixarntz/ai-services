@@ -343,41 +343,6 @@ final class Services_API {
 	}
 
 	/**
-	 * Gets the service name.
-	 *
-	 * @since 0.1.0
-	 * @deprecated n.e.x.t Use {@see Services_API::get_service_metadata()} instead.
-	 *
-	 * @param string $slug The service slug.
-	 * @return string The service name, or empty string if the service is not registered.
-	 */
-	public function get_service_name( string $slug ): string {
-		$metadata = $this->get_service_metadata( $slug );
-		if ( null === $metadata ) {
-			return '';
-		}
-		return $metadata->get_name();
-	}
-
-	/**
-	 * Gets the service credentials URL.
-	 *
-	 * @since 0.1.0
-	 * @deprecated n.e.x.t Use {@see Services_API::get_service_metadata()} instead.
-	 *
-	 * @param string $slug The service slug.
-	 * @return string The service credentials URL, or empty string if the service is not registered or if no
-	 *                credentials URL is specified.
-	 */
-	public function get_service_credentials_url( string $slug ): string {
-		$metadata = $this->get_service_metadata( $slug );
-		if ( null === $metadata ) {
-			return '';
-		}
-		return $metadata->get_credentials_url();
-	}
-
-	/**
 	 * Gets the list of all registered service slugs.
 	 *
 	 * @since 0.1.0

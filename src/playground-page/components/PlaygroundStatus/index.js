@@ -1,9 +1,4 @@
 /**
- * External dependencies
- */
-import { store as aiStore } from '@ai-services/ai';
-
-/**
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
@@ -28,22 +23,18 @@ export default function PlaygroundStatus() {
 			const {
 				getService,
 				getModel,
+				getServiceName,
 				getModelName,
 				getMessages,
 				isLoading,
 			} = select( playgroundStore );
-			const { getServiceName } = select( aiStore );
-
-			const currentService = getService();
 
 			return {
-				service: currentService,
+				service: getService(),
 				model: getModel(),
 				messages: getMessages(),
 				loading: isLoading(),
-				serviceName: currentService
-					? getServiceName( currentService )
-					: '',
+				serviceName: getServiceName(),
 				modelName: getModelName(),
 			};
 		} );

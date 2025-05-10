@@ -401,6 +401,21 @@ const selectors = {
 		return model;
 	} ),
 
+	getServiceName: createRegistrySelector( ( select ) => () => {
+		const service = select( preferencesStore ).get(
+			'ai-services-playground',
+			'service'
+		);
+		if ( ! service ) {
+			return false;
+		}
+		const serviceMetadata = select( aiStore ).getServiceMetadata( service );
+		if ( ! serviceMetadata ) {
+			return false;
+		}
+		return serviceMetadata.name;
+	} ),
+
 	getModelName: createRegistrySelector( ( select ) => () => {
 		const model = select( preferencesStore ).get(
 			'ai-services-playground',

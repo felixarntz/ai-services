@@ -504,9 +504,7 @@ const actions = {
 				foundationalCapability,
 				service: {
 					slug: serviceSlug,
-					name: registry
-						.select( aiStore )
-						.getServiceName( serviceSlug ),
+					name: service.metadata?.name || serviceSlug,
 				},
 				model: {
 					slug: modelSlug,

@@ -439,6 +439,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 						if (
 							str_starts_with( $mime_type, 'image/' )
 							|| str_starts_with( $mime_type, 'audio/' )
+							|| str_starts_with( $mime_type, 'video/' )
 						) {
 							$parts[] = array(
 								'inlineData' => array(
@@ -449,7 +450,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 							);
 						} else {
 							throw new Generative_AI_Exception(
-								'The Google AI API only supports text, image, audio, function call, and function response parts.'
+								'The Google AI API only supports text, image, audio, video, function call, and function response parts.'
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
@@ -457,6 +458,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 						if (
 							str_starts_with( $mime_type, 'image/' )
 							|| str_starts_with( $mime_type, 'audio/' )
+							|| str_starts_with( $mime_type, 'video/' )
 						) {
 							$parts[] = array(
 								'fileData' => array(
@@ -464,9 +466,16 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 									'fileUri'  => $part->get_file_uri(),
 								),
 							);
+						} elseif ( preg_match( '/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/)/', $part->get_file_uri() ) ) {
+							// Special case for YouTube video links.
+							$parts[] = array(
+								'fileData' => array(
+									'fileUri' => $part->get_file_uri(),
+								),
+							);
 						} else {
 							throw new Generative_AI_Exception(
-								'The Google AI API only supports text, image, audio, function call, and function response parts.'
+								'The Google AI API only supports text, image, audio, video, function call, and function response parts.'
 							);
 						}
 					} elseif ( $part instanceof Function_Call_Part ) {

@@ -255,7 +255,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				$response_type = $config->get_response_type();
 				if ( 'file_data' === $response_type ) {
 					throw new InvalidArgumentException(
-						esc_html__( 'Only base64-encoded data is supported as the response type.', 'ai-services' )
+						'Only base64-encoded data is supported as the response type.'
 					);
 				}
 				return '';

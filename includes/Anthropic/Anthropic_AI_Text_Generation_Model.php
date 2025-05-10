@@ -239,8 +239,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				$chunk_data = $response_data['message'];
 			} else {
 				throw $this->get_api_client()->create_response_exception(
-					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-					__( 'Unexpected response missing previous stream chunk.', 'ai-services' )
+					'Unexpected response missing previous stream chunk.'
 				);
 			}
 
@@ -283,8 +282,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 */
 	private function merge_candidate_chunk( array $candidate_data, array $chunk_data ): array {
 		if ( ! isset( $chunk_data['type'] ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw $this->get_api_client()->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
+			throw $this->get_api_client()->create_response_exception( 'Unexpected streaming chunk response.' );
 		}
 
 		switch ( $chunk_data['type'] ) {
@@ -331,7 +329,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				break;
 			default:
 				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-				throw $this->get_api_client()->create_response_exception( __( 'Unexpected streaming chunk response.', 'ai-services' ) );
+				throw $this->get_api_client()->create_response_exception( 'Unexpected streaming chunk response.' );
 		}
 
 		return $candidate_data;
@@ -387,8 +385,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				);
 			} else {
 				throw $this->get_api_client()->create_response_exception(
-					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-					__( 'The response includes an unexpected content part.', 'ai-services' )
+					'The response includes an unexpected content part.'
 				);
 			}
 		}
@@ -427,7 +424,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 						$mime_type = $part->get_mime_type();
 						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
 							throw new InvalidArgumentException(
-								esc_html__( 'The Anthropic API only supports text, inline image, function call, and function response parts.', 'ai-services' )
+								'The Anthropic API only supports text, inline image, function call, and function response parts.'
 							);
 						}
 						$parts[] = array(
@@ -451,11 +448,11 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 						$parts[]  = array(
 							'type'        => 'tool_result',
 							'tool_use_id' => $part->get_id(),
-							'content'     => wp_json_encode( $response ),
+							'content'     => json_encode( $response ), // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 						);
 					} else {
 						throw new InvalidArgumentException(
-							esc_html__( 'The Anthropic API only supports text, inline image, function call, and function response parts.', 'ai-services' )
+							'The Anthropic API only supports text, inline image, function call, and function response parts.'
 						);
 					}
 				}
@@ -517,7 +514,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 		foreach ( $tools as $tool ) {
 			if ( ! $tool instanceof Function_Declarations_Tool ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'Invalid tool: Only function declarations tools are supported.', 'ai-services' )
+					'Invalid tool: Only function declarations tools are supported.'
 				);
 			}
 

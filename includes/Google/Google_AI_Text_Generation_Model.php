@@ -95,7 +95,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			foreach ( $model_params['safetySettings'] as $safety_setting ) {
 				if ( ! $safety_setting instanceof Safety_Setting ) {
 					throw new InvalidArgumentException(
-						esc_html__( 'The safetySettings parameter must contain Safety_Setting instances.', 'ai-services' )
+						'The safetySettings parameter must contain Safety_Setting instances.'
 					);
 				}
 			}
@@ -371,7 +371,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		}
 
 		if ( count( $errors ) === count( $candidates_data ) ) {
-			$message = __( 'The response does not include any candidates with content.', 'ai-services' );
+			$message = 'The response does not include any candidates with content.';
 
 			$errors = array_unique(
 				array_filter(
@@ -384,9 +384,9 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			if ( count( $errors ) > 0 ) {
 				$message .= ' ' . sprintf(
 					/* translators: %s: finish reason code */
-					__( 'Finish reason: %s', 'ai-services' ),
+					'Finish reason: %s',
 					implode(
-						wp_get_list_item_separator(),
+						', ',
 						$errors
 					)
 				);
@@ -433,7 +433,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 							);
 						} else {
 							throw new Generative_AI_Exception(
-								esc_html__( 'The Google AI API only supports text, image, audio, function call, and function response parts.', 'ai-services' )
+								'The Google AI API only supports text, image, audio, function call, and function response parts.'
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
@@ -450,7 +450,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 							);
 						} else {
 							throw new Generative_AI_Exception(
-								esc_html__( 'The Google AI API only supports text, image, audio, function call, and function response parts.', 'ai-services' )
+								'The Google AI API only supports text, image, audio, function call, and function response parts.'
 							);
 						}
 					} elseif ( $part instanceof Function_Call_Part ) {
@@ -477,7 +477,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 						);
 					} else {
 						throw new Generative_AI_Exception(
-							esc_html__( 'The Google AI API only supports text, image, audio, function call, and function response parts.', 'ai-services' )
+							'The Google AI API only supports text, image, audio, function call, and function response parts.'
 						);
 					}
 				}
@@ -567,7 +567,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		foreach ( $tools as $tool ) {
 			if ( ! $tool instanceof Function_Declarations_Tool ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'Invalid tool: Only function declarations tools are supported.', 'ai-services' )
+					'Invalid tool: Only function declarations tools are supported.'
 				);
 			}
 

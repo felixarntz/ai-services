@@ -342,8 +342,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			foreach ( $choice_data['message']['tool_calls'] as $tool_call ) {
 				if ( ! isset( $tool_call['type'] ) || 'function' !== $tool_call['type'] || ! isset( $tool_call['function'] ) ) {
 					throw $this->get_api_client()->create_response_exception(
-						// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-						__( 'The response includes a tool of an unexpected type.', 'ai-services' )
+						'The response includes a tool of an unexpected type.'
 					);
 				}
 				$parts[] = array(
@@ -359,8 +358,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		}
 		if ( count( $parts ) === 0 ) {
 			throw $this->get_api_client()->create_response_exception(
-				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-				__( 'The response includes unexpected content.', 'ai-services' )
+				'The response includes unexpected content.'
 			);
 		}
 
@@ -400,7 +398,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				$parts = $content->get_parts();
 				if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Function_Response_Part ) {
 					$response = $parts->get( 0 )->get_response();
-					return wp_json_encode( $response );
+					return json_encode( $response ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 				}
 
 				$parts = array();
@@ -424,19 +422,21 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 								'type'        => 'input_audio',
 								'input_audio' => array(
 									'data'   => $part->get_base64_data(),
-									'format' => wp_get_default_extension_for_mime_type( $mime_type ),
+									'format' => function_exists( 'wp_get_default_extension_for_mime_type' ) ?
+										wp_get_default_extension_for_mime_type( $mime_type ) :
+										str_replace( 'audio/', '', $mime_type ),
 								),
 							);
 						} else {
 							throw new InvalidArgumentException(
-								esc_html__( 'The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+								'The OpenAI API only supports text, image, and audio parts.'
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
 						$mime_type = $part->get_mime_type();
 						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
 							throw new InvalidArgumentException(
-								esc_html__( 'The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+								'The OpenAI API only supports text, image, and audio parts.'
 							);
 						}
 						$parts[] = array(
@@ -454,11 +454,11 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 						 */
 						if ( $part instanceof Function_Response_Part ) {
 							throw new InvalidArgumentException(
-								esc_html__( 'The OpenAI API only allows a single function response, and it has to be the only content of the message.', 'ai-services' )
+								'The OpenAI API only allows a single function response, and it has to be the only content of the message.'
 							);
 						} elseif ( ! $part instanceof Function_Call_Part ) {
 							throw new InvalidArgumentException(
-								esc_html__( 'The OpenAI API only supports text, image, and audio parts.', 'ai-services' )
+								'The OpenAI API only supports text, image, and audio parts.'
 							);
 						}
 					}
@@ -475,7 +475,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 							'id'       => $part->get_id(),
 							'function' => array(
 								'name'      => $part->get_name(),
-								'arguments' => wp_json_encode( $part->get_args() ),
+								'arguments' => json_encode( $part->get_args() ), // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 							),
 						);
 					}
@@ -564,7 +564,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		foreach ( $tools as $tool ) {
 			if ( ! $tool instanceof Function_Declarations_Tool ) {
 				throw new InvalidArgumentException(
-					esc_html__( 'Invalid tool: Only function declarations tools are supported.', 'ai-services' )
+					'Invalid tool: Only function declarations tools are supported.'
 				);
 			}
 

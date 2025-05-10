@@ -57,23 +57,17 @@ class Safety_Setting implements Arrayable {
 	public function __construct( string $category, string $threshold ) {
 		if ( ! $this->is_valid_category( $category ) ) {
 			throw new InvalidArgumentException(
-				esc_html(
-					sprintf(
-						/* translators: %s: invalid category encountered */
-						__( 'The category %s is invalid.', 'ai-services' ),
-						$category
-					)
+				sprintf(
+					'The category %s is invalid.',
+					htmlspecialchars( $category ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}
 		if ( ! $this->is_valid_threshold( $threshold ) ) {
 			throw new InvalidArgumentException(
-				esc_html(
-					sprintf(
-						/* translators: %s: invalid threshold encountered */
-						__( 'The threshold %s is invalid.', 'ai-services' ),
-						$threshold
-					)
+				sprintf(
+					'The threshold %s is invalid.',
+					htmlspecialchars( $threshold ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
 			);
 		}

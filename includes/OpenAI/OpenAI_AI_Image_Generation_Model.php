@@ -244,7 +244,7 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				if ( ! $is_gpt ) {
 					if ( $output_mime && 'image/png' !== $output_mime ) {
 						throw new InvalidArgumentException(
-							esc_html__( 'Only "image/png" is supported as the output MIME.', 'ai-services' )
+							'Only "image/png" is supported as the output MIME.'
 						);
 					}
 					return '';
@@ -280,7 +280,7 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				if ( $is_gpt ) {
 					if ( $response_type && 'inline_data' !== $response_type ) {
 						throw new InvalidArgumentException(
-							esc_html__( 'Only base64-encoded data is supported as the response type.', 'ai-services' )
+							'Only base64-encoded data is supported as the response type.'
 						);
 					}
 					return '';

@@ -2,7 +2,7 @@ includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon
 parameters:
 	bootstrapFiles:
-		- php-tools/lint/phpstan-bootstrap.php
+		- tools/php/lint/phpstan-bootstrap.php
 	level: 6
 	paths:
 		- includes/
@@ -12,9 +12,9 @@ parameters:
 	scanDirectories:
 		- third-party
 	scanFiles:
-		- php-tools/lint/phpstan-stubs.php
-		- php-tools/lint/vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
-		- php-tools/lint/vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
-		- php-tools/lint/vendor/php-stubs/wp-cli-stubs/wp-cli-commands-stubs.php
-		- php-tools/lint/vendor/php-stubs/wp-cli-stubs/wp-cli-i18n-stubs.php
+		- tools/php/lint/phpstan-stubs.php
+		- tools/php/lint/vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+		- tools/php/lint/vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+		- tools/php/lint/vendor/php-stubs/wp-cli-stubs/wp-cli-commands-stubs.php
+		- tools/php/lint/vendor/php-stubs/wp-cli-stubs/wp-cli-i18n-stubs.php
 	treatPhpDocTypesAsCertain: false

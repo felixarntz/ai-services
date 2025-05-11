@@ -56,34 +56,34 @@
 			"mkdir -p third-party/vendor/composer && mv third-party/autoload_classmap.php third-party/vendor/composer/"
 		],
 		"format": [
-			"composer --working-dir=php-tools/lint update",
-			"php-tools/lint/vendor/bin/phpcbf --standard=phpcs.xml.dist"
+			"composer --working-dir=tools/php/lint update",
+			"tools/php/lint/vendor/bin/phpcbf --standard=phpcs.xml.dist"
 		],
 		"lint": [
-			"composer --working-dir=php-tools/lint update",
-			"php-tools/lint/vendor/bin/phpcs --standard=phpcs.xml.dist"
+			"composer --working-dir=tools/php/lint update",
+			"tools/php/lint/vendor/bin/phpcs --standard=phpcs.xml.dist"
 		],
 		"phpmd": [
-			"composer --working-dir=php-tools/lint update",
-			"php-tools/lint/vendor/bin/phpmd . text phpmd.xml"
+			"composer --working-dir=tools/php/lint update",
+			"tools/php/lint/vendor/bin/phpmd . text phpmd.xml"
 		],
 		"phpstan": [
-			"composer --working-dir=php-tools/lint update",
-			"php-tools/lint/vendor/bin/phpstan analyse --memory-limit=2048M"
+			"composer --working-dir=tools/php/lint update",
+			"tools/php/lint/vendor/bin/phpstan analyse --memory-limit=2048M"
 		],
 		"prefix-dependencies": [
-			"composer --working-dir=php-tools/prefix update",
-			"php-tools/prefix/vendor/bin/php-scoper add --output-dir=./third-party --force --quiet",
+			"composer --working-dir=tools/php/prefix update",
+			"tools/php/prefix/vendor/bin/php-scoper add --output-dir=./third-party --force --quiet",
 			"@autoload-includes",
 			"@autoload-third-party"
 		],
 		"test": [
-			"composer --working-dir=php-tools/test update",
-			"php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --verbose"
+			"composer --working-dir=tools/php/test update",
+			"tools/php/test/vendor/bin/phpunit -c phpunit.xml.dist --verbose"
 		],
 		"test-multisite": [
-			"composer --working-dir=php-tools/test update",
-			"WP_MULTISITE=1 php-tools/test/vendor/bin/phpunit -c phpunit.xml.dist --exclude-group=ms-excluded --verbose"
+			"composer --working-dir=tools/php/test update",
+			"WP_MULTISITE=1 tools/php/test/vendor/bin/phpunit -c phpunit.xml.dist --exclude-group=ms-excluded --verbose"
 		]
 	}
 }

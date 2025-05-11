@@ -1,0 +1,72 @@
+/**
+ * WordPress dependencies
+ */
+import { createRegistrySelector } from '@wordpress/data';
+import { store as interfaceStore } from '@wordpress/interface';
+
+const actions = {
+	/**
+	 * Opens a modal.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param {string} modalId Modal identifier.
+	 * @return {Function} Action creator.
+	 */
+	openModal( modalId ) {
+		return ( { registry } ) => {
+			registry
+				.dispatch( interfaceStore )
+				.openModal( `wp-starter-plugin/${ modalId }` );
+		};
+	},
+
+	/**
+	 * Closes the currently open modal.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return {Function} Action creator.
+	 */
+	closeModal() {
+		return ( { registry } ) => {
+			registry.dispatch( interfaceStore ).closeModal();
+		};
+	},
+
+	/**
+	 * Toggles a modal.
+	 *
+	 * If the modal is active, it will be closed.
+	 * If the modal is closed or another modal is active, it will be opened.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param {string} modalId Modal identifier.
+	 * @return {Function} Action creator.
+	 */
+	toggleModal( modalId ) {
+		return ( { dispatch, select } ) => {
+			if ( select.isModalActive( modalId ) ) {
+				dispatch.closeModal();
+			} else {
+				dispatch.openModal( modalId );
+			}
+		};
+	},
+};
+
+const selectors = {
+	isModalActive: createRegistrySelector( ( select ) => ( state, modalId ) => {
+		return select( interfaceStore ).isModalActive(
+			`wp-starter-plugin/${ modalId }`
+		);
+	} ),
+};
+
+const storeConfig = {
+	actions,
+	selectors,
+};
+
+export default storeConfig;

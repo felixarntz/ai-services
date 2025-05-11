@@ -7,7 +7,7 @@ import {
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
-} from '@wp-starter-plugin/components';
+} from '@wp-starter-plugin/interface';
 
 /**
  * WordPress dependencies

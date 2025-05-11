@@ -4,7 +4,7 @@
 import {
 	DistractionFreePreferenceToggleMenuItem,
 	KeyboardShortcutsMenuItem,
-} from '@wp-starter-plugin/components';
+} from '@wp-starter-plugin/interface';
 
 /**
  * WordPress dependencies

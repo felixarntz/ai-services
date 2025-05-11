@@ -15,6 +15,7 @@
 		"@wordpress/env": "^10.22.0",
 		"@wordpress/eslint-plugin": "^22.8.0",
 		"@wordpress/scripts": "^30.15.0",
+		"eslint-import-resolver-node": "^0.3.0",
 		"eslint-plugin-tsdoc": "^0.4.0",
 		"fast-glob": "^3.3.3",
 		"prettier": "npm:wp-prettier@^3.0.3",

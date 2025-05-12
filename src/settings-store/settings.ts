@@ -10,7 +10,6 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import camelCase from '../utils/camel-case';
 import logError from '../utils/log-error';
 import type { StoreConfig, Action, ThunkArgs } from '../utils/store-types';
 
@@ -62,6 +61,19 @@ type DispatcherArgs = ThunkArgs<
 	CombinedAction,
 	Selectors
 >;
+
+/**
+ * Given a string, returns a new string with dash and underscore separators
+ * converted to camelCase equivalent.
+ *
+ * @param input - Input dash- or underscore-delimited string.
+ * @returns Camel-cased string.
+ */
+function camelCase( input: string ): string {
+	return input.replace( /-|_([a-z])/g, ( _, letter ) =>
+		letter.toUpperCase()
+	);
+}
 
 /**
  * Updates the modified settings object with the new settings, if they differ from the saved settings.

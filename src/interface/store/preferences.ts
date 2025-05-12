@@ -17,7 +17,7 @@ type UnknownAction = Action< ActionType.Unknown >;
 
 export type CombinedAction = UnknownAction;
 
-export type State = {};
+export type State = Record< string, never >;
 
 export type ActionCreators = typeof actions;
 export type Selectors = typeof selectors;

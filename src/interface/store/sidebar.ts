@@ -142,8 +142,8 @@ const actions = {
  *
  * @since 0.4.0
  *
- * @param state  Current state.
- * @param action Action object.
+ * @param state  - Current state.
+ * @param action - Action object.
  * @returns New state.
  */
 function reducer( state: State = initialState, action: CombinedAction ): State {

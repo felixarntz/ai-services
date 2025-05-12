@@ -4,17 +4,42 @@
 import { createRegistrySelector } from '@wordpress/data';
 import { store as preferencesStore } from '@wordpress/preferences';
 
+/**
+ * Internal dependencies
+ */
+import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
+
+export enum ActionType {
+	Unknown = 'REDUX_UNKNOWN',
+}
+
+type UnknownAction = Action< ActionType.Unknown >;
+
+export type CombinedAction = UnknownAction;
+
+export type State = {};
+
+export type ActionCreators = typeof actions;
+export type Selectors = typeof selectors;
+
+type DispatcherArgs = ThunkArgs<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+>;
+
 const actions = {
 	/**
 	 * Opens a panel.
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} panelId Panel identifier.
-	 * @return {Function} Action creator.
+	 * @param panelId - Panel identifier.
+	 * @returns Action creator.
 	 */
-	openPanel( panelId ) {
-		return ( { registry } ) => {
+	openPanel( panelId: string ) {
+		return ( { registry }: DispatcherArgs ) => {
 			const activePanels =
 				registry
 					.select( preferencesStore )
@@ -36,16 +61,19 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} panelId Panel identifier.
-	 * @return {Function} Action creator.
+	 * @param panelId - Panel identifier.
+	 * @returns Action creator.
 	 */
-	closePanel( panelId ) {
-		return ( { registry } ) => {
+	closePanel( panelId: string ) {
+		return ( { registry }: DispatcherArgs ) => {
 			const activePanels =
 				registry
 					.select( preferencesStore )
 					.get( 'wp-starter-plugin', 'activePanels' ) ?? [];
-			if ( ! activePanels.includes( panelId ) ) {
+			if (
+				! Array.isArray( activePanels ) ||
+				! activePanels.includes( panelId )
+			) {
 				return;
 			}
 			registry.dispatch( preferencesStore ).set(
@@ -66,11 +94,11 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} panelId Panel identifier.
-	 * @return {Function} Action creator.
+	 * @param panelId - Panel identifier.
+	 * @returns Action creator.
 	 */
-	togglePanel( panelId ) {
-		return ( { dispatch, select } ) => {
+	togglePanel( panelId: string ) {
+		return ( { dispatch, select }: DispatcherArgs ) => {
 			if ( select.isPanelActive( panelId ) ) {
 				dispatch.closePanel( panelId );
 			} else {
@@ -83,12 +111,16 @@ const actions = {
 const selectors = {
 	isPanelActive: createRegistrySelector(
 		( select ) =>
-			( state, panelId, initialOpen = false ) => {
+			(
+				_state: State,
+				panelId: string,
+				initialOpen: boolean = false
+			) => {
 				const activePanels = select( preferencesStore ).get(
 					'wp-starter-plugin',
 					'activePanels'
 				);
-				if ( ! activePanels ) {
+				if ( ! activePanels || ! Array.isArray( activePanels ) ) {
 					return !! initialOpen;
 				}
 				return !! activePanels.includes( panelId );
@@ -96,8 +128,14 @@ const selectors = {
 	),
 };
 
-const storeConfig = {
+const storeConfig: StoreConfig<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+> = {
 	actions,
+	reducer: ( state: State ): State => state, // Empty reducer.
 	selectors,
 };
 

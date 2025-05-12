@@ -4,9 +4,39 @@
 import { createRegistrySelector } from '@wordpress/data';
 import { store as interfaceStore } from '@wordpress/interface';
 
-const SET_DEFAULT_SIDEBAR = 'SET_DEFAULT_SIDEBAR';
+/**
+ * Internal dependencies
+ */
+import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 
-const initialState = {
+export enum ActionType {
+	Unknown = 'REDUX_UNKNOWN',
+	SetDefaultSidebar = 'SET_DEFAULT_SIDEBAR',
+}
+
+type UnknownAction = Action< ActionType.Unknown >;
+type SetDefaultSidebarAction = Action<
+	ActionType.SetDefaultSidebar,
+	{ sidebarId: string }
+>;
+
+export type CombinedAction = UnknownAction | SetDefaultSidebarAction;
+
+export type State = {
+	defaultSidebarId: string | false;
+};
+
+export type ActionCreators = typeof actions;
+export type Selectors = typeof selectors;
+
+type DispatcherArgs = ThunkArgs<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+>;
+
+const initialState: State = {
 	defaultSidebarId: false,
 };
 
@@ -16,11 +46,11 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} sidebarId Sidebar identifier.
-	 * @return {Function} Action creator.
+	 * @param sidebarId - Sidebar identifier.
+	 * @returns Action creator.
 	 */
-	openSidebar( sidebarId ) {
-		return ( { registry } ) => {
+	openSidebar( sidebarId: string ) {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( interfaceStore )
 				.enableComplementaryArea( 'wp-starter-plugin', sidebarId );
@@ -32,10 +62,10 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	closeSidebar() {
-		return ( { registry } ) => {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( interfaceStore )
 				.disableComplementaryArea( 'wp-starter-plugin' );
@@ -50,11 +80,11 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} sidebarId Sidebar identifier.
-	 * @return {Function} Action creator.
+	 * @param sidebarId - Sidebar identifier.
+	 * @returns Action creator.
 	 */
-	toggleSidebar( sidebarId ) {
-		return ( { dispatch, select } ) => {
+	toggleSidebar( sidebarId: string ) {
+		return ( { dispatch, select }: DispatcherArgs ) => {
 			if ( select.isSidebarActive( sidebarId ) ) {
 				dispatch.closeSidebar();
 			} else {
@@ -71,10 +101,10 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	toggleDefaultSidebar() {
-		return ( { dispatch, select } ) => {
+		return ( { dispatch, select }: DispatcherArgs ) => {
 			if ( select.getActiveSidebar() ) {
 				dispatch.closeSidebar();
 			} else {
@@ -92,13 +122,17 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} sidebarId Sidebar identifier.
-	 * @return {Object} Action creator.
+	 * @param sidebarId - Sidebar identifier.
+	 * @returns Action creator.
 	 */
-	setDefaultSidebar( sidebarId ) {
-		return {
-			type: SET_DEFAULT_SIDEBAR,
-			payload: { sidebarId },
+	setDefaultSidebar( sidebarId: string ) {
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.SetDefaultSidebar,
+				payload: {
+					sidebarId,
+				},
+			} );
 		};
 	},
 };
@@ -108,13 +142,13 @@ const actions = {
  *
  * @since 0.4.0
  *
- * @param {Object} state  Current state.
- * @param {Object} action Action object.
- * @return {Object} New state.
+ * @param state  Current state.
+ * @param action Action object.
+ * @returns New state.
  */
-function reducer( state = initialState, action ) {
+function reducer( state: State = initialState, action: CombinedAction ): State {
 	switch ( action.type ) {
-		case SET_DEFAULT_SIDEBAR: {
+		case ActionType.SetDefaultSidebar: {
 			const { sidebarId } = action.payload;
 			return {
 				...state,
@@ -134,7 +168,7 @@ const selectors = {
 	} ),
 
 	isSidebarActive: createRegistrySelector(
-		( select ) => ( state, sidebarId ) => {
+		( select ) => ( _state: State, sidebarId: string ) => {
 			return (
 				select( interfaceStore ).getActiveComplementaryArea(
 					'wp-starter-plugin'
@@ -143,12 +177,17 @@ const selectors = {
 		}
 	),
 
-	getDefaultSidebar: ( state ) => {
+	getDefaultSidebar: ( state: State ) => {
 		return state.defaultSidebarId;
 	},
 };
 
-const storeConfig = {
+const storeConfig: StoreConfig<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+> = {
 	initialState,
 	actions,
 	reducer,

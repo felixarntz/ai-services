@@ -14,7 +14,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @since n.e.x.t
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function SettingsStatus() {
 	const { isLoading, isDirty, isSaving } = useSelect( ( select ) => {
@@ -31,7 +31,7 @@ export default function SettingsStatus() {
 			isDirty: hasModifiedSettings(),
 			isSaving: isSavingSettings(),
 		};
-	} );
+	}, [] );
 
 	let statusText;
 	if ( isLoading ) {

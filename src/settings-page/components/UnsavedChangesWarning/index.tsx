@@ -15,17 +15,17 @@ import { __ } from '@wordpress/i18n';
  *
  * @since n.e.x.t
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function UnsavedChangesWarning() {
 	const isDirty = useSelect( ( select ) => {
 		const { hasModifiedSettings } = select( pluginSettingsStore );
 
 		return hasModifiedSettings();
-	} );
+	}, [] );
 
 	useEffect( () => {
-		const warnIfUnsavedChanges = ( event ) => {
+		const warnIfUnsavedChanges = ( event: BeforeUnloadEvent ) => {
 			if ( isDirty ) {
 				event.returnValue = __(
 					'You have unsaved changes. If you proceed, they will be lost.',

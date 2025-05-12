@@ -14,12 +14,12 @@ import { useShortcut } from '@wordpress/keyboard-shortcuts';
  *
  * @since n.e.x.t
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function SettingsShortcuts() {
 	const { saveSettings } = useDispatch( pluginSettingsStore );
 
-	const handleSave = ( event ) => {
+	const handleSave = ( event: Event ) => {
 		event.preventDefault();
 		saveSettings();
 	};

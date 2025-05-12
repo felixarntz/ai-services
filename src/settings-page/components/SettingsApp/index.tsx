@@ -38,7 +38,7 @@ const interfaceLabels = {
  *
  * @since n.e.x.t
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function SettingsApp() {
 	return (

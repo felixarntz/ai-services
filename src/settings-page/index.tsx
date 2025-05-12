@@ -10,19 +10,19 @@ import { createRoot, render } from '@wordpress/element';
 import SettingsApp from './components/SettingsApp';
 
 /**
- * Mounts the given component into the DOM.
+ * Mounts the given JSX into the DOM.
  *
  * @since n.e.x.t
  *
- * @param {Component} Component    The component to be mounted.
- * @param {Element}   renderTarget The target element to render the component into.
+ * @param jsx          - The JSX node to be mounted.
+ * @param renderTarget - The target element to render the JSX into.
  */
-function mountApp( Component, renderTarget ) {
+function mountApp( jsx: JSX.Element, renderTarget: Element ) {
 	if ( createRoot ) {
 		const root = createRoot( renderTarget );
-		root.render( Component );
+		root.render( jsx );
 	} else {
-		render( Component, renderTarget );
+		render( jsx, renderTarget );
 	}
 }
 

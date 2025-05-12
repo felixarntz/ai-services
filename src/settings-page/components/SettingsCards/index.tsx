@@ -25,7 +25,7 @@ import './style.scss';
  *
  * @since n.e.x.t
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function SettingsCards() {
 	const { isLoading, deleteData } = useSelect( ( select ) => {
@@ -37,7 +37,7 @@ export default function SettingsCards() {
 				getSettings() === undefined || isResolving( 'getSettings' ),
 			deleteData: getDeleteData(),
 		};
-	} );
+	}, [] );
 
 	const { setDeleteData } = useDispatch( pluginSettingsStore );
 

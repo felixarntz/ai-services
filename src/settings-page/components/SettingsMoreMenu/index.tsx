@@ -25,7 +25,7 @@ import { store as preferencesStore } from '@wordpress/preferences';
  *
  * @since n.e.x.t
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function SettingsMoreMenu() {
 	const showIconLabels = useSelect(

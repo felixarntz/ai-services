@@ -12,6 +12,8 @@
 		"declarationMap": true,
 		"composite": true,
 		"emitDeclarationOnly": true,
+		"skipDefaultLibCheck": true,
+		"skipLibCheck": true,
 		"strict": true,
 		"noImplicitAny": true,
 		"noImplicitReturns": true,
@@ -22,7 +24,7 @@
 		"esModuleInterop": false,
 		"resolveJsonModule": true,
 		"pretty": true,
-		"typeRoots": [ "./node_modules/@types" ],
+		"typeRoots": [ "./src/@types", "./node_modules/@types" ],
 		"types": [],
 		"rootDir": "src",
 		"declarationDir": "build-types"

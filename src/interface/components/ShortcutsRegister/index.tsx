@@ -16,7 +16,7 @@ import { useHasSidebar } from '../Sidebar';
  *
  * @since 0.1.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function ShortcutsRegister() {
 	const hasSidebar = useHasSidebar();

@@ -16,16 +16,22 @@ import { store as interfaceStore } from '../../store';
  *
  * @since 0.1.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function KeyboardShortcutsMenuItem() {
 	const { openModal } = useDispatch( interfaceStore );
-	const shortcut = useSelect( ( select ) =>
-		select( keyboardShortcutsStore ).getShortcutRepresentation(
-			'wp-starter-plugin/keyboard-shortcuts',
-			'display'
-		)
+	const shortcut = useSelect(
+		( select ) =>
+			select( keyboardShortcutsStore ).getShortcutRepresentation(
+				'wp-starter-plugin/keyboard-shortcuts',
+				'display'
+			),
+		[]
 	);
+
+	if ( ! shortcut ) {
+		return null;
+	}
 
 	return (
 		<MenuItem

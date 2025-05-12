@@ -14,15 +14,21 @@ import { store as keyboardShortcutsStore } from '@wordpress/keyboard-shortcuts';
  *
  * @since 0.1.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function DistractionFreePreferenceToggleMenuItem() {
-	const shortcut = useSelect( ( select ) =>
-		select( keyboardShortcutsStore ).getShortcutRepresentation(
-			'wp-starter-plugin/toggle-distraction-free',
-			'display'
-		)
+	const shortcut = useSelect(
+		( select ) =>
+			select( keyboardShortcutsStore ).getShortcutRepresentation(
+				'wp-starter-plugin/toggle-distraction-free',
+				'display'
+			),
+		[]
 	);
+
+	if ( ! shortcut ) {
+		return null;
+	}
 
 	return (
 		<PreferenceToggleMenuItem

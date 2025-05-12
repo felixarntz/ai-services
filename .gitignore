@@ -22,6 +22,8 @@ nbproject/
 ############
 
 build
+build-types
+*.tsbuildinfo
 
 ############
 ## Vendor

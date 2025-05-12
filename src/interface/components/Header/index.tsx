@@ -1,9 +1,4 @@
 /**
- * External dependencies
- */
-import PropTypes from 'prop-types';
-
-/**
  * WordPress dependencies
  */
 import {
@@ -11,10 +6,12 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUseSlotFills as useSlotFills,
 } from '@wordpress/components';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
  */
+import type { HeaderProps } from './types';
 import './style.scss';
 
 const { Fill, Slot } = createSlotFill( 'Header' );
@@ -26,26 +23,25 @@ const { Fill, Slot } = createSlotFill( 'Header' );
  *
  * @since 0.1.0
  *
- * @param {Object}  props          Component props.
- * @param {Element} props.children Child elements to render.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function Header( { children } ) {
+function InternalHeader( props: WordPressComponentProps< HeaderProps, null > ) {
+	const { children } = props;
 	return <Fill>{ children }</Fill>;
 }
 
-Header.propTypes = {
-	children: PropTypes.node.isRequired,
-};
-
-Header.Slot = Slot;
+const Header = Object.assign( InternalHeader, {
+	displayName: 'Header',
+	Slot: Object.assign( Slot, { displayName: 'Header.Slot' } ),
+} );
 
 /**
  * Hook to check whether any fills are provided for the Header slot.
  *
  * @since 0.1.0
  *
- * @return {boolean} True if there are any Header fills, false otherwise.
+ * @returns True if there are any Header fills, false otherwise.
  */
 export function useHasHeader() {
 	const fills = useSlotFills( 'Header' );

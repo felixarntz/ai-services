@@ -1,9 +1,4 @@
 /**
- * External dependencies
- */
-import PropTypes from 'prop-types';
-
-/**
  * WordPress dependencies
  */
 import {
@@ -14,11 +9,13 @@ import {
 } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
  */
 import { store as interfaceStore } from '../../store';
+import type { ModalProps } from './types';
 
 const { Fill, Slot } = createSlotFill( 'Modal' );
 
@@ -29,15 +26,15 @@ const { Fill, Slot } = createSlotFill( 'Modal' );
  *
  * @since 0.4.0
  *
- * @param {Object}  props            Component props.
- * @param {string}  props.identifier Identifier for the modal, to use in the store.
- * @param {string}  props.title      Title of the modal.
- * @param {Element} props.children   Child elements to render.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function Modal( { identifier, title, children, ...props } ) {
-	const isModalActive = useSelect( ( select ) =>
-		select( interfaceStore ).isModalActive( identifier )
+function InternalModal( props: WordPressComponentProps< ModalProps, 'div' > ) {
+	const { identifier, title, children, ...additionalProps } = props;
+
+	const isModalActive = useSelect(
+		( select ) => select( interfaceStore ).isModalActive( identifier ),
+		[ identifier ]
 	);
 	const { closeModal } = useDispatch( interfaceStore );
 
@@ -51,7 +48,7 @@ function Modal( { identifier, title, children, ...props } ) {
 				title={ title }
 				closeButtonLabel={ __( 'Close modal', 'wp-starter-plugin' ) }
 				onRequestClose={ closeModal }
-				{ ...props }
+				{ ...additionalProps }
 			>
 				{ children }
 			</CoreModal>
@@ -59,20 +56,17 @@ function Modal( { identifier, title, children, ...props } ) {
 	);
 }
 
-Modal.propTypes = {
-	identifier: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
-	children: PropTypes.node.isRequired,
-};
-
-Modal.Slot = Slot;
+const Modal = Object.assign( InternalModal, {
+	displayName: 'Modal',
+	Slot: Object.assign( Slot, { displayName: 'Modal.Slot' } ),
+} );
 
 /**
  * Hook to check whether any fills are provided for the Modal slot.
  *
  * @since 0.4.0
  *
- * @return {boolean} True if there are any Modal fills, false otherwise.
+ * @returns True if there are any Modal fills, false otherwise.
  */
 export function useHasModal() {
 	const fills = useSlotFills( 'Modal' );

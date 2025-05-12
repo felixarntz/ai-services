@@ -1,9 +1,4 @@
 /**
- * External dependencies
- */
-import PropTypes from 'prop-types';
-
-/**
  * WordPress dependencies
  */
 import {
@@ -11,6 +6,12 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUseSlotFills as useSlotFills,
 } from '@wordpress/components';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
+
+/**
+ * Internal dependencies
+ */
+import type { HeaderActionsProps } from './types';
 
 const { Fill, Slot } = createSlotFill( 'HeaderActions' );
 
@@ -21,26 +22,27 @@ const { Fill, Slot } = createSlotFill( 'HeaderActions' );
  *
  * @since 0.1.0
  *
- * @param {Object}  props          Component props.
- * @param {Element} props.children Child elements to render.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function HeaderActions( { children } ) {
+function InternalHeaderActions(
+	props: WordPressComponentProps< HeaderActionsProps, null >
+) {
+	const { children } = props;
 	return <Fill>{ children }</Fill>;
 }
 
-HeaderActions.propTypes = {
-	children: PropTypes.node.isRequired,
-};
-
-HeaderActions.Slot = Slot;
+const HeaderActions = Object.assign( InternalHeaderActions, {
+	displayName: 'HeaderActions',
+	Slot: Object.assign( Slot, { displayName: 'HeaderActions.Slot' } ),
+} );
 
 /**
  * Hook to check whether any fills are provided for the HeaderActions slot.
  *
  * @since 0.1.0
  *
- * @return {boolean} True if there are any HeaderActions fills, false otherwise.
+ * @returns True if there are any HeaderActions fills, false otherwise.
  */
 export function useHasHeaderActions() {
 	const fills = useSlotFills( 'HeaderActions' );

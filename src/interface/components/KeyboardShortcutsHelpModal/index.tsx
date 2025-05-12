@@ -2,7 +2,6 @@
  * External dependencies
  */
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 
 /**
  * WordPress dependencies
@@ -15,30 +14,39 @@ import {
 } from '@wordpress/keyboard-shortcuts';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { displayShortcutList, shortcutAriaLabel } from '@wordpress/keycodes';
+import type { WPKeycodeModifier } from '@wordpress/keycodes';
 
 /**
  * Internal dependencies
  */
 import { store as interfaceStore } from '../../store';
 import Modal from '../Modal';
+import type {
+	KeyCombinationProps,
+	ShortcutProps,
+	ShortcutListProps,
+	ShortcutSectionProps,
+	ShortcutCategorySectionProps,
+} from './types';
 
 /**
  * Renders a shortcut key combination.
  *
  * @since 0.1.0
  *
- * @param {Object} props                Component props.
- * @param {Object} props.keyCombination Object containing 'modifier' and 'character' properties (both strings).
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function KeyCombination( { keyCombination } ) {
+function KeyCombination( props: KeyCombinationProps ) {
+	const { keyCombination } = props;
+
 	const shortcut = keyCombination.modifier
-		? displayShortcutList[ keyCombination.modifier ](
+		? displayShortcutList[ keyCombination.modifier as WPKeycodeModifier ](
 				keyCombination.character
 		  )
 		: keyCombination.character;
 	const ariaLabel = keyCombination.modifier
-		? shortcutAriaLabel[ keyCombination.modifier ](
+		? shortcutAriaLabel[ keyCombination.modifier as WPKeycodeModifier ](
 				keyCombination.character
 		  )
 		: keyCombination.character;
@@ -68,23 +76,17 @@ function KeyCombination( { keyCombination } ) {
 	);
 }
 
-KeyCombination.propTypes = {
-	keyCombination: PropTypes.shape( {
-		modifier: PropTypes.string,
-		character: PropTypes.string,
-	} ).isRequired,
-};
-
 /**
  * Renders a shortcut.
  *
  * @since 0.1.0
  *
- * @param {Object} props      Component props.
- * @param {string} props.name Identifier that the shortcut is registered under in the store.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function Shortcut( { name } ) {
+function Shortcut( props: ShortcutProps ) {
+	const { name } = props;
+
 	const { keyCombination, description, aliases } = useSelect(
 		( select ) => {
 			const {
@@ -113,28 +115,29 @@ function Shortcut( { name } ) {
 			</div>
 			<div className="editor-keyboard-shortcut-help-modal__shortcut-term">
 				<KeyCombination keyCombination={ keyCombination } />
-				{ aliases.map( ( alias, index ) => (
-					<KeyCombination keyCombination={ alias } key={ index } />
-				) ) }
+				{ Array.isArray( aliases ) &&
+					aliases.map( ( alias, index ) => (
+						<KeyCombination
+							keyCombination={ alias }
+							key={ index }
+						/>
+					) ) }
 			</div>
 		</>
 	);
 }
-
-Shortcut.propTypes = {
-	name: PropTypes.string.isRequired,
-};
 
 /**
  * Renders a list of shortcuts.
  *
  * @since 0.1.0
  *
- * @param {Object}   props           Component props.
- * @param {string[]} props.shortcuts List of shortcut identifiers.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function ShortcutList( { shortcuts } ) {
+function ShortcutList( props: ShortcutListProps ) {
+	const { shortcuts } = props;
+
 	return (
 		/*
 		 * Disable reason: The `list` ARIA role is redundant but
@@ -158,22 +161,17 @@ function ShortcutList( { shortcuts } ) {
 	);
 }
 
-ShortcutList.propTypes = {
-	shortcuts: PropTypes.arrayOf( PropTypes.string ).isRequired,
-};
-
 /**
  * Renders a section for a group of shortcuts.
  *
  * @since 0.1.0
  *
- * @param {Object}   props           Component props.
- * @param {string[]} props.shortcuts List of shortcut identifiers.
- * @param {?string}  props.title     Title for the section.
- * @param {?string}  props.className Class name to add to the section.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function ShortcutSection( { shortcuts, title, className } ) {
+function ShortcutSection( props: ShortcutSectionProps ) {
+	const { shortcuts, title, className } = props;
+
 	return (
 		<section
 			className={ clsx(
@@ -191,23 +189,17 @@ function ShortcutSection( { shortcuts, title, className } ) {
 	);
 }
 
-ShortcutSection.propTypes = {
-	shortcuts: PropTypes.arrayOf( PropTypes.string ).isRequired,
-	title: PropTypes.string,
-	className: PropTypes.string,
-};
-
 /**
  * Renders a section for a category of shortcuts.
  *
  * @since 0.1.0
  *
- * @param {Object}  props              Component props.
- * @param {string}  props.categoryName Identifier of the shortcut category in the store.
- * @param {?string} props.title        Title for the section.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function ShortcutCategorySection( { title, categoryName } ) {
+function ShortcutCategorySection( props: ShortcutCategorySectionProps ) {
+	const { categoryName, title } = props;
+
 	const categoryShortcuts = useSelect(
 		( select ) => {
 			return select( keyboardShortcutsStore ).getCategoryShortcuts(
@@ -220,17 +212,12 @@ function ShortcutCategorySection( { title, categoryName } ) {
 	return <ShortcutSection title={ title } shortcuts={ categoryShortcuts } />;
 }
 
-ShortcutCategorySection.propTypes = {
-	title: PropTypes.string,
-	categoryName: PropTypes.string.isRequired,
-};
-
 /**
  * Renders the modal displaying the available keyboard shortcuts.
  *
  * @since 0.1.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function KeyboardShortcutsHelpModal() {
 	const { toggleModal } = useDispatch( interfaceStore );

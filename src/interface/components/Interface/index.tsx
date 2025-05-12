@@ -2,14 +2,13 @@
  * External dependencies
  */
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 
 /**
  * WordPress dependencies
  */
 import { InterfaceSkeleton } from '@wordpress/interface';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 // eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 import { __unstableUseNavigateRegions as useNavigateRegions } from '@wordpress/components';
 import {
@@ -17,6 +16,8 @@ import {
 	store as keyboardShortcutsStore,
 } from '@wordpress/keyboard-shortcuts';
 import { useViewportMatch } from '@wordpress/compose';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
+import type { WPShortcutKeyCombination } from '@wordpress/keyboard-shortcuts';
 
 /**
  * Internal dependencies
@@ -29,19 +30,48 @@ import { default as Sidebar, useHasSidebar } from '../Sidebar';
 import { default as Modal } from '../Modal';
 import Notices from '../Notices';
 import Snackbars from '../Snackbars';
+import type { InterfaceProps } from './types';
+
+/**
+ * Sanitizes the shortcuts to navigate regions to be compatible with the `useNavigateRegions` hook.
+ *
+ * @param navigatePreviousRegionShortcut - Shortcut to navigate to the previous region.
+ * @param navigateNextRegionShortcut     - Shortcut to navigate to the next region.
+ * @returns Object to pass to the `useNavigateRegions` hook.
+ */
+function sanitizeNavigateRegions(
+	navigatePreviousRegionShortcut: WPShortcutKeyCombination[],
+	navigateNextRegionShortcut: WPShortcutKeyCombination[]
+) {
+	return {
+		previous: navigatePreviousRegionShortcut.map( ( shortcut ) => {
+			return {
+				character: shortcut.character,
+				modifier: shortcut.modifier || 'undefined',
+			};
+		} ),
+		next: navigateNextRegionShortcut.map( ( shortcut ) => {
+			return {
+				character: shortcut.character,
+				modifier: shortcut.modifier || 'undefined',
+			};
+		} ),
+	};
+}
 
 /**
  * Renders the application interface wrapper.
  *
  * @since 0.1.0
  *
- * @param {Object}  props           Component props.
- * @param {?string} props.className Class name to add to the interface wrapper.
- * @param {Object}  props.labels    Labels for the interface areas.
- * @param {Element} props.children  Child elements to render.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-export default function Interface( { className, labels, children } ) {
+export default function Interface(
+	props: WordPressComponentProps< InterfaceProps, null >
+) {
+	const { className, labels, children } = props;
+
 	const isLargeViewport = useViewportMatch( 'medium' );
 
 	const {
@@ -58,7 +88,7 @@ export default function Interface( { className, labels, children } ) {
 			select( interfaceStore );
 
 		return {
-			isDistractionFree: getPreference( 'distractionFree' ),
+			isDistractionFree: !! getPreference( 'distractionFree' ),
 			navigatePreviousRegionShortcut: getAllShortcutKeyCombinations(
 				'wp-starter-plugin/previous-region'
 			),
@@ -68,7 +98,7 @@ export default function Interface( { className, labels, children } ) {
 			activeSidebar: getActiveSidebar(),
 			defaultSidebar: getDefaultSidebar(),
 		};
-	} );
+	}, [] );
 
 	const { setDefaultSidebar, toggleDefaultSidebar, togglePreference } =
 		useDispatch( interfaceStore );
@@ -87,10 +117,16 @@ export default function Interface( { className, labels, children } ) {
 		toggleDefaultSidebar();
 	} );
 
-	const navigateRegionsProps = useNavigateRegions( {
-		previous: navigatePreviousRegionShortcut,
-		next: navigateNextRegionShortcut,
-	} );
+	const navigateRegionsInput = useMemo(
+		() =>
+			sanitizeNavigateRegions(
+				navigatePreviousRegionShortcut,
+				navigateNextRegionShortcut
+			),
+		[ navigatePreviousRegionShortcut, navigateNextRegionShortcut ]
+	);
+
+	const navigateRegionsProps = useNavigateRegions( navigateRegionsInput );
 
 	const hasHeader = useHasHeader();
 	const header = hasHeader && (
@@ -117,7 +153,6 @@ export default function Interface( { className, labels, children } ) {
 	return (
 		<div { ...navigateRegionsProps } ref={ navigateRegionsProps.ref }>
 			<InterfaceSkeleton
-				enableRegionNavigation={ true }
 				isDistractionFree={ isDistractionFree }
 				className={ clsx( 'ais-interface', className, {
 					'is-distraction-free': isDistractionFree,
@@ -141,16 +176,3 @@ export default function Interface( { className, labels, children } ) {
 		</div>
 	);
 }
-
-Interface.propTypes = {
-	className: PropTypes.string,
-	labels: PropTypes.shape( {
-		header: PropTypes.string,
-		body: PropTypes.string,
-		sidebar: PropTypes.string,
-		secondarySidebar: PropTypes.string,
-		actions: PropTypes.string,
-		footer: PropTypes.string,
-	} ),
-	children: PropTypes.node.isRequired,
-};

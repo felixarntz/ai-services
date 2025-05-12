@@ -47,7 +47,7 @@ export default function SettingsMoreMenu() {
 			} }
 			toggleProps={ {
 				showTooltip: ! showIconLabels,
-				...( showIconLabels && { variant: 'tertiary' } ),
+				...( showIconLabels ? { variant: 'tertiary' } : {} ),
 				tooltipPosition: 'bottom',
 				size: 'compact',
 			} }
@@ -61,6 +61,7 @@ export default function SettingsMoreMenu() {
 						<KeyboardShortcutsMenuItem />
 						<MenuItem
 							icon={ external }
+							// @ts-expect-error This prop is valid, but is missing from the type definition.
 							href={ __(
 								'https://wordpress.org/support/plugin/wp-starter-plugin/',
 								'wp-starter-plugin'

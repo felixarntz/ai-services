@@ -24,6 +24,9 @@
 		"esModuleInterop": false,
 		"resolveJsonModule": true,
 		"pretty": true,
+		"paths": {
+			"@wp-starter-plugin/*": [ "./src/*" ],
+		},
 		"typeRoots": [ "./src/@types", "./node_modules/@types" ],
 		"types": [],
 		"rootDir": "src",

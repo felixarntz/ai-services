@@ -19,7 +19,6 @@
 		"eslint-plugin-tsdoc": "^0.4.0",
 		"fast-glob": "^3.3.3",
 		"prettier": "npm:wp-prettier@^3.0.3",
-		"typedoc-plugin-markdown": "^4.6.2",
 		"typescript": "^5.8.3"
 	},
 	"dependencies": {

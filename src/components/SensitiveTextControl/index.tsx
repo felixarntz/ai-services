@@ -2,6 +2,7 @@
  * External dependencies
  */
 import clsx from 'clsx';
+import type { ChangeEvent, ForwardedRef } from 'react';
 
 /**
  * WordPress dependencies
@@ -9,11 +10,13 @@ import clsx from 'clsx';
 import { BaseControl } from '@wordpress/components';
 import { useInstanceId } from '@wordpress/compose';
 import { forwardRef, useState } from '@wordpress/element';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
  */
-import InputVisibleButton from './input-invisible-button.js';
+import InputVisibleButton from './input-visible-button';
+import type { SensitiveTextControlProps } from './types';
 import './style.scss';
 
 /**
@@ -25,25 +28,27 @@ import './style.scss';
  *
  * @since 0.1.0
  *
- * @param {Object} props Component props. These are identical to the props of the SensitiveTextControl component, with the
- *                       addition of 'buttonShowLabel', 'buttonHideLabel', and 'HelpContent'.
- * @param {Object} ref   Reference to the component.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @param ref   - Reference to the component.
+ * @returns The component to be rendered.
  */
-function UnforwardedSensitiveTextControl( props, ref ) {
+function UnforwardedSensitiveTextControl(
+	props: WordPressComponentProps< SensitiveTextControlProps, 'input' >,
+	ref: ForwardedRef< HTMLInputElement >
+) {
 	const {
 		__nextHasNoMarginBottom,
 		__next40pxDefaultSize = false,
 		label,
 		hideLabelFromVision,
 		value,
+		buttonShowLabel,
+		buttonHideLabel,
 		help,
 		id: idProp,
 		className,
 		onChange,
 		type = 'text',
-		buttonShowLabel,
-		buttonHideLabel,
 		HelpContent,
 		...additionalProps
 	} = props;
@@ -52,7 +57,8 @@ function UnforwardedSensitiveTextControl( props, ref ) {
 		'inspector-text-control',
 		idProp
 	);
-	const onChangeValue = ( event ) => onChange( event.target.value );
+	const onChangeValue = ( event: ChangeEvent< HTMLInputElement > ) =>
+		onChange( event.target.value );
 
 	const [ visible, setVisible ] = useState( false );
 

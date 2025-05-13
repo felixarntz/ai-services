@@ -2,7 +2,6 @@
  * External dependencies
  */
 import Markdown from 'markdown-to-jsx';
-import PropTypes from 'prop-types';
 import { helpers } from '@ai-services/ai';
 
 /**
@@ -10,10 +9,12 @@ import { helpers } from '@ai-services/ai';
  */
 import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
  */
+import type { MediaProps, JsonTextareaProps, PartsProps } from './types';
 import './style.scss';
 
 /**
@@ -21,12 +22,12 @@ import './style.scss';
  *
  * @since 0.4.0
  *
- * @param {Object} props          The component props.
- * @param {string} props.mimeType The media MIME type.
- * @param {string} props.src      The media source.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function Media( { mimeType, src } ) {
+function Media( props: WordPressComponentProps< MediaProps, null > ) {
+	const { mimeType, src } = props;
+
 	if ( mimeType.startsWith( 'image' ) ) {
 		return <img src={ src } alt="" />;
 	}
@@ -47,12 +48,14 @@ function Media( { mimeType, src } ) {
  *
  * @since 0.5.0
  *
- * @param {Object} props       The component props.
- * @param {Object} props.data  The data to display.
- * @param {string} props.label The textarea label.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function JsonTextarea( { data, label } ) {
+function JsonTextarea(
+	props: WordPressComponentProps< JsonTextareaProps, null >
+) {
+	const { data, label } = props;
+
 	const dataJson = useMemo( () => {
 		return JSON.stringify( data, null, 2 );
 	}, [ data ] );
@@ -62,7 +65,7 @@ function JsonTextarea( { data, label } ) {
 			className="code"
 			aria-label={ label }
 			value={ dataJson }
-			rows="5"
+			rows={ 5 }
 			readOnly
 		/>
 	);
@@ -74,13 +77,16 @@ function JsonTextarea( { data, label } ) {
  * @since 0.4.0
  * @since 0.5.0 Made publicly available as part of `@ai-services/components`.
  *
- * @param {Object}   props       Component props.
- * @param {Object[]} props.parts The parts to render.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function Parts( { parts } ) {
+export default function Parts(
+	props: WordPressComponentProps< PartsProps, null >
+) {
+	const { parts } = props;
+
 	return parts.map( ( part, index ) => {
-		if ( part.text ) {
+		if ( 'text' in part ) {
 			return (
 				<div className="ai-services-content-part" key={ index }>
 					<Markdown
@@ -95,7 +101,7 @@ function Parts( { parts } ) {
 			);
 		}
 
-		if ( part.inlineData ) {
+		if ( 'inlineData' in part ) {
 			const { mimeType, data } = part.inlineData;
 			const base64 = helpers.base64DataToBase64DataUrl( data, mimeType );
 			return (
@@ -105,7 +111,7 @@ function Parts( { parts } ) {
 			);
 		}
 
-		if ( part.fileData ) {
+		if ( 'fileData' in part ) {
 			const { mimeType, fileUri } = part.fileData;
 			return (
 				<div className="ai-services-content-part" key={ index }>
@@ -114,7 +120,7 @@ function Parts( { parts } ) {
 			);
 		}
 
-		if ( part.functionCall ) {
+		if ( 'functionCall' in part ) {
 			return (
 				<div className="ai-services-content-part" key={ index }>
 					<JsonTextarea
@@ -125,7 +131,7 @@ function Parts( { parts } ) {
 			);
 		}
 
-		if ( part.functionResponse ) {
+		if ( 'functionResponse' in part ) {
 			return (
 				<div className="ai-services-content-part" key={ index }>
 					<JsonTextarea
@@ -139,9 +145,3 @@ function Parts( { parts } ) {
 		return null;
 	} );
 }
-
-Parts.propTypes = {
-	parts: PropTypes.arrayOf( PropTypes.object ).isRequired,
-};
-
-export default Parts;

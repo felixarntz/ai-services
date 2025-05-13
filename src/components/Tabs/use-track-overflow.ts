@@ -4,10 +4,35 @@
 import { useState, useEffect } from '@wordpress/element';
 import { useEvent } from '@wordpress/compose';
 
-export const useTrackOverflow = ( parent, children ) => {
+type TrackOverflowParent = HTMLElement | undefined | null;
+type TrackOverflowChildren = {
+	first: HTMLElement | undefined | null;
+	last: HTMLElement | undefined | null;
+};
+
+/**
+ * Tracks if an element contains overflow and on which end by tracking the
+ * first and last child elements with an `IntersectionObserver` in relation
+ * to the parent element.
+ *
+ * Note that the returned value will only indicate whether the first or last
+ * element is currently "going out of bounds" but not whether it happens on
+ * the X or Y axis.
+ *
+ * @param parent   - The parent element to observe.
+ * @param children - The first and last child elements to observe.
+ * @returns An object containing `first` and `last` boolean values indicating
+ *          whether the first or last child is overflowing the parent.
+ */
+export function useTrackOverflow(
+	parent: TrackOverflowParent,
+	children: TrackOverflowChildren
+) {
 	const [ first, setFirst ] = useState( false );
 	const [ last, setLast ] = useState( false );
-	const [ observer, setObserver ] = useState();
+	const [ observer, setObserver ] = useState< IntersectionObserver | null >(
+		null
+	);
 
 	const callback = useEvent( ( entries ) => {
 		for ( const entry of entries ) {
@@ -56,4 +81,4 @@ export const useTrackOverflow = ( parent, children ) => {
 	}, [ children.first, children.last, observer ] );
 
 	return { first, last };
-};
+}

@@ -11,24 +11,24 @@ import { useCallback, useState } from '@wordpress/element';
 import { useDebounce } from '@wordpress/compose';
 import { speak } from '@wordpress/a11y';
 import { __, _n, sprintf } from '@wordpress/i18n';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
+
+/**
+ * Internal dependencies
+ */
+import type { OptionsFilterSearchControlProps } from './types';
 
 /**
  * Renders a search control that filters options displayed elsewhere (e.g. in a checkbox list or radio list).
  *
  * @since 0.5.0
  *
- * @param {Object}   props              The component props.
- * @param {string}   props.label        The label for the search control.
- * @param {Object[]} props.options      The list of options to filter. Each option must contain at least `value` and
- *                                      `label` properties.
- * @param {Function} props.onFilter     The callback function to be called when the options are filtered. It will
- *                                      receive the filtered list of options, or potentially the whole list if no
- *                                      filter is active.
- * @param {string[]} props.searchFields Optional. The fields to search in the options. Defaults to
- *                                      `['label', 'value']`.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-export default function OptionsFilterSearchControl( props ) {
+export default function OptionsFilterSearchControl(
+	props: WordPressComponentProps< OptionsFilterSearchControlProps, null >
+) {
 	const {
 		label: labelProp,
 		options = [],
@@ -42,7 +42,7 @@ export default function OptionsFilterSearchControl( props ) {
 	const debouncedSpeak = useDebounce( speak, 500 );
 
 	const setFilter = useCallback(
-		( newFilterValue ) => {
+		( newFilterValue: string ) => {
 			const fields = searchFields || [ 'label', 'value' ];
 			const newFilteredOptions = options.filter( ( option ) => {
 				if ( newFilterValue === '' ) {

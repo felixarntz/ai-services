@@ -26,7 +26,7 @@ const CONFIG = {
 };
 
 // See `@wordpress/components/src/utils/space.ts`.
-const space = ( value ) => {
+const space = ( value: number ) => {
 	return `calc(4px * ${ value })`;
 };
 

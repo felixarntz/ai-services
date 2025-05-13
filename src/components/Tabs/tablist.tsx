@@ -3,6 +3,7 @@
  */
 import { useStoreState } from '@ariakit/react';
 import clsx from 'clsx';
+import type { ForwardedRef } from 'react';
 
 /**
  * WordPress dependencies
@@ -10,6 +11,7 @@ import clsx from 'clsx';
 import warning from '@wordpress/warning';
 import { forwardRef, useState } from '@wordpress/element';
 import { useMergeRefs } from '@wordpress/compose';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
@@ -17,11 +19,21 @@ import { useMergeRefs } from '@wordpress/compose';
 import { useTabsContext } from './context';
 import { StyledTabList } from './styles';
 import { useTrackOverflow } from './use-track-overflow';
+import type { TabListProps } from './types';
 
-export const TabList = forwardRef( function TabList(
-	{ children, ...otherProps },
-	ref
+/**
+ * Renders a list of tabs.
+ *
+ * @param props - Component props.
+ * @param ref   - Reference to the component.
+ * @returns The component to be rendered.
+ */
+function UnforwardedTabList(
+	props: WordPressComponentProps< TabListProps, 'div' >,
+	ref: ForwardedRef< HTMLDivElement >
 ) {
+	const { children, ...otherProps } = props;
+
 	const { store } = useTabsContext() ?? {};
 
 	const selectedId = useStoreState( store, 'selectedId' );
@@ -60,12 +72,12 @@ export const TabList = forwardRef( function TabList(
 		<StyledTabList
 			ref={ refs }
 			store={ store }
-			render={ ( props ) => (
+			render={ ( renderProps ) => (
 				<div
-					{ ...props }
+					{ ...renderProps }
 					// Fallback to -1 to prevent browsers from making the tablist
 					// tabbable when it is a scrolling container.
-					tabIndex={ props.tabIndex ?? -1 }
+					tabIndex={ renderProps.tabIndex ?? -1 }
 				/>
 			) }
 			onBlur={ onBlur }
@@ -80,4 +92,6 @@ export const TabList = forwardRef( function TabList(
 			{ children }
 		</StyledTabList>
 	);
-} );
+}
+
+export const TabList = forwardRef( UnforwardedTabList );

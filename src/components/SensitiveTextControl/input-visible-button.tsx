@@ -1,13 +1,14 @@
 /**
- * External dependencies
- */
-import PropTypes from 'prop-types';
-
-/**
  * WordPress dependencies
  */
 import { Button, Dashicon } from '@wordpress/components';
 import { _x } from '@wordpress/i18n';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
+
+/**
+ * Internal dependencies
+ */
+import type { InputVisibleButtonProps } from './types';
 
 /**
  * Renders a wrapper for the actions within the header of the application.
@@ -16,14 +17,14 @@ import { _x } from '@wordpress/i18n';
  *
  * @since 0.1.0
  *
- * @param {Object}   props            Component props.
- * @param {boolean}  props.visible    Whether the input is visible.
- * @param {Function} props.setVisible Function to toggle the input visibility. Must accept a boolean.
- * @param {string}   props.showLabel  Label for the show action.
- * @param {string}   props.hideLabel  Label for the hide action.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function InputVisibleButton( { visible, setVisible, showLabel, hideLabel } ) {
+export default function InputVisibleButton(
+	props: WordPressComponentProps< InputVisibleButtonProps, null >
+) {
+	const { visible, setVisible, showLabel, hideLabel } = props;
+
 	return (
 		<Button
 			variant="secondary"
@@ -44,12 +45,3 @@ function InputVisibleButton( { visible, setVisible, showLabel, hideLabel } ) {
 		</Button>
 	);
 }
-
-InputVisibleButton.propTypes = {
-	visible: PropTypes.bool.isRequired,
-	setVisible: PropTypes.func.isRequired,
-	showLabel: PropTypes.string,
-	hideLabel: PropTypes.string,
-};
-
-export default InputVisibleButton;

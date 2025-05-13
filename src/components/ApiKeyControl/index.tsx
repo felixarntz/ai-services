@@ -4,11 +4,13 @@
 import { ExternalLink } from '@wordpress/components';
 import { createInterpolateElement } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
  */
 import SensitiveTextControl from '../SensitiveTextControl';
+import type { ApiKeyControlProps } from './types';
 
 /**
  * Renders a sensitive text field for an AI Services API key.
@@ -18,27 +20,15 @@ import SensitiveTextControl from '../SensitiveTextControl';
  *
  * @since 0.6.0
  *
- * @param {Object}   props                     The component props.
- * @param {Object}   props.service             Data for the relevant AI service that the API key is for. It is
- *                                             recommended to retrieve this data from the `getService( slug )` selector
- *                                             of the 'ai-services/settings' store.
- * @param {string}   props.apiKey              The AI service's API key.
- * @param {Function} props.onChangeApiKey      Listener function to call when the API key is modified via the field.
- *                                             It receives the new API key value as first parameter and the relevant AI
- *                                             service's slug as second parameter.
- * @param {boolean}  props.omitCredentialsLink Optional. By default, the control displays a link to the AI service's
- *                                             platform credentials URL, to set up or manage API keys for the service.
- *                                             If this boolean prop is set, the link will not be displayed.
- * @param {string}   props.className           Optional. Class name to set on the control wrapper element.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-export default function ApiKeyControl( {
-	service,
-	apiKey,
-	onChangeApiKey,
-	omitCredentialsLink,
-	className,
-} ) {
+export default function ApiKeyControl(
+	props: WordPressComponentProps< ApiKeyControlProps, null >
+) {
+	const { service, apiKey, onChangeApiKey, omitCredentialsLink, className } =
+		props;
+
 	if ( ! service ) {
 		return null;
 	}

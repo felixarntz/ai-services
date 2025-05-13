@@ -1,25 +1,27 @@
 /**
- * External dependencies
- */
-import PropTypes from 'prop-types';
-
-/**
  * WordPress dependencies
  */
 import { SVG, Circle, G, Path } from '@wordpress/components';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
+
+/**
+ * Internal dependencies
+ */
+import type { PluginIconProps } from './types';
 
 /**
  * Renders the plugin icon.
  *
  * @since 0.1.0
  *
- * @param {Object}  props             The component props.
- * @param {number}  props.size        The size of the icon.
- * @param {boolean} props.hideCircle  Whether to hide the circle.
- * @param {boolean} props.invertColor Whether to invert the colors of the circle and main icon.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-function PluginIcon( { size, hideCircle, invertColor, ...extraProps } ) {
+export default function PluginIcon(
+	props: WordPressComponentProps< PluginIconProps, 'svg' >
+) {
+	const { size, hideCircle, invertColor, ...extraProps } = props;
+
 	const circleColor = invertColor ? '#ffffff' : '#0174aa';
 	const iconColor = invertColor ? '#0174aa' : '#ffffff';
 
@@ -73,11 +75,3 @@ function PluginIcon( { size, hideCircle, invertColor, ...extraProps } ) {
 		</SVG>
 	);
 }
-
-PluginIcon.propTypes = {
-	size: PropTypes.number.isRequired,
-	hideCircle: PropTypes.bool,
-	invertColor: PropTypes.bool,
-};
-
-export default PluginIcon;

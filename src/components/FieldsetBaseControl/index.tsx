@@ -2,10 +2,12 @@
  * WordPress dependencies
  */
 import { BaseControl, VisuallyHidden } from '@wordpress/components';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
  */
+import type { FieldsetBaseControlProps } from './types';
 import './style.scss';
 
 /**
@@ -13,10 +15,12 @@ import './style.scss';
  *
  * @since 0.5.0
  *
- * @param {Object} props The component props. Matches the props supported by WordPress Core's `BaseControl` component.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-export default function FieldsetBaseControl( props ) {
+export default function FieldsetBaseControl(
+	props: WordPressComponentProps< FieldsetBaseControlProps, null >
+) {
 	const { label, hideLabelFromVision, children, ...additionalProps } = props;
 
 	return (

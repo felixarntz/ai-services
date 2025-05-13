@@ -2,24 +2,35 @@
  * External dependencies
  */
 import { useStoreState } from '@ariakit/react';
+import type { ForwardedRef } from 'react';
 
 /**
  * WordPress dependencies
  */
 import { forwardRef } from '@wordpress/element';
+import warning from '@wordpress/warning';
+import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
  */
 import { StyledTabPanel } from './styles';
-
-import warning from '@wordpress/warning';
 import { useTabsContext } from './context';
+import type { TabPanelProps } from './types';
 
-export const TabPanel = forwardRef( function TabPanel(
-	{ children, tabId, focusable = true, ...otherProps },
-	ref
+/**
+ * Renders a tab panel.
+ *
+ * @param props - Component props.
+ * @param ref   - Reference to the component.
+ * @returns The component to be rendered.
+ */
+function UnforwardedTabPanel(
+	props: Omit< WordPressComponentProps< TabPanelProps, 'div' >, 'id' >,
+	ref: ForwardedRef< HTMLDivElement >
 ) {
+	const { children, tabId, focusable = true, ...otherProps } = props;
+
 	const context = useTabsContext();
 	const selectedId = useStoreState( context?.store, 'selectedId' );
 	if ( ! context ) {
@@ -44,4 +55,6 @@ export const TabPanel = forwardRef( function TabPanel(
 			{ selectedId === instancedTabId && children }
 		</StyledTabPanel>
 	);
-} );
+}
+
+export const TabPanel = forwardRef( UnforwardedTabPanel );

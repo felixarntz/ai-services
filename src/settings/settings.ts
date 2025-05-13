@@ -211,7 +211,7 @@ const actions = {
 
 				// Refresh services that have new API keys.
 				servicesToRefresh.forEach( ( service ) =>
-					dispatch.refreshService( service )
+					registry.dispatch( STORE_NAME ).refreshService( service )
 				);
 			}
 

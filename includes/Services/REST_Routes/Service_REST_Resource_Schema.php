@@ -8,7 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\REST_Routes;
 
-use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\Entities\Service_Entity;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\REST_Routes\Abstract_REST_Resource_Schema;
@@ -100,28 +100,7 @@ class Service_REST_Resource_Schema extends Abstract_REST_Resource_Schema {
 					'context'              => array( 'view', 'edit' ),
 					'readonly'             => true,
 					'properties'           => array(),
-					'additionalProperties' => array(
-						'type'                 => 'object',
-						'properties'           => array(
-							'slug'         => array(
-								'description' => __( 'Model slug.', 'ai-services' ),
-								'type'        => 'string',
-							),
-							'name'         => array(
-								'description' => __( 'User-facing model name.', 'ai-services' ),
-								'type'        => 'string',
-							),
-							'capabilities' => array(
-								'description' => __( 'List of the AI capabilities that the model supports.', 'ai-services' ),
-								'type'        => 'array',
-								'items'       => array(
-									'type' => 'string',
-									'enum' => array( AI_Capability::TEXT_GENERATION, AI_Capability::IMAGE_GENERATION ),
-								),
-							),
-						),
-						'additionalProperties' => false,
-					),
+					'additionalProperties' => Model_Metadata::get_json_schema(),
 				),
 				'has_forced_api_key' => array(
 					'description' => __( 'Whether the service API key is force-set (i.e. not modifiable by changing the option value).', 'ai-services' ),

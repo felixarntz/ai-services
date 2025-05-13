@@ -10,9 +10,9 @@ import { STORE_NAME } from './name';
 import capabilitiesStoreConfig from './capabilities';
 import serviceModelStoreConfig from './service-model';
 import messagesStoreConfig from './messages';
-import combineStores from '../../utils/combine-stores';
+import combineStoreConfigs from '../../utils/combine-store-configs';
 
-const storeConfig = combineStores(
+const storeConfig = combineStoreConfigs(
 	capabilitiesStoreConfig,
 	serviceModelStoreConfig,
 	messagesStoreConfig

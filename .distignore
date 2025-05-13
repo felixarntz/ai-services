@@ -4,9 +4,9 @@
 /docs
 /examples
 /node_modules
-/php-tools
 /src
 /tests
+/tools
 /vendor
 
 /.distignore

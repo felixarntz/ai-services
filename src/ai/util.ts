@@ -7,16 +7,25 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import * as enums from './enums';
+import type {
+	Content,
+	Part,
+	ModelParams,
+	AiCapability,
+	ModelMetadata,
+} from './types';
 
 /**
  * Formats the various supported formats of new user content into a consistent content shape.
  *
  * @since 0.1.0
  *
- * @param {string|Object|Object[]} content New content.
- * @return {Object} The formatted new content.
+ * @param content - New content.
+ * @returns The formatted new content.
  */
-export function formatNewContent( content ) {
+export function formatNewContent(
+	content: string | Part[] | Content
+): Content {
 	if ( typeof content === 'string' ) {
 		return {
 			role: enums.ContentRole.USER,
@@ -25,18 +34,18 @@ export function formatNewContent( content ) {
 	}
 
 	if ( Array.isArray( content ) ) {
-		// Could be an array of contents or parts.
-		if ( content[ 0 ].role || content[ 0 ].parts ) {
-			return content;
-		}
-
 		return {
 			role: enums.ContentRole.USER,
 			parts: content,
 		};
 	}
 
-	if ( ! content.role || ! content.parts ) {
+	if (
+		typeof content !== 'object' ||
+		content === null ||
+		! ( 'role' in content ) ||
+		! ( 'parts' in content )
+	) {
 		throw new Error(
 			__(
 				'The value must be a string, a parts object, or a content object.',
@@ -53,9 +62,9 @@ export function formatNewContent( content ) {
  *
  * @since 0.1.0
  *
- * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional history.
+ * @param content - Content data to pass to the model, including the prompt and optional history.
  */
-export function validateContent( content ) {
+export function validateContent( content: string | Content | Content[] ) {
 	if ( ! content ) {
 		throw new Error(
 			__(
@@ -66,7 +75,7 @@ export function validateContent( content ) {
 	}
 	if ( ! Array.isArray( content ) ) {
 		if ( typeof content === 'object' ) {
-			if ( ! content.role || ! content.parts ) {
+			if ( ! ( 'role' in content ) || ! ( 'parts' in content ) ) {
 				throw new Error(
 					__(
 						'The content object must have a role and parts properties.',
@@ -90,11 +99,11 @@ export function validateContent( content ) {
  *
  * @since 0.1.0
  *
- * @param {Object[]} history Chat history.
+ * @param history - Chat history contents.
  */
-export function validateChatHistory( history ) {
+export function validateChatHistory( history: Content[] ) {
 	history.forEach( ( content, index ) => {
-		if ( ! content.role || ! content.parts ) {
+		if ( ! ( 'role' in content ) || ! ( 'parts' in content ) ) {
 			throw new Error(
 				__(
 					'The content object must have a role and parts properties.',
@@ -128,9 +137,9 @@ export function validateChatHistory( history ) {
  *
  * @since 0.3.0
  *
- * @param {Object} modelParams Model parameters.
+ * @param modelParams - Model parameters.
  */
-export function validateModelParams( modelParams ) {
+export function validateModelParams( modelParams: ModelParams ) {
 	if ( ! modelParams.feature ) {
 		throw new Error(
 			__(
@@ -146,12 +155,12 @@ export function validateModelParams( modelParams ) {
  *
  * @since 0.3.0
  *
- * @param {string[]} availableCapabilities Available capabilities.
- * @param {string[]} requestedCapabilities Requested capabilities.
+ * @param availableCapabilities - Available capabilities.
+ * @param requestedCapabilities - Requested capabilities.
  */
 export function validateCapabilities(
-	availableCapabilities,
-	requestedCapabilities
+	availableCapabilities: AiCapability[],
+	requestedCapabilities: AiCapability[]
 ) {
 	if (
 		! requestedCapabilities.every( ( capability ) =>
@@ -172,22 +181,18 @@ export function validateCapabilities(
  *
  * @since 0.3.0
  *
- * @param {string|Object|Object[]} content          Content data to pass to the model, including the prompt and
- *                                                  optional history.
- * @param {string[]}               baseCapabilities Optional. Base capabilities to include in the detected
- *                                                  capabilities. Should typically be provided, as this function cannot
- *                                                  recognize the base capability, e.g. whether to generate text or
- *                                                  images or audio.
- * @return {string[]} Detected capabilities.
+ * @param content          - Content data to pass to the model, including the prompt and optional history.
+ * @param baseCapabilities - Optional. Base capabilities to include in the detected capabilities.
+ * @returns Detected capabilities.
  */
 export function detectRequestedCapabilitiesFromContent(
-	content,
-	baseCapabilities
-) {
-	const requestedCapabilities = [ ...( baseCapabilities || [] ) ];
+	content: string | Content | Content[],
+	baseCapabilities: AiCapability[] = []
+): AiCapability[] {
+	const requestedCapabilities = [ ...baseCapabilities ];
 
 	// Multi-turn conversation.
-	if ( Array.isArray( content ) && content.length > 1 && content[ 0 ].role ) {
+	if ( Array.isArray( content ) && content.length > 1 ) {
 		requestedCapabilities.push( enums.AiCapability.CHAT_HISTORY );
 	}
 
@@ -201,11 +206,14 @@ export function detectRequestedCapabilitiesFromContent(
  *
  * @since 0.3.0
  *
- * @param {Object} availableModels Metadata for each model, mapped by model slug.
- * @param {Object} modelParams     Model parameters. Should contain either a 'model' slug or requested 'capabilities'.
- * @return {Object} Model data object.
+ * @param availableModels - Metadata for each model, mapped by model slug.
+ * @param modelParams     - Model parameters. Should contain either a 'model' slug or requested 'capabilities'.
+ * @returns Model data object.
  */
-export function findModel( availableModels, modelParams ) {
+export function findModel(
+	availableModels: Record< string, ModelMetadata >,
+	modelParams: ModelParams
+): ModelMetadata {
 	// Find model by slug, if specified.
 	if ( modelParams.model ) {
 		if ( ! availableModels[ modelParams.model ] ) {

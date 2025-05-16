@@ -4,17 +4,39 @@
 import CandidatesStreamProcessor from './classes/candidates-stream-processor';
 import HistoryPersistence from './classes/history-persistence';
 import { ContentRole } from './enums';
+import type {
+	ContentRole as ContentRoleType,
+	Content,
+	Candidate,
+} from './types';
+
+// Stubs for the WordPress attachment type.
+type WordPressAttachmentSizeData = {
+	url: string;
+	width: number;
+	height: number;
+};
+type WordPressAttachment = {
+	id: number;
+	url: string;
+	mime: string;
+	sizes?: Record< string, WordPressAttachmentSizeData >;
+	[ key: string ]: unknown;
+};
 
 /**
  * Converts a text string to a Content object.
  *
  * @since 0.2.0
  *
- * @param {string} text The text.
- * @param {string} role Optional. The role to use for the content. Default 'user'.
- * @return {Object} The Content object.
+ * @param text - The text.
+ * @param role - Optional. The role to use for the content. Default 'user'.
+ * @returns The Content object.
  */
-export function textToContent( text, role = ContentRole.USER ) {
+export function textToContent(
+	text: string,
+	role: ContentRoleType = ContentRole.USER
+): Content {
 	return {
 		role,
 		parts: [ { text } ],
@@ -29,16 +51,16 @@ export function textToContent( text, role = ContentRole.USER ) {
  *
  * @since 0.5.0
  *
- * @param {string} text       The text.
- * @param {Object} attachment The attachment object.
- * @param {string} role       Optional. The role to use for the content. Default 'user'.
- * @return {Object} The Content object.
+ * @param text       - The text.
+ * @param attachment - The attachment object.
+ * @param role       - Optional. The role to use for the content. Default 'user'.
+ * @returns The Content object.
  */
 export async function textAndAttachmentToContent(
-	text,
-	attachment,
-	role = ContentRole.USER
-) {
+	text: string,
+	attachment: WordPressAttachment,
+	role: ContentRoleType = ContentRole.USER
+): Promise< Content > {
 	return textAndAttachmentsToContent( text, [ attachment ], role );
 }
 
@@ -50,16 +72,16 @@ export async function textAndAttachmentToContent(
  *
  * @since 0.6.0
  *
- * @param {string}   text        The text.
- * @param {Object[]} attachments The attachment objects.
- * @param {string}   role        Optional. The role to use for the content. Default 'user'.
- * @return {Object} The Content object.
+ * @param text        - The text.
+ * @param attachments - The attachment objects.
+ * @param role        - Optional. The role to use for the content. Default 'user'.
+ * @returns The Content object.
  */
 export async function textAndAttachmentsToContent(
-	text,
-	attachments,
-	role = ContentRole.USER
-) {
+	text: string,
+	attachments: WordPressAttachment[],
+	role: ContentRoleType = ContentRole.USER
+): Promise< Content > {
 	return {
 		role,
 		parts: [
@@ -86,10 +108,10 @@ export async function textAndAttachmentsToContent(
  *
  * @since 0.2.0
  *
- * @param {Object} content The Content object.
- * @return {string} The text, or an empty string if there are no text parts.
+ * @param content - The Content object.
+ * @returns The text, or an empty string if there are no text parts.
  */
-export function contentToText( content ) {
+export function contentToText( content: Content ): string {
 	const textParts = [];
 
 	for ( const part of content.parts ) {
@@ -98,7 +120,7 @@ export function contentToText( content ) {
 		 * Therefore, we break the loop as soon as we encounter a non-text part, unless no text parts have been
 		 * found yet, in which case the text may only start with a later part.
 		 */
-		if ( part.text === undefined ) {
+		if ( ! ( 'text' in part ) ) {
 			if ( textParts.length > 0 ) {
 				break;
 			}
@@ -120,10 +142,10 @@ export function contentToText( content ) {
  *
  * @since 0.2.0
  *
- * @param {Object[]} contents The list of Content objects.
- * @return {string} The text, or an empty string if no Content object has text parts.
+ * @param contents - The list of Content objects.
+ * @returns The text, or an empty string if no Content object has text parts.
  */
-export function getTextFromContents( contents ) {
+export function getTextFromContents( contents: Content[] ): string {
 	for ( const content of contents ) {
 		const text = contentToText( content );
 		if ( text ) {
@@ -139,10 +161,12 @@ export function getTextFromContents( contents ) {
  *
  * @since 0.5.0
  *
- * @param {Object[]} contents The list of Content objects.
- * @return {?Object} The Content object, or null if no Content object has text parts.
+ * @param contents - The list of Content objects.
+ * @returns The Content object, or null if no Content object has text parts.
  */
-export function getTextContentFromContents( contents ) {
+export function getTextContentFromContents(
+	contents: Content[]
+): Content | null {
 	for ( const content of contents ) {
 		const text = contentToText( content );
 		if ( text ) {
@@ -158,10 +182,10 @@ export function getTextContentFromContents( contents ) {
  *
  * @since 0.2.0
  *
- * @param {Object[]} candidates The list of candidates.
- * @return {Object[]} The list of Content objects.
+ * @param candidates - The list of candidates.
+ * @returns The list of Content objects.
  */
-export function getCandidateContents( candidates ) {
+export function getCandidateContents( candidates: Candidate[] ): Content[] {
 	const contents = [];
 
 	for ( const candidate of candidates ) {
@@ -182,23 +206,25 @@ export function getCandidateContents( candidates ) {
  *
  * @since 0.3.0
  *
- * @param {Object} generator The generator that yields the chunks of response candidates.
- * @return {CandidatesStreamProcessor} The stream processor instance.
+ * @param generator - The generator that yields the chunks of response candidates.
+ * @returns The stream processor instance.
  */
-export function processCandidatesStream( generator ) {
+export function processCandidatesStream(
+	generator: AsyncGenerator< Candidate[], never, void >
+): CandidatesStreamProcessor {
 	return new CandidatesStreamProcessor( generator );
 }
 
-let historyPersistenceInstance;
+let historyPersistenceInstance: HistoryPersistence | undefined;
 
 /**
  * Gets the history persistence instance, to load, save, and clear histories.
  *
  * @since 0.5.0
  *
- * @return {HistoryPersistence} The history persistence instance.
+ * @returns The history persistence instance.
  */
-export function historyPersistence() {
+export function historyPersistence(): HistoryPersistence {
 	if ( ! historyPersistenceInstance ) {
 		historyPersistenceInstance = new HistoryPersistence();
 	}
@@ -211,12 +237,14 @@ export function historyPersistence() {
  *
  * @since 0.5.0
  *
- * @param {string} file     The file URL.
- * @param {string} mimeType Optional. The MIME type of the file. If provided, the base64-encoded data URL will
- *                          be prefixed with `data:{mime_type};base64,`. Default empty string.
- * @return {string} The base64-encoded file data URL, or empty string on failure.
+ * @param file     - The file URL.
+ * @param mimeType - Optional. The MIME type of the file, to prefix `data:{mime_type};base64,`. Default empty string.
+ * @returns The base64-encoded file data URL, or empty string on failure.
  */
-export async function fileToBase64DataUrl( file, mimeType = '' ) {
+export async function fileToBase64DataUrl(
+	file: string,
+	mimeType: string = ''
+): Promise< string > {
 	const blob = await fileToBlob( file, mimeType );
 	if ( ! blob ) {
 		return '';
@@ -230,12 +258,14 @@ export async function fileToBase64DataUrl( file, mimeType = '' ) {
  *
  * @since 0.5.0
  *
- * @param {string} file     The file URL.
- * @param {string} mimeType Optional. The MIME type of the file. If provided, the automatically detected MIME type will
- *                          be overwritten. Default empty string.
- * @return {Blob?} The binary data blob, or null on failure.
+ * @param file     - The file URL.
+ * @param mimeType - Optional. The MIME type of the file, to override detected MIME type. Default empty string.
+ * @returns The binary data blob, or null on failure.
  */
-export async function fileToBlob( file, mimeType = '' ) {
+export async function fileToBlob(
+	file: string,
+	mimeType: string = ''
+): Promise< Blob | null > {
 	const data = await fetch( file );
 	const blob = await data.blob();
 	if ( ! blob ) {
@@ -252,10 +282,10 @@ export async function fileToBlob( file, mimeType = '' ) {
  *
  * @since 0.5.0
  *
- * @param {Blob} blob The binary data blob.
- * @return {string} The base64-encoded data URL, or empty string on failure.
+ * @param blob - The binary data blob.
+ * @returns The base64-encoded data URL, or empty string on failure.
  */
-export async function blobToBase64DataUrl( blob ) {
+export async function blobToBase64DataUrl( blob: Blob ): Promise< string > {
 	const base64DataUrl = await new Promise( ( resolve ) => {
 		const reader = new window.FileReader();
 		reader.readAsDataURL( blob );
@@ -265,6 +295,10 @@ export async function blobToBase64DataUrl( blob ) {
 		};
 	} );
 
+	if ( typeof base64DataUrl !== 'string' ) {
+		return '';
+	}
+
 	return base64DataUrl;
 }
 
@@ -273,10 +307,12 @@ export async function blobToBase64DataUrl( blob ) {
  *
  * @since 0.5.0
  *
- * @param {string} base64DataUrl The base64-encoded data URL.
- * @return {Blob?} The binary data blob, or null on failure.
+ * @param base64DataUrl - The base64-encoded data URL.
+ * @returns The binary data blob, or null on failure.
  */
-export async function base64DataUrlToBlob( base64DataUrl ) {
+export async function base64DataUrlToBlob(
+	base64DataUrl: string
+): Promise< Blob | null > {
 	const prefixMatch = base64DataUrl.match(
 		/^data:([a-z0-9-]+\/[a-z0-9-]+);base64,/
 	);
@@ -308,11 +344,14 @@ export async function base64DataUrlToBlob( base64DataUrl ) {
  *
  * @since 0.6.0
  *
- * @param {string} base64Data Base64-encoded data. If it is already a data URL, it will be returned as is.
- * @param {string} mimeType   MIME type for the data.
- * @return {string} The base64 data URL.
+ * @param base64Data - Base64-encoded data. If it is already a data URL, it will be returned as is.
+ * @param mimeType   - MIME type for the data.
+ * @returns The base64 data URL.
  */
-export function base64DataToBase64DataUrl( base64Data, mimeType ) {
+export function base64DataToBase64DataUrl(
+	base64Data: string,
+	mimeType: string
+): string {
 	if ( base64Data.startsWith( 'data:' ) ) {
 		return base64Data;
 	}
@@ -324,10 +363,10 @@ export function base64DataToBase64DataUrl( base64Data, mimeType ) {
  *
  * @since 0.6.0
  *
- * @param {string} base64DataUrl Base64 data URL. If it is already without prefix, it will be returned as is.
- * @return {string} The base64-encoded data.
+ * @param base64DataUrl - Base64 data URL. If it is already without prefix, it will be returned as is.
+ * @returns The base64-encoded data.
  */
-export function base64DataUrlToBase64Data( base64DataUrl ) {
+export function base64DataUrlToBase64Data( base64DataUrl: string ): string {
 	if ( ! base64DataUrl.startsWith( 'data:' ) ) {
 		return base64DataUrl;
 	}

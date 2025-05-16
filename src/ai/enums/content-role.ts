@@ -2,7 +2,7 @@ export const USER = 'user';
 export const MODEL = 'model';
 export const SYSTEM = 'system';
 
-const VALUE_MAP = {
+export const _VALUE_MAP = {
 	[ USER ]: true,
 	[ MODEL ]: true,
 	[ SYSTEM ]: true,
@@ -13,11 +13,11 @@ const VALUE_MAP = {
  *
  * @since 0.2.0
  *
- * @param {string} value The value to check.
- * @return {boolean} True if the value is valid, false otherwise.
+ * @param value - The value to check.
+ * @returns True if the value is valid, false otherwise.
  */
-export function isValidValue( value ) {
-	return !! VALUE_MAP[ value ];
+export function isValidValue( value: string ) {
+	return value in _VALUE_MAP;
 }
 
 /**
@@ -25,8 +25,8 @@ export function isValidValue( value ) {
  *
  * @since 0.2.0
  *
- * @return {string[]} The list of valid values.
+ * @returns The list of valid values.
  */
 export function getValues() {
-	return Object.keys( VALUE_MAP );
+	return Object.keys( _VALUE_MAP );
 }

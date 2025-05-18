@@ -5,6 +5,7 @@ import GenerativeAiService from './generative-ai-service';
 import GenerativeAiModel from './generative-ai-model';
 import BrowserGenerativeAiModel from './browser-generative-ai-model';
 import { findModel } from '../util';
+import type { ModelParams } from '../types';
 
 const EMPTY_OBJECT = {};
 
@@ -19,11 +20,10 @@ export default class BrowserGenerativeAiService extends GenerativeAiService {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {Object} modelParams Model parameters. At a minimum this must include the unique "feature" identifier. It
-	 *                             can also include the model slug and other optional parameters.
-	 * @return {GenerativeAiModel} Generative AI model instance.
+	 * @param modelParams - Model parameters. At a minimum this must include the unique "feature" identifier.
+	 * @returns Generative AI model instance.
 	 */
-	getModel( modelParams ) {
+	getModel( modelParams: ModelParams ): GenerativeAiModel {
 		modelParams = modelParams || EMPTY_OBJECT;
 
 		const model = findModel( this.models, modelParams );

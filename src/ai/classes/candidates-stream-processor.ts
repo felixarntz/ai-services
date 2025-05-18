@@ -1,13 +1,23 @@
 /**
+ * Internal dependencies
+ */
+import type { Content, Candidates, AsyncCandidatesGenerator } from '../types';
+
+type CandidatesCallback = ( candidates: Candidates ) => void;
+
+/**
  * Appends the content of a new candidate to the content of an existing candidate.
  *
  * @since 0.3.0
  *
- * @param {Object} existingContent The existing content data.
- * @param {Object} newContent      The new content data.
- * @return {Object} The combined content data.
+ * @param existingContent - The existing content data.
+ * @param newContent      - The new content data.
+ * @returns The combined content data.
  */
-function appendContent( existingContent, newContent ) {
+function appendContent(
+	existingContent: Content,
+	newContent: Content
+): Content {
 	existingContent = {
 		...existingContent,
 		parts: [ ...( existingContent.parts || [] ) ],
@@ -24,8 +34,8 @@ function appendContent( existingContent, newContent ) {
 		}
 
 		if (
-			existingContent.parts[ index ].text === undefined ||
-			newPart.text === undefined
+			! ( 'text' in existingContent.parts[ index ] ) ||
+			! ( 'text' in newPart )
 		) {
 			return;
 		}
@@ -44,15 +54,17 @@ function appendContent( existingContent, newContent ) {
  * @since 0.3.0
  */
 export default class CandidatesStreamProcessor {
+	generator: AsyncCandidatesGenerator;
+	candidates: Candidates | null;
+
 	/**
 	 * Constructor.
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {Object} generator The generator that yields chunks of response candidates with the generated text
-	 *                           content.
+	 * @param generator - The generator that yields chunks of response candidates with the generated text content.
 	 */
-	constructor( generator ) {
+	constructor( generator: AsyncCandidatesGenerator ) {
 		this.generator = generator;
 		this.candidates = null;
 	}
@@ -65,10 +77,10 @@ export default class CandidatesStreamProcessor {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {Function|null} chunkCallback Optional. Callback that is called for each chunk of candidates.
-	 * @return {Promise<Object[]>} The complete candidates instance.
+	 * @param chunkCallback - Optional. Callback that is called for each chunk of candidates.
+	 * @returns The complete candidates instance.
 	 */
-	async readAll( chunkCallback ) {
+	async readAll( chunkCallback: CandidatesCallback | null = null ) {
 		for await ( const candidates of this.generator ) {
 			this.addChunk( candidates );
 
@@ -84,9 +96,9 @@ export default class CandidatesStreamProcessor {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {Object} candidates The chunk of candidates to add.
+	 * @param candidates - The chunk of candidates to add.
 	 */
-	addChunk( candidates ) {
+	addChunk( candidates: Candidates ) {
 		if ( ! this.candidates ) {
 			this.candidates = candidates;
 			return;
@@ -123,9 +135,9 @@ export default class CandidatesStreamProcessor {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @return {Object[]|null} The complete candidates instance, or null if the generator is not done yet.
+	 * @returns The complete candidates instance, or null if the generator is not done yet.
 	 */
-	getComplete() {
+	getComplete(): Candidates | null {
 		// TODO: How to check if the generator is done?
 		return this.candidates;
 	}

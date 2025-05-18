@@ -4,6 +4,12 @@
 import GenerativeAiModel from './generative-ai-model';
 import { getCandidateContents, processCandidatesStream } from '../helpers';
 import { validateChatHistory, formatNewContent } from '../util';
+import type {
+	Content,
+	Part,
+	AsyncCandidatesGenerator,
+	ChatSessionOptions,
+} from '../types';
 
 /**
  * Class representing a chat session with a generative model.
@@ -11,16 +17,20 @@ import { validateChatHistory, formatNewContent } from '../util';
  * @since 0.1.0
  */
 export default class ChatSession {
+	model: GenerativeAiModel;
+	history: Content[];
+
 	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param {GenerativeAiModel} model           Generative AI model.
-	 * @param {Object}            options         Chat options.
-	 * @param {Object[]}          options.history Chat history.
+	 * @param model   - Generative AI model.
+	 * @param options - Chat options.
 	 */
-	constructor( model, { history } ) {
+	constructor( model: GenerativeAiModel, options: ChatSessionOptions ) {
+		const { history } = options;
+
 		this.model = model;
 
 		if ( history ) {
@@ -36,9 +46,9 @@ export default class ChatSession {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return {Object[]} Chat history.
+	 * @returns Chat history.
 	 */
-	getHistory() {
+	getHistory(): Content[] {
 		return this.history;
 	}
 
@@ -47,10 +57,12 @@ export default class ChatSession {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param {string|Object|Object[]} content Chat message content.
-	 * @return {Promise<Object>} The response content.
+	 * @param content - Chat message content.
+	 * @returns The response content.
 	 */
-	async sendMessage( content ) {
+	async sendMessage(
+		content: string | Part[] | Content
+	): Promise< Content > {
 		const newContent = formatNewContent( content );
 
 		const contents = [ ...this.history, newContent ];
@@ -71,10 +83,12 @@ export default class ChatSession {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {string|Object|Object[]} content Chat message content.
-	 * @return {Promise<Object>} The generator that yields chunks of the response content.
+	 * @param content - Chat message content.
+	 * @returns The generator that yields chunks of the response content.
 	 */
-	async streamSendMessage( content ) {
+	async streamSendMessage(
+		content: string | Part[] | Content
+	): Promise< AsyncGenerator< Content, void, void > > {
 		const newContent = formatNewContent( content );
 
 		const contents = [ ...this.history, newContent ];
@@ -99,14 +113,14 @@ export default class ChatSession {
  *
  * @since 0.3.0
  *
- * @param {Object}   candidatesGenerator The generator that yields the chunks of response candidates.
- * @param {Function} completeCallback    Callback that is called with the complete response content.
- * @return {Object} The generator that yields chunks of the response content.
+ * @param candidatesGenerator - The generator that yields the chunks of response candidates.
+ * @param completeCallback    - Callback that is called with the complete response content.
+ * @returns The generator that yields chunks of the response content.
  */
 async function* processCandidatesStreamToContent(
-	candidatesGenerator,
-	completeCallback
-) {
+	candidatesGenerator: AsyncCandidatesGenerator,
+	completeCallback: ( content: Content ) => void
+): AsyncGenerator< Content, void, void > {
 	const candidatesProcessor = processCandidatesStream( candidatesGenerator );
 	for await ( const candidates of candidatesGenerator ) {
 		candidatesProcessor.addChunk( candidates );
@@ -119,6 +133,12 @@ async function* processCandidatesStreamToContent(
 	}
 
 	const completeCandidates = candidatesProcessor.getComplete();
+
+	if ( ! completeCandidates ) {
+		throw new Error(
+			'Candidates stream is empty. No content was generated.'
+		);
+	}
 
 	// TODO: Support optional candidateFilterArgs, similar to PHP implementation.
 	const completeContents = getCandidateContents( completeCandidates );

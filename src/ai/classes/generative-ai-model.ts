@@ -14,8 +14,21 @@ import {
 	validateCapabilities,
 } from '../util';
 import processStream from '../../utils/process-stream';
+import type {
+	ModelMetadata,
+	ModelParams,
+	Content,
+	Part,
+	Candidates,
+	AsyncCandidatesGenerator,
+} from '../types';
 
 const EMPTY_OBJECT = {};
+
+type ModelData = {
+	serviceSlug: string;
+	metadata: ModelMetadata;
+};
 
 /**
  * Model class.
@@ -23,23 +36,23 @@ const EMPTY_OBJECT = {};
  * @since 0.3.0
  */
 export default class GenerativeAiModel {
+	serviceSlug: string;
+	metadata: ModelMetadata;
+	modelParams: ModelParams;
+
 	/**
 	 * Constructor.
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {Object} model             Model object.
-	 * @param {string} model.serviceSlug Service slug.
-	 * @param {Object} model.metadata    Model metadata.
-	 * @param {Object} modelParams       Model parameters passed. At a minimum this must include the unique
-	 *                                   "feature" identifier. It can also include the model slug and other optional
-	 *                                   parameters.
+	 * @param model       - Model object.
+	 * @param modelParams - Model parameters passed. At a minimum this must include the unique "feature" identifier.
 	 */
-	constructor( { serviceSlug, metadata }, modelParams ) {
+	constructor( model: ModelData, modelParams: ModelParams ) {
 		validateModelParams( modelParams );
 
-		this.serviceSlug = serviceSlug;
-		this.metadata = metadata;
+		this.serviceSlug = model.serviceSlug;
+		this.metadata = model.metadata;
 		this.modelParams = modelParams || EMPTY_OBJECT;
 	}
 
@@ -48,7 +61,7 @@ export default class GenerativeAiModel {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @return {string} Model name.
+	 * @returns Model slug.
 	 */
 	getModelSlug() {
 		/*
@@ -64,7 +77,7 @@ export default class GenerativeAiModel {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return {Object} Model metadata.
+	 * @returns Model metadata.
 	 */
 	getModelMetadata() {
 		return this.metadata;
@@ -75,11 +88,12 @@ export default class GenerativeAiModel {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
-	 *                                         history.
-	 * @return {Promise<Object[]>} Model response candidates with the generated text content.
+	 * @param content - Content data to pass to the model, including the prompt and optional history.
+	 * @returns Model response candidates with the generated text content.
 	 */
-	async generateText( content ) {
+	async generateText(
+		content: string | Part[] | Content | Content[]
+	): Promise< Candidates > {
 		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 		] );
@@ -99,7 +113,9 @@ export default class GenerativeAiModel {
 				},
 			} );
 		} catch ( error ) {
-			throw new Error( error.message || error.code || error );
+			throw new Error(
+				error instanceof Error ? error.message : String( error )
+			);
 		}
 	}
 
@@ -108,12 +124,12 @@ export default class GenerativeAiModel {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
-	 *                                         history.
-	 * @return {Promise<Object>} The generator that yields chunks of response candidates with the generated text
-	 *                           content.
+	 * @param content - Content data to pass to the model, including the prompt and optional history.
+	 * @returns The generator that yields chunks of response candidates with the generated text content.
 	 */
-	async streamGenerateText( content ) {
+	async streamGenerateText(
+		content: string | Part[] | Content | Content[]
+	): Promise< AsyncCandidatesGenerator > {
 		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 		] );
@@ -123,7 +139,7 @@ export default class GenerativeAiModel {
 		// Do some very basic validation.
 		validateContent( content );
 
-		const response = await apiFetch( {
+		const response: Response = await apiFetch( {
 			path: `/ai-services/v1/services/${ this.serviceSlug }:stream-generate-text`,
 			method: 'POST',
 			data: {
@@ -144,10 +160,10 @@ export default class GenerativeAiModel {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param {Object[]} history Chat history.
-	 * @return {ChatSession} Chat session.
+	 * @param history - Chat history.
+	 * @returns Chat session.
 	 */
-	startChat( history ) {
+	startChat( history: Content[] ): ChatSession {
 		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.TEXT_GENERATION,
 			enums.AiCapability.CHAT_HISTORY,
@@ -161,11 +177,12 @@ export default class GenerativeAiModel {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param {string|Object|Object[]} content Content data to pass to the model, including the prompt and optional
-	 *                                         history.
-	 * @return {Promise<Object[]>} Model response candidates with the generated image.
+	 * @param content - Content data to pass to the model, including the prompt and optional history.
+	 * @returns Model response candidates with the generated image.
 	 */
-	async generateImage( content ) {
+	async generateImage(
+		content: string | Part[] | Content | Content[]
+	): Promise< Candidates > {
 		validateCapabilities( this.metadata.capabilities, [
 			enums.AiCapability.IMAGE_GENERATION,
 		] );
@@ -185,7 +202,9 @@ export default class GenerativeAiModel {
 				},
 			} );
 		} catch ( error ) {
-			throw new Error( error.message || error.code || error );
+			throw new Error(
+				error instanceof Error ? error.message : String( error )
+			);
 		}
 	}
 }

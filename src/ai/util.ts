@@ -64,7 +64,9 @@ export function formatNewContent(
  *
  * @param content - Content data to pass to the model, including the prompt and optional history.
  */
-export function validateContent( content: string | Content | Content[] ) {
+export function validateContent(
+	content: string | Part[] | Content | Content[]
+) {
 	if ( ! content ) {
 		throw new Error(
 			__(
@@ -186,13 +188,18 @@ export function validateCapabilities(
  * @returns Detected capabilities.
  */
 export function detectRequestedCapabilitiesFromContent(
-	content: string | Content | Content[],
+	content: string | Part[] | Content | Content[],
 	baseCapabilities: AiCapability[] = []
 ): AiCapability[] {
 	const requestedCapabilities = [ ...baseCapabilities ];
 
 	// Multi-turn conversation.
-	if ( Array.isArray( content ) && content.length > 1 ) {
+	if (
+		Array.isArray( content ) &&
+		content.length > 1 &&
+		'role' in content[ 0 ] &&
+		'parts' in content[ 0 ]
+	) {
 		requestedCapabilities.push( enums.AiCapability.CHAT_HISTORY );
 	}
 

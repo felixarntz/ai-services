@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import type { ServiceResource } from '@ai-services/ai/types';
+
+/**
  * WordPress dependencies
  */
 import apiFetch from '@wordpress/api-fetch';
@@ -10,28 +15,6 @@ import { createRegistrySelector } from '@wordpress/data';
 import { STORE_NAME } from './name';
 import type { StoreConfig, Action, ThunkArgs } from '../utils/store-types';
 
-type AiServiceMetadata = {
-	slug: string;
-	name: string;
-	credentials_url: string;
-	type: string;
-	capabilities: string[];
-};
-
-type AiModelMetadata = {
-	slug: string;
-	name: string;
-	capabilities: string[];
-};
-
-type AiService = {
-	slug: string;
-	metadata: AiServiceMetadata;
-	is_available: boolean;
-	available_models: Record< string, AiModelMetadata >;
-	has_forced_api_key?: boolean;
-};
-
 export enum ActionType {
 	Unknown = 'REDUX_UNKNOWN',
 	ReceiveServices = 'RECEIVE_SERVICES',
@@ -41,11 +24,11 @@ export enum ActionType {
 type UnknownAction = Action< ActionType.Unknown >;
 type ReceiveServicesAction = Action<
 	ActionType.ReceiveServices,
-	{ services: AiService[] }
+	{ services: ServiceResource[] }
 >;
 type ReceiveServiceAction = Action<
 	ActionType.ReceiveService,
-	{ service: AiService }
+	{ service: ServiceResource }
 >;
 
 export type CombinedAction =
@@ -54,7 +37,7 @@ export type CombinedAction =
 	| ReceiveServiceAction;
 
 export type State = {
-	services: Record< string, AiService > | undefined;
+	services: Record< string, ServiceResource > | undefined;
 };
 
 export type ActionCreators = typeof actions;
@@ -80,7 +63,7 @@ const actions = {
 	 * @param services - Services received from the server.
 	 * @returns Action creator.
 	 */
-	receiveServices( services: AiService[] ) {
+	receiveServices( services: ServiceResource[] ) {
 		return ( { dispatch }: DispatcherArgs ) => {
 			dispatch( {
 				type: ActionType.ReceiveServices,
@@ -99,7 +82,7 @@ const actions = {
 	 * @param service - Service received from the server.
 	 * @returns Action creator.
 	 */
-	receiveService( service: AiService ) {
+	receiveService( service: ServiceResource ) {
 		return ( { dispatch }: DispatcherArgs ) => {
 			dispatch( {
 				type: ActionType.ReceiveService,
@@ -124,7 +107,7 @@ const actions = {
 				return;
 			}
 
-			const service: AiService = await apiFetch( {
+			const service: ServiceResource = await apiFetch( {
 				path: `/ai-services/v1/services/${ slug }?context=edit`,
 			} );
 			dispatch.receiveService( service );
@@ -152,7 +135,7 @@ function reducer( state: State = initialState, action: CombinedAction ): State {
 						acc[ service.slug ] = service;
 						return acc;
 					},
-					{} as Record< string, AiService >
+					{} as Record< string, ServiceResource >
 				),
 			};
 		}
@@ -181,7 +164,7 @@ const resolvers = {
 	 */
 	getServices() {
 		return async ( { dispatch }: DispatcherArgs ) => {
-			const services: AiService[] = await apiFetch( {
+			const services: ServiceResource[] = await apiFetch( {
 				path: '/ai-services/v1/services?context=edit',
 			} );
 			dispatch.receiveServices( services );
@@ -196,7 +179,7 @@ const selectors = {
 
 	getService: createRegistrySelector(
 		( select ) => ( _state: State, slug: string ) => {
-			const services: Record< string, AiService > =
+			const services: Record< string, ServiceResource > | undefined =
 				select( STORE_NAME ).getServices();
 			if ( services === undefined ) {
 				return undefined;
@@ -204,7 +187,7 @@ const selectors = {
 			if ( services[ slug ] === undefined ) {
 				// eslint-disable-next-line no-console
 				console.error( `Invalid service ${ slug }.` );
-				return undefined;
+				return null;
 			}
 			return services[ slug ];
 		}

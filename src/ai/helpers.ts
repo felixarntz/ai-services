@@ -7,7 +7,8 @@ import { ContentRole } from './enums';
 import type {
 	ContentRole as ContentRoleType,
 	Content,
-	Candidate,
+	Candidates,
+	AsyncCandidatesGenerator,
 } from './types';
 
 // Stubs for the WordPress attachment type.
@@ -185,7 +186,7 @@ export function getTextContentFromContents(
  * @param candidates - The list of candidates.
  * @returns The list of Content objects.
  */
-export function getCandidateContents( candidates: Candidate[] ): Content[] {
+export function getCandidateContents( candidates: Candidates ): Content[] {
 	const contents = [];
 
 	for ( const candidate of candidates ) {
@@ -210,7 +211,7 @@ export function getCandidateContents( candidates: Candidate[] ): Content[] {
  * @returns The stream processor instance.
  */
 export function processCandidatesStream(
-	generator: AsyncGenerator< Candidate[], never, void >
+	generator: AsyncCandidatesGenerator
 ): CandidatesStreamProcessor {
 	return new CandidatesStreamProcessor( generator );
 }

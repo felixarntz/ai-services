@@ -90,6 +90,30 @@ export type Candidate = {
 	[ key: string ]: unknown;
 };
 
+export type Candidates = Candidate[];
+
+export type AsyncCandidatesGenerator = AsyncGenerator<
+	Candidate[],
+	void,
+	void
+>;
+
+/*
+ * Chat session.
+ * ================================================
+ */
+
+export type ChatSessionOptions = {
+	history?: Content[];
+};
+
+export type ChatConfigOptions = {
+	service?: string;
+	modelParams: ModelParams;
+};
+
+export type StartChatOptions = ChatConfigOptions & ChatSessionOptions;
+
 /*
  * History.
  * ================================================
@@ -192,4 +216,14 @@ export type ModelMetadata = {
 	slug: string;
 	name: string;
 	capabilities: AiCapability[];
+};
+
+/*
+ * Service retrieval.
+ * ================================================
+ */
+
+export type AvailableServicesArgs = {
+	slugs?: string[];
+	capabilities?: AiCapability[];
 };

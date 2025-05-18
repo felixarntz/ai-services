@@ -3,15 +3,22 @@
  *
  * @since 0.3.0
  *
- * @param {Response} response The response object.
- * @return {Object} The generator that yields chunks of data.
+ * @param response - The response object.
+ * @returns The generator that yields chunks of data.
  */
-export default function processStream( response ) {
+export default function processStream< T >(
+	response: Response
+): AsyncGenerator< T, void, void > {
+	if ( response.body === null ) {
+		throw new Error(
+			'Response body is null. This may be due to a network error or an unsupported response type.'
+		);
+	}
 	const inputStream = response.body.pipeThrough(
 		new TextDecoderStream( 'utf8', { fatal: true } )
 	);
-	const responseStream = getResponseStream( inputStream );
-	return getResponseGenerator( responseStream );
+	const responseStream = getResponseStream< T >( inputStream );
+	return getResponseGenerator< T >( responseStream );
 }
 
 /**
@@ -19,10 +26,12 @@ export default function processStream( response ) {
  *
  * @since 0.3.0
  *
- * @param {ReadableStream} stream The stream object.
- * @return {Object} The generator that yields chunks of data.
+ * @param stream - The stream object.
+ * @returns The generator that yields chunks of data.
  */
-async function* getResponseGenerator( stream ) {
+export async function* getResponseGenerator< T >(
+	stream: ReadableStream< T >
+): AsyncGenerator< T, void, void > {
 	const reader = stream.getReader();
 	while ( true ) {
 		const { value, done } = await reader.read();
@@ -45,26 +54,29 @@ const chunkLineRegex = /^data\: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
  *
  * @since 0.3.0
  *
- * @param {ReadableStream} inputStream The input stream.
- * @return {ReadableStream} The output stream.
+ * @param inputStream - The input stream.
+ * @returns The output stream.
  */
-function getResponseStream( inputStream ) {
+function getResponseStream< T >(
+	inputStream: ReadableStream< string >
+): ReadableStream< T > {
 	const reader = inputStream.getReader();
-	const stream = new ReadableStream( {
+	const stream = new ReadableStream< T >( {
 		/**
 		 * Processes the input stream and enqueues chunks of data.
 		 *
 		 * @since 0.3.0
 		 *
-		 * @param {ReadableStreamDefaultController} controller The stream controller.
+		 * @param controller - The stream controller.
 		 */
 		start( controller ) {
 			let buffer = '';
 
-			reader.read().then( function processText( { value, done } ) {
+			reader.read().then( function processText( { value, done } ): void {
 				if ( done ) {
 					if ( buffer ) {
-						controller.enqueue( buffer );
+						// TODO: May this still contain JSON to parse?
+						// controller.enqueue( buffer );
 					}
 					controller.close();
 					return;
@@ -89,7 +101,7 @@ function getResponseStream( inputStream ) {
 					match = buffer.match( chunkLineRegex );
 				}
 
-				return reader.read().then( processText );
+				reader.read().then( processText );
 			} );
 		},
 

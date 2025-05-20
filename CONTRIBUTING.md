@@ -21,7 +21,8 @@ If you're interested in contributing code, please consider the following guideli
 
 * All code must follow the [WordPress Coding Standards and best practices](https://developer.wordpress.org/coding-standards/), including documentation. They are enforced via the project's PHP_CodeSniffer configuration.
 * All code must be backward-compatible with WordPress 6.0 and PHP 7.2.
-* All code must pass the automated PHP code quality requirements via the project's PHPMD and PHPStan configuration.
+* All PHP code must pass the automated code quality requirements via the project's PHPCodeSniffer, PHPMD, and PHPStan configurations.
+* All TypeScript code must pass the automated code quality requirements via the project's ESLint, and `wp-prettier` (Prettier fork) configurations.
 * All functional code changes should be accompanied by PHPUnit tests.
 
 ### Getting started with writing code

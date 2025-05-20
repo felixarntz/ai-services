@@ -1,0 +1,50 @@
+############
+## VCS
+############
+.git/
+
+############
+## Build
+############
+
+build
+build-types
+*.tsbuildinfo
+
+############
+## Vendor
+############
+
+node_modules/
+third-party/
+vendor/
+
+############
+## OSes
+############
+
+[Tt]humbs.db
+[Dd]esktop.ini
+*.DS_store
+.DS_store?
+
+############
+## Misc
+############
+
+tests/logs
+tmp/
+*.tmp
+*.bak
+*.log
+*.[Cc]ache
+*.cpr
+*.orig
+*.php.in
+.idea/
+.sass-cache/*
+temp/
+._*
+.Trashes
+.svn
+.env

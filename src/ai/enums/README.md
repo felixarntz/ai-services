@@ -4,6 +4,8 @@ Directory: `src/ai/enums/`
 
 This directory contains TypeScript modules that define various enumerations (enums) used throughout the AI-related functionalities of the plugin. These enums provide a set of predefined constants for specific types, such as AI capabilities, content roles in a conversation, and AI service types. Each enum module typically exports the constant values and utility functions to validate or retrieve these values. The `index.ts` file serves as a central export point for all enums in this directory, making them accessible via common namespaces.
 
+It is CRITICAL that all the available JavaScript/TypeScript enums and their values defined here are kept in sync with the PHP enums in `includes/Services/API/Enums/`.
+
 ## Purpose
 
 The primary purpose of the code within this directory is to:

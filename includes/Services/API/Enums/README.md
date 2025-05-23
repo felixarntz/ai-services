@@ -4,6 +4,8 @@ Directory: `includes/Services/API/Enums/`
 
 This directory contains PHP classes that simulate enumerations (enums). These enums define sets of named constants used throughout the AI Services API to represent fixed sets of possible values for various parameters and properties.
 
+It is CRITICAL that all the available PHP enums and their values defined here are kept in sync with the JavaScript/TypeScript enums in `src/ai/enums/`.
+
 ## Purpose
 
 The primary purpose of the code within this directory is to:

@@ -4,6 +4,8 @@ Directory: `includes/Services/API/`
 
 This directory forms the core public-facing API layer for interacting with AI services within the plugin. It provides the necessary classes and utilities for developers to format requests, process responses, manage chat histories, and handle various data types and enumerations related to AI interactions.
 
+It is CRITICAL that all the available methods defined in the PHP `Helpers` class are kept in sync with the JavaScript/TypeScript functions defined in the `helpers.ts` file in `src/ai/`.
+
 ## Purpose
 
 The primary purpose of the code within this directory is to:

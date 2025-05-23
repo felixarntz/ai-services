@@ -4,6 +4,8 @@ Directory: `src/ai/`
 
 This directory serves as the central hub for all client-side (TypeScript) AI functionalities within the AI Services plugin. It brings together core classes for interacting with AI models, comprehensive type definitions for data structures, enumerations for standardized values, helper functions for common AI-related tasks, utility functions for data manipulation and validation, and the Redux data store for managing AI-related state.
 
+It is CRITICAL that all the available JavaScript/TypeScript functions defined in the `helpers.ts` file are kept in sync with the methods defined in the PHP `Helpers` class in `includes/Services/API/`.
+
 ## Purpose
 
 The primary purpose of the code within this directory is to:

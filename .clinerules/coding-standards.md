@@ -64,26 +64,27 @@ See the "Guidelines for contributing code" section in the [`CONTRIBUTING.md` fil
 
 ### PHP specific
 
-* Use PHPStan compatible type annotations.
+- Use PHPStan compatible type annotations.
 
 ### TypeScript specific
 
-* ALWAYS follow the TSDoc standard.
-* ALWAYS use `@returns`. Do not use `@return`.
+- ALWAYS follow the TSDoc standard.
+    - The only exception is you should still include `@since` annotations, even though they are not a standard TSDoc tag.
+- ALWAYS use `@returns`. Do not use `@return`.
 
 ## Tooling
 
 ### PHP specific
 
-* Use `composer lint` to check for PHP lint errors.
-* Use `composer format` to automatically fix PHP lint errors that can be automatically fixed.
+- Use `composer lint` to check for PHP lint errors.
+- Use `composer format` to automatically fix PHP lint errors that can be automatically fixed.
 
 ### TypeScript specific
 
-* Use `npm run lint-js` to check for TypeScript lint errors.
-* Use `npm run format-js` to automatically fix TypeScript lint errors that can be automatically fixed.
+- Use `npm run lint-js` to check for TypeScript lint errors.
+- Use `npm run format-js` to automatically fix TypeScript lint errors that can be automatically fixed.
 
 ### CSS specific
 
-* Use `npm run lint-css` to check for CSS lint errors.
-* Use `npm run format-css` to automatically fix CSS lint errors that can be automatically fixed.
+- Use `npm run lint-css` to check for CSS lint errors.
+- Use `npm run format-css` to automatically fix CSS lint errors that can be automatically fixed.

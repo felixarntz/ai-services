@@ -6,6 +6,8 @@ This directory serves as the central hub for all client-side (TypeScript) AI fun
 
 It is CRITICAL that all the available JavaScript/TypeScript functions defined in the `helpers.ts` file are kept in sync with the methods defined in the PHP `Helpers` class in `includes/Services/API/`.
 
+It is CRITICAL that all the available JavaScript/TypeScript types defined in the `types.ts` file are kept in sync with the PHP type classes in `includes/Services/API/Types/`.
+
 ## Purpose
 
 The primary purpose of the code within this directory is to:

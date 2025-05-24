@@ -4,6 +4,8 @@ Directory: `includes/Services/API/Types/`
 
 This directory contains PHP classes that represent various data structures (types) used throughout the AI Services API. These classes primarily function as value objects, Data Transfer Objects (DTOs), and configuration objects, ensuring data consistency and providing clear contracts for API interactions.
 
+It is CRITICAL that all the PHP type classes defined here are kept in sync with the JavaScript/TypeScript types defined in the `types.ts` file in `src/ai/`.
+
 ## Purpose
 
 The primary purpose of the code within this directory is to:

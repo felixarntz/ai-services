@@ -19,44 +19,47 @@ import {
  * Using `@types/dom-chromium-ai` does not properly work, so we'll redefine the relevant types here.
  * See https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/dom-chromium-ai/index.d.ts
  */
-interface AILanguageModelFactory {
+interface LanguageModelFactory {
 	create: (
-		options?: AILanguageModelCreateOptions
-	) => Promise< AILanguageModel >;
-	capabilities: () => Promise< AILanguageModelCapabilities >;
+		options?: LanguageModelCreateOptions
+	) => Promise< LanguageModel >;
+	availability: (
+		options?: LanguageModelCreateCoreOptions
+	) => Promise< Availability >;
 }
-interface AILanguageModelCreateOptions {
+type Availability =
+	| 'unavailable'
+	| 'downloadable'
+	| 'downloading'
+	| 'available';
+interface LanguageModelCreateCoreOptions {
 	topK?: number;
 	temperature?: number;
-	systemPrompt?: string;
-	initialPrompts?: AILanguageModelPrompt[];
 }
-type AILanguageModelPromptRole = 'user' | 'assistant';
-interface AILanguageModelPrompt {
-	role: AILanguageModelPromptRole;
+interface LanguageModelCreateOptions extends LanguageModelCreateCoreOptions {
+	systemPrompt?: string;
+	initialPrompts?: LanguageModelMessage[];
+}
+interface LanguageModelMessage {
+	role: LanguageModelMessageRole;
 	content: string;
 }
-interface AILanguageModel {
+type LanguageModelMessageRole = 'user' | 'assistant';
+interface LanguageModel {
 	prompt: (
-		input: AILanguageModelPromptInput,
-		options?: AILanguageModelPromptOptions
+		input: LanguageModelPrompt,
+		options?: LanguageModelPromptOptions
 	) => Promise< string >;
 	promptStreaming: (
-		input: AILanguageModelPromptInput,
-		options?: AILanguageModelPromptOptions
+		input: LanguageModelPrompt,
+		options?: LanguageModelPromptOptions
 	) => ReadableStream< string >;
 }
-type AILanguageModelPromptInput =
-	| string
-	| AILanguageModelPrompt
-	| AILanguageModelPrompt[];
-interface AILanguageModelPromptOptions {
+type LanguageModelPrompt = string | LanguageModelMessage[];
+interface LanguageModelPromptOptions {
+	responseConstraint?: Record< string, unknown >;
 	signal?: AbortSignal;
 }
-interface AILanguageModelCapabilities {
-	readonly available: AICapabilityAvailability;
-}
-type AICapabilityAvailability = 'readily' | 'after-download' | 'no';
 
 /**
  * Gets the text from a content object.
@@ -111,21 +114,22 @@ function prepareContentForBrowser(
 }
 
 /**
- * Creates a new session with the browser model, based on supported model params.
+ * Creates a new browser model instance, based on supported model params.
  *
  * See https://github.com/explainers-by-googlers/prompt-api#examples for supported parameters.
  *
  * @since 0.3.0
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
  * @since 0.6.0 Checks for newer `LanguageModel` property.
+ * @since n.e.x.t Renamed from `createSession`.
  *
  * @param modelParams - Model parameters.
- * @returns The browser session.
+ * @returns The browser model instance.
  */
-async function createSession(
+async function createBrowserLlm(
 	modelParams: ModelParams
-): Promise< AILanguageModel > {
-	const browserParams: AILanguageModelCreateOptions = {};
+): Promise< LanguageModel > {
+	const browserParams: LanguageModelCreateOptions = {};
 	if (
 		modelParams.generationConfig &&
 		( 'temperature' in modelParams.generationConfig ||
@@ -152,16 +156,16 @@ async function createSession(
 		}
 	}
 
-	let llm: AILanguageModelFactory | undefined;
+	let llm: LanguageModelFactory | undefined;
 	if ( 'LanguageModel' in window ) {
-		llm = window.LanguageModel as AILanguageModelFactory;
+		llm = window.LanguageModel as LanguageModelFactory;
 	} else if (
 		'ai' in window &&
 		typeof window.ai === 'object' &&
 		window.ai !== null &&
 		'languageModel' in window.ai
 	) {
-		llm = window.ai.languageModel as AILanguageModelFactory;
+		llm = window.ai.languageModel as LanguageModelFactory;
 	}
 
 	if ( ! llm ) {
@@ -236,9 +240,9 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 		// Do some very basic validation.
 		validateContent( content );
 
-		const session = await createSession( this.modelParams );
+		const llm = await createBrowserLlm( this.modelParams );
 		const text = prepareContentForBrowser( content );
-		const resultText = await session.prompt( text );
+		const resultText = await llm.prompt( text );
 
 		// Normalize result shape to match candidates API syntax from other services.
 		return [
@@ -266,9 +270,9 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 		// Do some very basic validation.
 		validateContent( content );
 
-		const session = await createSession( this.modelParams );
+		const llm = await createBrowserLlm( this.modelParams );
 		const text = prepareContentForBrowser( content );
-		const resultTextStream = session.promptStreaming( text );
+		const resultTextStream = llm.promptStreaming( text );
 		const resultTextGenerator = getResponseGenerator( resultTextStream );
 
 		// Normalize result shape to match candidates API syntax from other services.

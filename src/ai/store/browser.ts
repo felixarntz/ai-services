@@ -13,14 +13,21 @@ import { ServiceResource, AiCapability } from '../types';
  * Using `@types/dom-chromium-ai` does not properly work, so we'll redefine the relevant types here.
  * See https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/dom-chromium-ai/index.d.ts
  */
-interface AILanguageModelFactory {
+interface LanguageModelFactory {
 	// Since we only use this method here, no need to define the full type.
-	capabilities: () => Promise< AILanguageModelCapabilities >;
+	availability: (
+		options?: LanguageModelCreateCoreOptions
+	) => Promise< Availability >;
 }
-interface AILanguageModelCapabilities {
-	readonly available: AICapabilityAvailability;
+type Availability =
+	| 'unavailable'
+	| 'downloadable'
+	| 'downloading'
+	| 'available';
+interface LanguageModelCreateCoreOptions {
+	topK?: number;
+	temperature?: number;
 }
-type AICapabilityAvailability = 'readily' | 'after-download' | 'no';
 
 let browser: ServiceResource;
 
@@ -72,21 +79,21 @@ export async function getBrowserServiceData(): Promise< ServiceResource > {
 async function getBrowserAiCapabilities(): Promise< AiCapability[] > {
 	const capabilities: AiCapability[] = [];
 
-	let llm: AILanguageModelFactory | undefined;
+	let llm: LanguageModelFactory | undefined;
 	if ( 'LanguageModel' in window ) {
-		llm = window.LanguageModel as AILanguageModelFactory;
+		llm = window.LanguageModel as LanguageModelFactory;
 	} else if (
 		'ai' in window &&
 		typeof window.ai === 'object' &&
 		window.ai !== null &&
 		'languageModel' in window.ai
 	) {
-		llm = window.ai.languageModel as AILanguageModelFactory;
+		llm = window.ai.languageModel as LanguageModelFactory;
 	}
 
 	if ( llm ) {
-		const browserAiCapabilities = await llm.capabilities();
-		if ( browserAiCapabilities.available === 'readily' ) {
+		const browserAiAvailability = await llm.availability();
+		if ( browserAiAvailability === 'available' ) {
 			capabilities.push( enums.AiCapability.TEXT_GENERATION );
 		}
 	}

@@ -28,6 +28,8 @@ See the "Guidelines for contributing code" section in the [`CONTRIBUTING.md` fil
 
 - Use functional programming, with a few exceptions for where classes might make sense.
 - ALWAYS ask the user for approval first (`ask_followup_question`) before creating a new class.
+- ALWAYS ask the user for approval first (`ask_followup_question`) before introducing a new type.
+    - The only exception to this are types for React component props.
 - ALWAYS add all necessary `import` statements for classes, constants, functions, and types from other files.
 
 ## Naming Conventions

@@ -27,7 +27,7 @@ import Chatbot from '../Chatbot';
 import { ChatbotConfigProvider } from '../../config';
 import './style.scss';
 
-const CHAT_ID = 'wpspChatbotPrimary';
+const CHAT_ID = 'aisChatbotPrimary';
 const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_GENERATION ] };
 
 const retrieveVisibility = () => {

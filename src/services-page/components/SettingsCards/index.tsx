@@ -42,10 +42,10 @@ export default function SettingsCards() {
 	const { setDeleteData } = useDispatch( pluginSettingsStore );
 
 	return (
-		<div className="wpsp-settings-cards">
+		<div className="ais-settings-cards">
 			<Card>
 				<CardHeader>
-					<h2 className="wpsp-settings-cards__heading">
+					<h2 className="ais-settings-cards__heading">
 						{ __( 'Advanced', 'ai-services' ) }
 					</h2>
 				</CardHeader>

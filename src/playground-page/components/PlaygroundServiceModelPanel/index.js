@@ -81,7 +81,7 @@ export default function PlaygroundServiceModelPanel() {
 				value: '',
 				label: __( 'Select service…', 'ai-services' ),
 			},
-			...availableServices.map( ( { identifier, label } ) => ( {
+			...( availableServices || [] ).map( ( { identifier, label } ) => ( {
 				value: identifier,
 				label,
 			} ) ),

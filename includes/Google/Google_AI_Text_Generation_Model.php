@@ -611,8 +611,8 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				// Filtering by allowed or disallowed domains is not supported by the Google AI API.
 				$tools_param[] = array( 'googleSearch' => new \stdClass() );
 			} else {
-				throw new InvalidArgumentException(
-					'Invalid tool: Only function declarations and web search tools are supported.'
+				throw $this->get_api_client()->create_bad_request_exception(
+					'Only function declarations and web search tools are supported.'
 				);
 			}
 		}

@@ -176,7 +176,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * @return array<string, mixed> The parameters for generating text content.
 	 */
 	private function prepare_generate_text_params( array $contents ): array {
-		$transformers = self::get_content_transformers();
+		$transformers = self::get_content_transformers( $this->get_api_client() );
 
 		$params = array(
 			'messages' => array_map(
@@ -402,13 +402,14 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 *
 	 * @since 0.2.0
 	 *
+	 * @param Generative_AI_API_Client $api_client The API client instance.
 	 * @return array<string, callable> The content transformers.
 	 *
 	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
-	private static function get_content_transformers(): array {
+	private static function get_content_transformers( Generative_AI_API_Client $api_client ): array {
 		return array(
 			'role'    => static function ( Content $content ) {
 				if ( $content->get_role() === Content_Role::MODEL ) {
@@ -416,7 +417,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 				}
 				return 'user';
 			},
-			'content' => static function ( Content $content ) {
+			'content' => static function ( Content $content ) use ( $api_client ) {
 				$parts = array();
 				foreach ( $content->get_parts() as $part ) {
 					if ( $part instanceof Text_Part ) {
@@ -427,8 +428,8 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 					} elseif ( $part instanceof Inline_Data_Part ) {
 						$mime_type = $part->get_mime_type();
 						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
-							throw new InvalidArgumentException(
-								'The Anthropic API only supports text, inline image, function call, and function response parts.'
+							throw $api_client->create_bad_request_exception(
+								'The API only supports text, inline image, function call, and function response parts.'
 							);
 						}
 						$parts[] = array(
@@ -455,8 +456,8 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 							'content'     => json_encode( $response ), // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 						);
 					} else {
-						throw new InvalidArgumentException(
-							'The Anthropic API only supports text, inline image, function call, and function response parts.'
+						throw $api_client->create_bad_request_exception(
+							'The API only supports text, inline image, function call, and function response parts.'
 						);
 					}
 				}

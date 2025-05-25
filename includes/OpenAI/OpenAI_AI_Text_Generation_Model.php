@@ -169,7 +169,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			$contents = array_merge( array( $this->get_system_instruction() ), $contents );
 		}
 
-		$transformers = self::get_content_transformers();
+		$transformers = self::get_content_transformers( $this->get_api_client() );
 
 		$params = array(
 			'messages' => array_map(
@@ -370,13 +370,14 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 *
 	 * @since 0.2.0
 	 *
+	 * @param Generative_AI_API_Client $api_client The API client instance.
 	 * @return array<string, callable> The content transformers.
 	 *
 	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
-	private static function get_content_transformers(): array {
+	private static function get_content_transformers( Generative_AI_API_Client $api_client ): array {
 		return array(
 			'role'         => static function ( Content $content ) {
 				// Special case of a function response.
@@ -393,7 +394,7 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				}
 				return 'user';
 			},
-			'content'      => static function ( Content $content ) {
+			'content'      => static function ( Content $content ) use ( $api_client ) {
 				// Special case of a function response.
 				$parts = $content->get_parts();
 				if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Function_Response_Part ) {
@@ -428,15 +429,15 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 								),
 							);
 						} else {
-							throw new InvalidArgumentException(
-								'The OpenAI API only supports text, image, and audio parts.'
+							throw $api_client->create_bad_request_exception(
+								'The API only supports text, image, and audio parts.'
 							);
 						}
 					} elseif ( $part instanceof File_Data_Part ) {
 						$mime_type = $part->get_mime_type();
 						if ( ! str_starts_with( $mime_type, 'image/' ) ) {
-							throw new InvalidArgumentException(
-								'The OpenAI API only supports text, image, and audio parts.'
+							throw $api_client->create_bad_request_exception(
+								'The API only supports text, image, and audio parts.'
 							);
 						}
 						$parts[] = array(
@@ -453,12 +454,12 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 						 * handled as a special case above.
 						 */
 						if ( $part instanceof Function_Response_Part ) {
-							throw new InvalidArgumentException(
-								'The OpenAI API only allows a single function response, and it has to be the only content of the message.'
+							throw $api_client->create_bad_request_exception(
+								'The API only allows a single function response, and it has to be the only content of the message.'
 							);
 						} elseif ( ! $part instanceof Function_Call_Part ) {
-							throw new InvalidArgumentException(
-								'The OpenAI API only supports text, image, and audio parts.'
+							throw $api_client->create_bad_request_exception(
+								'The API only supports text, image, and audio parts.'
 							);
 						}
 					}
@@ -563,8 +564,8 @@ class OpenAI_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 
 		foreach ( $tools as $tool ) {
 			if ( ! $tool instanceof Function_Declarations_Tool ) {
-				throw new InvalidArgumentException(
-					'Invalid tool: Only function declarations tools are supported.'
+				throw $this->get_api_client()->create_bad_request_exception(
+					'Only function declarations tools are supported.'
 				);
 			}
 

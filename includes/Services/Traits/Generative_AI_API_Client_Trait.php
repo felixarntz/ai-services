@@ -16,6 +16,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Contracts\Response;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Exception\Request_Exception;
 use Generator;
+use InvalidArgumentException;
 
 /**
  * Trait for an API client class which implements the Generative_AI_API_Client interface.
@@ -156,6 +157,24 @@ trait Generative_AI_API_Client_Trait {
 			$previous_processed_data = $processed_data;
 			yield $processed_data;
 		}
+	}
+
+	/**
+	 * Creates a new exception for a bad request, i.e. invalid or unsupported request data.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $message The error message to include in the exception.
+	 * @return InvalidArgumentException The exception instance.
+	 */
+	final public function create_bad_request_exception( string $message ): InvalidArgumentException {
+		return new InvalidArgumentException(
+			sprintf(
+				'Invalid request data for the %1$s API: %2$s',
+				$this->get_api_name(),
+				$message
+			)
+		);
 	}
 
 	/**

@@ -139,7 +139,7 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 			$params = Transformer::transform_generation_config_params(
 				array_merge( $generation_config->get_additional_args(), $params ),
 				$generation_config,
-				self::get_generation_config_transformers( $this->get_model_slug() )
+				self::get_generation_config_transformers( $this->get_api_client(), $this->get_model_slug() )
 			);
 		} else {
 			// Override some API defaults.
@@ -232,18 +232,19 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param string $model_slug The model slug. Needed because the API works differently for 'gpt-image-*' models.
+	 * @param Generative_AI_API_Client $api_client The API client instance.
+	 * @param string                   $model_slug The model slug. Needed because the API works differently for 'gpt-image-*' models.
 	 * @return array<string, callable> The generation configuration transformers.
 	 */
-	private static function get_generation_config_transformers( string $model_slug ): array {
+	private static function get_generation_config_transformers( Generative_AI_API_Client $api_client, string $model_slug ): array {
 		$is_gpt = str_starts_with( $model_slug, 'gpt-image-' );
 
 		return array(
-			'output_format'   => static function ( Image_Generation_Config $config ) use ( $is_gpt ) {
+			'output_format'   => static function ( Image_Generation_Config $config ) use ( $api_client, $is_gpt ) {
 				$output_mime = $config->get_response_mime_type();
 				if ( ! $is_gpt ) {
 					if ( $output_mime && 'image/png' !== $output_mime ) {
-						throw new InvalidArgumentException(
+						throw $api_client->create_bad_request_exception(
 							'Only "image/png" is supported as the output MIME.'
 						);
 					}
@@ -274,12 +275,12 @@ class OpenAI_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 				}
 				return '';
 			},
-			'response_format' => static function ( Image_Generation_Config $config ) use ( $is_gpt ) {
+			'response_format' => static function ( Image_Generation_Config $config ) use ( $api_client, $is_gpt ) {
 				// The default in the API is to return URLs, but we want to return base64-encoded data by default.
 				$response_type = $config->get_response_type();
 				if ( $is_gpt ) {
 					if ( $response_type && 'inline_data' !== $response_type ) {
-						throw new InvalidArgumentException(
+						throw $api_client->create_bad_request_exception(
 							'Only base64-encoded data is supported as the response type.'
 						);
 					}

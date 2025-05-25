@@ -143,7 +143,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 			$params['parameters'] = Transformer::transform_generation_config_params(
 				isset( $params['generationConfig'] ) && is_array( $params['generationConfig'] ) ? $params['generationConfig'] : array(),
 				$generation_config,
-				self::get_generation_config_transformers()
+				self::get_generation_config_transformers( $this->get_api_client() )
 			);
 		} else {
 			// Override some API defaults.
@@ -233,9 +233,10 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
+	 * @param Generative_AI_API_Client $api_client The API client instance.
 	 * @return array<string, callable> The generation configuration transformers.
 	 */
-	private static function get_generation_config_transformers(): array {
+	private static function get_generation_config_transformers( Generative_AI_API_Client $api_client ): array {
 		return array(
 			'outputOptions' => static function ( Image_Generation_Config $config ) {
 				$output_mime = $config->get_response_mime_type();
@@ -250,11 +251,11 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 			'aspectRatio'   => static function ( Image_Generation_Config $config ) {
 				return $config->get_aspect_ratio();
 			},
-			'responseType'  => static function ( Image_Generation_Config $config ) {
+			'responseType'  => static function ( Image_Generation_Config $config ) use ( $api_client ) {
 				// The API does not allow setting the response type and always uses base64-encoded data.
 				$response_type = $config->get_response_type();
 				if ( 'file_data' === $response_type ) {
-					throw new InvalidArgumentException(
+					throw $api_client->create_bad_request_exception(
 						'Only base64-encoded data is supported as the response type.'
 					);
 				}

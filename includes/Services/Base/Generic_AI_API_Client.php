@@ -147,6 +147,10 @@ class Generic_AI_API_Client implements Generative_AI_API_Client {
 			$path .= '?alt=sse';
 		}
 
+		if ( '' === $api_version ) {
+			return "{$base_url}/{$path}";
+		}
+
 		return "{$base_url}/{$api_version}/{$path}";
 	}
 

@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - main
+            - 'release/**'
         # Only run if PHP-related files changed.
         paths:
             - '.github/workflows/php-test.yml'
@@ -17,6 +18,8 @@ on:
     pull_request:
         branches:
             - main
+            - 'feature/**'
+            - 'release/**'
         # Only run if PHP-related files changed.
         paths:
             - '.github/workflows/php-test.yml'
@@ -58,6 +61,8 @@ jobs:
                     - '8.0'
                     - '8.1'
                     - '8.2'
+                    - '8.3'
+                    - '8.4'
                 wordpress: ['latest']
                 multisite: [false, true]
                 experimental: [false]
@@ -74,11 +79,11 @@ jobs:
                     - php: '8.0'
                       wordpress: '6.1'
                       multisite: true
-                    - php: '8.2'
+                    - php: '8.4'
                       wordpress: 'trunk'
                       multisite: false
                       experimental: true
-                    - php: '8.2'
+                    - php: '8.4'
                       wordpress: 'trunk'
                       multisite: true
                       experimental: true

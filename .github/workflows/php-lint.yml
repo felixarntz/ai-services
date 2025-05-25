@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - main
+            - 'release/**'
         # Only run if PHP-related files changed.
         paths:
             - '.github/workflows/php-lint.yml'
@@ -16,6 +17,8 @@ on:
     pull_request:
         branches:
             - main
+            - 'feature/**'
+            - 'release/**'
         # Only run if PHP-related files changed.
         paths:
             - '.github/workflows/php-lint.yml'

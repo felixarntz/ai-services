@@ -6,7 +6,7 @@ Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
 Tested up to: 6.8
-Stable tag:   0.6.3
+Stable tag:   0.6.4
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Tags:         ai, text generation, image generation, function calling, multimodal
@@ -295,6 +295,14 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 4. AI Playground code modal showing PHP and JavaScript code for the current prompt and configuration
 
 == Changelog ==
+
+= 0.6.4 =
+
+**Bug Fixes:**
+
+* Fix possible error when resolving `getServices()` selector due to browser built-in AI not being present. Props [ocean90](https://github.com/ocean90). ([269bde4](https://github.com/felixarntz/ai-services/commit/269bde42ad9c32c773986af6952680ef4c85022d))
+* Sanitize AI Playground `getAdditionalCapabilities()` selector output against available capabilities. ([7acd7d0](https://github.com/felixarntz/ai-services/commit/7acd7d0c11109ee8f46b8e06f403b8bfaff884fb))
+* Clarify AI Playground notice message for when no applicable AI services are available. ([91d6ab8](https://github.com/felixarntz/ai-services/commit/91d6ab89760c922642219fa6c8ac6a30e762df24))
 
 = 0.6.3 =
 

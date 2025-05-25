@@ -27,6 +27,17 @@ const combineCapabilities = memoize(
 	}
 );
 
+const filterAdditionalCapabilities = memoize(
+	( additionalCapabilities, availableAdditionalCapabilities ) => {
+		const availableValues = availableAdditionalCapabilities.map(
+			( cap ) => cap.identifier
+		);
+		return additionalCapabilities.filter( ( cap ) =>
+			availableValues.includes( cap )
+		);
+	}
+);
+
 const initialState = {
 	availableFoundationalCapabilities: [],
 	availableAdditionalCapabilities: [],
@@ -239,7 +250,16 @@ const selectors = {
 		if ( ! caps ) {
 			return EMPTY_ARRAY;
 		}
-		return caps;
+
+		const availableAdditionalCapabilities =
+			select( STORE_NAME ).getAvailableAdditionalCapabilities();
+		if ( ! availableAdditionalCapabilities ) {
+			return EMPTY_ARRAY;
+		}
+		return filterAdditionalCapabilities(
+			caps,
+			availableAdditionalCapabilities
+		);
 	} ),
 
 	getCapabilities: createRegistrySelector( ( select ) => () => {

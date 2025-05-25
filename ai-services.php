@@ -8,8 +8,8 @@
  * Version: 0.6.3
  * Author: Felix Arntz
  * Author URI: https://felix-arntz.me
- * License: GPLv2 or later
- * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * License: GPL-2.0-or-later
+ * License URI: https://spdx.org/licenses/GPL-2.0-or-later.html
  * Text Domain: ai-services
  *
  * @package ai-services

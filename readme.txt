@@ -7,8 +7,8 @@ Author URI:   https://felix-arntz.me
 Contributors: flixos90
 Tested up to: 6.8
 Stable tag:   0.6.3
-License:      GPLv2 or later
-License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+License:      GPL-2.0-or-later
+License URI:  https://spdx.org/licenses/GPL-2.0-or-later.html
 Tags:         ai, text generation, image generation, function calling, multimodal
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.

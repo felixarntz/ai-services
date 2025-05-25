@@ -54,9 +54,11 @@ async function getBrowserAiCapabilities() {
 	const capabilities = [];
 
 	const llm =
-		window.LanguageModel || window.ai.languageModel || window.ai.assistant;
+		window.LanguageModel ||
+		window.ai?.languageModel ||
+		window.ai?.assistant;
 
-	if ( llm ) {
+	if ( llm && typeof llm.availability === 'function' ) {
 		const availability = await llm.availability();
 		if ( availability === 'available' ) {
 			capabilities.push( enums.AiCapability.TEXT_GENERATION );

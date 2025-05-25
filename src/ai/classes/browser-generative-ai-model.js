@@ -82,7 +82,9 @@ async function createSession( modelParams ) {
 	}
 
 	const llm =
-		window.LanguageModel || window.ai.languageModel || window.ai.assistant;
+		window.LanguageModel ||
+		window.ai?.languageModel ||
+		window.ai?.assistant;
 
 	if ( Object.keys( browserParams ).length === 0 ) {
 		return llm.create();

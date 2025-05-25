@@ -25,6 +25,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools\Web_Search_Tool;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
@@ -33,6 +34,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Output;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Web_Search;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\Model_Param_System_Instruction_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Text_Generation_Config_Trait;
@@ -51,7 +53,7 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since 0.5.0 Renamed from `Google_AI_Model`.
  */
-class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input, With_Multimodal_Output {
+class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Web_Search, With_Multimodal_Input, With_Multimodal_Output {
 	use With_API_Client_Trait;
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
@@ -590,27 +592,29 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 		$tools_param = array();
 
 		foreach ( $tools as $tool ) {
-			if ( ! $tool instanceof Function_Declarations_Tool ) {
+			if ( $tool instanceof Function_Declarations_Tool ) {
+				$function_declarations = $tool->get_function_declarations();
+				$declarations_data     = array();
+				foreach ( $function_declarations as $declaration ) {
+					$declarations_data[] = array_filter(
+						array(
+							'name'        => $declaration['name'],
+							'description' => $declaration['description'] ?? null,
+							'parameters'  => isset( $declaration['parameters'] ) ? $this->remove_additional_properties_key( $declaration['parameters'] ) : null,
+						)
+					);
+				}
+				$tools_param[] = array(
+					'functionDeclarations' => $declarations_data,
+				);
+			} elseif ( $tool instanceof Web_Search_Tool ) {
+				// Filtering by allowed or disallowed domains is not supported by the Google AI API.
+				$tools_param[] = array( 'googleSearch' => new \stdClass() );
+			} else {
 				throw new InvalidArgumentException(
-					'Invalid tool: Only function declarations tools are supported.'
+					'Invalid tool: Only function declarations and web search tools are supported.'
 				);
 			}
-
-			$function_declarations = $tool->get_function_declarations();
-			$declarations_data     = array();
-			foreach ( $function_declarations as $declaration ) {
-				$declarations_data[] = array_filter(
-					array(
-						'name'        => $declaration['name'],
-						'description' => $declaration['description'] ?? null,
-						'parameters'  => isset( $declaration['parameters'] ) ? $this->remove_additional_properties_key( $declaration['parameters'] ) : null,
-					)
-				);
-			}
-
-			$tools_param[] = array(
-				'functionDeclarations' => $declarations_data,
-			);
 		}
 
 		return $tools_param;

@@ -205,6 +205,10 @@ const resolvers = {
 					label: __( 'Function calling', 'ai-services' ),
 				},
 				{
+					identifier: enums.AiCapability.WEB_SEARCH,
+					label: __( 'Web search', 'ai-services' ),
+				},
+				{
 					identifier: enums.AiCapability.MULTIMODAL_INPUT,
 					label: __( 'Multimodal input', 'ai-services' ),
 				},

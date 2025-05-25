@@ -27,7 +27,7 @@ The primary purpose of the code within this directory is to:
     - Provides a `sort_models_by_preference()` method to order models, prioritizing newer and more capable ones like "Claude 3.5 Sonnet".
 
 - **Text Generation Model (`Anthropic_AI_Text_Generation_Model.php`):**
-    - Extends `Abstract_AI_Model` (from `includes/Services/Base/`) and implements various capability-specific contracts from `includes/Services/Contracts/` (e.g., `With_Text_Generation`, `With_Chat_History`, `With_Function_Calling`, `With_Multimodal_Input`).
+    - Extends `Abstract_AI_Model` (from `includes/Services/Base/`) and implements various capability-specific contracts from `includes/Services/Contracts/` (e.g., `With_Text_Generation`, `With_Chat_History`, `With_Function_Calling`, `With_Web_Search`, `With_Multimodal_Input`).
     - Utilizes several traits from `includes/Services/Traits/` to manage model parameters like system instructions, text generation configuration, and tool configurations.
     - Implements methods for both standard (`send_generate_text_request()`) and streaming (`send_stream_generate_text_request()`) text generation.
     - Contains detailed logic for transforming the plugin's generic `Content`, `Parts`, `Text_Generation_Config`, `Tools`, and `Tool_Config` types (from `includes/Services/API/Types/`) into the specific format required by the Anthropic "messages" API. This includes handling different content part types (text, image, function call, function response) and mapping roles (e.g., `Content_Role::MODEL` to "assistant").

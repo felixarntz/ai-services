@@ -23,6 +23,7 @@ use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tool_Config;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools\Web_Search_Tool;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_API_Client;
@@ -30,6 +31,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Web_Search;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\Model_Param_System_Instruction_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Text_Generation_Config_Trait;
@@ -48,7 +50,7 @@ use InvalidArgumentException;
  * @since 0.1.0
  * @since 0.5.0 Renamed from `Anthropic_AI_Model`.
  */
-class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Web_Search, With_Multimodal_Input {
 	use With_API_Client_Trait;
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
@@ -383,6 +385,8 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 						'args' => $part['input'],
 					),
 				);
+			} elseif ( 'server_tool_use' === $part['type'] || 'web_search_tool_result' === $part['type'] ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
+				// No special handling for now. These may be included for web search requests.
 			} else {
 				throw $this->get_api_client()->create_response_exception(
 					'The response includes an unexpected content part.'
@@ -512,20 +516,30 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 		$tools_param = array();
 
 		foreach ( $tools as $tool ) {
-			if ( ! $tool instanceof Function_Declarations_Tool ) {
-				throw new InvalidArgumentException(
-					'Invalid tool: Only function declarations tools are supported.'
-				);
-			}
-
-			$function_declarations = $tool->get_function_declarations();
-			foreach ( $function_declarations as $declaration ) {
+			if ( $tool instanceof Function_Declarations_Tool ) {
+				$function_declarations = $tool->get_function_declarations();
+				foreach ( $function_declarations as $declaration ) {
+					$tools_param[] = array_filter(
+						array(
+							'name'         => $declaration['name'],
+							'description'  => $declaration['description'] ?? null,
+							'input_schema' => $declaration['parameters'] ?? null,
+						)
+					);
+				}
+			} elseif ( $tool instanceof Web_Search_Tool ) {
 				$tools_param[] = array_filter(
 					array(
-						'name'         => $declaration['name'],
-						'description'  => $declaration['description'] ?? null,
-						'input_schema' => $declaration['parameters'] ?? null,
+						'type'            => 'web_search_20250305',
+						'name'            => 'web_search',
+						'max_uses'        => 1,
+						'allowed_domains' => $tool->get_allowed_domains(),
+						'blocked_domains' => $tool->get_disallowed_domains(),
 					)
+				);
+			} else {
+				throw new InvalidArgumentException(
+					'Invalid tool: Only function declarations and web search tools are supported.'
 				);
 			}
 		}

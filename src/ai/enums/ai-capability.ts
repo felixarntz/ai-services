@@ -4,6 +4,7 @@ export const IMAGE_GENERATION = 'image_generation';
 export const MULTIMODAL_INPUT = 'multimodal_input';
 export const MULTIMODAL_OUTPUT = 'multimodal_output';
 export const TEXT_GENERATION = 'text_generation';
+export const WEB_SEARCH = 'web_search';
 
 export const _VALUE_MAP = {
 	[ CHAT_HISTORY ]: true,
@@ -12,6 +13,7 @@ export const _VALUE_MAP = {
 	[ MULTIMODAL_INPUT ]: true,
 	[ MULTIMODAL_OUTPUT ]: true,
 	[ TEXT_GENERATION ]: true,
+	[ WEB_SEARCH ]: true,
 };
 
 /**

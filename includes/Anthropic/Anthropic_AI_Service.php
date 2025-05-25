@@ -98,6 +98,9 @@ class Anthropic_AI_Service extends Abstract_AI_Service implements With_API_Clien
 					$model_caps = $anthropic_legacy_capabilities;
 				} else {
 					$model_caps = $anthropic_capabilities;
+					if ( ! preg_match( '/^claude-3-[a-z]+/', $model_slug ) ) { // Only models newer than Claude 3 support web search.
+						$model_caps[] = AI_Capability::WEB_SEARCH;
+					}
 				}
 
 				$models_data[ $model_slug ] = Model_Metadata::from_array(

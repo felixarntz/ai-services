@@ -28,7 +28,7 @@ The classes in this directory extend and implement core abstractions provided by
 
 - **`Google_AI_Text_Generation_Model.php`**: Represents Google AI models capable of text generation, chat, function calling, and multimodal input/output (e.g., Gemini models).
     - It extends `Abstract_AI_Model` (from `includes/Services/Base/`).
-    - It implements various contracts from `includes/Services/Contracts/` such as `With_Text_Generation`, `With_Chat_History`, `With_Function_Calling`, `With_Multimodal_Input`, and `With_Multimodal_Output`.
+    - It implements various contracts from `includes/Services/Contracts/` such as `With_Text_Generation`, `With_Chat_History`, `With_Function_Calling`, `With_Web_Search`, `With_Multimodal_Input`, and `With_Multimodal_Output`.
     - It transforms generic requests and configurations (like `Text_Generation_Config`) into Google API-specific formats, including handling of tools, tool configurations, system instructions, and safety settings.
     - It processes responses, including streaming data and various content part types (text, inline data, file data, function calls/responses).
 

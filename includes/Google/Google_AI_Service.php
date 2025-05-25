@@ -112,12 +112,20 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 						$model_caps = $gemini_legacy_capabilities;
 					} else {
 						$model_caps = $gemini_capabilities;
-					}
-					if ( // New experimental multimodal output model.
-						str_contains( $model_slug, 'image-generation' ) ||
-						str_starts_with( $model_slug, 'gemini-2.0-flash-exp' )
-					) {
-						$model_caps[] = AI_Capability::MULTIMODAL_OUTPUT;
+
+						if ( // Web search is supported by Gemini 2.0 and newer.
+							str_starts_with( $model_slug, 'gemini-' ) &&
+							! str_starts_with( $model_slug, 'gemini-1.5-' )
+						) {
+							$model_caps[] = AI_Capability::WEB_SEARCH;
+						}
+
+						if ( // New experimental multimodal output model.
+							str_contains( $model_slug, 'image-generation' ) ||
+							str_starts_with( $model_slug, 'gemini-2.0-flash-exp' )
+						) {
+							$model_caps[] = AI_Capability::MULTIMODAL_OUTPUT;
+						}
 					}
 				} elseif (
 					isset( $model_data['supportedGenerationMethods'] ) &&

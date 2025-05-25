@@ -300,18 +300,29 @@ const formatErrorContent = ( error ) => {
 	);
 };
 
-const getTools = ( functionDeclarations, selectedFunctionDeclarationNames ) => {
+const getTools = (
+	functionDeclarations,
+	selectedFunctionDeclarationNames,
+	additionalCapabilities
+) => {
 	const selectedFunctionDeclarations = functionDeclarations?.filter(
 		( declaration ) =>
 			selectedFunctionDeclarationNames &&
 			selectedFunctionDeclarationNames.includes( declaration.name )
 	);
 
+	const tools = [];
 	if ( selectedFunctionDeclarations && selectedFunctionDeclarations.length ) {
-		return [ { functionDeclarations: selectedFunctionDeclarations } ];
+		tools.push( { functionDeclarations: selectedFunctionDeclarations } );
+	}
+	if (
+		additionalCapabilities &&
+		additionalCapabilities.includes( enums.AiCapability.WEB_SEARCH )
+	) {
+		tools.push( { webSearch: {} } );
 	}
 
-	return null;
+	return tools.length > 0 ? tools : null;
 };
 
 const getLastMessageFunctionCall = ( messages ) => {
@@ -408,6 +419,7 @@ const actions = {
 			};
 
 			const foundationalCapability = select.getFoundationalCapability();
+			const additionalCapabilities = select.getAdditionalCapabilities();
 
 			const generationConfig = {};
 			if (
@@ -434,8 +446,6 @@ const actions = {
 				 * Therefore, if the model supports it and the user explicitly looked for such a model, we simply opt
 				 * in to both. In the future, we may want to allow users to select the modalities.
 				 */
-				const additionalCapabilities =
-					select.getAdditionalCapabilities();
 				if (
 					additionalCapabilities &&
 					additionalCapabilities.includes(
@@ -459,7 +469,8 @@ const actions = {
 			) {
 				const tools = getTools(
 					select.getFunctionDeclarations(),
-					select.getSelectedFunctionDeclarations()
+					select.getSelectedFunctionDeclarations(),
+					additionalCapabilities
 				);
 				if ( tools ) {
 					modelParams.tools = tools;

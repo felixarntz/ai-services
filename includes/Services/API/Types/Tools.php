@@ -11,6 +11,7 @@ namespace Felix_Arntz\AI_Services\Services\API\Types;
 use ArrayIterator;
 use Felix_Arntz\AI_Services\Services\API\Types\Contracts\Tool;
 use Felix_Arntz\AI_Services\Services\API\Types\Tools\Function_Declarations_Tool;
+use Felix_Arntz\AI_Services\Services\API\Types\Tools\Web_Search_Tool;
 use Felix_Arntz\AI_Services\Services\Contracts\With_JSON_Schema;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Arrayable;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\Collection;
@@ -43,6 +44,27 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 		$this->add_tool(
 			Function_Declarations_Tool::from_array(
 				array( 'functionDeclarations' => $function_declarations )
+			)
+		);
+	}
+
+	/**
+	 * Adds a web search tool.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string[] $allowed_domains    Optional. The allowed domains. Default empty array.
+	 * @param string[] $disallowed_domains Optional. The disallowed domains. Default empty array.
+	 */
+	public function add_web_search_tool( array $allowed_domains = array(), array $disallowed_domains = array() ): void {
+		$this->add_tool(
+			Web_Search_Tool::from_array(
+				array(
+					'webSearch' => array(
+						'allowedDomains'    => $allowed_domains,
+						'disallowedDomains' => $disallowed_domains,
+					),
+				)
 			)
 		);
 	}
@@ -135,6 +157,8 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 
 			if ( isset( $tool['functionDeclarations'] ) ) {
 				$tools->add_tool( Function_Declarations_Tool::from_array( $tool ) );
+			} elseif ( isset( $tool['webSearch'] ) ) {
+				$tools->add_tool( Web_Search_Tool::from_array( $tool ) );
 			} else {
 				throw new InvalidArgumentException( 'Invalid tool data.' );
 			}
@@ -154,6 +178,9 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 		$function_declarations_tool_schema = Function_Declarations_Tool::get_json_schema();
 		unset( $function_declarations_tool_schema['type'] );
 
+		$web_search_tool_schema = Web_Search_Tool::get_json_schema();
+		unset( $web_search_tool_schema['type'] );
+
 		return array(
 			'type'     => 'array',
 			'minItems' => 1,
@@ -161,6 +188,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 				'type'  => 'object',
 				'oneOf' => array(
 					$function_declarations_tool_schema,
+					$web_search_tool_schema,
 				),
 			),
 		);

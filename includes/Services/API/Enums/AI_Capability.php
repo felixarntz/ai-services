@@ -21,6 +21,7 @@ final class AI_Capability extends Abstract_Enum {
 	const MULTIMODAL_INPUT  = 'multimodal_input';
 	const MULTIMODAL_OUTPUT = 'multimodal_output';
 	const TEXT_GENERATION   = 'text_generation';
+	const WEB_SEARCH        = 'web_search';
 
 	/**
 	 * Gets all values for the enum.
@@ -37,6 +38,7 @@ final class AI_Capability extends Abstract_Enum {
 			self::MULTIMODAL_INPUT,
 			self::MULTIMODAL_OUTPUT,
 			self::TEXT_GENERATION,
+			self::WEB_SEARCH,
 		);
 	}
 }

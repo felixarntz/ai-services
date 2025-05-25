@@ -154,7 +154,7 @@ final class Helpers {
 				continue;
 			}
 
-			$text_parts[] = $part->get_text();
+			$text_parts[] = trim( $part->get_text() );
 		}
 
 		if ( count( $text_parts ) === 0 ) {

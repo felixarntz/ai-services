@@ -156,8 +156,14 @@ export type FunctionDeclarationsTool = {
 	functionDeclarations: FunctionDeclaration[];
 };
 
-// For now, the only supported tool is `functionDeclarationsTool`.
-export type Tool = FunctionDeclarationsTool;
+export type WebSearchTool = {
+	webSearch: {
+		allowedDomains?: string[];
+		disallowedDomains?: string[];
+	};
+};
+
+export type Tool = FunctionDeclarationsTool | WebSearchTool;
 
 export type ToolConfig = {
 	functionCallMode?: 'auto' | 'any';

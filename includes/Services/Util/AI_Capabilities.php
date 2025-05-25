@@ -17,6 +17,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Output;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Web_Search;
 use InvalidArgumentException;
 
 /**
@@ -75,6 +76,9 @@ final class AI_Capabilities {
 		if ( isset( $interfaces[ With_Text_Generation::class ] ) ) {
 			$capabilities[] = AI_Capability::TEXT_GENERATION;
 		}
+		if ( isset( $interfaces[ With_Web_Search::class ] ) ) {
+			$capabilities[] = AI_Capability::WEB_SEARCH;
+		}
 		return $capabilities;
 	}
 
@@ -105,6 +109,9 @@ final class AI_Capabilities {
 		}
 		if ( $model instanceof With_Text_Generation ) {
 			$capabilities[] = AI_Capability::TEXT_GENERATION;
+		}
+		if ( $model instanceof With_Web_Search ) {
+			$capabilities[] = AI_Capability::WEB_SEARCH;
 		}
 		return $capabilities;
 	}

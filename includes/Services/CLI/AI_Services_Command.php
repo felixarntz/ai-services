@@ -459,6 +459,9 @@ final class AI_Services_Command {
 	 * [--function-declarations=<function-declarations>]
 	 * : JSON-encoded array of function declarations to pass to the model as tools.
 	 *
+	 * [--web-search]
+	 * : Use web search for ground (only available for models that support it).
+	 *
 	 * [--system-instruction=<system-instruction>]
 	 * : System instruction for the model.
 	 *
@@ -726,6 +729,7 @@ final class AI_Services_Command {
 				'system-instruction'    => '',
 				'attachment-id'         => 0,
 				'function-declarations' => '',
+				'web-search'            => false,
 			),
 			$this->formatter_args
 		);
@@ -736,11 +740,17 @@ final class AI_Services_Command {
 		$function_declarations  = $assoc_args['function-declarations'] ? json_decode( $assoc_args['function-declarations'], true ) : array();
 
 		$capabilities = array( AI_Capability::TEXT_GENERATION );
+		$tools        = array();
 		if ( $attachment_id ) {
 			$capabilities[] = AI_Capability::MULTIMODAL_INPUT;
 		}
+		if ( $assoc_args['web-search'] ) {
+			$capabilities[] = AI_Capability::WEB_SEARCH;
+			$tools[]        = array( 'webSearch' => array() );
+		}
 		if ( $function_declarations ) {
 			$capabilities[] = AI_Capability::FUNCTION_CALLING;
+			$tools[]        = array( 'functionDeclarations' => $function_declarations );
 		}
 
 		return array(
@@ -748,11 +758,7 @@ final class AI_Services_Command {
 			'model'             => $model_slug,
 			'capabilities'      => $capabilities,
 			'generationConfig'  => Text_Generation_Config::from_array( $generation_config_args ),
-			'tools'             => $function_declarations ? Tools::from_array(
-				array(
-					array( 'functionDeclarations' => $function_declarations ),
-				)
-			) : null,
+			'tools'             => count( $tools ) > 0 ? Tools::from_array( $tools ) : null,
 			'systemInstruction' => $assoc_args['system-instruction'] ? $assoc_args['system-instruction'] : null,
 		);
 	}
@@ -892,8 +898,8 @@ final class AI_Services_Command {
 
 		// If the content is purely text, print it directly, otherwise print the parts as structured JSON.
 		$parts = $content->get_parts();
-		if ( count( $parts ) === 1 && $parts->get( 0 ) instanceof Text_Part ) {
-			WP_CLI::print_value( trim( $parts->get( 0 )->get_text() ), array( 'format' => 'table' ) );
+		if ( count( $parts ) === count( $parts->filter( array( 'class_name' => Text_Part::class ) ) ) ) {
+			WP_CLI::print_value( Helpers::content_to_text( $content ), array( 'format' => 'table' ) );
 			return;
 		}
 		WP_CLI::print_value( $parts->to_array(), array( 'format' => 'json' ) );

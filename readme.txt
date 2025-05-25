@@ -6,7 +6,7 @@ Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
 Tested up to: 6.8
-Stable tag:   0.6.4
+Stable tag:   0.6.5
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Tags:         ai, text generation, image generation, function calling, multimodal
@@ -295,6 +295,12 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 4. AI Playground code modal showing PHP and JavaScript code for the current prompt and configuration
 
 == Changelog ==
+
+= 0.6.5 =
+
+**Bug Fixes:**
+
+* Fix iteration over possibly undefined value. ([bbcf37c](https://github.com/felixarntz/ai-services/commit/bbcf37c7bafa11b8b3b53241c5200cb798d884ae))
 
 = 0.6.4 =
 

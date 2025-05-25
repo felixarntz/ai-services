@@ -91,7 +91,7 @@ async function getBrowserAiCapabilities(): Promise< AiCapability[] > {
 		llm = window.ai.languageModel as LanguageModelFactory;
 	}
 
-	if ( llm ) {
+	if ( llm && typeof llm.availability === 'function' ) {
 		const browserAiAvailability = await llm.availability();
 		if ( browserAiAvailability === 'available' ) {
 			capabilities.push( enums.AiCapability.TEXT_GENERATION );

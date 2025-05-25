@@ -78,7 +78,7 @@ const actions = {
 				.set( 'ai-services-playground', 'service', service );
 
 			const availableModels = select.getAvailableModels();
-			if ( availableModels.length === 1 ) {
+			if ( availableModels && availableModels.length === 1 ) {
 				dispatch.setModel( availableModels[ 0 ].identifier );
 			} else {
 				dispatch.setModel( '' );
@@ -444,7 +444,7 @@ const selectors = {
 	getAvailableServices: createRegistrySelector( ( select ) => () => {
 		const registeredServices = select( aiStore ).getServices();
 		if ( ! registeredServices ) {
-			return EMPTY_ARRAY;
+			return undefined;
 		}
 
 		const requiredCapabilities = select( STORE_NAME ).getCapabilities();
@@ -455,13 +455,13 @@ const selectors = {
 	} ),
 
 	getAvailableModels: createRegistrySelector( ( select ) => () => {
-		const service = select( STORE_NAME ).getService();
-		if ( ! service ) {
-			return EMPTY_ARRAY;
+		const registeredServices = select( aiStore ).getServices();
+		if ( ! registeredServices ) {
+			return undefined;
 		}
 
-		const registeredServices = select( aiStore ).getServices();
-		if ( ! registeredServices || ! registeredServices[ service ] ) {
+		const service = select( STORE_NAME ).getService();
+		if ( ! service || ! registeredServices[ service ] ) {
 			return EMPTY_ARRAY;
 		}
 

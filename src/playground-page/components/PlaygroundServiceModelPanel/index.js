@@ -39,6 +39,7 @@ const MODEL_SELECT_PLACEHOLDER_OPTIONS = [
  */
 export default function PlaygroundServiceModelPanel() {
 	const {
+		hasAnyAvailableServices,
 		availableServices,
 		availableModels,
 		service,
@@ -53,10 +54,12 @@ export default function PlaygroundServiceModelPanel() {
 			getService,
 			getModel,
 		} = select( playgroundStore );
-		const { getPluginSettingsUrl, currentUserCan } = select( aiStore );
+		const { getPluginSettingsUrl, currentUserCan, hasAvailableServices } =
+			select( aiStore );
 		const { isPanelActive } = select( interfaceStore );
 
 		return {
+			hasAnyAvailableServices: hasAvailableServices(),
 			availableServices: getAvailableServices(),
 			availableModels: getAvailableModels(),
 			service: getService(),
@@ -78,7 +81,7 @@ export default function PlaygroundServiceModelPanel() {
 				value: '',
 				label: __( 'Select service…', 'ai-services' ),
 			},
-			...availableServices.map( ( { identifier, label } ) => ( {
+			...( availableServices || [] ).map( ( { identifier, label } ) => ( {
 				value: identifier,
 				label,
 			} ) ),
@@ -91,7 +94,7 @@ export default function PlaygroundServiceModelPanel() {
 				value: '',
 				label: __( 'Select model…', 'ai-services' ),
 			},
-			...availableModels.map( ( { identifier, label } ) => ( {
+			...( availableModels || [] ).map( ( { identifier, label } ) => ( {
 				value: identifier,
 				label,
 			} ) ),
@@ -129,51 +132,65 @@ export default function PlaygroundServiceModelPanel() {
 			onToggle={ () => togglePanel( 'playground-service-model' ) }
 			className="ai-services-playground-service-model-panel"
 		>
-			{ availableServices.length ? (
-				<Flex direction="column" gap="4">
-					<SelectControl
-						className="ai-services-playground-service"
-						label={ __( 'Service', 'ai-services' ) }
-						value={ service }
-						options={ serviceSelectOptions }
-						onChange={ onChangeService }
-						__nextHasNoMarginBottom
-						__next40pxDefaultSize
-					/>
-					<SelectControl
-						className="ai-services-playground-model"
-						label={ __( 'Model', 'ai-services' ) }
-						value={ model }
-						options={
-							modelSelectOptions.length > 1
-								? modelSelectOptions
-								: MODEL_SELECT_PLACEHOLDER_OPTIONS
-						}
-						onChange={ setModel }
-						disabled={ modelSelectOptions.length <= 1 }
-						__nextHasNoMarginBottom
-						__next40pxDefaultSize
-					/>
-				</Flex>
-			) : (
-				<Notice status="warning" isDismissible={ false }>
-					{ __(
-						'No services available for the configured capabilities.',
-						'ai-services'
+			{ availableServices !== undefined && (
+				<>
+					{ availableServices.length ? (
+						<Flex direction="column" gap="4">
+							<SelectControl
+								className="ai-services-playground-service"
+								label={ __( 'Service', 'ai-services' ) }
+								value={ service }
+								options={ serviceSelectOptions }
+								onChange={ onChangeService }
+								__nextHasNoMarginBottom
+								__next40pxDefaultSize
+							/>
+							<SelectControl
+								className="ai-services-playground-model"
+								label={ __( 'Model', 'ai-services' ) }
+								value={ model }
+								options={
+									modelSelectOptions.length > 1
+										? modelSelectOptions
+										: MODEL_SELECT_PLACEHOLDER_OPTIONS
+								}
+								onChange={ setModel }
+								disabled={ modelSelectOptions.length <= 1 }
+								__nextHasNoMarginBottom
+								__next40pxDefaultSize
+							/>
+						</Flex>
+					) : (
+						<Notice status="warning" isDismissible={ false }>
+							{ hasAnyAvailableServices
+								? __(
+										'No services available for the configured capabilities.',
+										'ai-services'
+								  )
+								: __(
+										'No services available.',
+										'ai-services'
+								  ) }
+							{ currentUserCanManageServices &&
+								createInterpolateElement(
+									' ' +
+										( hasAnyAvailableServices
+											? __(
+													'Please modify the selected capabilities or configure additional <a>AI services</a>.',
+													'ai-services'
+											  )
+											: __(
+													'Please configure <a>AI services</a>.',
+													'ai-services'
+											  ) ),
+									{
+										// eslint-disable-next-line jsx-a11y/anchor-has-content
+										a: <a href={ servicesSettingsUrl } />,
+									}
+								) }
+						</Notice>
 					) }
-					{ currentUserCanManageServices &&
-						createInterpolateElement(
-							' ' +
-								__(
-									'Please configure <a>AI services</a>.',
-									'ai-services'
-								),
-							{
-								// eslint-disable-next-line jsx-a11y/anchor-has-content
-								a: <a href={ servicesSettingsUrl } />,
-							}
-						) }
-				</Notice>
+				</>
 			) }
 		</PanelBody>
 	);

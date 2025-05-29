@@ -63,8 +63,12 @@ trait Generative_AI_API_Client_Trait {
 
 		if ( $response->get_status() < 200 || $response->get_status() >= 300 ) {
 			$data = $response->get_data();
-			if ( $data && isset( $data['error']['message'] ) ) {
+			if ( $data && isset( $data['error']['message'] ) && is_string( $data['error']['message'] ) ) {
 				$error_message = $data['error']['message'];
+			} elseif ( $data && isset( $data['error'] ) && is_string( $data['error'] ) ) {
+				$error_message = $data['error'];
+			} elseif ( $data && isset( $data['message'] ) && is_string( $data['message'] ) ) {
+				$error_message = $data['message'];
 			} else {
 				$error_message = sprintf(
 					'Bad status code: %d',

@@ -80,31 +80,39 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 		}
 
 		// Unfortunately, the OpenAI API does not return model capabilities, so we have to hardcode them here.
-		$gpt_capabilities            = array(
+		$gpt_capabilities              = array(
 			AI_Capability::CHAT_HISTORY,
 			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::TEXT_GENERATION,
 		);
-		$gpt_multimodal_capabilities = array(
+		$gpt_multimodal_capabilities   = array(
 			AI_Capability::CHAT_HISTORY,
 			AI_Capability::FUNCTION_CALLING,
 			AI_Capability::MULTIMODAL_INPUT,
 			AI_Capability::TEXT_GENERATION,
 		);
-		$image_capabilities          = array(
+		$image_capabilities            = array(
 			AI_Capability::IMAGE_GENERATION,
+		);
+		$image_multimodal_capabilities = array(
+			AI_Capability::IMAGE_GENERATION,
+			AI_Capability::MULTIMODAL_INPUT,
 		);
 
 		return array_reduce(
 			$response_data['data'],
-			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities, $image_capabilities ) {
+			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities, $image_capabilities, $image_multimodal_capabilities ) {
 				$model_slug = $model_data['id'];
 
 				if (
 					str_starts_with( $model_slug, 'dall-e-' ) ||
 					str_starts_with( $model_slug, 'gpt-image-' )
 				) {
-					$model_caps = $image_capabilities;
+					if ( 'dall-e-3' === $model_slug ) {
+						$model_caps = $image_capabilities;
+					} else {
+						$model_caps = $image_multimodal_capabilities;
+					}
 				} elseif (
 					( str_starts_with( $model_slug, 'gpt-' ) || str_starts_with( $model_slug, 'o1-' ) )
 					&& ! str_contains( $model_slug, '-instruct' )

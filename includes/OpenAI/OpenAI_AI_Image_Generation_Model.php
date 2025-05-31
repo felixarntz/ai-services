@@ -11,6 +11,8 @@ namespace Felix_Arntz\AI_Services\OpenAI;
 use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config;
 use Felix_Arntz\AI_Services\Services\Base\OpenAI_Compatible_AI_Image_Generation_Model;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
+use Felix_Arntz\AI_Services\Services\Traits\OpenAI_Compatible_Image_Generation_With_Multimodal_Input_Trait;
 use InvalidArgumentException;
 
 /**
@@ -18,7 +20,8 @@ use InvalidArgumentException;
  *
  * @since 0.5.0
  */
-class OpenAI_AI_Image_Generation_Model extends OpenAI_Compatible_AI_Image_Generation_Model {
+class OpenAI_AI_Image_Generation_Model extends OpenAI_Compatible_AI_Image_Generation_Model implements With_Multimodal_Input {
+	use OpenAI_Compatible_Image_Generation_With_Multimodal_Input_Trait;
 
 	/**
 	 * Prepares the API request parameters for generating an image.

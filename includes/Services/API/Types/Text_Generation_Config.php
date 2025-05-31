@@ -257,7 +257,7 @@ class Text_Generation_Config extends Abstract_Generation_Config {
 					'type'        => 'number',
 				),
 				'frequencyPenalty' => array(
-					'description' => __( 'Frequency penalty applied to the next token’s logprobs, multiplied by the number of times each token has been seen in the respponse so far.', 'ai-services' ),
+					'description' => __( 'Frequency penalty applied to the next token’s logprobs, multiplied by the number of times each token has been seen in the response so far.', 'ai-services' ),
 					'type'        => 'number',
 				),
 				'responseLogprobs' => array(

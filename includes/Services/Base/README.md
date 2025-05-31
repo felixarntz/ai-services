@@ -58,4 +58,25 @@ The primary purpose of the code within this directory is to:
     *   Applies authentication to requests if an `Authentication` instance is provided.
     *   This class is designed to be a reusable API client for services that follow a common RESTful pattern and can be configured with standard HTTP request handlers and authentication mechanisms.
 
+### `OpenAI_Compatible_AI_Image_Generation_Model.php` (`OpenAI_Compatible_AI_Image_Generation_Model`)
+
+*   **Description:** A generic base class for AI models that are compatible with the OpenAI API for image generation. It extends `Abstract_AI_Model` and implements `With_API_Client` and `With_Image_Generation`.
+*   **Key Features:**
+    *   Utilizes `With_API_Client_Trait` for API client handling and `With_Image_Generation_Trait` for image generation logic.
+    *   Manages image generation configuration (`Image_Generation_Config`) and system instructions using `Model_Param_Image_Generation_Config_Trait` and `Model_Param_System_Instruction_Trait`.
+    *   Provides a concrete implementation for sending image generation requests (`send_generate_image_request()`) to an OpenAI-compatible endpoint (e.g., `images/generations`).
+    *   Handles request parameter preparation (`prepare_generate_image_params()`) and response processing (`get_response_candidates()`, `prepare_response_candidate_content()`), including transforming base64 image data.
+    *   Allows customization of generation configuration parameter transformation via `get_generation_config_transformers()`.
+
+### `OpenAI_Compatible_AI_Text_Generation_Model.php` (`OpenAI_Compatible_AI_Text_Generation_Model`)
+
+*   **Description:** A generic base class for AI models that are compatible with the OpenAI API for text generation and chat completions. It extends `Abstract_AI_Model` and implements `With_API_Client`, `With_Text_Generation`, and `With_Chat_History`.
+*   **Key Features:**
+    *   Utilizes `With_API_Client_Trait` for API client handling, `With_Text_Generation_Trait` for text generation logic, and `With_Chat_History_Trait` for managing chat history.
+    *   Manages text generation configuration (`Text_Generation_Config`) and system instructions using `Model_Param_Text_Generation_Config_Trait` and `Model_Param_System_Instruction_Trait`.
+    *   Provides concrete implementations for sending text generation requests (`send_generate_text_request()`) and streaming requests (`send_stream_generate_text_request()`) to an OpenAI-compatible endpoint (e.g., `chat/completions`).
+    *   Handles request parameter preparation (`prepare_generate_text_params()`), including transforming `Content` objects into the OpenAI message format.
+    *   Processes responses (`get_response_candidates()`), including merging chunks for streaming responses (`merge_candidates_chunk()`).
+    *   Transforms content parts and generation configuration parameters using `get_content_transformers()` and `get_generation_config_transformers()`.
+
 These base classes and generic implementations form a crucial layer in the plugin's architecture, promoting code reuse and a standardized approach to integrating various AI services.

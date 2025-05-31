@@ -35,6 +35,7 @@ const mapValuesToArray = memoize(
 
 type ServiceApiKeyControlProps = {
 	service: ServiceResource;
+	className?: string;
 };
 
 /**
@@ -46,7 +47,7 @@ type ServiceApiKeyControlProps = {
  * @returns The component to be rendered.
  */
 function ServiceApiKeyControl( props: ServiceApiKeyControlProps ) {
-	const { service } = props;
+	const { service, className } = props;
 
 	const apiKey = useSelect(
 		( select ) => select( pluginSettingsStore ).getApiKey( service.slug ),
@@ -66,6 +67,7 @@ function ServiceApiKeyControl( props: ServiceApiKeyControlProps ) {
 			service={ service }
 			apiKey={ apiKey }
 			onChangeApiKey={ onChangeApiKey }
+			className={ className }
 		/>
 	);
 }
@@ -113,6 +115,7 @@ export default function SettingsCards() {
 						<ServiceApiKeyControl
 							key={ service.slug }
 							service={ service }
+							className="ais-settings-cards__api-key-control"
 						/>
 					) ) }
 				</CardBody>

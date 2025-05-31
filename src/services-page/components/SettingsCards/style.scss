@@ -19,6 +19,23 @@
 			margin: 64px auto;
 			max-width: 800px;
 		}
+
+		&__header,
+		&__body {
+			padding: 16px 24px;
+
+			@media (min-width: 783px) {
+				padding: 24px;
+			}
+		}
+
+		&__body > .components-base-control:not(:last-child) {
+			margin-bottom: 16px;
+
+			@media (min-width: 783px) {
+				margin-bottom: 24px;
+			}
+		}
 	}
 
 	&__heading {

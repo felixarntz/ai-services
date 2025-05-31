@@ -24,6 +24,9 @@ use Felix_Arntz\AI_Services\Services\Services_API;
 use Felix_Arntz\AI_Services\Services\Services_API_Instance;
 use Felix_Arntz\AI_Services\Services\Services_Loader;
 use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
+use Felix_Arntz\AI_Services\XAI\XAI_AI_Image_Generation_Model;
+use Felix_Arntz\AI_Services\XAI\XAI_AI_Service;
+use Felix_Arntz\AI_Services\XAI\XAI_AI_Text_Generation_Model;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts\With_Hooks;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Hook_Registrar;
@@ -345,6 +348,28 @@ class Plugin_Main implements With_Hooks {
 				'type'            => Service_Type::CLOUD,
 				'capabilities'    => AI_Capabilities::get_model_classes_capabilities(
 					array( Perplexity_AI_Text_Generation_Model::class )
+				),
+				'allow_override'  => false,
+			)
+		);
+		$this->services_api->register_service(
+			'xai',
+			static function ( Service_Registration_Context $context ) {
+				return new XAI_AI_Service(
+					$context->get_metadata(),
+					$context->get_authentication(),
+					$context->get_request_handler()
+				);
+			},
+			array(
+				'name'            => 'xAI (Grok)',
+				'credentials_url' => 'https://console.x.ai',
+				'type'            => Service_Type::CLOUD,
+				'capabilities'    => AI_Capabilities::get_model_classes_capabilities(
+					array(
+						XAI_AI_Text_Generation_Model::class,
+						XAI_AI_Image_Generation_Model::class,
+					)
 				),
 				'allow_override'  => false,
 			)

@@ -90,12 +90,13 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	 */
 	final protected function send_generate_image_request( array $contents, array $request_options ): Candidates {
 		$api    = $this->get_api_client();
+		$route  = $this->get_generate_image_route( $contents );
 		$params = $this->prepare_generate_image_params( $contents );
 
 		$params['model'] = $this->get_model_slug();
 
 		$request  = $api->create_post_request(
-			'images/generations',
+			$route,
 			$params,
 			array_merge(
 				$this->get_request_options(),
@@ -126,11 +127,23 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	}
 
 	/**
+	 * Gets the API route for generating an image.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Content[] $contents The contents to generate an image for.
+	 * @return string The route for generating an image.
+	 */
+	protected function get_generate_image_route( array $contents ): string {
+		return 'images/generations';
+	}
+
+	/**
 	 * Prepares the API request parameters for generating an image.
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param Content[] $contents The contents to generate text for.
+	 * @param Content[] $contents The contents to generate an image for.
 	 * @return array<string, mixed> The parameters for generating an image.
 	 *
 	 * @throws InvalidArgumentException Thrown if configuration values are not supported by the model.
@@ -141,24 +154,16 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 		 * For this reason, we only use the last content in case multiple messages are provided, and we prepend the
 		 * system instruction if set.
 		 */
-		if ( count( $contents ) > 1 ) {
-			$contents = array( $contents[ count( $contents ) - 1 ] );
-		}
-		if ( $this->get_system_instruction() ) {
-			$contents = array_merge( array( $this->get_system_instruction() ), $contents );
-		}
+		$last_content = end( $contents );
 
-		$params = array(
-			'prompt' => trim(
-				implode(
-					'\n\n',
-					array_map(
-						array( Helpers::class, 'content_to_text' ),
-						$contents
-					)
-				)
-			),
+		$params = Transformer::transform_content(
+			$last_content,
+			$this->get_content_transformers()
 		);
+
+		if ( $this->get_system_instruction() ) {
+			$params['prompt'] = Helpers::content_to_text( $this->get_system_instruction() ) . "\n\n" . $params['prompt'];
+		}
 
 		$generation_config = $this->get_image_generation_config();
 		if ( $generation_config ) {
@@ -252,6 +257,21 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 		return new Content(
 			Content_Role::MODEL,
 			Parts::from_array( array( $part ) )
+		);
+	}
+
+	/**
+	 * Gets the content transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The content transformers.
+	 */
+	protected function get_content_transformers(): array {
+		return array(
+			'prompt' => static function ( Content $content ) {
+				return Helpers::content_to_text( $content );
+			},
 		);
 	}
 

@@ -110,31 +110,28 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param Content[] $contents The contents to generate text for.
+	 * @param Content[] $contents The contents to generate an image for.
 	 * @return array<string, mixed> The parameters for generating an image.
 	 */
 	private function prepare_generate_image_params( array $contents ): array {
-		if ( count( $contents ) > 1 ) {
-			$contents = array( $contents[ count( $contents ) - 1 ] );
-		}
+		/*
+		 * The Google API only allows a single prompt, as a text string.
+		 * For this reason, we only use the last content in case multiple messages are provided, and we prepend the
+		 * system instruction if set.
+		 */
+		$last_content = end( $contents );
+
+		$instance = Transformer::transform_content(
+			$last_content,
+			$this->get_content_transformers()
+		);
+
 		if ( $this->get_system_instruction() ) {
-			$contents = array_merge( array( $this->get_system_instruction() ), $contents );
+			$instance['prompt'] = Helpers::content_to_text( $this->get_system_instruction() ) . "\n\n" . $instance['prompt'];
 		}
 
 		$params = array(
-			'instances' => array(
-				array(
-					'prompt' => trim(
-						implode(
-							'\n\n',
-							array_map(
-								array( Helpers::class, 'content_to_text' ),
-								$contents
-							)
-						)
-					),
-				),
-			),
+			'instances' => array( $instance ),
 		);
 
 		$generation_config = $this->get_image_generation_config();
@@ -143,7 +140,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 			$params['parameters'] = Transformer::transform_generation_config_params(
 				isset( $params['generationConfig'] ) && is_array( $params['generationConfig'] ) ? $params['generationConfig'] : array(),
 				$generation_config,
-				self::get_generation_config_transformers( $this->get_api_client() )
+				$this->get_generation_config_transformers()
 			);
 		} else {
 			// Override some API defaults.
@@ -229,14 +226,31 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	}
 
 	/**
+	 * Gets the content transformers.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, callable> The content transformers.
+	 */
+	private function get_content_transformers(): array {
+		return array(
+			'prompt' => static function ( Content $content ) {
+				return Helpers::content_to_text( $content );
+			},
+		);
+	}
+
+	/**
 	 * Gets the generation configuration transformers.
 	 *
 	 * @since 0.5.0
+	 * @since n.e.x.t Changed to non-static.
 	 *
-	 * @param Generative_AI_API_Client $api_client The API client instance.
 	 * @return array<string, callable> The generation configuration transformers.
 	 */
-	private static function get_generation_config_transformers( Generative_AI_API_Client $api_client ): array {
+	private function get_generation_config_transformers(): array {
+		$api_client = $this->get_api_client();
+
 		return array(
 			'outputOptions' => static function ( Image_Generation_Config $config ) {
 				$output_mime = $config->get_response_mime_type();

@@ -25,7 +25,7 @@ class OpenAI_AI_Image_Generation_Model extends OpenAI_Compatible_AI_Image_Genera
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param Content[] $contents The contents to generate text for.
+	 * @param Content[] $contents The contents to generate an image for.
 	 * @return array<string, mixed> The parameters for generating an image.
 	 *
 	 * @throws InvalidArgumentException Thrown if configuration values are not supported by the model.

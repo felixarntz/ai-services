@@ -17,7 +17,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_API_Client;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Web_Search;
-use Felix_Arntz\AI_Services\Services\Traits\OpenAI_Compatible_With_Function_Calling_Trait;
+use Felix_Arntz\AI_Services\Services\Traits\OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait;
 use InvalidArgumentException;
 
 /**
@@ -26,7 +26,7 @@ use InvalidArgumentException;
  * @since n.e.x.t
  */
 class XAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generation_Model implements With_Function_Calling, With_Multimodal_Input, With_Web_Search {
-	use OpenAI_Compatible_With_Function_Calling_Trait {
+	use OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 		prepare_generate_text_params as prepare_generate_text_params_with_function_calling;
 		prepare_tool as prepare_function_declarations_tool;
 	}

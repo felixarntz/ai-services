@@ -212,7 +212,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @return array<string, mixed> The parameters for generating text content.
 	 */
 	private function prepare_generate_text_params( array $contents ): array {
-		$transformers = self::get_content_transformers();
+		$transformers = $this->get_content_transformers();
 
 		$params = array(
 			'contents' => array_map(
@@ -237,7 +237,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			$params['generationConfig'] = Transformer::transform_generation_config_params(
 				isset( $params['generationConfig'] ) && is_array( $params['generationConfig'] ) ? $params['generationConfig'] : array(),
 				$generation_config,
-				self::get_generation_config_transformers()
+				$this->get_generation_config_transformers()
 			);
 		}
 
@@ -419,6 +419,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * Gets the content transformers.
 	 *
 	 * @since 0.2.0
+	 * @since n.e.x.t Changed to non-static.
 	 *
 	 * @return array<string, callable> The content transformers.
 	 *
@@ -426,7 +427,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
-	private static function get_content_transformers(): array {
+	private function get_content_transformers(): array {
 		return array(
 			'role'  => static function ( Content $content ) {
 				return $content->get_role();
@@ -517,10 +518,11 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * Gets the generation configuration transformers.
 	 *
 	 * @since 0.2.0
+	 * @since n.e.x.t Changed to non-static.
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */
-	private static function get_generation_config_transformers(): array {
+	private function get_generation_config_transformers(): array {
 		return array(
 			'stopSequences'      => static function ( Text_Generation_Config $config ) {
 				return $config->get_stop_sequences();

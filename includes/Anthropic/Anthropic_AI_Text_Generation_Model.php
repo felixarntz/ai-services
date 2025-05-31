@@ -176,7 +176,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * @return array<string, mixed> The parameters for generating text content.
 	 */
 	private function prepare_generate_text_params( array $contents ): array {
-		$transformers = self::get_content_transformers( $this->get_api_client() );
+		$transformers = $this->get_content_transformers();
 
 		$params = array(
 			'messages' => array_map(
@@ -204,7 +204,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 			$params = Transformer::transform_generation_config_params(
 				array_merge( $generation_config->get_additional_args(), $params ),
 				$generation_config,
-				self::get_generation_config_transformers()
+				$this->get_generation_config_transformers()
 			);
 		} else {
 			// The 'max_tokens' parameter is required in the Anthropic API, so we need a default.
@@ -401,15 +401,17 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * Gets the content transformers.
 	 *
 	 * @since 0.2.0
+	 * @since n.e.x.t Changed to non-static.
 	 *
-	 * @param Generative_AI_API_Client $api_client The API client instance.
 	 * @return array<string, callable> The content transformers.
 	 *
 	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
-	private static function get_content_transformers( Generative_AI_API_Client $api_client ): array {
+	private function get_content_transformers(): array {
+		$api_client = $this->get_api_client();
+
 		return array(
 			'role'    => static function ( Content $content ) {
 				if ( $content->get_role() === Content_Role::MODEL ) {
@@ -470,10 +472,11 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * Gets the generation configuration transformers.
 	 *
 	 * @since 0.2.0
+	 * @since n.e.x.t Changed to non-static.
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */
-	private static function get_generation_config_transformers(): array {
+	private function get_generation_config_transformers(): array {
 		return array(
 			'stop_sequences' => static function ( Text_Generation_Config $config ) {
 				return $config->get_stop_sequences();

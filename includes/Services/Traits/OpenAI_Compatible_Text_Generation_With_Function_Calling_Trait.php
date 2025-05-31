@@ -1,6 +1,6 @@
 <?php
 /**
- * Trait Felix_Arntz\AI_Services\Services\Traits\OpenAI_Compatible_With_Function_Calling_Trait
+ * Trait Felix_Arntz\AI_Services\Services\Traits\OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait
  *
  * @since n.e.x.t
  * @package ai-services
@@ -19,11 +19,11 @@ use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use InvalidArgumentException;
 
 /**
- * Trait for an OpenAI compatible model which implements function calling.
+ * Trait for an OpenAI compatible text generation model which implements function calling.
  *
  * @since n.e.x.t
  */
-trait OpenAI_Compatible_With_Function_Calling_Trait {
+trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	use Model_Param_Tool_Config_Trait;
 	use Model_Param_Tools_Trait;
 

@@ -30,7 +30,7 @@ Below is a summary of the traits available in this directory:
 
 -   **`Model_Param_Tools_Trait.php`**: Manages the set of available tools (`Tools` from `includes/Services/API/Types/`) for AI models that support function calling.
 
--   **`OpenAI_Compatible_With_Function_Calling_Trait.php`**: Enhances OpenAI-compatible text generation models by adding support for function calling. It prepares request parameters for tools and tool configurations, and processes API responses to extract function call information. It relies on `Model_Param_Tool_Config_Trait` and `Model_Param_Tools_Trait`.
+-   **`OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait.php`**: Enhances OpenAI-compatible text generation models by adding support for function calling. It prepares request parameters for tools and tool configurations, and processes API responses to extract function call information. It relies on `Model_Param_Tool_Config_Trait` and `Model_Param_Tools_Trait`.
 
 -   **`With_API_Client_Trait.php`**: Implements the `With_API_Client` interface (from `includes/Services/Contracts/`), providing standardized injection and access to a `Generative_AI_API_Client` instance.
 

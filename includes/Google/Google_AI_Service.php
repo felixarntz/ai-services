@@ -71,7 +71,14 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	public function list_models( array $request_options = array() ): array {
 		$api = $this->get_api_client();
 
-		$request       = $api->create_get_request( 'models', array(), $request_options );
+		$request       = $api->create_get_request(
+			'models',
+			array(
+				// 1000 is the maximum page size - we just want to retrieve all models in one go.
+				'pageSize' => 1000,
+			),
+			$request_options
+		);
 		$response_data = $api->make_request( $request )->get_data();
 
 		if ( ! isset( $response_data['models'] ) || ! $response_data['models'] ) {

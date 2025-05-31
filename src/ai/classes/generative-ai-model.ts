@@ -207,7 +207,11 @@ export default class GenerativeAiModel {
 			} );
 		} catch ( error ) {
 			throw new Error(
-				error instanceof Error ? error.message : String( error )
+				typeof error === 'object' &&
+				error !== null &&
+				'message' in error
+					? String( error.message )
+					: String( error )
 			);
 		}
 	}

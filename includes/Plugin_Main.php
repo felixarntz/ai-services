@@ -16,6 +16,8 @@ use Felix_Arntz\AI_Services\Google\Google_AI_Text_Generation_Model;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Image_Generation_Model;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Service;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Text_Generation_Model;
+use Felix_Arntz\AI_Services\Perplexity\Perplexity_AI_Service;
+use Felix_Arntz\AI_Services\Perplexity\Perplexity_AI_Text_Generation_Model;
 use Felix_Arntz\AI_Services\Services\API\Enums\Service_Type;
 use Felix_Arntz\AI_Services\Services\Service_Registration_Context;
 use Felix_Arntz\AI_Services\Services\Services_API;
@@ -261,6 +263,8 @@ class Plugin_Main implements With_Hooks {
 	 * Registers the default AI services.
 	 *
 	 * @since 0.1.0
+	 *
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	private function register_default_services(): void {
 		$this->services_api->register_service(
@@ -322,6 +326,25 @@ class Plugin_Main implements With_Hooks {
 						OpenAI_AI_Text_Generation_Model::class,
 						OpenAI_AI_Image_Generation_Model::class,
 					)
+				),
+				'allow_override'  => false,
+			)
+		);
+		$this->services_api->register_service(
+			'perplexity',
+			static function ( Service_Registration_Context $context ) {
+				return new Perplexity_AI_Service(
+					$context->get_metadata(),
+					$context->get_authentication(),
+					$context->get_request_handler()
+				);
+			},
+			array(
+				'name'            => 'Perplexity (Sonar)',
+				'credentials_url' => 'https://www.perplexity.ai/account/api/keys',
+				'type'            => Service_Type::CLOUD,
+				'capabilities'    => AI_Capabilities::get_model_classes_capabilities(
+					array( Perplexity_AI_Text_Generation_Model::class )
 				),
 				'allow_override'  => false,
 			)

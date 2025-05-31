@@ -199,7 +199,7 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 			return 8;
 		};
 
-		$preference_groups = array_fill( 0, 6, array() );
+		$preference_groups = array_fill( 0, 9, array() );
 		foreach ( $model_slugs as $model_slug ) {
 			$group                         = $get_preference_group( $model_slug );
 			$preference_groups[ $group ][] = $model_slug;

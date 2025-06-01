@@ -115,10 +115,17 @@ const getPhpCode = ( rawData, service, foundationalCapability ) => {
 		functionDeclarations = '';
 	}
 
-	const method =
-		foundationalCapability === enums.AiCapability.IMAGE_GENERATION
-			? 'generate_image'
-			: 'generate_text';
+	let method = 'generate_text';
+	let promptVariableName = '$prompt';
+	switch ( foundationalCapability ) {
+		case enums.AiCapability.IMAGE_GENERATION:
+			method = 'generate_image';
+			break;
+		case enums.AiCapability.TEXT_TO_SPEECH:
+			method = 'text_to_speech';
+			promptVariableName = '$input';
+			break;
+	}
 
 	let promptComment = '';
 	if (
@@ -128,7 +135,9 @@ const getPhpCode = ( rawData, service, foundationalCapability ) => {
 		promptComment =
 			'\n' +
 			line(
-				'// Alternatively, you could use the short-hand syntax and set `$prompt` to only the string.',
+				'// Alternatively, you could use the short-hand syntax and set `' +
+					promptVariableName +
+					'` to only the string.',
 				1
 			);
 	} else if (
@@ -147,7 +156,7 @@ use Felix_Arntz\\AI_Services\\Services\\API\\Types\\Content;
 if ( ai_services()->is_service_available( '${ service.slug }' ) ) {
 	$service = ai_services()->get_available_service( '${ service.slug }' );
 ${ promptComment }
-	$prompt = Content::from_array(
+	${ promptVariableName } = Content::from_array(
 		array(
 			'role'  => Content_Role::USER,
 			'parts' => ${ parts },
@@ -159,7 +168,7 @@ ${ functionDeclarations }
 			->get_model(
 				${ modelParams }
 			)
-			->${ method }( $prompt );
+			->${ method }( ${ promptVariableName } );
 	} catch ( Exception $e ) {
 		// Handle the exception.
 	}

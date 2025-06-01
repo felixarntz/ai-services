@@ -219,6 +219,10 @@ const resolvers = {
 					identifier: enums.AiCapability.IMAGE_GENERATION,
 					label: __( 'Image generation', 'ai-services' ),
 				},
+				{
+					identifier: enums.AiCapability.TEXT_TO_SPEECH,
+					label: __( 'Text to speech', 'ai-services' ),
+				},
 			];
 
 			dispatch.receiveFoundationalCapabilities( capabilities );

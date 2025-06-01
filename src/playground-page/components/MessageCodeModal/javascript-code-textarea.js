@@ -113,10 +113,17 @@ const getJavaScriptCode = ( rawData, service, foundationalCapability ) => {
 		functionDeclarations = '';
 	}
 
-	const method =
-		foundationalCapability === enums.AiCapability.IMAGE_GENERATION
-			? 'generateImage'
-			: 'generateText';
+	let method = 'generateText';
+	let promptVariableName = 'prompt';
+	switch ( foundationalCapability ) {
+		case enums.AiCapability.IMAGE_GENERATION:
+			method = 'generateImage';
+			break;
+		case enums.AiCapability.TEXT_TO_SPEECH:
+			method = 'textToSpeech';
+			promptVariableName = 'input';
+			break;
+	}
 
 	let promptComment = '';
 	if (
@@ -126,7 +133,9 @@ const getJavaScriptCode = ( rawData, service, foundationalCapability ) => {
 		promptComment =
 			'\n' +
 			line(
-				'// Alternatively, you could use the short-hand syntax and set `prompt` to only the string.',
+				'// Alternatively, you could use the short-hand syntax and set `' +
+					promptVariableName +
+					'` to only the string.',
 				1
 			);
 	} else if (
@@ -146,14 +155,14 @@ const { isServiceAvailable, getAvailableService } = select( aiStore );
 if ( isServiceAvailable( '${ service.slug }' ) ) {
 	const service = getAvailableService( '${ service.slug }' );
 ${ promptComment }
-	const prompt = {
+	const ${ promptVariableName } = {
 		role: enums.ContentRole.USER,
 		parts: ${ parts },
 	};
 ${ functionDeclarations }
 	try {
 		const candidates = await service.${ method }(
-			prompt,
+			${ promptVariableName },
 			${ modelParams }
 		);
 	} catch ( error ) {

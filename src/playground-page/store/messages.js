@@ -423,6 +423,13 @@ const actions = {
 
 			const generationConfig = {};
 			if (
+				foundationalCapability === enums.AiCapability.TEXT_TO_SPEECH
+			) {
+				const voice = select.getModelParam( 'voice' );
+				if ( voice ) {
+					generationConfig.voice = voice;
+				}
+			} else if (
 				foundationalCapability === enums.AiCapability.IMAGE_GENERATION
 			) {
 				const aspectRatio = select.getModelParam( 'aspectRatio' );
@@ -542,13 +549,15 @@ const actions = {
 
 			let candidates;
 			try {
-				if (
-					foundationalCapability ===
-					enums.AiCapability.IMAGE_GENERATION
-				) {
-					candidates = await model.generateImage( contentToSend );
-				} else {
-					candidates = await model.generateText( contentToSend );
+				switch ( foundationalCapability ) {
+					case enums.AiCapability.IMAGE_GENERATION:
+						candidates = await model.generateImage( contentToSend );
+						break;
+					case enums.AiCapability.TEXT_TO_SPEECH:
+						candidates = await model.textToSpeech( contentToSend );
+						break;
+					default:
+						candidates = await model.generateText( contentToSend );
 				}
 
 				const responseContent =

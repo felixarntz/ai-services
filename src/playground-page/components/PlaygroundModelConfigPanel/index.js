@@ -42,6 +42,7 @@ export default function PlaygroundModelConfigPanel() {
 		topP,
 		outputModalities,
 		aspectRatio,
+		voice,
 		isPanelOpened,
 	} = useSelect( ( select ) => {
 		const {
@@ -62,6 +63,7 @@ export default function PlaygroundModelConfigPanel() {
 			outputModalities:
 				getModelParam( 'outputModalities' ) || EMPTY_ARRAY,
 			aspectRatio: getModelParam( 'aspectRatio' ),
+			voice: getModelParam( 'voice' ),
 			isPanelOpened: isPanelActive( 'playground-model-config' ),
 		};
 	} );
@@ -204,6 +206,23 @@ export default function PlaygroundModelConfigPanel() {
 						] }
 						onChange={ ( value ) =>
 							setModelParam( 'aspectRatio', value )
+						}
+						__nextHasNoMarginBottom
+						__next40pxDefaultSize
+					/>
+				</Flex>
+			) }
+			{ foundationalCapability === enums.AiCapability.TEXT_TO_SPEECH && (
+				<Flex direction="column" gap="4">
+					<TextControl
+						label={ __( 'Voice', 'ai-services' ) }
+						help={ __(
+							'Identifier of the voice to use for generated speech. Consult with the selected model documentation for available voices.',
+							'ai-services'
+						) }
+						value={ voice }
+						onChange={ ( value ) =>
+							setModelParam( 'voice', value )
 						}
 						__nextHasNoMarginBottom
 						__next40pxDefaultSize

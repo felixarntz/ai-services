@@ -232,6 +232,11 @@ export default function Input() {
 			'Enter AI prompt or JSON data for a function response',
 			'ai-services'
 		);
+	} else if ( capabilities.includes( enums.AiCapability.TEXT_TO_SPEECH ) ) {
+		inputPlaceholder = __(
+			'Enter AI text to transform to speech',
+			'ai-services'
+		);
 	} else if ( capabilities.includes( enums.AiCapability.IMAGE_GENERATION ) ) {
 		inputPlaceholder = __(
 			'Enter AI prompt to generate images',

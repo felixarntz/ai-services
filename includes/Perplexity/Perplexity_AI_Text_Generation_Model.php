@@ -60,31 +60,33 @@ class Perplexity_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Gene
 	protected function prepare_generate_text_params( array $contents ): array {
 		$params = parent::prepare_generate_text_params( $contents );
 
-		/*
-		 * Add 'search_domain_filter' parameter if needed based on any web search tools provided.
-		 * Web search itself is ALWAYS enabled in Perplexity, and it cannot be turned off.
-		 * So there is no need to opt in or out of it.
-		 */
-		$domain_filters = array();
-		foreach ( $this->get_tools() as $tool ) {
-			if ( ! $tool instanceof Web_Search_Tool ) {
-				throw $this->get_api_client()->create_bad_request_exception(
-					'Only web search tools are supported.'
-				);
-			}
+		if ( $this->get_tools() ) {
+			/*
+			* Add 'search_domain_filter' parameter if needed based on any web search tools provided.
+			* Web search itself is ALWAYS enabled in Perplexity, and it cannot be turned off.
+			* So there is no need to opt in or out of it.
+			*/
+			$domain_filters = array();
+			foreach ( $this->get_tools() as $tool ) {
+				if ( ! $tool instanceof Web_Search_Tool ) {
+					throw $this->get_api_client()->create_bad_request_exception(
+						'Only web search tools are supported.'
+					);
+				}
 
-			$allowed_domains    = $tool->get_allowed_domains();
-			$disallowed_domains = $tool->get_disallowed_domains();
+				$allowed_domains    = $tool->get_allowed_domains();
+				$disallowed_domains = $tool->get_disallowed_domains();
 
-			foreach ( $allowed_domains as $domain ) {
-				$domain_filters[] = $domain;
+				foreach ( $allowed_domains as $domain ) {
+					$domain_filters[] = $domain;
+				}
+				foreach ( $disallowed_domains as $domain ) {
+					$domain_filters[] = '-' . $domain;
+				}
 			}
-			foreach ( $disallowed_domains as $domain ) {
-				$domain_filters[] = '-' . $domain;
+			if ( count( $domain_filters ) > 0 ) {
+				$params['search_domain_filter'] = implode( ',', $domain_filters );
 			}
-		}
-		if ( count( $domain_filters ) > 0 ) {
-			$params['search_domain_filter'] = implode( ',', $domain_filters );
 		}
 
 		return $params;

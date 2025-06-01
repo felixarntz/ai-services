@@ -109,12 +109,17 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 					( str_starts_with( $model_slug, 'gpt-' ) || str_starts_with( $model_slug, 'o1-' ) )
 					&& ! str_contains( $model_slug, '-instruct' )
 					&& ! str_contains( $model_slug, '-realtime' )
-					&& ! str_contains( $model_slug, '-audio' )
 				) {
 					if ( str_starts_with( $model_slug, 'gpt-4o' ) ) {
 						$model_caps = $gpt_multimodal_capabilities;
-					} else {
+						// New multimodal output model for audio generation.
+						if ( str_contains( $model_slug, '-audio' ) ) {
+							$model_caps[] = AI_Capability::MULTIMODAL_OUTPUT;
+						}
+					} elseif ( ! str_contains( $model_slug, '-audio' ) ) {
 						$model_caps = $gpt_capabilities;
+					} else {
+						$model_caps = array();
 					}
 				} else {
 					$model_caps = array();

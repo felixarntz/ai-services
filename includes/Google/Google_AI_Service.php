@@ -127,9 +127,13 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 							$model_caps[] = AI_Capability::WEB_SEARCH;
 						}
 
-						if ( // New experimental multimodal output model.
+						if ( // New multimodal output model for image generation.
 							str_contains( $model_slug, 'image-generation' ) ||
 							str_starts_with( $model_slug, 'gemini-2.0-flash-exp' )
+						) {
+							$model_caps[] = AI_Capability::MULTIMODAL_OUTPUT;
+						} elseif ( // New multimodal output model for audio generation.
+							str_contains( $model_slug, '-tts' )
 						) {
 							$model_caps[] = AI_Capability::MULTIMODAL_OUTPUT;
 						}

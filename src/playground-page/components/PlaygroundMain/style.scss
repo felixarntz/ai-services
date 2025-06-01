@@ -129,6 +129,10 @@
 				margin-left: auto;
 				max-width: 100%;
 				max-height: 800px; // Prevent excessive height.
+			}
+
+			img,
+			video {
 				height: auto;
 			}
 		}

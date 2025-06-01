@@ -348,6 +348,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 			throw $this->get_api_client()->create_missing_response_key_exception( "candidates.{$index}.content.parts" );
 		}
 
+		// TODO: How to handle the 'audio/L16' MIME type output? Can it be converted to WAV in PHP?
 		foreach ( $candidate_data['content']['parts'] as $index => $part ) {
 			if ( isset( $part['inlineData']['mimeType'] ) && isset( $part['inlineData']['data'] ) ) {
 				$candidate_data['content']['parts'][ $index ]['inlineData']['data'] = Helpers::base64_data_to_base64_data_url(
@@ -569,7 +570,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 				if ( count( $modalities ) > 0 ) {
 					return array_map(
 						static function ( $modality ) {
-							// Change "text" to "Text" and "image" to "Image".
+							// Change "text" to "Text", "image" to "Image", etc.
 							return ucfirst( $modality );
 						},
 						$modalities

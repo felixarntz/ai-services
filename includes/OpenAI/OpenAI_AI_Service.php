@@ -94,10 +94,13 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 		$image_capabilities          = array(
 			AI_Capability::IMAGE_GENERATION,
 		);
+		$tts_capabilities            = array(
+			AI_Capability::TEXT_TO_SPEECH,
+		);
 
 		return array_reduce(
 			$response_data['data'],
-			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities, $image_capabilities ) {
+			static function ( array $models_data, array $model_data ) use ( $gpt_capabilities, $gpt_multimodal_capabilities, $image_capabilities, $tts_capabilities ) {
 				$model_slug = $model_data['id'];
 
 				if (
@@ -105,6 +108,11 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 					str_starts_with( $model_slug, 'gpt-image-' )
 				) {
 					$model_caps = $image_capabilities;
+				} elseif (
+					str_starts_with( $model_slug, 'tts-' ) ||
+					str_contains( $model_slug, '-tts' )
+				) {
+					$model_caps = $tts_capabilities;
 				} elseif (
 					( str_starts_with( $model_slug, 'gpt-' ) || str_starts_with( $model_slug, 'o1-' ) )
 					&& ! str_contains( $model_slug, '-instruct' )
@@ -154,6 +162,7 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 			array(
 				OpenAI_AI_Text_Generation_Model::class,
 				OpenAI_AI_Image_Generation_Model::class,
+				OpenAI_AI_Text_To_Speech_Model::class,
 			),
 			$model_metadata->get_capabilities()
 		);

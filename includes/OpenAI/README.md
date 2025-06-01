@@ -25,6 +25,8 @@ The primary purpose of the code within this directory is to:
 
 - **`OpenAI_AI_Image_Generation_Model.php`**: This class also extends `Abstract_AI_Model` and implements `With_Image_Generation`. It interacts with OpenAI's image generation endpoint (`images/generations`). It prepares image generation parameters, including prompts and `Image_Generation_Config`, and processes the API response to extract generated images, handling different output formats like base64 encoded JSON or image URLs.
 
+- **`OpenAI_AI_Text_To_Speech_Model.php`**: This class extends `Abstract_AI_Model` and implements `With_Text_To_Speech`. It interacts with OpenAI's audio speech endpoint (`audio/speech`). It prepares text to speech parameters, including the input text and `Text_To_Speech_Config`, and processes the API response to extract generated audio, handling different output formats.
+
 ## Architectural Concerns & Technical Decisions
 
 - **API Client**: The `OpenAI_AI_Service` utilizes a `Generic_AI_API_Client` (from `includes/Services/Base/`) for making HTTP requests to the OpenAI API. Authentication is handled via an `Authentication` contract, typically an API key.

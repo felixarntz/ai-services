@@ -16,6 +16,7 @@ use Felix_Arntz\AI_Services\Google\Google_AI_Text_Generation_Model;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Image_Generation_Model;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Service;
 use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Text_Generation_Model;
+use Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Text_To_Speech_Model;
 use Felix_Arntz\AI_Services\Perplexity\Perplexity_AI_Service;
 use Felix_Arntz\AI_Services\Perplexity\Perplexity_AI_Text_Generation_Model;
 use Felix_Arntz\AI_Services\Services\API\Enums\Service_Type;
@@ -328,6 +329,7 @@ class Plugin_Main implements With_Hooks {
 					array(
 						OpenAI_AI_Text_Generation_Model::class,
 						OpenAI_AI_Image_Generation_Model::class,
+						OpenAI_AI_Text_To_Speech_Model::class,
 					)
 				),
 				'allow_override'  => false,

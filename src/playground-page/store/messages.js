@@ -440,19 +440,20 @@ const actions = {
 					}
 				} );
 
-				/*
-				 * For now, multimodal output is only supported for text generation.
-				 * The only AI provider that supports it is Google, and only for "text" and "image" modalities.
-				 * Therefore, if the model supports it and the user explicitly looked for such a model, we simply opt
-				 * in to both. In the future, we may want to allow users to select the modalities.
-				 */
 				if (
 					additionalCapabilities &&
 					additionalCapabilities.includes(
 						enums.AiCapability.MULTIMODAL_OUTPUT
 					)
 				) {
-					generationConfig.outputModalities = [ 'text', 'image' ];
+					const outputModalities =
+						select.getModelParam( 'outputModalities' );
+					if (
+						Array.isArray( outputModalities ) &&
+						outputModalities.length
+					) {
+						generationConfig.outputModalities = outputModalities;
+					}
 				}
 			}
 			if ( Object.keys( generationConfig ).length ) {

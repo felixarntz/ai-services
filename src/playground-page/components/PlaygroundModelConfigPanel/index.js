@@ -2,6 +2,7 @@
  * External dependencies
  */
 import { enums } from '@ai-services/ai';
+import { MultiCheckboxControl } from '@ai-services/components';
 import { store as interfaceStore } from '@ai-services/interface';
 
 /**
@@ -14,12 +15,15 @@ import {
 	SelectControl,
 } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { useMemo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
 import { store as playgroundStore } from '../../store';
+
+const EMPTY_ARRAY = [];
 
 /**
  * Renders the playground sidebar panel for AI model configuration.
@@ -31,21 +35,32 @@ import { store as playgroundStore } from '../../store';
 export default function PlaygroundModelConfigPanel() {
 	const {
 		foundationalCapability,
+		additionalCapabilities,
+		availableModalities,
 		maxOutputTokens,
 		temperature,
 		topP,
+		outputModalities,
 		aspectRatio,
 		isPanelOpened,
 	} = useSelect( ( select ) => {
-		const { getFoundationalCapability, getModelParam } =
-			select( playgroundStore );
+		const {
+			getFoundationalCapability,
+			getAdditionalCapabilities,
+			getAvailableModalities,
+			getModelParam,
+		} = select( playgroundStore );
 		const { isPanelActive } = select( interfaceStore );
 
 		return {
 			foundationalCapability: getFoundationalCapability(),
+			additionalCapabilities: getAdditionalCapabilities(),
+			availableModalities: getAvailableModalities(),
 			maxOutputTokens: getModelParam( 'maxOutputTokens' ),
 			temperature: getModelParam( 'temperature' ),
 			topP: getModelParam( 'topP' ),
+			outputModalities:
+				getModelParam( 'outputModalities' ) || EMPTY_ARRAY,
 			aspectRatio: getModelParam( 'aspectRatio' ),
 			isPanelOpened: isPanelActive( 'playground-model-config' ),
 		};
@@ -53,6 +68,16 @@ export default function PlaygroundModelConfigPanel() {
 
 	const { setModelParam } = useDispatch( playgroundStore );
 	const { togglePanel } = useDispatch( interfaceStore );
+
+	// Get option objects for available modalities to render in the checkbox list.
+	const modalityOptions = useMemo( () => {
+		return availableModalities.map( ( modality ) => {
+			return {
+				value: modality.identifier,
+				label: modality.label,
+			};
+		} );
+	}, [ availableModalities ] );
 
 	return (
 		<PanelBody
@@ -63,6 +88,27 @@ export default function PlaygroundModelConfigPanel() {
 		>
 			{ foundationalCapability === enums.AiCapability.TEXT_GENERATION && (
 				<Flex direction="column" gap="4">
+					{ additionalCapabilities &&
+						additionalCapabilities.includes(
+							enums.AiCapability.MULTIMODAL_OUTPUT
+						) && (
+							<MultiCheckboxControl
+								label={ __(
+									'Output modalities',
+									'ai-services'
+								) }
+								help={ __(
+									'Not every model supports all output modalities. Select the modalities based on the model you are using.',
+									'ai-services'
+								) }
+								value={ outputModalities }
+								options={ modalityOptions }
+								onChange={ ( value ) =>
+									setModelParam( 'outputModalities', value )
+								}
+								__nextHasNoMarginBottom
+							/>
+						) }
 					<TextControl
 						type="number"
 						min="0"

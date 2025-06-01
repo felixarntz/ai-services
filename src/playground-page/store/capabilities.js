@@ -8,7 +8,7 @@ import memoize from 'memize';
  * WordPress dependencies
  */
 import { createRegistrySelector } from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
+import { __, _x } from '@wordpress/i18n';
 import { store as preferencesStore } from '@wordpress/preferences';
 
 /**
@@ -20,6 +20,7 @@ const EMPTY_ARRAY = [];
 
 const RECEIVE_FOUNDATIONAL_CAPABILITIES = 'RECEIVE_FOUNDATIONAL_CAPABILITIES';
 const RECEIVE_ADDITIONAL_CAPABILITIES = 'RECEIVE_ADDITIONAL_CAPABILITIES';
+const RECEIVE_MODALITIES = 'RECEIVE_MODALITIES';
 
 const combineCapabilities = memoize(
 	( foundationalCapability, additionalCapabilities ) => {
@@ -41,6 +42,7 @@ const filterAdditionalCapabilities = memoize(
 const initialState = {
 	availableFoundationalCapabilities: [],
 	availableAdditionalCapabilities: [],
+	availableModalities: [],
 };
 
 const actions = {
@@ -140,6 +142,25 @@ const actions = {
 			} );
 		};
 	},
+
+	/**
+	 * Receives available modalities.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param {Object[]} modalities Modalities, as array of objects with `identifier` and `label` properties.
+	 * @return {Function} Action creator.
+	 */
+	receiveModalities( modalities ) {
+		return ( { dispatch } ) => {
+			dispatch( {
+				type: RECEIVE_MODALITIES,
+				payload: {
+					modalities,
+				},
+			} );
+		};
+	},
 };
 
 /**
@@ -165,6 +186,13 @@ function reducer( state = initialState, action ) {
 			return {
 				...state,
 				availableAdditionalCapabilities: capabilities,
+			};
+		}
+		case RECEIVE_MODALITIES: {
+			const { modalities } = action.payload;
+			return {
+				...state,
+				availableModalities: modalities,
 			};
 		}
 	}
@@ -232,6 +260,33 @@ const resolvers = {
 			dispatch.receiveAdditionalCapabilities( capabilities );
 		};
 	},
+	/**
+	 * Loads modalities.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return {Function} Action creator.
+	 */
+	getAvailableModalities() {
+		return async ( { dispatch } ) => {
+			const modalities = [
+				{
+					identifier: enums.Modality.TEXT,
+					label: _x( 'Text', 'modality', 'ai-services' ),
+				},
+				{
+					identifier: enums.Modality.IMAGE,
+					label: _x( 'Image', 'modality', 'ai-services' ),
+				},
+				{
+					identifier: enums.Modality.AUDIO,
+					label: _x( 'Audio', 'modality', 'ai-services' ),
+				},
+			];
+
+			dispatch.receiveModalities( modalities );
+		};
+	},
 };
 
 const selectors = {
@@ -278,6 +333,8 @@ const selectors = {
 
 	getAvailableAdditionalCapabilities: ( state ) =>
 		state.availableAdditionalCapabilities,
+
+	getAvailableModalities: ( state ) => state.availableModalities,
 };
 
 const storeConfig = {

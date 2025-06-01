@@ -306,6 +306,7 @@ Here is a code example:
 
 ```php
 use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Enums\Modality;
 use Felix_Arntz\AI_Services\Services\API\Types\Text_Generation_Config;
 
 try {
@@ -316,7 +317,7 @@ try {
 				'capabilities'      => array( AI_Capability::TEXT_GENERATION, AI_Capability::MULTIMODAL_OUTPUT ),
 				'generationConfig'  => Text_Generation_Config::from_array(
 					array(
-						'outputModalities' => array( 'text', 'image' ),
+						'outputModalities' => array( Modality::TEXT, Modality::IMAGE ),
 					)
 				),
 			)

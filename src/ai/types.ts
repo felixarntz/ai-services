@@ -6,6 +6,7 @@ import {
 	_VALUE_MAP as _CONTENT_ROLE_VALUE_MAP,
 	SYSTEM,
 } from './enums/content-role';
+import { _VALUE_MAP as _MODALITY_VALUE_MAP } from './enums/modality';
 import { _VALUE_MAP as _SERVICE_TYPE_VALUE_MAP } from './enums/service-type';
 
 /*
@@ -15,6 +16,7 @@ import { _VALUE_MAP as _SERVICE_TYPE_VALUE_MAP } from './enums/service-type';
 
 export type AiCapability = keyof typeof _AI_CAPABILITY_VALUE_MAP;
 export type ContentRole = keyof typeof _CONTENT_ROLE_VALUE_MAP;
+export type Modality = keyof typeof _MODALITY_VALUE_MAP;
 export type ServiceType = keyof typeof _SERVICE_TYPE_VALUE_MAP;
 
 /*
@@ -183,7 +185,7 @@ export type TextGenerationConfig = {
 	frequencyPenalty?: number;
 	responseLogprobs?: boolean;
 	logprobs?: number;
-	outputModalities?: ( 'text' | 'image' )[];
+	outputModalities?: Modality[];
 	[ key: string ]: unknown;
 };
 

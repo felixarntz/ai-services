@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services\API\Types;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Modality;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_Generation_Config;
 use InvalidArgumentException;
 
@@ -273,7 +274,11 @@ class Text_Generation_Config extends Abstract_Generation_Config {
 					'type'        => 'array',
 					'items'       => array(
 						'type' => 'string',
-						'enum' => array( 'text', 'image' ),
+						'enum' => array(
+							Modality::TEXT,
+							Modality::IMAGE,
+							Modality::AUDIO,
+						),
 					),
 				),
 			),

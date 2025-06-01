@@ -21,8 +21,9 @@ This directory includes the following key files:
 
 -   **`ai-capability.ts`**: Defines constants representing various AI capabilities supported or recognized by the system. Examples include `TEXT_GENERATION`, `IMAGE_GENERATION`, `FUNCTION_CALLING`, etc. It also provides `isValidValue` and `getValues` helper functions.
 -   **`content-role.ts`**: Defines constants for the different roles that content can have, particularly in conversational AI contexts. Common roles include `USER`, `MODEL`, and `SYSTEM`. It also provides `isValidValue` and `getValues` helper functions.
+-   **`modality.ts`**: Defines constants for the different types of data modalities that can be used as input or output. Examples include `TEXT`, `IMAGE`, and `AUDIO`. It also provides `isValidValue` and `getValues` helper functions.
 -   **`service-type.ts`**: Defines constants for categorizing AI services based on their operational nature, such as `CLOUD`, `SERVER`, or `CLIENT`. It also provides `isValidValue` and `getValues` helper functions.
--   **`index.ts`**: Serves as the public interface for this directory. It re-exports the constants and helper functions from the individual enum files (e.g., `AiCapability`, `ContentRole`, `ServiceType`), excluding internal implementation details like `_VALUE_MAP`. This allows other parts of the application to import these enums from a single, consistent path.
+-   **`index.ts`**: Serves as the public interface for this directory. It re-exports the constants and helper functions from the individual enum files (e.g., `AiCapability`, `ContentRole`, `Modality`, `ServiceType`), excluding internal implementation details like `_VALUE_MAP`. This allows other parts of the application to import these enums from a single, consistent path.
 
 ## Technical Decisions
 

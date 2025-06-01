@@ -391,7 +391,7 @@ try {
 			feature: 'my-test-feature',
 			capabilities: [ enums.AiCapability.TEXT_GENERATION, enums.AiCapability.MULTIMODAL_OUTPUT ],
 			generationConfig: {
-				outputModalities: [ 'text', 'image' ],
+				outputModalities: [ enums.Modality.TEXT, enums.Modality.IMAGE ],
 			},
 		}
 	);

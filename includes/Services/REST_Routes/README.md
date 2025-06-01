@@ -40,6 +40,7 @@ These routes allow clients to discover and use AI services.
 -   `Service_Generate_Text_REST_Route.php`: Handles requests for generating text content from a specified service and model.
 -   `Service_Stream_Generate_Text_REST_Route.php`: Handles requests for generating text content with a streamed response.
 -   `Service_Generate_Image_REST_Route.php`: Handles requests for generating images from a specified service and model.
+-   `Service_Text_To_Speech_REST_Route.php`: Handles requests for transforming text to speech from a specified service and model.
 -   `Service_Generate_Content_REST_Route.php`: An abstract base class for content generation routes, providing common functionality.
 
 The schema for service-related data is defined in `Service_REST_Resource_Schema.php`. Core interactions with AI services are managed via the `Services_API` class, typically found in `includes/Services/Services_API.php`. Service data is often represented by `Service_Entity` from `includes/Services/Entities/`.

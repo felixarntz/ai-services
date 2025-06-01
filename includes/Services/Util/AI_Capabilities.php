@@ -17,6 +17,7 @@ use Felix_Arntz\AI_Services\Services\Contracts\With_Image_Generation;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Output;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
+use Felix_Arntz\AI_Services\Services\Contracts\With_Text_To_Speech;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Web_Search;
 use InvalidArgumentException;
 
@@ -53,6 +54,8 @@ final class AI_Capabilities {
 	 *
 	 * @param string $model_class The model class name.
 	 * @return string[] The AI capabilities that the model class supports, based on the interfaces it implements.
+	 *
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 */
 	public static function get_model_class_capabilities( string $model_class ): array {
 		$interfaces = class_implements( $model_class );
@@ -76,6 +79,9 @@ final class AI_Capabilities {
 		if ( isset( $interfaces[ With_Text_Generation::class ] ) ) {
 			$capabilities[] = AI_Capability::TEXT_GENERATION;
 		}
+		if ( isset( $interfaces[ With_Text_To_Speech::class ] ) ) {
+			$capabilities[] = AI_Capability::TEXT_TO_SPEECH;
+		}
 		if ( isset( $interfaces[ With_Web_Search::class ] ) ) {
 			$capabilities[] = AI_Capability::WEB_SEARCH;
 		}
@@ -89,6 +95,8 @@ final class AI_Capabilities {
 	 *
 	 * @param Generative_AI_Model $model The model instance.
 	 * @return string[] The AI capabilities that the model instance supports, based on the interfaces it implements.
+	 *
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
 	 */
 	public static function get_model_instance_capabilities( Generative_AI_Model $model ): array {
 		$capabilities = array();
@@ -109,6 +117,9 @@ final class AI_Capabilities {
 		}
 		if ( $model instanceof With_Text_Generation ) {
 			$capabilities[] = AI_Capability::TEXT_GENERATION;
+		}
+		if ( $model instanceof With_Text_To_Speech ) {
+			$capabilities[] = AI_Capability::TEXT_TO_SPEECH;
 		}
 		if ( $model instanceof With_Web_Search ) {
 			$capabilities[] = AI_Capability::WEB_SEARCH;

@@ -74,6 +74,21 @@ interface Generative_AI_API_Client {
 	public function process_response_data( Response $response, $process_callback );
 
 	/**
+	 * Processes the response body from the API.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Response $response         The response instance. Must not be a stream response, i.e. not implement the
+	 *                                   With_Stream interface.
+	 * @param callable $process_callback The callback to process the response body. Receives the response body as
+	 *                                   string and should return the processed data in the desired format.
+	 * @return mixed The processed response data.
+	 *
+	 * @throws Generative_AI_Exception If an error occurs while processing the response body.
+	 */
+	public function process_response_body( Response $response, $process_callback );
+
+	/**
 	 * Processes the response data stream from the API.
 	 *
 	 * @since 0.3.0

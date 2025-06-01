@@ -144,7 +144,10 @@ export type ModelParams = {
 	capabilities?: AiCapability[];
 	tools?: Tool[];
 	toolConfig?: ToolConfig;
-	generationConfig?: TextGenerationConfig | ImageGenerationConfig;
+	generationConfig?:
+		| TextGenerationConfig
+		| ImageGenerationConfig
+		| TextToSpeechConfig;
 	systemInstruction?: SystemInstruction;
 };
 
@@ -194,6 +197,12 @@ export type ImageGenerationConfig = {
 	candidateCount?: number;
 	aspectRatio?: '1:1' | '16:9' | '9:16' | '4:3' | '3:4';
 	responseType?: 'inline_data' | 'file_data';
+	[ key: string ]: unknown;
+};
+
+export type TextToSpeechConfig = {
+	voice?: string;
+	responseMimeType?: 'audio/mpeg' | 'audio/wav' | 'audio/pcm' | 'audio/flac';
 	[ key: string ]: unknown;
 };
 

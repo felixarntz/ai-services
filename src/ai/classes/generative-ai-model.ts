@@ -215,4 +215,44 @@ export default class GenerativeAiModel {
 			);
 		}
 	}
+
+	/**
+	 * Transforms text to speech using the model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param content - The content to transform to speech.
+	 * @returns Model response candidates with the generated speech.
+	 */
+	async textToSpeech(
+		content: string | Part[] | Content | Content[]
+	): Promise< Candidates > {
+		validateCapabilities( this.metadata.capabilities, [
+			enums.AiCapability.TEXT_TO_SPEECH,
+		] );
+
+		const modelParams = { ...this.modelParams };
+
+		// Do some very basic validation.
+		validateContent( content );
+
+		try {
+			return await apiFetch( {
+				path: `/ai-services/v1/services/${ this.serviceSlug }:text-to-speech`,
+				method: 'POST',
+				data: {
+					content,
+					modelParams,
+				},
+			} );
+		} catch ( error ) {
+			throw new Error(
+				typeof error === 'object' &&
+				error !== null &&
+				'message' in error
+					? String( error.message )
+					: String( error )
+			);
+		}
+	}
 }

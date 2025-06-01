@@ -44,6 +44,7 @@ Below is an overview of the main interfaces found in this directory:
     *   **`With_Multimodal_Input.php` (`With_Multimodal_Input`)**: For models that can accept multimodal input (e.g., text and images).
     *   **`With_Multimodal_Output.php` (`With_Multimodal_Output`)**: For models that can produce multimodal output.
     *   **`With_Text_Generation.php` (`With_Text_Generation`)**: For models capable of generating text, including streaming responses.
+    *   **`With_Text_To_Speech.php` (`With_Text_To_Speech`)**: For models that support transforming text to speech.
     *   **`With_Web_Search.php` (`With_Web_Search`)**: For models that support web search capabilities.
 
 By adhering to these contracts, developers can integrate new AI services or models into the plugin with greater ease and confidence, knowing they fit into the established architectural patterns.

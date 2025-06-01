@@ -124,6 +124,46 @@ trait Generative_AI_API_Client_Trait {
 	}
 
 	/**
+	 * Processes the response body from the API.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param Response $response         The response instance. Must not be a stream response, i.e. not implement the
+	 *                                   With_Stream interface.
+	 * @param callable $process_callback The callback to process the response body. Receives the response body as
+	 *                                   string and should return the processed data in the desired format.
+	 * @return mixed The processed response data.
+	 *
+	 * @throws Generative_AI_Exception If an error occurs while processing the response body.
+	 */
+	final public function process_response_body( Response $response, $process_callback ) {
+		if ( $response instanceof With_Stream ) {
+			throw new Generative_AI_Exception(
+				sprintf(
+					'Response must not implement %s.',
+					With_Stream::class
+				)
+			);
+		}
+
+		$body = $response->get_body();
+		if ( ! $body ) {
+			throw new Generative_AI_Exception(
+				'No body received in response.'
+			);
+		}
+
+		$processed_data = call_user_func( $process_callback, $body );
+		if ( ! $processed_data ) {
+			throw new Generative_AI_Exception(
+				'No data returned by process callback.'
+			);
+		}
+
+		return $processed_data;
+	}
+
+	/**
 	 * Processes the response data stream from the API.
 	 *
 	 * @since 0.3.0

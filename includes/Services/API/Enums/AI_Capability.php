@@ -21,6 +21,7 @@ final class AI_Capability extends Abstract_Enum {
 	const MULTIMODAL_INPUT  = 'multimodal_input';
 	const MULTIMODAL_OUTPUT = 'multimodal_output';
 	const TEXT_GENERATION   = 'text_generation';
+	const TEXT_TO_SPEECH    = 'text_to_speech';
 	const WEB_SEARCH        = 'web_search';
 
 	/**
@@ -38,6 +39,7 @@ final class AI_Capability extends Abstract_Enum {
 			self::MULTIMODAL_INPUT,
 			self::MULTIMODAL_OUTPUT,
 			self::TEXT_GENERATION,
+			self::TEXT_TO_SPEECH,
 			self::WEB_SEARCH,
 		);
 	}

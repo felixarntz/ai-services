@@ -29,6 +29,7 @@ use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Get_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_List_REST_Route;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_REST_Resource_Schema;
 use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Stream_Generate_Text_REST_Route;
+use Felix_Arntz\AI_Services\Services\REST_Routes\Service_Text_To_Speech_REST_Route;
 use Felix_Arntz\AI_Services\Services\Util\Data_Encryption;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Links\Admin_Link_Collection;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Admin_Links\Admin_Page_Link;
@@ -295,6 +296,7 @@ final class Services_Service_Container_Builder {
 					new Service_Generate_Text_REST_Route( $cont['api'], $cont['current_user'] ),
 					new Service_Stream_Generate_Text_REST_Route( $cont['api'], $cont['current_user'] ),
 					new Service_Generate_Image_REST_Route( $cont['api'], $cont['current_user'] ),
+					new Service_Text_To_Speech_REST_Route( $cont['api'], $cont['current_user'] ),
 					new History_List_REST_Route( $cont['current_user'], $history_resource_schema ),
 					new Aggregate_REST_Route(
 						array(

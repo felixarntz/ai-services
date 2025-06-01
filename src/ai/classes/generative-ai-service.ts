@@ -221,4 +221,33 @@ export default class GenerativeAiService {
 		const model = this.getModel( modelParams );
 		return model.generateImage( content );
 	}
+
+	/**
+	 * Transforms text to speech using the service.
+	 *
+	 * This is a short-hand method for `service.getModel( modelParams ).textToSpeech( content )`.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param content     - The content to transform to speech.
+	 * @param modelParams - Model parameters. At a minimum this must include the unique "feature" identifier.
+	 * @returns Model response candidates with the generated speech.
+	 */
+	async textToSpeech(
+		content: string | Part[] | Content | Content[],
+		modelParams: ModelParams
+	): Promise< Candidates > {
+		// The `enums.AiCapability.TEXT_TO_SPEECH` capability is naturally implied to generate speech.
+		if ( ! modelParams?.capabilities ) {
+			modelParams = {
+				...modelParams,
+				capabilities: detectRequestedCapabilitiesFromContent( content, [
+					enums.AiCapability.TEXT_TO_SPEECH,
+				] ),
+			};
+		}
+
+		const model = this.getModel( modelParams );
+		return model.textToSpeech( content );
+	}
 }

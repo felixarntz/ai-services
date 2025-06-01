@@ -26,6 +26,8 @@ Below is a summary of the traits available in this directory:
 
 -   **`Model_Param_Text_Generation_Config_Trait.php`**: Manages text generation configuration (`Text_Generation_Config` from `includes/Services/API/Types/`) for AI models. It includes helpers to set this configuration from model parameters.
 
+-   **`Model_Param_Text_To_Speech_Config_Trait.php`**: Manages text to speech configuration (`Text_To_Speech_Config` from `includes/Services/API/Types/`) for AI models. It includes helpers to set this configuration from model parameters.
+
 -   **`Model_Param_Tool_Config_Trait.php`**: Manages tool configuration (`Tool_Config` from `includes/Services/API/Types/`) for AI models, allowing them to define how function calling or tools should behave.
 
 -   **`Model_Param_Tools_Trait.php`**: Manages the set of available tools (`Tools` from `includes/Services/API/Types/`) for AI models that support function calling.
@@ -39,6 +41,8 @@ Below is a summary of the traits available in this directory:
 -   **`With_Image_Generation_Trait.php`**: Implements the `With_Image_Generation` interface (from `includes/Services/Contracts/`). It provides the `generate_image()` method, handling content sanitization and delegating the actual API call to an abstract `send_generate_image_request()` method.
 
 -   **`With_Text_Generation_Trait.php`**: Implements the `With_Text_Generation` interface (from `includes/Services/Contracts/`). It provides `generate_text()` and `stream_generate_text()` methods, handling content sanitization and delegating API calls to abstract `send_generate_text_request()` and `send_stream_generate_text_request()` methods.
+
+-   **`With_Text_To_Speech_Trait.php`**: Implements the `With_Text_To_Speech` interface (from `includes/Services/Contracts/`). It provides the `text_to_speech()` method, handling content sanitization and delegating the actual API call to an abstract `send_text_to_speech_request()` method.
 
 ## Common Patterns and Technical Decisions
 

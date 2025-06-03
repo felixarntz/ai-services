@@ -143,18 +143,35 @@ export default class GenerativeAiModel {
 		// Do some very basic validation.
 		validateContent( content );
 
-		const response: Response = await apiFetch( {
-			path: `/ai-services/v1/services/${ this.serviceSlug }:stream-generate-text`,
-			method: 'POST',
-			data: {
-				content,
-				modelParams: modelParams || {},
-			},
-			headers: {
-				Accept: 'text/event-stream',
-			},
-			parse: false,
-		} );
+		let response: Response;
+		try {
+			response = await apiFetch( {
+				path: `/ai-services/v1/services/${ this.serviceSlug }:stream-generate-text`,
+				method: 'POST',
+				data: {
+					content,
+					modelParams: modelParams || {},
+				},
+				headers: {
+					Accept: 'text/event-stream',
+				},
+				parse: false,
+			} );
+		} catch ( error ) {
+			if ( error instanceof Response ) {
+				let json: Record< string, unknown >;
+				try {
+					json = await error.json();
+				} catch ( jsonError ) {
+					throw {
+						code: 'bad_stream_response',
+						message: `Response returned with status code ${ error.status }.`,
+					};
+				}
+				throw json;
+			}
+			throw error;
+		}
 
 		return processStream( response );
 	}

@@ -174,7 +174,7 @@ export default function ChatbotApp() {
 	const { service, hasChat } = useSelect( ( select ) => {
 		return {
 			service: select( aiStore ).getAvailableService( SERVICE_ARGS ),
-			hasChat: !! select( aiStore ).getChat( CHAT_ID ),
+			hasChat: select( aiStore ).hasChat( CHAT_ID ),
 		};
 	} );
 

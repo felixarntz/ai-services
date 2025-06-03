@@ -457,6 +457,10 @@ function reducer( state: State = initialState, action: CombinedAction ): State {
 }
 
 const selectors = {
+	hasChat: ( state: State, chatId: string ) => {
+		return !! state.chatHistories[ chatId ];
+	},
+
 	getChat: ( state: State, chatId: string ) => {
 		if ( ! state.chatHistories[ chatId ] ) {
 			return EMPTY_HISTORY;

@@ -11,6 +11,7 @@ import ChatSession from '../classes/chat-session';
 import GenerativeAiService from '../classes/generative-ai-service';
 import * as enums from '../enums';
 import { formatNewContent } from '../util';
+import logError from '../../utils/log-error';
 import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 import {
 	Content,
@@ -170,10 +171,7 @@ const actions = {
 				service &&
 				! registry.select( STORE_NAME ).isServiceAvailable( service )
 			) {
-				// eslint-disable-next-line no-console
-				console.error(
-					`The AI service ${ service } is not available.`
-				);
+				logError( `The AI service ${ service } is not available.` );
 				return;
 			}
 			if (
@@ -182,8 +180,7 @@ const actions = {
 					.select( STORE_NAME )
 					.hasAvailableServices( SERVICE_ARGS )
 			) {
-				// eslint-disable-next-line no-console
-				console.error(
+				logError(
 					'No AI service available for text generation with chat history.'
 				);
 				return;
@@ -227,8 +224,7 @@ const actions = {
 		return async ( { dispatch }: DispatcherArgs ) => {
 			const session = chatSessionInstances[ chatId ];
 			if ( ! session ) {
-				// eslint-disable-next-line no-console
-				console.error( `Chat ${ chatId } not found.` );
+				logError( `Chat ${ chatId } not found.` );
 				return;
 			}
 
@@ -276,8 +272,7 @@ const actions = {
 		return async ( { dispatch }: DispatcherArgs ) => {
 			const session = chatSessionInstances[ chatId ];
 			if ( ! session ) {
-				// eslint-disable-next-line no-console
-				console.error( `Chat ${ chatId } not found.` );
+				logError( `Chat ${ chatId } not found.` );
 				return;
 			}
 

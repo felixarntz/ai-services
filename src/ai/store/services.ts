@@ -12,7 +12,7 @@ import { getBrowserServiceData } from './browser';
 import GenerativeAiService from '../classes/generative-ai-service';
 import BrowserGenerativeAiService from '../classes/browser-generative-ai-service';
 import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
-import { ServiceResource, AvailableServicesArgs } from '../types';
+import type { ServiceResource, AvailableServicesArgs } from '../types';
 
 const serviceInstances: Record< string, GenerativeAiService > = {};
 

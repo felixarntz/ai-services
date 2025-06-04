@@ -13,6 +13,7 @@ import { createRegistrySelector } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
+import logError from '../utils/log-error';
 import type { StoreConfig, Action, ThunkArgs } from '../utils/store-types';
 
 export enum ActionType {
@@ -185,8 +186,7 @@ const selectors = {
 				return undefined;
 			}
 			if ( services[ slug ] === undefined ) {
-				// eslint-disable-next-line no-console
-				console.error( `Invalid service ${ slug }.` );
+				logError( `Invalid service ${ slug }.` );
 				return null;
 			}
 			return services[ slug ];

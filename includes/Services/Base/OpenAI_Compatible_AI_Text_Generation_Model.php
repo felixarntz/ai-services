@@ -249,7 +249,9 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 		unset( $other_data['choices'] );
 
 		foreach ( $chunk_data['choices'] as $index => $candidate_data ) {
-			if ( isset( $candidate_data['delta']['content'] ) ) {
+			if ( isset( $candidate_data['delta']['reasoning_content'] ) ) {
+				$candidates_data[ $index ]['content']['parts'][0]['text'] = $candidate_data['delta']['reasoning_content'];
+			} elseif ( isset( $candidate_data['delta']['content'] ) ) {
 				$candidates_data[ $index ]['content']['parts'][0]['text'] = $candidate_data['delta']['content'];
 			} else {
 				// If there was a previous content block, ensure it is ends in a double newline.
@@ -319,6 +321,9 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	 */
 	protected function prepare_response_candidate_content_parts( array $candidate_data ): Parts {
 		$parts = array();
+		if ( isset( $candidate_data['message']['reasoning_content'] ) && is_string( $candidate_data['message']['reasoning_content'] ) ) {
+			$parts[] = array( 'text' => $candidate_data['message']['reasoning_content'] );
+		}
 		if ( isset( $candidate_data['message']['content'] ) && is_string( $candidate_data['message']['content'] ) ) {
 			$parts[] = array( 'text' => $candidate_data['message']['content'] );
 		}

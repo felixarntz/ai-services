@@ -587,3 +587,103 @@ Note that not all configuration arguments are supported by every service API. He
 * `aspectRatio` _(string)_: Aspect ratio of the generated image.
 
 Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+
+## Transforming text to speech using an AI service
+
+The API for transforming text to speech works very similarly to the one for [generating text content](#generating-text-content-using-an-ai-service). Basically, instead of the model class's `generate_text()` method you need to call the `text_to_speech()` method, and the AI capability to check for is `AI_Capability::TEXT_TO_SPEECH`.
+
+Here is a code example to transform text to speech using whichever AI service and model is available and suitable for the request:
+
+```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+
+try {
+	$service = ai_services()->get_available_service( array( 'capabilities' => array( AI_Capability::TEXT_TO_SPEECH ) ) );
+} catch ( InvalidArgumentException $e ) {
+	// Handle the exception.
+}
+
+try {
+	$candidates = $service
+		->get_model(
+			array(
+				'feature'      => 'my-test-feature',
+				'capabilities' => array( AI_Capability::TEXT_TO_SPEECH ),
+			)
+		)
+		->text_to_speech( 'What a beautiful day it is today!' );
+} catch ( Exception $e ) {
+	// Handle the exception.
+}
+```
+
+The signature of the `text_to_speech()` method is almost exactly the same as the `generate_text()` method. You can also provide a `Content` object as input, however please note that at the moment none of the built-in AI services support multimodal input or chat history in combination with transforming text to speech. Whenever any of the models adds support for those AI capabilities in the future, it'll work out of the box right away.
+
+### Processing audio responses
+
+Similar to `generate_text()`, the `text_to_speech()` model method returns an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidates` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Candidates.php) which is an iterable object that contains the alternative response candidates - today it's just one, but in the future returning multiple alternatives could be supported once provider models allow for it.
+
+Every candidate in the list is an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Candidate` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types\Candidate.php), which allows you to access its actual content as well as metadata about the particular response candidate.
+
+For example, you can use code as follows to retrieve the generated audio from the first candidate.
+
+```php
+$speech_url = '';
+foreach ( $candidates->get( 0 )->get_content()->get_parts() as $part ) {
+	if ( $part instanceof \Felix_Arntz\AI_Services\Services\API\Types\Parts\Inline_Data_Part ) {
+		$speech_url = $part->get_base64_data(); // Data URL.
+		break;
+	}
+	if ( $part instanceof \Felix_Arntz\AI_Services\Services\API\Types\Parts\File_Data_Part ) {
+		$speech_url = $part->get_file_uri(); // Actual URL. May have limited TTL (often 1 hour).
+		break;
+	}
+}
+```
+
+By default, text-to-speech models are configured to return inline data, i.e. a data URL with base64-encoded data.
+
+After retrieving the resulting audio (data) URL, you can process it further - for example save it to a file or stream it to the user. The AI Services plugin provides a few helper methods related to transforming different representations of a file, via the [`Felix_Arntz\AI_Services\Services\API\Helpers` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Helpers.php). Related to these is the [`Felix_Arntz\AI_Services\Services\API\Types\Blob` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Blob.php), which represents a binary data blob and is inspired by the [native JavaScript `Blob` class](https://developer.mozilla.org/en-US/docs/Web/API/Blob). For processing a data URL for generated audio, the most important helper method is `Helpers::base64_data_url_to_blob()`. Here is the full list of relevant helper methods for file processing:
+
+* `Helpers::file_to_base64_data_url( string $file, string $mime_type ): string`: Returns the base64-encoded data URL representation of the given file URL.
+* `Helpers::file_to_blob( string $file, string $mime_type = '' ): ?Blob`: Returns the binary data blob representation of the given file URL.
+* `Helpers::blob_to_base64_data_url( Blob $blob ): string`: Returns the base64-encoded data URL representation of the given binary data blob.
+* `Helpers::base64_data_url_to_blob( string $base64_data_url ): ?Blob`: Returns the binary data blob representation of the given base64-encoded data URL.
+
+### Customizing the default text-to-speech configuration
+
+Similarly to how you can [customize the text generation configuration](#customizing-the-default-text-generation-configuration), you can customize the text-to-speech configuration. For text-to-speech, the `generationConfig` key needs to contain an instance of the [`Felix_Arntz\AI_Services\Services\API\Types\Text_To_Speech_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_To_Speech_Generation_Config.php), which allows to provide various model configuration arguments in a normalized way that works across the different AI services and their APIs.
+
+Here is a code example using `generationConfig`:
+
+```php
+use Felix_Arntz\AI_Services\Services\API\Enums\AI_Capability;
+use Felix_Arntz\AI_Services\Services\API\Types\Text_To_Speech_Generation_Config;
+
+try {
+	$model = $service
+		->get_model(
+			array(
+				'feature'          => 'my-test-feature',
+				'capabilities'     => array( AI_Capability::TEXT_TO_SPEECH ),
+				'generationConfig' => Text_To_Speech_Generation_Config::from_array(
+					array(
+						'voice'            => 'coral',
+						'responseMimeType' => 'audio/wav',
+					)
+				),
+			)
+		);
+
+	// Transform text to speech using the model.
+} catch ( Exception $e ) {
+	// Handle the exception.
+}
+```
+
+Note that not all configuration arguments are supported by every service API. Here is a list of common configuration arguments that are widely supported:
+
+* `voice` _(string)_: The voice to use for the audio.
+* `responseMimeType` _(string)_: The format of the audio byte stream.
+
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_To_Speech_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_To_Speech_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.

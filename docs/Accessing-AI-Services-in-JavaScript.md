@@ -277,7 +277,7 @@ for ( const part of candidates[ 0 ].content.parts ) {
 
 This code example realistically should work in 99% of use-cases. However, there may be a scenario where the first candidate only contains non-text content. In that case the code example above would result in an empty string. Therefore, technically speaking it is the safest approach to first find a candidate that has any text content.
 
-As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods via [`aiServices.ai.helpers`](https://github.com/felixarntz/ai-services/tree/main/src/ai/helpers.js) from the `aiServices` JavaScript global.
+As this can be tedious, the AI Services API provides a set of helper methods to make it extremely simple. You can access the helper methods via [`aiServices.ai.helpers`](https://github.com/felixarntz/ai-services/tree/main/src/ai/helpers.ts) from the `aiServices` JavaScript global.
 
 The following example shows how you can accomplish the above in a safer, yet simpler way:
 
@@ -618,7 +618,7 @@ for ( const part of candidates[ 0 ].content.parts ) {
 
 By default, image models are configured to return inline data, i.e. a data URL with base64-encoded data.
 
-After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper functions related to transforming different representations of a file, via [`aiServices.ai.helpers`](https://github.com/felixarntz/ai-services/tree/main/src/ai/helpers.js). For processing a data URL for a generated image, the most important helper function is `base64DataUrlToBlob()`. Here is the full list of relevant helper functions for file processing:
+After retrieving the resulting image (data) URL, you can process it further - for example upload it to the WordPress Media Library. The AI Services plugin provides a few helper functions related to transforming different representations of a file, via [`aiServices.ai.helpers`](https://github.com/felixarntz/ai-services/tree/main/src/ai/helpers.ts). For processing a data URL for a generated image, the most important helper function is `base64DataUrlToBlob()`. Here is the full list of relevant helper functions for file processing:
 
 * `fileToBase64DataUrl( file: string, mimeType: string = '' ): string`: Returns the base64-encoded data URL representation of the given file URL.
 * `fileToBlob( file: string, mimeType: string = '' ): Blob?`: Returns the binary data blob representation of the given file URL.
@@ -658,3 +658,98 @@ Note that not all configuration arguments are supported by every service API. He
 * `aspectRatio` _(string)_: Aspect ratio of the generated image.
 
 Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Image_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Image_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.
+
+## Transforming text to speech using an AI service
+
+The API for transforming text to speech works very similarly to the one for [generating text content](#generating-text-content-using-an-ai-service). Basically, instead of the model or service class's `generateText()` method you need to call the `textToSpeech()` method, and the AI capability to check for is `enums.AiCapability.TEXT_TO_SPEECH`.
+
+Here is a code example to transform text to speech using whichever AI service and model is available and suitable for the request:
+
+```js
+const enums = aiServices.ai.enums;
+
+const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_TO_SPEECH ] };
+const { hasAvailableServices, getAvailableService } = wp.data.select( 'ai-services/ai' );
+if ( hasAvailableServices( SERVICE_ARGS ) ) {
+	const service = getAvailableService( SERVICE_ARGS );
+
+	try {
+		const candidates = await service.textToSpeech(
+			'What a beautiful day it is today!',
+			{
+				feature: 'my-test-feature',
+				capabilities: [ enums.AiCapability.TEXT_TO_SPEECH ],
+			}
+		);
+	} catch ( error ) {
+		// Handle the error.
+	}
+}
+```
+
+The signature of the `textToSpeech()` method is almost exactly the same as the `generateText()` method. You can also provide a `Content` object as input, however please note that at the moment none of the built-in AI services support multimodal input or chat history in combination with transforming text to speech. Whenever any of the models adds support for those AI capabilities in the future, it'll work out of the box right away.
+
+### Processing audio responses
+
+Similar to `generateText()`, the `textToSpeech()` model method returns an array of candidate objects - today it's just one, but in the future returning multiple alternatives could be supported once provider models allow for it.
+
+Every candidate in the list is an object, which allows you to access its actual content as well as metadata about the particular response candidate.
+
+For example, you can use code as follows to retrieve the generated audio from the first candidate.
+
+```js
+let speechUrl = '';
+for ( const part of candidates[ 0 ].content.parts ) {
+	if ( part.inlineData ) {
+		speechUrl = part.inlineData.data; // Data URL.
+		break;
+	}
+	if ( part.fileData ) {
+		speechUrl = part.fileData.fileUri; // Actual URL. May have limited TTL (often 1 hour).
+		break;
+	}
+}
+```
+
+By default, text-to-speech models are configured to return inline data, i.e. a data URL with base64-encoded data.
+
+After retrieving the resulting audio (data) URL, you can process it further - for example save it to a file or stream it to the user. The AI Services plugin provides a few helper functions related to transforming different representations of a file, via [`aiServices.ai.helpers`](https://github.com/felixarntz/ai-services/tree/main/src/ai/helpers.ts). For processing a data URL for generated audio, the most important helper function is `base64DataUrlToBlob()`. Here is the full list of relevant helper functions for file processing:
+
+* `fileToBase64DataUrl( file: string, mimeType: string = '' ): string`: Returns the base64-encoded data URL representation of the given file URL.
+* `fileToBlob( file: string, mimeType: string = '' ): Blob?`: Returns the binary data blob representation of the given file URL.
+* `blobToBase64DataUrl( blob: Blob ): string`: Returns the base64-encoded data URL representation of the given binary data blob.
+* `base64DataUrlToBlob( base64DataUrl: string ): Blob?`: Returns the binary data blob representation of the given base64-encoded data URL.
+
+### Customizing the default text-to-speech configuration
+
+Similarly to how you can [customize the text generation configuration](#customizing-the-default-text-generation-configuration), you can customize the text-to-speech configuration. The `generationConfig` key needs to contain an object with configuration arguments. These arguments are normalized in a way that works across the different AI services and their APIs.
+
+Here is a code example using `generationConfig`:
+
+```js
+const enums = aiServices.ai.enums;
+
+try {
+	const model = service.getModel(
+		{
+			feature: 'my-test-feature',
+			capabilities: [ enums.AiCapability.TEXT_TO_SPEECH ],
+			generationConfig: {
+				voice: 'coral',
+				responseMimeType: 'audio/wav',
+			},
+		}
+	);
+
+	// Transform text to speech using the model.
+} catch ( error ) {
+	// Handle the error.
+}
+```
+
+Note that not all configuration arguments are supported by every service API. Here is a list of common configuration arguments that are widely supported:
+
+* `voice` _(string)_: The voice to use for the audio.
+* `responseMimeType` _(string)_: The format of the audio byte stream.
+
+Please see the [`Felix_Arntz\AI_Services\Services\API\Types\Text_To_Speech_Generation_Config` class](https://github.com/felixarntz/ai-services/tree/main/includes/Services/API/Types/Text_To_Speech_Generation_Config.php) for all available configuration arguments, and consult the API documentation of the respective provider to see which of them are supported.

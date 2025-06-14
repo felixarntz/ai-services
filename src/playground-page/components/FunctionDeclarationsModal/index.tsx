@@ -3,6 +3,7 @@
  */
 import { OptionsFilterSearchControl, Tabs } from '@ai-services/components';
 import { Modal } from '@ai-services/interface';
+import type { FunctionDeclaration } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -26,23 +27,41 @@ import { speak } from '@wordpress/a11y';
 import { store as playgroundStore } from '../../store';
 import './style.scss';
 
-const EMPTY_ARRAY = [];
+const EMPTY_PARAMETER_ARRAY: Parameter[] = [];
 const MIN_FUNCTION_DECLARATIONS_COUNT_FOR_FILTER = 8;
+
+type ParameterSchema = {
+	type: string;
+	description?: string;
+	items?: { type: string };
+	properties?: Record< string, ParameterSchema >;
+	required?: string[];
+	[ key: string ]: unknown;
+};
+
+type Parameter = {
+	name: string;
+	schema: ParameterSchema;
+};
+
+type ParametersObject = {
+	properties: Record< string, ParameterSchema >;
+};
 
 /**
  * Converts an object of parameter schemas keyed by name to an array of objects with name and schema properties.
  *
  * @since 0.5.0
  *
- * @param {Object} parameters The parameters object.
- * @return {Object[]} The array of objects with name and schema properties.
+ * @param parameters - The parameters object.
+ * @returns The array of objects with name and schema properties.
  */
-function parametersObjectToArray( parameters ) {
+function parametersObjectToArray( parameters: ParametersObject ): Parameter[] {
 	if ( ! parameters.properties ) {
 		return [];
 	}
 	return Object.entries( parameters.properties ).map(
-		( [ name, schema ] ) => ( {
+		( [ name, schema ] ): Parameter => ( {
 			name,
 			schema,
 		} )
@@ -54,11 +73,11 @@ function parametersObjectToArray( parameters ) {
  *
  * @since 0.5.0
  *
- * @param {Object[]} parameters The array of objects with name and schema properties.
- * @return {Object} The parameters object.
+ * @param parameters - The array of objects with name and schema properties.
+ * @returns The parameters object.
  */
-function parametersArrayToObject( parameters ) {
-	const properties = {};
+function parametersArrayToObject( parameters: Parameter[] ): ParameterSchema {
+	const properties: Record< string, ParameterSchema > = {};
 	parameters.forEach( ( { name, schema } ) => {
 		properties[ name ] = schema;
 	} );
@@ -68,18 +87,23 @@ function parametersArrayToObject( parameters ) {
 	};
 }
 
+type PatternValidatorProps = {
+	value: string;
+	pattern: RegExp;
+	message: string;
+};
+
 /**
  * Renders a pattern validator that shows a notice if the given value does not match the pattern.
  *
  * @since 0.5.0
  *
- * @param {Object} props         The component props.
- * @param {string} props.value   The value to validate.
- * @param {RegExp} props.pattern The pattern to match.
- * @param {string} props.message The message to display if the value does not match the pattern.
- * @return {Component} The component to be rendered.
+ * @param props - The component props.
+ * @returns The component to be rendered.
  */
-function PatternValidator( { value, pattern, message } ) {
+function PatternValidator( props: PatternValidatorProps ) {
+	const { value, pattern, message } = props;
+
 	if ( value && ! value.match( pattern ) ) {
 		return (
 			<Notice
@@ -95,29 +119,46 @@ function PatternValidator( { value, pattern, message } ) {
 	return null;
 }
 
-const PARAMETER_TYPES = [ 'string', 'number', 'boolean', 'array', 'object' ];
+const PARAMETER_TYPES: string[] = [
+	'string',
+	'number',
+	'boolean',
+	'array',
+	'object',
+];
 
-const PARAMETER_TYPE_OPTIONS = PARAMETER_TYPES.map( ( type ) => ( {
-	value: type,
-	label: type,
-} ) );
-const PARAMETER_ITEM_TYPE_OPTIONS = PARAMETER_TYPE_OPTIONS.filter(
-	( option ) => option.value !== 'array'
+type SelectOption = {
+	value: string;
+	label: string;
+};
+
+const PARAMETER_TYPE_OPTIONS: SelectOption[] = PARAMETER_TYPES.map(
+	( type ) => ( {
+		value: type,
+		label: type,
+	} )
 );
+const PARAMETER_ITEM_TYPE_OPTIONS: SelectOption[] =
+	PARAMETER_TYPE_OPTIONS.filter( ( option ) => option.value !== 'array' );
+
+type FunctionParameterProps = {
+	name: string;
+	schema: ParameterSchema;
+	onChange: ( newParameter: Parameter ) => void;
+	onDelete: () => void;
+};
 
 /**
  * Renders the group of input fields for a single function parameter.
  *
  * @since 0.5.0
  *
- * @param {Object}   props          The component props.
- * @param {string}   props.name     The parameter name.
- * @param {Object}   props.schema   The parameter schema.
- * @param {Function} props.onChange The function to call when the parameter changes.
- * @param {Function} props.onDelete The function to call when the parameter is deleted.
- * @return {Component} The component to be rendered.
+ * @param props - The component props.
+ * @returns The component to be rendered.
  */
-function FunctionParameter( { name, schema, onChange, onDelete } ) {
+function FunctionParameter( props: FunctionParameterProps ) {
+	const { name, schema, onChange, onDelete } = props;
+
 	return (
 		<div
 			className="ai-services-playground-function-declarations-modal__function-parameter"
@@ -129,7 +170,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 						label={ _x( 'Name', 'parameter name', 'ai-services' ) }
 						className="ai-services-playground-function-declarations-modal__function-parameter__name"
 						value={ name }
-						onChange={ ( value ) =>
+						onChange={ ( value: string ) =>
 							onChange( { name: value, schema } )
 						}
 						__nextHasNoMarginBottom
@@ -140,8 +181,11 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 						className="ai-services-playground-function-declarations-modal__function-parameter__type"
 						value={ schema.type || 'string' }
 						options={ PARAMETER_TYPE_OPTIONS }
-						onChange={ ( value ) => {
-							const newSchema = { ...schema, type: value };
+						onChange={ ( value: string ) => {
+							const newSchema: ParameterSchema = {
+								...schema,
+								type: value,
+							};
 							if ( value === 'array' && ! newSchema.items ) {
 								newSchema.items = { type: 'string' };
 							} else if ( value !== 'array' && newSchema.items ) {
@@ -160,7 +204,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 						) }
 						className="ai-services-playground-function-declarations-modal__function-parameter__description"
 						value={ schema.description || '' }
-						onChange={ ( value ) =>
+						onChange={ ( value: string ) =>
 							onChange( {
 								name,
 								schema: { ...schema, description: value },
@@ -188,7 +232,7 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 						className="ai-services-playground-function-declarations-modal__function-parameter__items-type"
 						value={ schema.items?.type || 'string' }
 						options={ PARAMETER_ITEM_TYPE_OPTIONS }
-						onChange={ ( value ) =>
+						onChange={ ( value: string ) =>
 							onChange( {
 								name,
 								schema: { ...schema, items: { type: value } },
@@ -203,41 +247,53 @@ function FunctionParameter( { name, schema, onChange, onDelete } ) {
 	);
 }
 
+type FunctionDeclarationFormProps = {
+	functionDeclaration: FunctionDeclaration | null;
+};
+
 /**
  * Renders the form for adding or editing a function declaration.
  *
  * @since 0.5.0
  *
- * @param {Object}  props                     The component props.
- * @param {?Object} props.functionDeclaration The function declaration to edit, or null if adding a new function.
- * @return {Component} The component to be rendered.
+ * @param props - The component props.
+ * @returns The component to be rendered.
  */
-function FunctionDeclarationForm( { functionDeclaration } ) {
+function FunctionDeclarationForm( props: FunctionDeclarationFormProps ) {
+	const { functionDeclaration } = props;
+
 	const {
-		setFunctionDeclaration,
-		deleteFunctionDeclaration,
-		setActiveFunctionDeclaration,
+		setFunctionDeclaration: setStoreFunctionDeclaration,
+		deleteFunctionDeclaration: deleteStoreFunctionDeclaration,
+		setActiveFunctionDeclaration: setStoreActiveFunctionDeclaration,
 	} = useDispatch( playgroundStore );
 
-	const [ functionName, setFunctionName ] = useState( '' );
-	const [ functionDescription, setFunctionDescription ] = useState( '' );
-	const [ functionParameters, setFunctionParameters ] =
-		useState( EMPTY_ARRAY );
+	const [ functionName, setFunctionName ] = useState< string >( '' );
+	const [ functionDescription, setFunctionDescription ] =
+		useState< string >( '' );
+	const [ functionParameters, setFunctionParameters ] = useState<
+		Parameter[]
+	>( EMPTY_PARAMETER_ARRAY );
 
 	useEffect( () => {
 		if ( ! functionDeclaration ) {
 			setFunctionName( '' );
 			setFunctionDescription( '' );
-			setFunctionParameters( EMPTY_ARRAY );
+			setFunctionParameters( EMPTY_PARAMETER_ARRAY );
 			return;
 		}
 
 		setFunctionName( functionDeclaration.name );
 		setFunctionDescription( functionDeclaration.description || '' );
 		setFunctionParameters(
-			functionDeclaration.parameters
-				? parametersObjectToArray( functionDeclaration.parameters )
-				: EMPTY_ARRAY
+			'parameters' in functionDeclaration &&
+				functionDeclaration.parameters !== undefined
+				? parametersObjectToArray(
+						functionDeclaration.parameters as {
+							properties: Record< string, ParameterSchema >;
+						}
+				  )
+				: EMPTY_PARAMETER_ARRAY
 		);
 	}, [
 		functionDeclaration,
@@ -246,26 +302,29 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 		setFunctionParameters,
 	] );
 
-	const addFunctionParameter = () => {
+	const addFunctionParameter = (): void => {
 		setFunctionParameters( [
 			...functionParameters,
 			{ name: '', schema: { type: 'string', description: '' } },
 		] );
 	};
 
-	const editFunctionParameter = ( newParameter, index ) => {
+	const editFunctionParameter = (
+		newParameter: Parameter,
+		index: number
+	): void => {
 		const newParameters = [ ...functionParameters ];
 		newParameters[ index ] = newParameter;
 		setFunctionParameters( newParameters );
 	};
 
-	const deleteFunctionParameter = ( index ) => {
+	const deleteFunctionParameter = ( index: number ): void => {
 		const newParameters = [ ...functionParameters ];
 		newParameters.splice( index, 1 );
 		setFunctionParameters( newParameters );
 	};
 
-	const formSubmitDisabled = useMemo( () => {
+	const formSubmitDisabled: boolean = useMemo( () => {
 		// Check if any of the required values are empty.
 		if (
 			! functionName ||
@@ -278,23 +337,23 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 		return false;
 	}, [ functionName, functionDescription, functionParameters ] );
 
-	const saveChanges = () => {
+	const saveChanges = (): void => {
 		if ( formSubmitDisabled ) {
 			return;
 		}
 
 		const existingFunctionName = functionDeclaration?.name;
 
-		setFunctionDeclaration(
+		setStoreFunctionDeclaration(
 			functionName,
 			functionDescription,
 			parametersArrayToObject( functionParameters ),
-			existingFunctionName
+			existingFunctionName || ''
 		);
 
 		// If this is a new function or the function name changed, set the new function as active.
 		if ( functionName !== existingFunctionName ) {
-			setActiveFunctionDeclaration( functionName );
+			setStoreActiveFunctionDeclaration( functionName );
 			if ( ! existingFunctionName ) {
 				speak(
 					sprintf(
@@ -336,7 +395,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 	return (
 		<form
 			className="ai-services-playground-function-declarations-modal__form"
-			onSubmit={ ( event ) => {
+			onSubmit={ ( event: React.FormEvent< HTMLFormElement > ) => {
 				event.preventDefault();
 				saveChanges();
 			} }
@@ -361,9 +420,11 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 							variant="secondary"
 							isDestructive
 							onClick={ () => {
-								deleteFunctionDeclaration(
-									functionDeclaration.name
-								);
+								if ( functionDeclaration?.name ) {
+									deleteStoreFunctionDeclaration(
+										functionDeclaration.name
+									);
+								}
 							} }
 							__next40pxDefaultSize
 						/>
@@ -412,7 +473,7 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 						key={ index }
 						name={ parameter.name }
 						schema={ parameter.schema }
-						onChange={ ( newParameter ) =>
+						onChange={ ( newParameter: Parameter ) =>
 							editFunctionParameter( newParameter, index )
 						}
 						onDelete={ () => deleteFunctionParameter( index ) }
@@ -445,60 +506,72 @@ function FunctionDeclarationForm( { functionDeclaration } ) {
 	);
 }
 
-const getTabId = ( functionName ) => {
+const getTabId = ( functionName?: string | false ): string => {
 	if ( functionName ) {
 		return `function-${ functionName }`;
 	}
 	return 'add-new-function';
 };
 
-const getFunctionNameFromTabId = ( tabId ) => {
+const getFunctionNameFromTabId = ( tabId: string ): string => {
 	if ( tabId === 'add-new-function' ) {
 		return '';
 	}
 	return tabId.replace( /^function-/, '' );
 };
 
-const SEARCH_FIELDS = [ 'name' ];
+const SEARCH_FIELDS: string[] = [ 'name' ];
+
+type FunctionDeclarationsModalSelectProps = {
+	availableFunctionDeclarations: FunctionDeclaration[];
+	activeFunctionDeclaration: FunctionDeclaration | null;
+};
 
 /**
  * Renders the modal for managing the available function declarations.
  *
  * @since 0.5.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function FunctionDeclarationsModal() {
-	const { availableFunctionDeclarations, activeFunctionDeclaration } =
-		useSelect( ( select ) => {
-			const { getFunctionDeclarations, getActiveFunctionDeclaration } =
-				select( playgroundStore );
+	const {
+		availableFunctionDeclarations,
+		activeFunctionDeclaration,
+	}: FunctionDeclarationsModalSelectProps = useSelect( ( select ) => {
+		const {
+			getFunctionDeclarations,
+			getActiveFunctionDeclaration: getStoreActiveFunctionDeclaration,
+		} = select( playgroundStore );
 
-			const available = getFunctionDeclarations();
+		const available: FunctionDeclaration[] = getFunctionDeclarations();
 
-			let activeName = getActiveFunctionDeclaration();
-			if ( typeof activeName !== 'string' ) {
-				activeName = available.length > 0 ? available[ 0 ].name : '';
-			}
+		let activeName = getStoreActiveFunctionDeclaration();
+		if ( typeof activeName !== 'string' ) {
+			activeName = available.length > 0 ? available[ 0 ].name : null;
+		}
 
-			return {
-				availableFunctionDeclarations: available,
-				activeFunctionDeclaration: activeName
-					? available.find( ( { name } ) => name === activeName )
-					: null,
-			};
-		} );
+		return {
+			availableFunctionDeclarations: available,
+			activeFunctionDeclaration:
+				available.find( ( { name } ) => name === activeName ) || null,
+		};
+	}, [] );
 
 	const { setActiveFunctionDeclaration } = useDispatch( playgroundStore );
 
 	const [ filteredFunctionDeclarations, setFilteredFunctionDeclarations ] =
-		useState( availableFunctionDeclarations );
+		useState< FunctionDeclaration[] >( availableFunctionDeclarations );
 
-	const showFilter =
+	useEffect( () => {
+		setFilteredFunctionDeclarations( availableFunctionDeclarations );
+	}, [ availableFunctionDeclarations ] );
+
+	const showFilter: boolean =
 		availableFunctionDeclarations.length >=
 		MIN_FUNCTION_DECLARATIONS_COUNT_FOR_FILTER;
 
-	const functionDeclarationsToRender = showFilter
+	const functionDeclarationsToRender: FunctionDeclaration[] = showFilter
 		? filteredFunctionDeclarations
 		: availableFunctionDeclarations;
 
@@ -511,12 +584,16 @@ export default function FunctionDeclarationsModal() {
 			<div className="ai-services-playground-function-declarations-modal__content">
 				<Tabs
 					selectedTabId={ getTabId(
-						activeFunctionDeclaration?.name
+						activeFunctionDeclaration
+							? activeFunctionDeclaration.name
+							: false
 					) }
-					onSelect={ ( tabId ) => {
-						setActiveFunctionDeclaration(
-							getFunctionNameFromTabId( tabId )
-						);
+					onSelect={ ( tabId: string | null | undefined ) => {
+						if ( typeof tabId === 'string' ) {
+							setActiveFunctionDeclaration(
+								getFunctionNameFromTabId( tabId )
+							);
+						}
 					} }
 					orientation="vertical"
 				>
@@ -528,8 +605,25 @@ export default function FunctionDeclarationsModal() {
 									'ai-services'
 								) }
 								className="ai-services-playground-function-declarations-modal__search-control"
-								options={ availableFunctionDeclarations }
-								onFilter={ setFilteredFunctionDeclarations }
+								options={ availableFunctionDeclarations.map(
+									( item ) => ( {
+										value: item.name,
+										label: `${ item.name }()`,
+									} )
+								) }
+								onFilter={ (
+									filteredOptions: SelectOption[]
+								) => {
+									setFilteredFunctionDeclarations(
+										availableFunctionDeclarations.filter(
+											( decl ) =>
+												filteredOptions.some(
+													( opt ) =>
+														opt.value === decl.name
+												)
+										)
+									);
+								} }
 								searchFields={ SEARCH_FIELDS }
 							/>
 						) }
@@ -567,17 +661,17 @@ export default function FunctionDeclarationsModal() {
 					</div>
 					<div className="ai-services-playground-function-declarations-modal__main">
 						{ functionDeclarationsToRender.map(
-							( functionDeclaration ) => (
+							( functionDeclarationItem ) => (
 								<Tabs.TabPanel
-									key={ functionDeclaration.name }
+									key={ functionDeclarationItem.name }
 									tabId={ getTabId(
-										functionDeclaration.name
+										functionDeclarationItem.name
 									) }
 									className="ai-services-playground-function-declarations-modal__function-declaration-panel"
 								>
 									<FunctionDeclarationForm
 										functionDeclaration={
-											functionDeclaration
+											functionDeclarationItem
 										}
 									/>
 								</Tabs.TabPanel>

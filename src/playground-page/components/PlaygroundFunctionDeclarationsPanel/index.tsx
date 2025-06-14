@@ -4,6 +4,11 @@
 import { MultiCheckboxControl, HelpText } from '@ai-services/components';
 import { store as interfaceStore } from '@ai-services/interface';
 import { enums, store as aiStore } from '@ai-services/ai';
+import type {
+	AiCapability,
+	FunctionDeclaration,
+	ServiceResource,
+} from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -19,15 +24,20 @@ import { __ } from '@wordpress/i18n';
 import { store as playgroundStore } from '../../store';
 import './style.scss';
 
-const EMPTY_ARRAY = [];
+const EMPTY_CAPABILITY_ARRAY: AiCapability[] = [];
 const MIN_FUNCTION_DECLARATIONS_COUNT_FOR_FILTER = 8;
+
+type FunctionDeclarationOption = {
+	value: string;
+	label: string;
+};
 
 /**
  * Renders the playground sidebar panel for function declarations relevant for AI function calling.
  *
  * @since 0.5.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundFunctionDeclarationsPanel() {
 	const {
@@ -45,12 +55,13 @@ export default function PlaygroundFunctionDeclarationsPanel() {
 		} = select( playgroundStore );
 		const { isPanelActive } = select( interfaceStore );
 
-		const currentService = getService();
-		const currentModel = getModel();
+		const currentService: string | false = getService();
+		const currentModel: string | false = getModel();
 
-		let currentCapabilities = EMPTY_ARRAY;
+		let currentCapabilities: AiCapability[] = EMPTY_CAPABILITY_ARRAY;
 		if ( currentService && currentModel ) {
-			const services = getServices();
+			const services: Record< string, ServiceResource > | undefined =
+				getServices();
 			if (
 				services &&
 				services[ currentService ] &&
@@ -64,31 +75,38 @@ export default function PlaygroundFunctionDeclarationsPanel() {
 
 		return {
 			capabilities: currentCapabilities,
-			availableFunctionDeclarations: getFunctionDeclarations(),
-			selectedFunctionDeclarations: getSelectedFunctionDeclarations(),
-			isPanelOpened: isPanelActive( 'playground-function-declarations' ),
+			availableFunctionDeclarations:
+				getFunctionDeclarations() as FunctionDeclaration[],
+			selectedFunctionDeclarations:
+				getSelectedFunctionDeclarations() as string[],
+			isPanelOpened: isPanelActive(
+				'playground-function-declarations'
+			) as boolean,
 		};
-	} );
+	}, [] );
 
 	const { toggleSelectedFunctionDeclaration } =
 		useDispatch( playgroundStore );
 	const { togglePanel, openModal } = useDispatch( interfaceStore );
 
 	// Get option objects for available function declarations to render in the checkbox list.
-	const functionDeclarationOptions = useMemo( () => {
-		return availableFunctionDeclarations.map( ( functionDeclaration ) => {
-			return {
-				value: functionDeclaration.name,
-				label: `${ functionDeclaration.name }()`,
-			};
-		} );
-	}, [ availableFunctionDeclarations ] );
+	const functionDeclarationOptions: FunctionDeclarationOption[] =
+		useMemo( () => {
+			return availableFunctionDeclarations.map(
+				( functionDeclaration: FunctionDeclaration ) => {
+					return {
+						value: functionDeclaration.name,
+						label: `${ functionDeclaration.name }()`,
+					};
+				}
+			);
+		}, [ availableFunctionDeclarations ] );
 
 	if ( ! capabilities.includes( enums.AiCapability.FUNCTION_CALLING ) ) {
 		return null;
 	}
 
-	const showFilter =
+	const showFilter: boolean =
 		availableFunctionDeclarations.length >=
 		MIN_FUNCTION_DECLARATIONS_COUNT_FOR_FILTER;
 

@@ -2,6 +2,19 @@
  * External dependencies
  */
 import { enums, helpers, store as aiStore } from '@ai-services/ai';
+import type {
+	AiCapability,
+	Modality,
+	Content,
+	InlineDataPart,
+	ModelParams,
+	FunctionResponsePart,
+	FunctionDeclaration,
+	Tool,
+	TextGenerationConfig,
+	ImageGenerationConfig,
+	TextToSpeechConfig,
+} from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -11,12 +24,28 @@ import { __, _x, sprintf } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 import { uploadMedia } from '@wordpress/media-utils';
 
-const EMPTY_ARRAY = [];
+/**
+ * Internal dependencies
+ */
+import { STORE_NAME } from './name';
+import logError from '../../utils/log-error';
+import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
+import type {
+	AiPlaygroundMessage,
+	AiPlaygroundMessageAdditionalData,
+	WordPressAttachment,
+} from '../types';
+
+const EMPTY_MESSAGE_ARRAY: AiPlaygroundMessage[] = [];
 
 const FEATURE_SLUG = 'ai-playground';
 const HISTORY_SLUG = 'default';
+const UPLOAD_ATTACHMENT_NOTICE_ID = 'UPLOAD_ATTACHMENT_NOTICE_ID';
 
-const prepareContentForCache = ( content, attachments ) => {
+const prepareContentForCache = (
+	content: Content,
+	attachments: ( WordPressAttachment | null )[]
+): Content => {
 	return {
 		...content,
 		parts: content.parts.map( ( part, partIndex ) => {
@@ -25,7 +54,7 @@ const prepareContentForCache = ( content, attachments ) => {
 			 * Otherwise, the data may be too large for session storage.
 			 */
 			if (
-				part.inlineData &&
+				'inlineData' in part &&
 				part.inlineData.data &&
 				attachments[ partIndex ]
 			) {
@@ -43,14 +72,17 @@ const prepareContentForCache = ( content, attachments ) => {
 	};
 };
 
-const parseContentFromCache = async ( content, attachments ) => {
+const parseContentFromCache = async (
+	content: Content,
+	attachments: ( WordPressAttachment | null )[]
+): Promise< Content > => {
 	return {
 		...content,
 		parts: await Promise.all(
 			content.parts.map( async ( part, partIndex ) => {
 				// For inline data where the attachment is known but base64 data was stripped before cache, restore it.
 				if (
-					part.inlineData &&
+					'inlineData' in part &&
 					! part.inlineData.data &&
 					attachments[ partIndex ]
 				) {
@@ -71,11 +103,17 @@ const parseContentFromCache = async ( content, attachments ) => {
 	};
 };
 
-const prepareMessageForCache = ( message ) => {
+const prepareMessageForCache = (
+	message: AiPlaygroundMessage
+): AiPlaygroundMessage => {
 	// Migrate old "attachment" property to new "attachments" array on-the-fly.
-	if ( ! message.attachments && message.attachment ) {
+	if (
+		! ( 'attachments' in message ) &&
+		'attachment' in message &&
+		message.attachment
+	) {
 		let partIndex = message.content.parts.findIndex(
-			( part ) => part.inlineData
+			( part ) => 'inlineData' in part
 		);
 		if ( partIndex === -1 ) {
 			partIndex = 0;
@@ -105,12 +143,15 @@ const prepareMessageForCache = ( message ) => {
 		 * For a user message, the content is directly in rawData, which is the request parameters object.
 		 * For a model message, the content is within the first item of rawData, which is the candidates array.
 		 */
-		if ( prepared.rawData.content ) {
+		if ( ! Array.isArray( prepared.rawData ) && prepared.rawData.content ) {
 			prepared.rawData = {
 				...prepared.rawData,
 				content: prepared.content,
 			};
-		} else if ( prepared.rawData[ 0 ]?.content ) {
+		} else if (
+			Array.isArray( prepared.rawData ) &&
+			prepared.rawData[ 0 ]?.content
+		) {
 			prepared.rawData = [ ...prepared.rawData ];
 			prepared.rawData[ 0 ] = {
 				...prepared.rawData[ 0 ],
@@ -121,11 +162,13 @@ const prepareMessageForCache = ( message ) => {
 	return prepared;
 };
 
-const parseMessageFromCache = async ( message ) => {
+const parseMessageFromCache = async (
+	message: AiPlaygroundMessage
+): Promise< AiPlaygroundMessage > => {
 	// Migrate old "attachment" property to new "attachments" array on-the-fly.
 	if ( ! message.attachments && message.attachment ) {
 		let partIndex = message.content.parts.findIndex(
-			( part ) => part.inlineData
+			( part ) => 'inlineData' in part
 		);
 		if ( partIndex === -1 ) {
 			partIndex = 0;
@@ -158,12 +201,15 @@ const parseMessageFromCache = async ( message ) => {
 		 * For a user message, the content is directly in rawData, which is the request parameters object.
 		 * For a model message, the content is within the first item of rawData, which is the candidates array.
 		 */
-		if ( parsed.rawData.content ) {
+		if ( ! Array.isArray( parsed.rawData ) && parsed.rawData.content ) {
 			parsed.rawData = {
 				...parsed.rawData,
 				content: parsed.content,
 			};
-		} else if ( parsed.rawData[ 0 ]?.content ) {
+		} else if (
+			Array.isArray( parsed.rawData ) &&
+			parsed.rawData[ 0 ]?.content
+		) {
 			parsed.rawData = [ ...parsed.rawData ];
 			parsed.rawData[ 0 ] = {
 				...parsed.rawData[ 0 ],
@@ -174,13 +220,15 @@ const parseMessageFromCache = async ( message ) => {
 	return parsed;
 };
 
-const retrieveMessages = async () => {
+const retrieveMessages = async (): Promise< AiPlaygroundMessage[] > => {
 	const history = await helpers
 		.historyPersistence()
 		.loadHistory( FEATURE_SLUG, HISTORY_SLUG );
 	if ( history && history.entries ) {
 		const entries = await Promise.all(
-			history.entries.map( parseMessageFromCache )
+			( history.entries as AiPlaygroundMessage[] ).map(
+				parseMessageFromCache
+			)
 		);
 
 		/*
@@ -198,7 +246,10 @@ const retrieveMessages = async () => {
 			) {
 				const nextEntry = entries[ index + 1 ];
 				if ( nextEntry && nextEntry.type === 'model' ) {
-					if ( nextEntry.content.parts?.[ 0 ]?.inlineData ) {
+					if (
+						nextEntry.content.parts?.[ 0 ] &&
+						'inlineData' in nextEntry.content.parts[ 0 ]
+					) {
 						entry.foundationalCapability =
 							enums.AiCapability.IMAGE_GENERATION;
 					} else {
@@ -216,7 +267,10 @@ const retrieveMessages = async () => {
 				entry.type === 'model' &&
 				! entry.foundationalCapability
 			) {
-				if ( entry.content.parts?.[ 0 ]?.inlineData ) {
+				if (
+					entry.content.parts?.[ 0 ] &&
+					'inlineData' in entry.content.parts[ 0 ]
+				) {
 					entry.foundationalCapability =
 						enums.AiCapability.IMAGE_GENERATION;
 				} else {
@@ -229,10 +283,10 @@ const retrieveMessages = async () => {
 
 		return entries;
 	}
-	return EMPTY_ARRAY;
+	return EMPTY_MESSAGE_ARRAY;
 };
 
-const storeMessages = async ( messages ) => {
+const storeMessages = async ( messages: AiPlaygroundMessage[] ) => {
 	const history = {
 		feature: FEATURE_SLUG,
 		slug: HISTORY_SLUG,
@@ -249,11 +303,11 @@ const clearMessages = async () => {
 };
 
 const formatNewContent = async (
-	prompt,
-	attachments,
-	includeHistory,
-	messages
-) => {
+	prompt: string,
+	attachments?: WordPressAttachment[],
+	includeHistory?: boolean,
+	messages?: AiPlaygroundMessage[]
+): Promise< Content > => {
 	if ( includeHistory ) {
 		// See if the prompt is JSON in response to a function call in the last message.
 		const lastMessageFunctionCall = getLastMessageFunctionCall( messages );
@@ -265,16 +319,24 @@ const formatNewContent = async (
 				// Ignore errors.
 			}
 			if ( responseData ) {
-				const functionResponse = {};
+				let functionResponse: FunctionResponsePart[ 'functionResponse' ];
 				if ( lastMessageFunctionCall.functionCall.id ) {
-					functionResponse.id =
-						lastMessageFunctionCall.functionCall.id;
+					functionResponse = {
+						id: lastMessageFunctionCall.functionCall.id,
+						response: responseData,
+					};
+					if ( lastMessageFunctionCall.functionCall.name ) {
+						functionResponse.name =
+							lastMessageFunctionCall.functionCall.name;
+					}
+				} else if ( lastMessageFunctionCall.functionCall.name ) {
+					functionResponse = {
+						name: lastMessageFunctionCall.functionCall.name,
+						response: responseData,
+					};
+				} else {
+					throw new Error( 'Invalid function call data.' );
 				}
-				if ( lastMessageFunctionCall.functionCall.name ) {
-					functionResponse.name =
-						lastMessageFunctionCall.functionCall.name;
-				}
-				functionResponse.response = responseData;
 				return {
 					role: enums.ContentRole.USER,
 					parts: [
@@ -293,17 +355,17 @@ const formatNewContent = async (
 	return helpers.textToContent( prompt );
 };
 
-const formatErrorContent = ( error ) => {
+const formatErrorContent = ( error: unknown ) => {
 	return helpers.textToContent(
-		sprintf( '%s', error.message || error ),
+		error instanceof Error ? error.message : String( error ),
 		enums.ContentRole.MODEL
 	);
 };
 
 const getTools = (
-	functionDeclarations,
-	selectedFunctionDeclarationNames,
-	additionalCapabilities
+	functionDeclarations: FunctionDeclaration[],
+	selectedFunctionDeclarationNames: string[],
+	additionalCapabilities: AiCapability[]
 ) => {
 	const selectedFunctionDeclarations = functionDeclarations?.filter(
 		( declaration ) =>
@@ -311,7 +373,7 @@ const getTools = (
 			selectedFunctionDeclarationNames.includes( declaration.name )
 	);
 
-	const tools = [];
+	const tools: Tool[] = [];
 	if ( selectedFunctionDeclarations && selectedFunctionDeclarations.length ) {
 		tools.push( { functionDeclarations: selectedFunctionDeclarations } );
 	}
@@ -325,7 +387,9 @@ const getTools = (
 	return tools.length > 0 ? tools : null;
 };
 
-const getLastMessageFunctionCall = ( messages ) => {
+const getLastMessageFunctionCall = (
+	messages: AiPlaygroundMessage[] | undefined
+) => {
 	if ( ! messages || ! messages.length ) {
 		return null;
 	}
@@ -335,10 +399,19 @@ const getLastMessageFunctionCall = ( messages ) => {
 		return null;
 	}
 
-	return lastMessage.content?.parts?.find( ( part ) => part.functionCall );
+	return (
+		lastMessage.content?.parts?.find(
+			( part ) => 'functionCall' in part
+		) || null
+	);
 };
 
-const generateFilename = ( partIndex, mimeType, serviceSlug, modelSlug ) => {
+const generateFilename = (
+	partIndex: number,
+	mimeType: string,
+	serviceSlug?: string,
+	modelSlug?: string
+) => {
 	let extension = mimeType.split( '/' )[ 1 ];
 	if ( extension === 'jpeg' ) {
 		extension = 'jpg';
@@ -362,7 +435,11 @@ const generateFilename = ( partIndex, mimeType, serviceSlug, modelSlug ) => {
 	return `ai-generated-${ partIndex }-${ source }${ dateSuffix }.${ extension }`;
 };
 
-const getFreshPartsAttachments = ( message, partIndex, attachment ) => {
+const getFreshPartsAttachments = (
+	message: AiPlaygroundMessage,
+	partIndex: number,
+	attachment: WordPressAttachment
+) => {
 	const attachments = [ ...( message.attachments || [] ) ];
 	if ( attachments.length < message.content.parts.length ) {
 		const missingIndexes =
@@ -375,17 +452,73 @@ const getFreshPartsAttachments = ( message, partIndex, attachment ) => {
 	return attachments;
 };
 
-const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
-const RECEIVE_MESSAGES_FROM_CACHE = 'RECEIVE_MESSAGES_FROM_CACHE';
-const RESET_MESSAGES = 'RESET_MESSAGES';
-const SET_ACTIVE_MESSAGE = 'SET_ACTIVE_MESSAGE';
-const SET_MESSAGE_ATTACHMENT = 'SET_MESSAGE_ATTACHMENT';
-const LOAD_START = 'LOAD_START';
-const LOAD_FINISH = 'LOAD_FINISH';
+export enum ActionType {
+	Unknown = 'REDUX_UNKNOWN',
+	ReceiveMessage = 'RECEIVE_MESSAGE',
+	ReceiveMessagesFromCache = 'RECEIVE_MESSAGES_FROM_CACHE',
+	ResetMessages = 'RESET_MESSAGES',
+	SetActiveMessage = 'SET_ACTIVE_MESSAGE',
+	SetMessageAttachment = 'SET_MESSAGE_ATTACHMENT',
+	LoadStart = 'LOAD_START',
+	LoadFinish = 'LOAD_FINISH',
+}
 
-const UPLOAD_ATTACHMENT_NOTICE_ID = 'UPLOAD_ATTACHMENT_NOTICE_ID';
+type UnknownAction = Action< ActionType.Unknown >;
+type ReceiveMessageAction = Action<
+	ActionType.ReceiveMessage,
+	{
+		type: AiPlaygroundMessage[ 'type' ];
+		content: AiPlaygroundMessage[ 'content' ];
+		additionalData: AiPlaygroundMessageAdditionalData;
+	}
+>;
+type ReceiveMessagesFromCacheAction = Action<
+	ActionType.ReceiveMessagesFromCache,
+	{ messages: AiPlaygroundMessage[] }
+>;
+type ResetMessagesAction = Action< ActionType.ResetMessages >;
+type SetActiveMessageAction = Action<
+	ActionType.SetActiveMessage,
+	{ message: AiPlaygroundMessage }
+>;
+type SetMessageAttachmentAction = Action<
+	ActionType.SetMessageAttachment,
+	{
+		index: number;
+		partIndex: number;
+		attachment: WordPressAttachment;
+	}
+>;
+type LoadStartAction = Action< ActionType.LoadStart >;
+type LoadFinishAction = Action< ActionType.LoadFinish >;
 
-const initialState = {
+export type CombinedAction =
+	| UnknownAction
+	| ReceiveMessageAction
+	| ReceiveMessagesFromCacheAction
+	| ResetMessagesAction
+	| SetActiveMessageAction
+	| SetMessageAttachmentAction
+	| LoadStartAction
+	| LoadFinishAction;
+
+export type State = {
+	messages: AiPlaygroundMessage[] | undefined;
+	loading: boolean;
+	activeMessage: AiPlaygroundMessage | null;
+};
+
+export type ActionCreators = typeof actions;
+export type Selectors = typeof selectors;
+
+type DispatcherArgs = ThunkArgs<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+>;
+
+const initialState: State = {
 	messages: undefined,
 	loading: false,
 	activeMessage: null,
@@ -398,50 +531,74 @@ const actions = {
 	 * @since 0.4.0
 	 * @since 0.6.0 Now expects an array of attachments instead of a single attachment.
 	 *
-	 * @param {string}   prompt         Message prompt.
-	 * @param {Object[]} attachments    Optional array of attachment objects.
-	 * @param {boolean}  includeHistory Whether to include the message history before the prompt. Default false.
-	 * @return {Function} Action creator.
+	 * @param prompt         - Message prompt.
+	 * @param attachments    - Optional array of attachment objects.
+	 * @param includeHistory - Whether to include the message history before the prompt. Default false.
+	 * @returns Action creator.
 	 */
-	sendMessage( prompt, attachments, includeHistory ) {
-		return async ( { registry, dispatch, select } ) => {
-			const serviceSlug = select.getService();
-			const modelSlug = select.getModel();
+	sendMessage(
+		prompt: string,
+		attachments?: WordPressAttachment[],
+		includeHistory?: boolean
+	) {
+		return async ( { registry, dispatch, select }: DispatcherArgs ) => {
+			const serviceSlug = registry.select( STORE_NAME ).getService();
+			const modelSlug = registry.select( STORE_NAME ).getModel();
 			if ( ! serviceSlug || ! modelSlug ) {
-				// eslint-disable-next-line no-console
-				console.error( 'No AI service or model selected.' );
+				logError( 'No AI service or model selected.' );
 				return;
 			}
 
-			const modelParams = {
+			const modelParams: ModelParams = {
 				feature: FEATURE_SLUG,
 				model: modelSlug,
 			};
 
-			const foundationalCapability = select.getFoundationalCapability();
-			const additionalCapabilities = select.getAdditionalCapabilities();
+			const foundationalCapability = registry
+				.select( STORE_NAME )
+				.getFoundationalCapability() as AiCapability;
+			const additionalCapabilities = registry
+				.select( STORE_NAME )
+				.getAdditionalCapabilities() as AiCapability[];
 
-			const generationConfig = {};
+			let generationConfig:
+				| TextGenerationConfig
+				| ImageGenerationConfig
+				| TextToSpeechConfig;
 			if (
 				foundationalCapability === enums.AiCapability.TEXT_TO_SPEECH
 			) {
-				const voice = select.getModelParam( 'voice' );
+				generationConfig = {} as TextToSpeechConfig;
+
+				const voice = registry
+					.select( STORE_NAME )
+					.getModelParam( 'voice' ) as string;
 				if ( voice ) {
 					generationConfig.voice = voice;
 				}
 			} else if (
 				foundationalCapability === enums.AiCapability.IMAGE_GENERATION
 			) {
-				const aspectRatio = select.getModelParam( 'aspectRatio' );
+				generationConfig = {} as ImageGenerationConfig;
+
+				const aspectRatio = registry
+					.select( STORE_NAME )
+					.getModelParam(
+						'aspectRatio'
+					) as ImageGenerationConfig[ 'aspectRatio' ];
 				if ( aspectRatio ) {
 					generationConfig.aspectRatio = aspectRatio;
 				}
 			} else if (
 				foundationalCapability === enums.AiCapability.TEXT_GENERATION
 			) {
+				generationConfig = {} as TextGenerationConfig;
+
 				const paramKeys = [ 'maxOutputTokens', 'temperature', 'topP' ];
 				paramKeys.forEach( ( key ) => {
-					const value = select.getModelParam( key );
+					const value = registry
+						.select( STORE_NAME )
+						.getModelParam( key );
 					if ( value ) {
 						generationConfig[ key ] = Number( value );
 					}
@@ -453,8 +610,9 @@ const actions = {
 						enums.AiCapability.MULTIMODAL_OUTPUT
 					)
 				) {
-					const outputModalities =
-						select.getModelParam( 'outputModalities' );
+					const outputModalities = registry
+						.select( STORE_NAME )
+						.getModelParam( 'outputModalities' ) as Modality[];
 					if (
 						Array.isArray( outputModalities ) &&
 						outputModalities.length
@@ -462,12 +620,18 @@ const actions = {
 						generationConfig.outputModalities = outputModalities;
 					}
 				}
+			} else {
+				// Invalid foundational capability - just default to text generation (but doesn't really matter).
+				generationConfig = {} as TextGenerationConfig;
 			}
+
 			if ( Object.keys( generationConfig ).length ) {
 				modelParams.generationConfig = generationConfig;
 			}
 
-			const systemInstruction = select.getSystemInstruction();
+			const systemInstruction = registry
+				.select( STORE_NAME )
+				.getSystemInstruction();
 			if ( systemInstruction ) {
 				modelParams.systemInstruction = systemInstruction;
 			}
@@ -476,8 +640,12 @@ const actions = {
 				foundationalCapability === enums.AiCapability.TEXT_GENERATION
 			) {
 				const tools = getTools(
-					select.getFunctionDeclarations(),
-					select.getSelectedFunctionDeclarations(),
+					registry
+						.select( STORE_NAME )
+						.getFunctionDeclarations() as FunctionDeclaration[],
+					registry
+						.select( STORE_NAME )
+						.getSelectedFunctionDeclarations() as string[],
 					additionalCapabilities
 				);
 				if ( tools ) {
@@ -494,7 +662,7 @@ const actions = {
 				originalMessages
 			);
 
-			let contentToSend = newContent;
+			let contentToSend: Content | Content[] = newContent;
 			if ( includeHistory ) {
 				if ( originalMessages && originalMessages.length ) {
 					contentToSend = [
@@ -506,8 +674,9 @@ const actions = {
 				}
 			}
 
-			await dispatch( {
-				type: LOAD_START,
+			dispatch( {
+				type: ActionType.LoadStart,
+				payload: {},
 			} );
 
 			if ( registry.select( aiStore ).getServices() === undefined ) {
@@ -519,7 +688,7 @@ const actions = {
 				.getAvailableService( serviceSlug );
 			const model = service.getModel( modelParams );
 
-			const additionalData = {
+			const additionalData: AiPlaygroundMessageAdditionalData = {
 				foundationalCapability,
 				service: {
 					slug: serviceSlug,
@@ -531,7 +700,7 @@ const actions = {
 				},
 			};
 
-			const additionalPromptData = {
+			const additionalPromptData: AiPlaygroundMessageAdditionalData = {
 				...additionalData,
 				rawData: {
 					content: contentToSend,
@@ -570,8 +739,9 @@ const actions = {
 				dispatch.receiveMessage( 'error', formatErrorContent( error ) );
 			}
 
-			await dispatch( {
-				type: LOAD_FINISH,
+			dispatch( {
+				type: ActionType.LoadFinish,
+				payload: {},
 			} );
 
 			return candidates;
@@ -583,13 +753,17 @@ const actions = {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param {number} index      The index of the message.
-	 * @param {number} partIndex  The index of the part within the message.
-	 * @param {Object} inlineData The inline data object.
-	 * @return {Function} Action creator.
+	 * @param index      - The index of the message.
+	 * @param partIndex  - The index of the part within the message.
+	 * @param inlineData - The inline data object.
+	 * @returns Action creator.
 	 */
-	uploadAttachment( index, partIndex, inlineData ) {
-		return async ( { dispatch, registry, select } ) => {
+	uploadAttachment(
+		index: number,
+		partIndex: number,
+		inlineData: InlineDataPart[ 'inlineData' ]
+	) {
+		return async ( { dispatch, registry, select }: DispatcherArgs ) => {
 			const messages = select.getMessages();
 			const message = messages?.[ index ];
 			if ( ! message ) {
@@ -598,7 +772,10 @@ const actions = {
 
 			// Sanity check that it's the correct message.
 			const inlineDataPart = message.content.parts?.[ partIndex ];
-			if ( inlineDataPart?.inlineData?.data !== inlineData.data ) {
+			if (
+				! ( 'inlineData' in inlineDataPart ) ||
+				inlineDataPart.inlineData.data !== inlineData.data
+			) {
 				return;
 			}
 
@@ -608,6 +785,11 @@ const actions = {
 					inlineData.mimeType
 				)
 			);
+			if ( ! fileBlob ) {
+				logError( 'Could not transform base64 data URL to blob.' );
+				return;
+			}
+
 			const file = new File(
 				[ fileBlob ],
 				generateFilename(
@@ -622,7 +804,7 @@ const actions = {
 				}
 			);
 
-			const attachmentData = {};
+			const attachmentData: { caption?: string } = {};
 			if ( message.type === 'model' ) {
 				const previousMessage = messages?.[ index - 1 ];
 				if ( previousMessage && previousMessage.type === 'user' ) {
@@ -646,6 +828,7 @@ const actions = {
 			return new Promise( ( resolve ) => {
 				uploadMedia( {
 					filesList: [ file ],
+					// @ts-expect-error WordPress expecting the `RestAttachment` type here is incorrect.
 					additionalData: attachmentData,
 					onFileChange: ( [ attachment ] ) => {
 						if ( ! attachment ) {
@@ -666,7 +849,7 @@ const actions = {
 							dispatch.setMessageAttachment(
 								index,
 								partIndex,
-								attachment
+								attachment as WordPressAttachment
 							);
 							registry
 								.dispatch( noticesStore )
@@ -712,15 +895,21 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} type           Message type. Either 'user', 'model', or 'error'.
-	 * @param {Object} content        Message content.
-	 * @param {Object} additionalData Additional data to include with the message.
-	 * @return {Object} Action creator.
+	 * @param type           - Message type. Either 'user', 'model', or 'error'.
+	 * @param content        - Message content.
+	 * @param additionalData - Additional data to include with the message.
+	 * @returns Action creator.
 	 */
-	receiveMessage( type, content, additionalData = {} ) {
-		return {
-			type: RECEIVE_MESSAGE,
-			payload: { type, content, additionalData },
+	receiveMessage(
+		type: AiPlaygroundMessage[ 'type' ],
+		content: AiPlaygroundMessage[ 'content' ],
+		additionalData: AiPlaygroundMessageAdditionalData = {}
+	) {
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.ReceiveMessage,
+				payload: { type, content, additionalData },
+			} );
 		};
 	},
 
@@ -729,13 +918,15 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {Object[]} messages Messages to restore.
-	 * @return {Object} Action creator.
+	 * @param messages - Messages to restore.
+	 * @returns Action creator.
 	 */
-	receiveMessagesFromCache( messages ) {
-		return {
-			type: RECEIVE_MESSAGES_FROM_CACHE,
-			payload: { messages },
+	receiveMessagesFromCache( messages: AiPlaygroundMessage[] ) {
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.ReceiveMessagesFromCache,
+				payload: { messages },
+			} );
 		};
 	},
 
@@ -744,12 +935,14 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Object} Action creator.
+	 * @returns Action creator.
 	 */
 	resetMessages() {
-		return {
-			type: RESET_MESSAGES,
-			payload: {},
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.ResetMessages,
+				payload: {},
+			} );
 		};
 	},
 
@@ -758,13 +951,15 @@ const actions = {
 	 *
 	 * @since 0.6.0
 	 *
-	 * @param {Object} message Message to display.
-	 * @return {Object} Action creator.
+	 * @param message - Message to display.
+	 * @returns Action creator.
 	 */
-	setActiveMessage( message ) {
-		return {
-			type: SET_ACTIVE_MESSAGE,
-			payload: { message },
+	setActiveMessage( message: AiPlaygroundMessage ) {
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.SetActiveMessage,
+				payload: { message },
+			} );
 		};
 	},
 
@@ -773,15 +968,21 @@ const actions = {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param {number} index      The index of the message.
-	 * @param {number} partIndex  The index of the part within the message.
-	 * @param {Object} attachment The attachment object.
-	 * @return {Object} Action creator.
+	 * @param index      - The index of the message.
+	 * @param partIndex  - The index of the part within the message.
+	 * @param attachment - The attachment object.
+	 * @returns Action creator.
 	 */
-	setMessageAttachment( index, partIndex, attachment ) {
-		return {
-			type: SET_MESSAGE_ATTACHMENT,
-			payload: { index, partIndex, attachment },
+	setMessageAttachment(
+		index: number,
+		partIndex: number,
+		attachment: WordPressAttachment
+	) {
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.SetMessageAttachment,
+				payload: { index, partIndex, attachment },
+			} );
 		};
 	},
 };
@@ -791,15 +992,15 @@ const actions = {
  *
  * @since 0.4.0
  *
- * @param {Object} state  Current state.
- * @param {Object} action Action object.
- * @return {Object} New state.
+ * @param state  - Current state.
+ * @param action - Action object.
+ * @returns New state.
  */
-function reducer( state = initialState, action ) {
+function reducer( state: State = initialState, action: CombinedAction ): State {
 	switch ( action.type ) {
-		case RECEIVE_MESSAGE: {
+		case ActionType.ReceiveMessage: {
 			const { type, content, additionalData } = action.payload;
-			const newMessage = { type, content };
+			const newMessage: AiPlaygroundMessage = { type, content };
 			if ( additionalData ) {
 				newMessage.foundationalCapability =
 					additionalData.foundationalCapability;
@@ -811,35 +1012,35 @@ function reducer( state = initialState, action ) {
 				}
 			}
 
-			const messages = [ ...state.messages, newMessage ];
+			const messages = [ ...( state.messages || [] ), newMessage ];
 			storeMessages( messages );
 			return {
 				...state,
 				messages,
 			};
 		}
-		case RECEIVE_MESSAGES_FROM_CACHE: {
+		case ActionType.ReceiveMessagesFromCache: {
 			const { messages } = action.payload;
 			return {
 				...state,
 				messages,
 			};
 		}
-		case RESET_MESSAGES: {
+		case ActionType.ResetMessages: {
 			clearMessages();
 			return {
 				...state,
 				messages: [],
 			};
 		}
-		case SET_ACTIVE_MESSAGE: {
+		case ActionType.SetActiveMessage: {
 			const { message } = action.payload;
 			return {
 				...state,
 				activeMessage: message,
 			};
 		}
-		case SET_MESSAGE_ATTACHMENT: {
+		case ActionType.SetMessageAttachment: {
 			const { index, partIndex, attachment } = action.payload;
 			if ( state.messages?.[ index ] ) {
 				const messages = [ ...state.messages ];
@@ -859,13 +1060,13 @@ function reducer( state = initialState, action ) {
 			}
 			return state;
 		}
-		case LOAD_START: {
+		case ActionType.LoadStart: {
 			return {
 				...state,
 				loading: true,
 			};
 		}
-		case LOAD_FINISH: {
+		case ActionType.LoadFinish: {
 			return {
 				...state,
 				loading: false,
@@ -882,10 +1083,10 @@ const resolvers = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	getMessages() {
-		return async ( { dispatch } ) => {
+		return async ( { dispatch }: DispatcherArgs ) => {
 			const messages = await retrieveMessages();
 			dispatch.receiveMessagesFromCache( messages );
 		};
@@ -893,20 +1094,25 @@ const resolvers = {
 };
 
 const selectors = {
-	getMessages: ( state ) => {
-		return state.messages || EMPTY_ARRAY;
+	getMessages: ( state: State ) => {
+		return state.messages || EMPTY_MESSAGE_ARRAY;
 	},
 
-	isLoading: ( state ) => {
+	isLoading: ( state: State ) => {
 		return state.loading || state.messages === undefined;
 	},
 
-	getActiveMessage: ( state ) => {
+	getActiveMessage: ( state: State ) => {
 		return state.activeMessage;
 	},
 };
 
-const storeConfig = {
+const storeConfig: StoreConfig<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+> = {
 	initialState,
 	actions,
 	reducer,

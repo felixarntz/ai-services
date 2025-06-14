@@ -15,7 +15,7 @@ import { store as playgroundStore } from '../../store';
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function SystemInstruction() {
 	const { systemInstruction, isSystemInstructionVisible } = useSelect(
@@ -26,7 +26,8 @@ export default function SystemInstruction() {
 				isSystemInstructionVisible:
 					select( playgroundStore ).isSystemInstructionVisible(),
 			};
-		}
+		},
+		[]
 	);
 
 	const { setSystemInstruction } = useDispatch( playgroundStore );
@@ -49,7 +50,7 @@ export default function SystemInstruction() {
 				) }
 				value={ systemInstruction }
 				onChange={ ( value ) => setSystemInstruction( value ) }
-				rows="4"
+				rows={ 4 }
 				__nextHasNoMarginBottom
 			/>
 		</div>

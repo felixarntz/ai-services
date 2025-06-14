@@ -2,6 +2,7 @@
  * External dependencies
  */
 import { enums, store as aiStore } from '@ai-services/ai';
+import type { AiCapability } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -25,25 +26,27 @@ import { UP, DOWN } from '@wordpress/keycodes';
  */
 import { store as playgroundStore } from '../../store';
 import MediaModal from './media-modal';
+import type { AiPlaygroundMessage, WordPressAttachment } from '../../types';
 
-const EMPTY_ARRAY = [];
+const EMPTY_CAPABILITY_ARRAY: AiCapability[] = [];
 
-const matchMessage = ( message, prompt ) => {
+const matchMessage = ( message: AiPlaygroundMessage, prompt: string ) => {
 	if ( message.type !== 'user' ) {
 		return '';
 	}
 
-	if ( prompt === '' && message.content.parts[ 0 ]?.text ) {
+	if ( prompt === '' && 'text' in message.content.parts[ 0 ] ) {
 		return message.content.parts[ 0 ].text;
 	}
 
 	for ( let j = 0; j < message.content.parts.length; j++ ) {
+		const part = message.content.parts[ j ];
 		if (
-			message.content.parts[ j ].text &&
-			message.content.parts[ j ].text.startsWith( prompt ) &&
-			message.content.parts[ j ].text !== prompt
+			'text' in part &&
+			part.text.startsWith( prompt ) &&
+			part.text !== prompt
 		) {
-			return message.content.parts[ j ].text;
+			return part.text;
 		}
 	}
 
@@ -51,11 +54,11 @@ const matchMessage = ( message, prompt ) => {
 };
 
 const matchLastMessage = (
-	messages,
-	prompt,
+	messages: AiPlaygroundMessage[],
+	prompt: string,
 	matchedIndex = -1,
 	searchForwards = false
-) => {
+): [ number, string ] => {
 	if ( ! messages || ! messages.length ) {
 		return [ -1, '' ];
 	}
@@ -87,13 +90,17 @@ const matchLastMessage = (
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function Input() {
 	const [ prompt, setPrompt ] = useState( '' );
-	const [ attachments, setAttachments ] = useState( [] );
+	const [ attachments, setAttachments ] = useState< WordPressAttachment[] >(
+		[]
+	);
 	const [ includeHistory, setIncludeHistory ] = useState( false );
-	const [ promptToMatch, setPromptToMatch ] = useState( false );
+	const [ promptToMatch, setPromptToMatch ] = useState< string | false >(
+		false
+	);
 	const [ matchedIndex, setMatchedIndex ] = useState( -1 );
 
 	const { service, model, capabilities, messages, canUploadMedia } =
@@ -105,7 +112,7 @@ export default function Input() {
 			const currentService = getService();
 			const currentModel = getModel();
 
-			let currentCapabilities = EMPTY_ARRAY;
+			let currentCapabilities = EMPTY_CAPABILITY_ARRAY;
 			if ( currentService && currentModel ) {
 				const services = getServices();
 				if (
@@ -133,7 +140,7 @@ export default function Input() {
 						name: 'media',
 					} ) ?? true,
 			};
-		} );
+		}, [] );
 
 	const { sendMessage } = useDispatch( playgroundStore );
 
@@ -163,7 +170,7 @@ export default function Input() {
 	};
 
 	const searchLastMessage = useCallback(
-		( event ) => {
+		( event: KeyboardEvent ) => {
 			if ( event.keyCode === UP || event.keyCode === DOWN ) {
 				if ( false === promptToMatch ) {
 					setPromptToMatch( prompt );
@@ -200,11 +207,11 @@ export default function Input() {
 		}
 
 		return !! lastMessage.content?.parts?.some(
-			( part ) => part.functionCall
+			( part ) => 'functionCall' in part
 		);
 	}, [ capabilities, messages ] );
 
-	const inputRef = useRef();
+	const inputRef = useRef< HTMLTextAreaElement | null >( null );
 
 	useEffect( () => {
 		if ( ! inputRef.current ) {
@@ -254,7 +261,7 @@ export default function Input() {
 		[ attachments ]
 	);
 
-	const removeAttachment = ( indexToRemove ) => {
+	const removeAttachment = ( indexToRemove: number ) => {
 		setAttachments( ( prevAttachments ) =>
 			prevAttachments.filter( ( _, index ) => index !== indexToRemove )
 		);
@@ -270,7 +277,7 @@ export default function Input() {
 					aria-label={ __( 'AI prompt', 'ai-services' ) }
 					value={ prompt }
 					onChange={ ( event ) => setPrompt( event.target.value ) }
-					rows="2"
+					rows={ 2 }
 				/>
 				<Flex direction="column" gap="2">
 					{ capabilities.includes(
@@ -337,18 +344,23 @@ export default function Input() {
 										allowedTypes={ [ 'image' ] }
 										multiple={ true }
 										attachmentIds={ attachmentIds }
-										render={ ( { open } ) => (
-											<button
-												className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
-												aria-label={ __(
-													'Select media for multimodal prompt',
-													'ai-services'
-												) }
-												onClick={ open }
-											>
-												{ upload }
-											</button>
-										) }
+										render={ ( renderProps: {
+											open: () => void;
+										} ) => {
+											const { open } = renderProps;
+											return (
+												<button
+													className="ai-services-playground__input-action ai-services-playground__input-action--secondary"
+													aria-label={ __(
+														'Select media for multimodal prompt',
+														'ai-services'
+													) }
+													onClick={ open }
+												>
+													{ upload }
+												</button>
+											);
+										} }
 									/>
 								) }
 							{ capabilities.includes(

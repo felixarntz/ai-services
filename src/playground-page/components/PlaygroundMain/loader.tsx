@@ -13,11 +13,12 @@ import { store as playgroundStore } from '../../store';
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function Loader() {
-	const loading = useSelect( ( select ) =>
-		select( playgroundStore ).isLoading()
+	const loading = useSelect(
+		( select ) => select( playgroundStore ).isLoading(),
+		[]
 	);
 
 	if ( ! loading ) {

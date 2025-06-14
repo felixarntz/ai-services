@@ -1,16 +1,29 @@
 /**
+ * External dependencies
+ */
+import type { MutableRefObject } from 'react';
+
+/**
  * WordPress dependencies
  */
 import { useEffect } from '@wordpress/element';
 
+type CodeMirrorStub = {
+	toTextArea: () => void;
+};
+
 /**
  * React hook to initialize CodeMirror on a textarea.
  *
- * @param {Object} textareaRef Reference to the textarea element.
- * @param {string} language    Language mode for CodeMirror.
+ * @param textareaRef - Reference to the textarea element.
+ * @param language    - Language mode for CodeMirror.
  */
-export default function useCodeMirrorEffect( textareaRef, language ) {
+export default function useCodeMirrorEffect(
+	textareaRef: MutableRefObject< HTMLTextAreaElement | null >,
+	language: string
+) {
 	useEffect( () => {
+		// @ts-expect-error Not worth setting this up properly for TypeScript.
 		if ( ! wp?.CodeMirror || ! textareaRef.current ) {
 			return;
 		}
@@ -22,17 +35,18 @@ export default function useCodeMirrorEffect( textareaRef, language ) {
 		 * initializing CodeMirror. Otherwise, the textarea will not be
 		 * initialized correctly.
 		 */
-		let codemirror;
+		let codemirror: CodeMirrorStub | undefined;
 		const timeout = setTimeout( () => {
+			// @ts-expect-error Not worth setting this up properly for TypeScript.
 			codemirror = wp.CodeMirror.fromTextArea( textarea, {
 				indentUnit: 4,
 				indentWithTabs: true,
 				lineNumbers: true,
 				lineWrapping: false,
-				readOnly: !! textarea.readonly,
+				readOnly: !! textarea.readOnly,
 				direction: 'ltr', // Code is shown in LTR even in RTL languages.
 				mode: language,
-			} );
+			} ) as CodeMirrorStub;
 		}, 0 );
 
 		return () => {

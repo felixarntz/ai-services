@@ -3,6 +3,11 @@
  */
 import { store as aiStore } from '@ai-services/ai';
 import memoize from 'memize';
+import type {
+	ServiceResource,
+	AiCapability,
+	FunctionDeclaration,
+} from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -14,11 +19,18 @@ import { store as preferencesStore } from '@wordpress/preferences';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
+import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
+import type { AiServiceOption, AiModelOption } from '../types';
 
-const EMPTY_ARRAY = [];
+const EMPTY_FUNCTION_DECLARATION_ARRAY: FunctionDeclaration[] = [];
+const EMPTY_AI_MODEL_OPTION_ARRAY: AiModelOption[] = [];
+const EMPTY_STRING_ARRAY: string[] = [];
 
 const filterAvailableServices = memoize(
-	( registeredServices, requiredCapabilities ) => {
+	(
+		registeredServices: Record< string, ServiceResource >,
+		requiredCapabilities: AiCapability[]
+	) => {
 		return Object.values( registeredServices )
 			.filter( ( service ) => {
 				if ( ! service.is_available ) {
@@ -30,7 +42,7 @@ const filterAvailableServices = memoize(
 					)
 				);
 			} )
-			.map( ( { slug, metadata } ) => {
+			.map( ( { slug, metadata } ): AiServiceOption => {
 				return {
 					identifier: slug,
 					label: metadata?.name || slug,
@@ -40,14 +52,17 @@ const filterAvailableServices = memoize(
 );
 
 const filterAvailableModels = memoize(
-	( availableModels, requiredCapabilities ) => {
+	(
+		availableModels: ServiceResource[ 'available_models' ],
+		requiredCapabilities: AiCapability[]
+	) => {
 		return Object.values( availableModels )
 			.filter( ( modelMetadata ) => {
 				return requiredCapabilities.every( ( capability ) =>
 					modelMetadata.capabilities.includes( capability )
 				);
 			} )
-			.map( ( modelMetadata ) => {
+			.map( ( modelMetadata ): AiModelOption => {
 				return {
 					identifier: modelMetadata.slug,
 					label: modelMetadata.name,
@@ -56,9 +71,34 @@ const filterAvailableModels = memoize(
 	}
 );
 
-const SET_ACTIVE_FUNCTION_DECLARATION = 'SET_ACTIVE_FUNCTION_DECLARATION';
+export enum ActionType {
+	Unknown = 'REDUX_UNKNOWN',
+	SetActiveFunctionDeclaration = 'SET_ACTIVE_FUNCTION_DECLARATION',
+}
 
-const initialState = {
+type UnknownAction = Action< ActionType.Unknown >;
+type SetActiveFunctionDeclarationAction = Action<
+	ActionType.SetActiveFunctionDeclaration,
+	{ name: string }
+>;
+
+export type CombinedAction = UnknownAction | SetActiveFunctionDeclarationAction;
+
+export type State = {
+	activeFunctionDeclaration: string | null;
+};
+
+export type ActionCreators = typeof actions;
+export type Selectors = typeof selectors;
+
+type DispatcherArgs = ThunkArgs<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+>;
+
+const initialState: State = {
 	activeFunctionDeclaration: null,
 };
 
@@ -68,11 +108,11 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} service Service identifier.
-	 * @return {Function} Action creator.
+	 * @param service - Service identifier.
+	 * @returns Action creator.
 	 */
-	setService( service ) {
-		return ( { registry, dispatch, select } ) => {
+	setService( service: string ) {
+		return ( { registry, dispatch, select }: DispatcherArgs ) => {
 			registry
 				.dispatch( preferencesStore )
 				.set( 'ai-services-playground', 'service', service );
@@ -91,11 +131,11 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} model Model identifier.
-	 * @return {Function} Action creator.
+	 * @param model - Model identifier.
+	 * @returns Action creator.
 	 */
-	setModel( model ) {
-		return ( { registry } ) => {
+	setModel( model: string ) {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( preferencesStore )
 				.set( 'ai-services-playground', 'model', model );
@@ -107,12 +147,12 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} key   Parameter key.
-	 * @param {*}      value Parameter value.
-	 * @return {Function} Action creator.
+	 * @param key   - Parameter key.
+	 * @param value - Parameter value.
+	 * @returns Action creator.
 	 */
-	setModelParam( key, value ) {
-		return ( { registry } ) => {
+	setModelParam( key: string, value: unknown ) {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( preferencesStore )
 				.set( 'ai-services-playground', `model_param_${ key }`, value );
@@ -124,11 +164,11 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} systemInstruction System instruction.
-	 * @return {Function} Action creator.
+	 * @param systemInstruction - System instruction.
+	 * @returns Action creator.
 	 */
-	setSystemInstruction( systemInstruction ) {
-		return ( { registry } ) => {
+	setSystemInstruction( systemInstruction: string ) {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( preferencesStore )
 				.set(
@@ -144,10 +184,10 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	showSystemInstruction() {
-		return ( { registry } ) => {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( preferencesStore )
 				.set(
@@ -163,10 +203,10 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	hideSystemInstruction() {
-		return ( { registry } ) => {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( preferencesStore )
 				.set(
@@ -185,16 +225,19 @@ const actions = {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param {string} name         Unique function name.
-	 * @param {string} description  Function description.
-	 * @param {Object} parameters   Function parameters as JSON schema. It must be of type 'object', with the actual
-	 *                              parameters as properties.
-	 * @param {string} existingName Name of an existing function if this is an update and the name differs. If so, the
-	 *                              existing function will be replaced.
-	 * @return {Function} Action creator.
+	 * @param name         - Unique function name.
+	 * @param description  - Function description.
+	 * @param parameters   - Function parameters as JSON schema. It must be of type 'object'.
+	 * @param existingName - Name of an existing function to replace, if this is an update and the name differs.
+	 * @returns Action creator.
 	 */
-	setFunctionDeclaration( name, description, parameters, existingName ) {
-		return ( { registry } ) => {
+	setFunctionDeclaration(
+		name: string,
+		description: string,
+		parameters: Record< string, unknown >,
+		existingName: string
+	) {
+		return ( { registry }: DispatcherArgs ) => {
 			// Some basic sanity checks on the input.
 			if (
 				typeof name !== 'string' ||
@@ -212,10 +255,13 @@ const actions = {
 			}
 
 			const functionDeclarations =
-				registry
+				( registry
 					.select( preferencesStore )
-					.get( 'ai-services-playground', 'function-declarations' ) ??
-				EMPTY_ARRAY;
+					.get(
+						'ai-services-playground',
+						'function-declarations'
+					) as FunctionDeclaration[] ) ??
+				EMPTY_FUNCTION_DECLARATION_ARRAY;
 
 			const newFunctionDeclarations =
 				name !== existingName
@@ -261,16 +307,19 @@ const actions = {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param {string} name Unique function name of the function declaration to delete.
-	 * @return {Function} Action creator.
+	 * @param name - Unique function name of the function declaration to delete.
+	 * @returns Action creator.
 	 */
-	deleteFunctionDeclaration( name ) {
-		return ( { registry } ) => {
+	deleteFunctionDeclaration( name: string ) {
+		return ( { registry }: DispatcherArgs ) => {
 			const functionDeclarations =
-				registry
+				( registry
 					.select( preferencesStore )
-					.get( 'ai-services-playground', 'function-declarations' ) ??
-				EMPTY_ARRAY;
+					.get(
+						'ai-services-playground',
+						'function-declarations'
+					) as FunctionDeclaration[] ) ??
+				EMPTY_FUNCTION_DECLARATION_ARRAY;
 
 			const newFunctionDeclarations = functionDeclarations.filter(
 				( declaration ) => declaration.name !== name
@@ -296,18 +345,18 @@ const actions = {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param {string} name Function declaration name.
-	 * @return {Function} Action creator.
+	 * @param name - Function declaration name.
+	 * @returns Action creator.
 	 */
-	toggleSelectedFunctionDeclaration( name ) {
-		return ( { registry } ) => {
+	toggleSelectedFunctionDeclaration( name: string ) {
+		return ( { registry }: DispatcherArgs ) => {
 			const selected =
-				registry
+				( registry
 					.select( preferencesStore )
 					.get(
 						'ai-services-playground',
 						'selected-function-declaration-names'
-					) ?? EMPTY_ARRAY;
+					) as string[] ) ?? EMPTY_STRING_ARRAY;
 
 			const newSelected = selected.includes( name )
 				? selected.filter( ( selectedName ) => selectedName !== name )
@@ -328,13 +377,15 @@ const actions = {
 	 *
 	 * @since 0.5.0
 	 *
-	 * @param {Object} name Active function name being edited, or empty string to clear.
-	 * @return {Object} Action creator.
+	 * @param name - Active function name being edited, or empty string to clear.
+	 * @returns Action creator.
 	 */
-	setActiveFunctionDeclaration( name ) {
-		return {
-			type: SET_ACTIVE_FUNCTION_DECLARATION,
-			payload: { name },
+	setActiveFunctionDeclaration( name: string ) {
+		return ( { dispatch }: DispatcherArgs ) => {
+			dispatch( {
+				type: ActionType.SetActiveFunctionDeclaration,
+				payload: { name },
+			} );
 		};
 	},
 };
@@ -344,13 +395,13 @@ const actions = {
  *
  * @since 0.5.0
  *
- * @param {Object} state  Current state.
- * @param {Object} action Action object.
- * @return {Object} New state.
+ * @param state  - Current state.
+ * @param action - Action object.
+ * @returns New state.
  */
-function reducer( state = initialState, action ) {
+function reducer( state: State = initialState, action: CombinedAction ): State {
 	switch ( action.type ) {
-		case SET_ACTIVE_FUNCTION_DECLARATION: {
+		case ActionType.SetActiveFunctionDeclaration: {
 			const { name } = action.payload;
 			return {
 				...state,
@@ -367,11 +418,13 @@ const selectors = {
 		const service = select( preferencesStore ).get(
 			'ai-services-playground',
 			'service'
-		);
+		) as string | undefined;
 		if ( ! service ) {
 			return false;
 		}
-		const availableServices = select( STORE_NAME ).getAvailableServices();
+		const availableServices = select(
+			STORE_NAME
+		).getAvailableServices() as AiServiceOption[] | undefined;
 		if (
 			! availableServices ||
 			! availableServices.find(
@@ -387,11 +440,13 @@ const selectors = {
 		const model = select( preferencesStore ).get(
 			'ai-services-playground',
 			'model'
-		);
+		) as string | undefined;
 		if ( ! model ) {
 			return false;
 		}
-		const availableModels = select( STORE_NAME ).getAvailableModels();
+		const availableModels = select( STORE_NAME ).getAvailableModels() as
+			| AiModelOption[]
+			| undefined;
 		if (
 			! availableModels ||
 			! availableModels.find( ( { identifier } ) => identifier === model )
@@ -405,7 +460,7 @@ const selectors = {
 		const service = select( preferencesStore ).get(
 			'ai-services-playground',
 			'service'
-		);
+		) as string | undefined;
 		if ( ! service ) {
 			return false;
 		}
@@ -420,11 +475,13 @@ const selectors = {
 		const model = select( preferencesStore ).get(
 			'ai-services-playground',
 			'model'
-		);
+		) as string | undefined;
 		if ( ! model ) {
 			return false;
 		}
-		const availableModels = select( STORE_NAME ).getAvailableModels();
+		const availableModels = select( STORE_NAME ).getAvailableModels() as
+			| AiModelOption[]
+			| undefined;
 		if ( ! availableModels ) {
 			return false;
 		}
@@ -434,12 +491,14 @@ const selectors = {
 		return modelData?.label || false;
 	} ),
 
-	getModelParam: createRegistrySelector( ( select ) => ( state, key ) => {
-		return select( preferencesStore ).get(
-			'ai-services-playground',
-			`model_param_${ key }`
-		);
-	} ),
+	getModelParam: createRegistrySelector(
+		( select ) => ( _state: State, key: string ) => {
+			return select( preferencesStore ).get(
+				'ai-services-playground',
+				`model_param_${ key }`
+			);
+		}
+	),
 
 	getAvailableServices: createRegistrySelector( ( select ) => () => {
 		const registeredServices = select( aiStore ).getServices();
@@ -447,7 +506,9 @@ const selectors = {
 			return undefined;
 		}
 
-		const requiredCapabilities = select( STORE_NAME ).getCapabilities();
+		const requiredCapabilities = select(
+			STORE_NAME
+		).getCapabilities() as AiCapability[];
 		return filterAvailableServices(
 			registeredServices,
 			requiredCapabilities
@@ -460,12 +521,14 @@ const selectors = {
 			return undefined;
 		}
 
-		const service = select( STORE_NAME ).getService();
+		const service = select( STORE_NAME ).getService() as string | false;
 		if ( ! service || ! registeredServices[ service ] ) {
-			return EMPTY_ARRAY;
+			return EMPTY_AI_MODEL_OPTION_ARRAY;
 		}
 
-		const requiredCapabilities = select( STORE_NAME ).getCapabilities();
+		const requiredCapabilities = select(
+			STORE_NAME
+		).getCapabilities() as AiCapability[];
 		return filterAvailableModels(
 			registeredServices[ service ].available_models,
 			requiredCapabilities
@@ -476,7 +539,7 @@ const selectors = {
 		const systemInstruction = select( preferencesStore ).get(
 			'ai-services-playground',
 			'system-instruction'
-		);
+		) as string | undefined;
 		if ( ! systemInstruction ) {
 			return '';
 		}
@@ -493,30 +556,35 @@ const selectors = {
 
 	getFunctionDeclarations: createRegistrySelector( ( select ) => () => {
 		return (
-			select( preferencesStore ).get(
+			( select( preferencesStore ).get(
 				'ai-services-playground',
 				'function-declarations'
-			) ?? EMPTY_ARRAY
+			) as FunctionDeclaration[] ) ?? EMPTY_FUNCTION_DECLARATION_ARRAY
 		);
 	} ),
 
 	getSelectedFunctionDeclarations: createRegistrySelector(
 		( select ) => () => {
 			return (
-				select( preferencesStore ).get(
+				( select( preferencesStore ).get(
 					'ai-services-playground',
 					'selected-function-declaration-names'
-				) ?? EMPTY_ARRAY
+				) as string[] ) ?? EMPTY_STRING_ARRAY
 			);
 		}
 	),
 
-	getActiveFunctionDeclaration: ( state ) => {
+	getActiveFunctionDeclaration: ( state: State ) => {
 		return state.activeFunctionDeclaration;
 	},
 };
 
-const storeConfig = {
+const storeConfig: StoreConfig<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+> = {
 	actions,
 	reducer,
 	selectors,

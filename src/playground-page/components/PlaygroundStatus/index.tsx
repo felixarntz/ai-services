@@ -15,7 +15,7 @@ import { store as playgroundStore } from '../../store';
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundStatus() {
 	const { service, model, messages, loading, serviceName, modelName } =
@@ -37,9 +37,11 @@ export default function PlaygroundStatus() {
 				serviceName: getServiceName(),
 				modelName: getModelName(),
 			};
-		} );
+		}, [] );
 
-	const [ messageCount, setMessageCount ] = useState( false );
+	const [ messageCount, setMessageCount ] = useState< number | false >(
+		false
+	);
 	const [ messageStatus, setMessageStatus ] = useState( '' );
 
 	useEffect( () => {
@@ -47,13 +49,20 @@ export default function PlaygroundStatus() {
 			return;
 		}
 
-		if ( messages.length === messageCount + 1 ) {
+		if (
+			typeof messageCount === 'number' &&
+			messages.length === messageCount + 1
+		) {
 			if ( messages[ messages.length - 1 ].type === 'error' ) {
 				setMessageStatus( 'prompt_error' );
 			} else {
 				setMessageStatus( 'prompt_success' );
 			}
-		} else if ( messages.length === 0 && messageCount > 0 ) {
+		} else if (
+			typeof messageCount === 'number' &&
+			messages.length === 0 &&
+			messageCount > 0
+		) {
 			setMessageStatus( 'reset' );
 		}
 		setMessageCount( messages.length );

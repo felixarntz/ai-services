@@ -4,6 +4,13 @@
 import { enums } from '@ai-services/ai';
 import { MultiCheckboxControl } from '@ai-services/components';
 import { store as interfaceStore } from '@ai-services/interface';
+import type {
+	AiCapability,
+	Modality,
+	TextGenerationConfig,
+	ImageGenerationConfig,
+	TextToSpeechConfig,
+} from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -23,14 +30,14 @@ import { __, sprintf } from '@wordpress/i18n';
  */
 import { store as playgroundStore } from '../../store';
 
-const EMPTY_ARRAY = [];
+const EMPTY_MODALITY_ARRAY: Modality[] = [];
 
 /**
  * Renders the playground sidebar panel for AI model configuration.
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundModelConfigPanel() {
 	const {
@@ -54,19 +61,29 @@ export default function PlaygroundModelConfigPanel() {
 		const { isPanelActive } = select( interfaceStore );
 
 		return {
-			foundationalCapability: getFoundationalCapability(),
-			additionalCapabilities: getAdditionalCapabilities(),
+			foundationalCapability: getFoundationalCapability() as AiCapability,
+			additionalCapabilities:
+				getAdditionalCapabilities() as AiCapability[],
 			availableModalities: getAvailableModalities(),
-			maxOutputTokens: getModelParam( 'maxOutputTokens' ),
-			temperature: getModelParam( 'temperature' ),
-			topP: getModelParam( 'topP' ),
+			maxOutputTokens: getModelParam(
+				'maxOutputTokens'
+			) as TextGenerationConfig[ 'maxOutputTokens' ],
+			temperature: getModelParam(
+				'temperature'
+			) as TextGenerationConfig[ 'temperature' ],
+			topP: getModelParam( 'topP' ) as TextGenerationConfig[ 'topP' ],
 			outputModalities:
-				getModelParam( 'outputModalities' ) || EMPTY_ARRAY,
-			aspectRatio: getModelParam( 'aspectRatio' ),
-			voice: getModelParam( 'voice' ),
+				( getModelParam(
+					'outputModalities'
+				) as TextGenerationConfig[ 'outputModalities' ] ) ||
+				EMPTY_MODALITY_ARRAY,
+			aspectRatio: getModelParam(
+				'aspectRatio'
+			) as ImageGenerationConfig[ 'aspectRatio' ],
+			voice: getModelParam( 'voice' ) as TextToSpeechConfig[ 'voice' ],
 			isPanelOpened: isPanelActive( 'playground-model-config' ),
 		};
-	} );
+	}, [] );
 
 	const { setModelParam } = useDispatch( playgroundStore );
 	const { togglePanel } = useDispatch( interfaceStore );
@@ -120,7 +137,7 @@ export default function PlaygroundModelConfigPanel() {
 							'The maximum number of tokens to include in a response candidate.',
 							'ai-services'
 						) }
-						value={ maxOutputTokens }
+						value={ maxOutputTokens || '' }
 						onChange={ ( value ) =>
 							setModelParam( 'maxOutputTokens', value )
 						}
@@ -142,7 +159,7 @@ export default function PlaygroundModelConfigPanel() {
 							'0.0',
 							'1.0'
 						) }
-						value={ temperature }
+						value={ temperature || '' }
 						onChange={ ( value ) =>
 							setModelParam( 'temperature', value )
 						}
@@ -158,7 +175,7 @@ export default function PlaygroundModelConfigPanel() {
 							'The maximum cumulative probability of tokens to consider when sampling.',
 							'ai-services'
 						) }
-						value={ topP }
+						value={ topP || '' }
 						onChange={ ( value ) => setModelParam( 'topP', value ) }
 						__nextHasNoMarginBottom
 						__next40pxDefaultSize
@@ -220,7 +237,7 @@ export default function PlaygroundModelConfigPanel() {
 							'Identifier of the voice to use for generated speech. Consult with the selected model documentation for available voices.',
 							'ai-services'
 						) }
-						value={ voice }
+						value={ voice || '' }
 						onChange={ ( value ) =>
 							setModelParam( 'voice', value )
 						}

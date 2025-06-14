@@ -3,6 +3,7 @@
  */
 import { enums } from '@ai-services/ai';
 import memoize from 'memize';
+import type { AiCapability } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -15,21 +16,25 @@ import { store as preferencesStore } from '@wordpress/preferences';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
+import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
+import type { AiCapabilityOption, ModalityOption } from '../types';
 
-const EMPTY_ARRAY = [];
-
-const RECEIVE_FOUNDATIONAL_CAPABILITIES = 'RECEIVE_FOUNDATIONAL_CAPABILITIES';
-const RECEIVE_ADDITIONAL_CAPABILITIES = 'RECEIVE_ADDITIONAL_CAPABILITIES';
-const RECEIVE_MODALITIES = 'RECEIVE_MODALITIES';
+const EMPTY_CAPABILITY_ARRAY: AiCapability[] = [];
 
 const combineCapabilities = memoize(
-	( foundationalCapability, additionalCapabilities ) => {
+	(
+		foundationalCapability: AiCapability,
+		additionalCapabilities: AiCapability[]
+	): AiCapability[] => {
 		return [ foundationalCapability, ...additionalCapabilities ];
 	}
 );
 
 const filterAdditionalCapabilities = memoize(
-	( additionalCapabilities, availableAdditionalCapabilities ) => {
+	(
+		additionalCapabilities: AiCapability[],
+		availableAdditionalCapabilities: AiCapabilityOption[]
+	) => {
 		const availableValues = availableAdditionalCapabilities.map(
 			( cap ) => cap.identifier
 		);
@@ -39,7 +44,50 @@ const filterAdditionalCapabilities = memoize(
 	}
 );
 
-const initialState = {
+export enum ActionType {
+	Unknown = 'REDUX_UNKNOWN',
+	ReceiveFoundationalCapabilities = 'RECEIVE_FOUNDATIONAL_CAPABILITIES',
+	ReceiveAdditionalCapabilities = 'RECEIVE_ADDITIONAL_CAPABILITIES',
+	ReceiveModalities = 'RECEIVE_MODALITIES',
+}
+
+type UnknownAction = Action< ActionType.Unknown >;
+type ReceiveFoundationalCapabilitiesAction = Action<
+	ActionType.ReceiveFoundationalCapabilities,
+	{ capabilities: AiCapabilityOption[] }
+>;
+type ReceiveAdditionalCapabilitiesAction = Action<
+	ActionType.ReceiveAdditionalCapabilities,
+	{ capabilities: AiCapabilityOption[] }
+>;
+type ReceiveModalitiesAction = Action<
+	ActionType.ReceiveModalities,
+	{ modalities: ModalityOption[] }
+>;
+
+export type CombinedAction =
+	| UnknownAction
+	| ReceiveFoundationalCapabilitiesAction
+	| ReceiveAdditionalCapabilitiesAction
+	| ReceiveModalitiesAction;
+
+export type State = {
+	availableFoundationalCapabilities: AiCapabilityOption[];
+	availableAdditionalCapabilities: AiCapabilityOption[];
+	availableModalities: ModalityOption[];
+};
+
+export type ActionCreators = typeof actions;
+export type Selectors = typeof selectors;
+
+type DispatcherArgs = ThunkArgs<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+>;
+
+const initialState: State = {
 	availableFoundationalCapabilities: [],
 	availableAdditionalCapabilities: [],
 	availableModalities: [],
@@ -51,11 +99,11 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} capability Foundational capability identifier.
-	 * @return {Function} Action creator.
+	 * @param capability - Foundational capability identifier.
+	 * @returns Action creator.
 	 */
-	setFoundationalCapability( capability ) {
-		return ( { registry } ) => {
+	setFoundationalCapability( capability: AiCapability ) {
+		return ( { registry }: DispatcherArgs ) => {
 			registry
 				.dispatch( preferencesStore )
 				.set(
@@ -71,12 +119,12 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {string} capability Additional capability identifier.
-	 * @return {Function} Action creator.
+	 * @param capability - Additional capability identifier.
+	 * @returns Action creator.
 	 */
-	toggleAdditionalCapability( capability ) {
-		return ( { registry } ) => {
-			const caps = registry
+	toggleAdditionalCapability( capability: AiCapability ) {
+		return ( { registry }: DispatcherArgs ) => {
+			const caps: AiCapability[] | undefined = registry
 				.select( preferencesStore )
 				.get( 'ai-services-playground', 'additionalCapabilities' );
 			if ( ! caps ) {
@@ -110,13 +158,13 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {Object[]} capabilities Foundational capabilities, as array of objects with `identifier` and `label` properties.
-	 * @return {Function} Action creator.
+	 * @param capabilities - Foundational capabilities, as array of objects with `identifier` and `label` properties.
+	 * @returns Action creator.
 	 */
-	receiveFoundationalCapabilities( capabilities ) {
-		return ( { dispatch } ) => {
+	receiveFoundationalCapabilities( capabilities: AiCapabilityOption[] ) {
+		return ( { dispatch }: DispatcherArgs ) => {
 			dispatch( {
-				type: RECEIVE_FOUNDATIONAL_CAPABILITIES,
+				type: ActionType.ReceiveFoundationalCapabilities,
 				payload: {
 					capabilities,
 				},
@@ -129,13 +177,13 @@ const actions = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param {Object[]} capabilities Additional capabilities, as array of objects with `identifier` and `label` properties.
-	 * @return {Function} Action creator.
+	 * @param capabilities - Additional capabilities, as array of objects with `identifier` and `label` properties.
+	 * @returns Action creator.
 	 */
-	receiveAdditionalCapabilities( capabilities ) {
-		return ( { dispatch } ) => {
+	receiveAdditionalCapabilities( capabilities: AiCapabilityOption[] ) {
+		return ( { dispatch }: DispatcherArgs ) => {
 			dispatch( {
-				type: RECEIVE_ADDITIONAL_CAPABILITIES,
+				type: ActionType.ReceiveAdditionalCapabilities,
 				payload: {
 					capabilities,
 				},
@@ -148,13 +196,13 @@ const actions = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param {Object[]} modalities Modalities, as array of objects with `identifier` and `label` properties.
-	 * @return {Function} Action creator.
+	 * @param modalities - Modalities, as array of objects with `identifier` and `label` properties.
+	 * @returns Action creator.
 	 */
-	receiveModalities( modalities ) {
-		return ( { dispatch } ) => {
+	receiveModalities( modalities: ModalityOption[] ) {
+		return ( { dispatch }: DispatcherArgs ) => {
 			dispatch( {
-				type: RECEIVE_MODALITIES,
+				type: ActionType.ReceiveModalities,
 				payload: {
 					modalities,
 				},
@@ -168,27 +216,27 @@ const actions = {
  *
  * @since 0.4.0
  *
- * @param {Object} state  Current state.
- * @param {Object} action Action object.
- * @return {Object} New state.
+ * @param state  - Current state.
+ * @param action - Action object.
+ * @returns New state.
  */
-function reducer( state = initialState, action ) {
+function reducer( state: State = initialState, action: CombinedAction ): State {
 	switch ( action.type ) {
-		case RECEIVE_FOUNDATIONAL_CAPABILITIES: {
+		case ActionType.ReceiveFoundationalCapabilities: {
 			const { capabilities } = action.payload;
 			return {
 				...state,
 				availableFoundationalCapabilities: capabilities,
 			};
 		}
-		case RECEIVE_ADDITIONAL_CAPABILITIES: {
+		case ActionType.ReceiveAdditionalCapabilities: {
 			const { capabilities } = action.payload;
 			return {
 				...state,
 				availableAdditionalCapabilities: capabilities,
 			};
 		}
-		case RECEIVE_MODALITIES: {
+		case ActionType.ReceiveModalities: {
 			const { modalities } = action.payload;
 			return {
 				...state,
@@ -206,11 +254,11 @@ const resolvers = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	getAvailableFoundationalCapabilities() {
-		return async ( { dispatch } ) => {
-			const capabilities = [
+		return async ( { dispatch }: DispatcherArgs ) => {
+			const capabilities: AiCapabilityOption[] = [
 				{
 					identifier: enums.AiCapability.TEXT_GENERATION,
 					label: __( 'Text generation', 'ai-services' ),
@@ -234,11 +282,11 @@ const resolvers = {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	getAvailableAdditionalCapabilities() {
-		return async ( { dispatch } ) => {
-			const capabilities = [
+		return async ( { dispatch }: DispatcherArgs ) => {
+			const capabilities: AiCapabilityOption[] = [
 				{
 					identifier: enums.AiCapability.CHAT_HISTORY,
 					label: __( 'Chat history', 'ai-services' ),
@@ -269,11 +317,11 @@ const resolvers = {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @return {Function} Action creator.
+	 * @returns Action creator.
 	 */
 	getAvailableModalities() {
-		return async ( { dispatch } ) => {
-			const modalities = [
+		return async ( { dispatch }: DispatcherArgs ) => {
+			const modalities: ModalityOption[] = [
 				{
 					identifier: enums.Modality.TEXT,
 					label: _x( 'Text', 'modality', 'ai-services' ),
@@ -298,7 +346,7 @@ const selectors = {
 		const cap = select( preferencesStore ).get(
 			'ai-services-playground',
 			'foundationalCapability'
-		);
+		) as AiCapability | undefined;
 		if ( ! cap ) {
 			return enums.AiCapability.TEXT_GENERATION;
 		}
@@ -309,15 +357,16 @@ const selectors = {
 		const caps = select( preferencesStore ).get(
 			'ai-services-playground',
 			'additionalCapabilities'
-		);
+		) as AiCapability[] | undefined;
 		if ( ! caps ) {
-			return EMPTY_ARRAY;
+			return EMPTY_CAPABILITY_ARRAY;
 		}
 
-		const availableAdditionalCapabilities =
-			select( STORE_NAME ).getAvailableAdditionalCapabilities();
+		const availableAdditionalCapabilities = select(
+			STORE_NAME
+		).getAvailableAdditionalCapabilities() as AiCapabilityOption[];
 		if ( ! availableAdditionalCapabilities ) {
-			return EMPTY_ARRAY;
+			return EMPTY_CAPABILITY_ARRAY;
 		}
 		return filterAdditionalCapabilities(
 			caps,
@@ -327,21 +376,26 @@ const selectors = {
 
 	getCapabilities: createRegistrySelector( ( select ) => () => {
 		return combineCapabilities(
-			select( STORE_NAME ).getFoundationalCapability(),
-			select( STORE_NAME ).getAdditionalCapabilities()
+			select( STORE_NAME ).getFoundationalCapability() as AiCapability,
+			select( STORE_NAME ).getAdditionalCapabilities() as AiCapability[]
 		);
 	} ),
 
-	getAvailableFoundationalCapabilities: ( state ) =>
+	getAvailableFoundationalCapabilities: ( state: State ) =>
 		state.availableFoundationalCapabilities,
 
-	getAvailableAdditionalCapabilities: ( state ) =>
+	getAvailableAdditionalCapabilities: ( state: State ) =>
 		state.availableAdditionalCapabilities,
 
-	getAvailableModalities: ( state ) => state.availableModalities,
+	getAvailableModalities: ( state: State ) => state.availableModalities,
 };
 
-const storeConfig = {
+const storeConfig: StoreConfig<
+	State,
+	ActionCreators,
+	CombinedAction,
+	Selectors
+> = {
 	initialState,
 	actions,
 	reducer,

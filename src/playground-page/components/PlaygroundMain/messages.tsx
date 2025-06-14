@@ -3,6 +3,7 @@
  */
 import { Parts } from '@ai-services/components';
 import { store as interfaceStore } from '@ai-services/interface';
+import type { Part, InlineDataPart } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -18,8 +19,15 @@ import { code, upload } from '@wordpress/icons';
  */
 import { store as playgroundStore } from '../../store';
 import Loader from './loader';
+import type {
+	AiPlaygroundMessage,
+	AiPlaygroundMessageAdditionalData,
+	WordPressAttachment,
+} from '../../types';
 
-const getModelAuthor = ( additionalData ) => {
+const getModelAuthor = (
+	additionalData: AiPlaygroundMessageAdditionalData
+) => {
 	if ( additionalData.service?.name && additionalData.model?.name ) {
 		return sprintf(
 			/* translators: %1$s: service name, %2$s: model name */
@@ -36,12 +44,15 @@ const getModelAuthor = ( additionalData ) => {
 	return __( 'AI Model', 'ai-services' );
 };
 
-const findMediaPartsToUpload = ( parts, existingAttachments ) => {
+const findMediaPartsToUpload = (
+	parts: Part[],
+	existingAttachments: ( WordPressAttachment | null )[]
+) => {
 	const mediaParts = [];
 	for ( let partIndex = 0; partIndex < parts.length; partIndex++ ) {
 		const part = parts[ partIndex ];
 		if (
-			part.inlineData &&
+			'inlineData' in part &&
 			part.inlineData.data &&
 			! existingAttachments[ partIndex ]
 		) {
@@ -51,19 +62,27 @@ const findMediaPartsToUpload = ( parts, existingAttachments ) => {
 	return mediaParts;
 };
 
+type MessageProps = {
+	message: AiPlaygroundMessage;
+	index: number;
+	onUploadAttachment: (
+		index: number,
+		partIndex: number,
+		inlineData: InlineDataPart[ 'inlineData' ]
+	) => Promise< void >;
+	onViewMessageCode: ( message: AiPlaygroundMessage ) => void;
+};
+
 /**
  * Renders a single message.
  *
  * @since 0.5.0
  *
- * @param {Object}   props                    The component properties.
- * @param {Object}   props.message            The message object.
- * @param {number}   props.index              The index of the message within the list of messages.
- * @param {Function} props.onUploadAttachment The callback to upload an attachment.
- * @param {Function} props.onViewMessageCode  The callback to view the message code.
- * @return {Component} The component to be rendered.
+ * @param props - The component props.
+ * @returns The component to be rendered.
  */
-function Message( { message, index, onUploadAttachment, onViewMessageCode } ) {
+function Message( props: MessageProps ) {
+	const { message, index, onUploadAttachment, onViewMessageCode } = props;
 	const { type, content, ...additionalData } = message;
 
 	const mediaPartsToUpload = useMemo( () => {
@@ -161,18 +180,19 @@ function Message( { message, index, onUploadAttachment, onViewMessageCode } ) {
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function Messages() {
-	const messages = useSelect( ( select ) =>
-		select( playgroundStore ).getMessages()
+	const messages = useSelect(
+		( select ) => select( playgroundStore ).getMessages(),
+		[]
 	);
 
 	const { uploadAttachment, setActiveMessage } =
 		useDispatch( playgroundStore );
 	const { openModal } = useDispatch( interfaceStore );
 
-	const messagesContainerRef = useRef();
+	const messagesContainerRef = useRef< HTMLDivElement | null >( null );
 
 	const scrollIntoView = () => {
 		const interval = setInterval( () => {
@@ -204,14 +224,18 @@ export default function Messages() {
 	}, [ messages ] );
 
 	const onUploadAttachment = useCallback(
-		async ( index, partIndex, inlineData ) => {
+		async (
+			index: number,
+			partIndex: number,
+			inlineData: InlineDataPart[ 'inlineData' ]
+		) => {
 			await uploadAttachment( index, partIndex, inlineData );
 		},
 		[ uploadAttachment ]
 	);
 
 	const onViewMessageCode = useCallback(
-		( message ) => {
+		( message: AiPlaygroundMessage ) => {
 			setActiveMessage( message );
 			openModal( 'message-code' );
 		},

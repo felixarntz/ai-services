@@ -26,7 +26,7 @@ import { store as preferencesStore } from '@wordpress/preferences';
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundMoreMenu() {
 	const showIconLabels = useSelect(
@@ -50,7 +50,8 @@ export default function PlaygroundMoreMenu() {
 				supportUrl: getPluginSupportUrl(),
 				contributingUrl: getPluginContributingUrl(),
 			};
-		}
+		},
+		[]
 	);
 
 	return (
@@ -63,7 +64,7 @@ export default function PlaygroundMoreMenu() {
 			} }
 			toggleProps={ {
 				showTooltip: ! showIconLabels,
-				...( showIconLabels && { variant: 'tertiary' } ),
+				...( showIconLabels ? { variant: 'tertiary' } : {} ),
 				tooltipPosition: 'bottom',
 				size: 'compact',
 			} }
@@ -76,6 +77,7 @@ export default function PlaygroundMoreMenu() {
 					<MenuGroup label={ __( 'Tools', 'ai-services' ) }>
 						<KeyboardShortcutsMenuItem />
 						{ !! settingsUrl && (
+							// @ts-expect-error This prop is valid, but is missing from the type definition.
 							<MenuItem href={ settingsUrl }>
 								{ __( 'AI Services Settings', 'ai-services' ) }
 							</MenuItem>
@@ -85,6 +87,7 @@ export default function PlaygroundMoreMenu() {
 						{ !! supportUrl && (
 							<MenuItem
 								icon={ external }
+								// @ts-expect-error This prop is valid, but is missing from the type definition.
 								href={ supportUrl }
 								target="_blank"
 								rel="noopener noreferrer"
@@ -104,6 +107,7 @@ export default function PlaygroundMoreMenu() {
 						{ !! homepageUrl && (
 							<MenuItem
 								icon={ external }
+								// @ts-expect-error This prop is valid, but is missing from the type definition.
 								href={ homepageUrl }
 								target="_blank"
 								rel="noopener noreferrer"
@@ -123,6 +127,7 @@ export default function PlaygroundMoreMenu() {
 						{ !! contributingUrl && (
 							<MenuItem
 								icon={ external }
+								// @ts-expect-error This prop is valid, but is missing from the type definition.
 								href={ contributingUrl }
 								target="_blank"
 								rel="noopener noreferrer"

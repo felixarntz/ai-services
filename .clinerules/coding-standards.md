@@ -31,6 +31,8 @@ See the "Guidelines for contributing code" section in the [`CONTRIBUTING.md` fil
 - ALWAYS ask the user for approval first (`ask_followup_question`) before introducing a new type.
     - The only exception to this are types for React component props.
 - ALWAYS add all necessary `import` statements for classes, constants, functions, and types from other files.
+- NEVER explicitly provide the return type for React component functions (e.g. `JSX.Element`). Leave it out. It's unnecessary.
+- NEVER use function parameter destructuring. ALWAYS destructure objects in the function body.
 
 ## Naming Conventions
 
@@ -71,6 +73,7 @@ See the "Guidelines for contributing code" section in the [`CONTRIBUTING.md` fil
 - ALWAYS follow the TSDoc standard.
     - The only exception is you should still include `@since` annotations, even though they are not a standard TSDoc tag.
 - ALWAYS use `@returns`. Do not use `@return`.
+- NEVER document individual properties of an object. Only add a single line of documentation for each overarching parameter.
 
 ## Tooling
 

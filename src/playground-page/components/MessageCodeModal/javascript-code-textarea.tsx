@@ -2,6 +2,11 @@
  * External dependencies
  */
 import { enums } from '@ai-services/ai';
+import type {
+	AiCapability,
+	Candidates,
+	ModelParams,
+} from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -13,16 +18,17 @@ import { useMemo, useRef } from '@wordpress/element';
  * Internal dependencies
  */
 import useCodeMirrorEffect from './use-codemirror-effect';
+import type { AiPlaygroundMessageAdditionalData } from '../../types';
 
-const toJavaScriptValue = ( input, rootIndentTabs = 0 ) => {
-	const lines = [];
+const toJavaScriptValue = ( input: unknown, rootIndentTabs: number = 0 ) => {
+	const lines: string[] = [];
 
-	const addLine = ( line ) => {
+	const addLine = ( line: string ) => {
 		const indentTabs = '\t'.repeat( rootIndentTabs );
 		lines.push( `${ indentTabs }${ line }` );
 	};
 
-	const processValue = ( value ) => {
+	const processValue = ( value: unknown ) => {
 		if (
 			Array.isArray( value ) ||
 			( typeof value === 'object' && value !== null )
@@ -31,17 +37,20 @@ const toJavaScriptValue = ( input, rootIndentTabs = 0 ) => {
 		}
 
 		if ( typeof value === 'string' ) {
-			const match = value.match( /^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/ );
+			let strValue = value;
+			const match = strValue.match(
+				/^data:[a-z0-9-]+\/[a-z0-9-]+;base64,/
+			);
 			if ( match ) {
-				value = match[ 0 ] + '...truncated...';
+				strValue = match[ 0 ] + '...truncated...';
 			}
-			if ( value.includes( "'" ) ) {
-				if ( value.includes( '"' ) ) {
-					return `'${ value.replace( /'/g, "\\'" ) }'`;
+			if ( strValue.includes( "'" ) ) {
+				if ( strValue.includes( '"' ) ) {
+					return `'${ strValue.replace( /'/g, "\\'" ) }'`;
 				}
-				return `"${ value }"`;
+				return `"${ strValue }"`;
 			}
-			return `'${ value }'`;
+			return `'${ strValue }'`;
 		}
 
 		return `${ value }`;
@@ -49,14 +58,15 @@ const toJavaScriptValue = ( input, rootIndentTabs = 0 ) => {
 
 	if ( Array.isArray( input ) ) {
 		addLine( '[' );
-		input.forEach( ( value ) => {
+		input.forEach( ( value: unknown ) => {
 			addLine( '\t' + processValue( value ) + ',' );
 		} );
 		addLine( ']' );
 	} else if ( typeof input === 'object' && input !== null ) {
+		const objectInput = input as { [ key: string ]: unknown };
 		addLine( '{' );
-		Object.keys( input ).forEach( ( key ) => {
-			const value = input[ key ];
+		Object.keys( objectInput ).forEach( ( key ) => {
+			const value = objectInput[ key ];
 			addLine( `\t${ key }: ${ processValue( value ) },` );
 		} );
 		addLine( '}' );
@@ -67,50 +77,75 @@ const toJavaScriptValue = ( input, rootIndentTabs = 0 ) => {
 	return lines.join( '\n' ).trimStart();
 };
 
-const getJavaScriptCode = ( rawData, service, foundationalCapability ) => {
-	const line = ( content, rootIndentTabs = 0 ) => {
-		return '\t'.repeat( rootIndentTabs ) + content;
+type UserMessageRawData = Exclude<
+	AiPlaygroundMessageAdditionalData[ 'rawData' ],
+	Candidates | undefined
+>;
+type UserMessageService = Exclude<
+	AiPlaygroundMessageAdditionalData[ 'service' ],
+	undefined
+>;
+
+const getJavaScriptCode = (
+	rawData: UserMessageRawData,
+	service: UserMessageService,
+	foundationalCapability: AiCapability
+): string => {
+	// TODO: Support multiple content parts, relevant for sending history.
+	const content = Array.isArray( rawData.content )
+		? rawData.content[ rawData.content.length - 1 ]
+		: rawData.content;
+
+	const line = (
+		lineContent: string,
+		rootIndentTabs: number = 0
+	): string => {
+		return '\t'.repeat( rootIndentTabs ) + lineContent;
 	};
 
-	const parts = toJavaScriptValue( rawData.content.parts, 2 );
+	const parts = toJavaScriptValue( content.parts, 2 );
 
-	let modelParams;
-	let functionDeclarations;
-	if ( rawData.modelParams.tools?.[ 0 ]?.functionDeclarations ) {
-		const modelParamsWithoutFunctionDeclarations = {
+	let modelParamsString: string;
+	let functionDeclarationsString: string = '';
+	if (
+		rawData.modelParams.tools !== undefined &&
+		rawData.modelParams.tools.length &&
+		'functionDeclarations' in rawData.modelParams.tools[ 0 ]
+	) {
+		const functionDeclarations =
+			rawData.modelParams.tools[ 0 ].functionDeclarations;
+
+		const modelParamsWithoutFunctionDeclarations: ModelParams = {
 			...rawData.modelParams,
 			tools: [
 				{
 					...rawData.modelParams.tools[ 0 ],
-					functionDeclarations: 'functionDeclarations',
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					functionDeclarations: '$function_declarations' as any, // Hack to allow for placeholder.
 				},
 				...rawData.modelParams.tools.slice( 1 ),
 			],
 		};
-		modelParams = toJavaScriptValue(
+		modelParamsString = toJavaScriptValue(
 			modelParamsWithoutFunctionDeclarations,
 			3
 		);
-		modelParams = modelParams.replace(
+		modelParamsString = modelParamsString.replace(
 			"'functionDeclarations'",
 			'functionDeclarations'
 		);
 
-		functionDeclarations =
+		functionDeclarationsString =
 			'\n' +
 			line(
 				'const functionDeclarations = ' +
-					toJavaScriptValue(
-						rawData.modelParams.tools[ 0 ].functionDeclarations,
-						1
-					) +
+					toJavaScriptValue( functionDeclarations, 1 ) +
 					';',
 				1
 			) +
 			'\n';
 	} else {
-		modelParams = toJavaScriptValue( rawData.modelParams, 3 );
-		functionDeclarations = '';
+		modelParamsString = toJavaScriptValue( rawData.modelParams, 3 );
 	}
 
 	let method = 'generateText';
@@ -126,10 +161,7 @@ const getJavaScriptCode = ( rawData, service, foundationalCapability ) => {
 	}
 
 	let promptComment = '';
-	if (
-		rawData.content.parts.length === 1 &&
-		rawData.content.parts[ 0 ].text
-	) {
+	if ( content.parts.length === 1 && 'text' in content.parts[ 0 ] ) {
 		promptComment =
 			'\n' +
 			line(
@@ -139,7 +171,9 @@ const getJavaScriptCode = ( rawData, service, foundationalCapability ) => {
 				1
 			);
 	} else if (
-		rawData.content.parts.find( ( part ) => part.inlineData?.data )
+		content.parts.find(
+			( part ) => 'inlineData' in part && part.inlineData.data
+		)
 	) {
 		promptComment =
 			'\n' +
@@ -159,11 +193,11 @@ ${ promptComment }
 		role: enums.ContentRole.USER,
 		parts: ${ parts },
 	};
-${ functionDeclarations }
+${ functionDeclarationsString }
 	try {
 		const candidates = await service.${ method }(
 			${ promptVariableName },
-			${ modelParams }
+			${ modelParamsString }
 		);
 	} catch ( error ) {
 		// Handle the error.
@@ -174,22 +208,25 @@ ${ functionDeclarations }
 	return jsCode;
 };
 
+type JavaScriptCodeTextareaProps = {
+	rawData: UserMessageRawData;
+	service: UserMessageService;
+	foundationalCapability: AiCapability;
+};
+
 /**
  * Renders a textarea with the JavaScript code for the selected message.
  *
  * @since 0.6.0
  *
- * @param {Object} props                        The component properties.
- * @param {Object} props.rawData                The raw data for the selected message.
- * @param {Object} props.service                The service for the selected message.
- * @param {Object} props.foundationalCapability The foundational capability for the selected message.
- * @return {Component} The component to be rendered.
+ * @param props - The component props.
+ * @returns The component to be rendered.
  */
-export default function JavaScriptCodeTextarea( {
-	rawData,
-	service,
-	foundationalCapability,
-} ) {
+export default function JavaScriptCodeTextarea(
+	props: JavaScriptCodeTextareaProps
+) {
+	const { rawData, service, foundationalCapability } = props;
+
 	const jsCode = useMemo( () => {
 		if ( ! rawData || ! service || ! foundationalCapability ) {
 			return '';
@@ -197,7 +234,7 @@ export default function JavaScriptCodeTextarea( {
 		return getJavaScriptCode( rawData, service, foundationalCapability );
 	}, [ rawData, service, foundationalCapability ] );
 
-	const textareaRef = useRef();
+	const textareaRef = useRef< HTMLTextAreaElement | null >( null );
 
 	// Initialize 'wp-codemirror'.
 	useCodeMirrorEffect( textareaRef, 'javascript' );
@@ -212,7 +249,7 @@ export default function JavaScriptCodeTextarea( {
 					'ai-services'
 				) }
 				value={ jsCode }
-				rows="14"
+				rows={ 14 }
 				readOnly
 			/>
 		</div>

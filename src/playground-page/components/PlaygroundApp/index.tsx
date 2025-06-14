@@ -47,7 +47,7 @@ const interfaceLabels = {
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundApp() {
 	const isLargeViewport = useViewportMatch( 'medium' );

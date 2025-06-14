@@ -35,7 +35,7 @@ const MODEL_SELECT_PLACEHOLDER_OPTIONS = [
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundServiceModelPanel() {
 	const {
@@ -70,7 +70,7 @@ export default function PlaygroundServiceModelPanel() {
 			),
 			isPanelOpened: isPanelActive( 'playground-service-model', true ),
 		};
-	} );
+	}, [] );
 
 	const { setService, setModel } = useDispatch( playgroundStore );
 	const { togglePanel } = useDispatch( interfaceStore );
@@ -102,7 +102,7 @@ export default function PlaygroundServiceModelPanel() {
 	}, [ availableModels ] );
 
 	const [ changedService, setChangedService ] = useState( false );
-	const onChangeService = ( value ) => {
+	const onChangeService = ( value: string ) => {
 		setService( value );
 		setChangedService( true );
 	};
@@ -139,7 +139,9 @@ export default function PlaygroundServiceModelPanel() {
 							<SelectControl
 								className="ai-services-playground-service"
 								label={ __( 'Service', 'ai-services' ) }
-								value={ service }
+								value={
+									typeof service === 'string' ? service : ''
+								}
 								options={ serviceSelectOptions }
 								onChange={ onChangeService }
 								__nextHasNoMarginBottom
@@ -148,7 +150,7 @@ export default function PlaygroundServiceModelPanel() {
 							<SelectControl
 								className="ai-services-playground-model"
 								label={ __( 'Model', 'ai-services' ) }
-								value={ model }
+								value={ typeof model === 'string' ? model : '' }
 								options={
 									modelSelectOptions.length > 1
 										? modelSelectOptions

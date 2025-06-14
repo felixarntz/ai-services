@@ -8,22 +8,31 @@ import { useMemo, useRef } from '@wordpress/element';
  * Internal dependencies
  */
 import useCodeMirrorEffect from './use-codemirror-effect';
+import type { AiPlaygroundMessageAdditionalData } from '../../types';
+
+type RawDataTextareaProps = {
+	rawData: Exclude<
+		AiPlaygroundMessageAdditionalData[ 'rawData' ],
+		undefined
+	>;
+};
 
 /**
  * Renders a textarea with the raw data for the selected message.
  *
  * @since 0.6.0
  *
- * @param {Object} props         The component properties.
- * @param {Object} props.rawData The raw data for the selected message.
- * @return {Component} The component to be rendered.
+ * @param props - The component properties.
+ * @returns The component to be rendered.
  */
-export default function RawDataTextarea( { rawData } ) {
+export default function RawDataTextarea( props: RawDataTextareaProps ) {
+	const { rawData } = props;
+
 	const rawDataJson = useMemo( () => {
 		return JSON.stringify( rawData, null, 2 );
 	}, [ rawData ] );
 
-	const textareaRef = useRef();
+	const textareaRef = useRef< HTMLTextAreaElement >( null );
 
 	// Initialize 'wp-codemirror'.
 	useCodeMirrorEffect( textareaRef, 'javascript' );
@@ -38,7 +47,7 @@ export default function RawDataTextarea( { rawData } ) {
 					'ai-services'
 				) }
 				value={ rawDataJson }
-				rows="14"
+				rows={ 14 }
 				readOnly
 			/>
 		</div>

@@ -3,6 +3,8 @@
  */
 import { MultiCheckboxControl } from '@ai-services/components';
 import { store as interfaceStore } from '@ai-services/interface';
+import type { AiCapabilityOption } from '@ai-services/playground-page/types';
+import type { AiCapability } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -17,12 +19,19 @@ import { __ } from '@wordpress/i18n';
  */
 import { store as playgroundStore } from '../../store';
 
+type PlaygroundCapabilitiesPanelSelectProps = {
+	availableFoundationalCapabilities: AiCapabilityOption[];
+	availableAdditionalCapabilities: AiCapabilityOption[];
+	foundationalCapability: AiCapability | undefined;
+	additionalCapabilities: AiCapability[];
+	isPanelOpened: boolean;
+};
+
 /**
  * Renders the playground sidebar panel for AI capabilities.
  *
  * @since 0.4.0
- *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundCapabilitiesPanel() {
 	const {
@@ -31,7 +40,7 @@ export default function PlaygroundCapabilitiesPanel() {
 		foundationalCapability,
 		additionalCapabilities,
 		isPanelOpened,
-	} = useSelect( ( select ) => {
+	}: PlaygroundCapabilitiesPanelSelectProps = useSelect( ( select ) => {
 		const {
 			getAvailableFoundationalCapabilities,
 			getAvailableAdditionalCapabilities,
@@ -45,24 +54,30 @@ export default function PlaygroundCapabilitiesPanel() {
 				getAvailableFoundationalCapabilities(),
 			availableAdditionalCapabilities:
 				getAvailableAdditionalCapabilities(),
-			foundationalCapability: getFoundationalCapability(),
-			additionalCapabilities: getAdditionalCapabilities(),
+			foundationalCapability: getFoundationalCapability() as AiCapability,
+			additionalCapabilities:
+				getAdditionalCapabilities() as AiCapability[],
 			isPanelOpened: isPanelActive( 'playground-capabilities', true ),
 		};
-	} );
+	}, [] );
 
 	const { setFoundationalCapability, toggleAdditionalCapability } =
 		useDispatch( playgroundStore );
 	const { togglePanel } = useDispatch( interfaceStore );
 
 	// Get option objects for available additional capabilities to render in the checkbox list.
-	const additionalCapabilityOptions = useMemo( () => {
-		return availableAdditionalCapabilities.map( ( cap ) => {
-			return {
-				value: cap.identifier,
-				label: cap.label,
-			};
-		} );
+	const additionalCapabilityOptions: Array< {
+		value: AiCapability;
+		label: string;
+	} > = useMemo( () => {
+		return availableAdditionalCapabilities.map(
+			( cap: AiCapabilityOption ) => {
+				return {
+					value: cap.identifier,
+					label: cap.label,
+				};
+			}
+		);
 	}, [ availableAdditionalCapabilities ] );
 
 	return (
@@ -78,12 +93,14 @@ export default function PlaygroundCapabilitiesPanel() {
 					label={ __( 'Foundational capability', 'ai-services' ) }
 					value={ foundationalCapability }
 					options={ availableFoundationalCapabilities.map(
-						( { identifier, label } ) => ( {
+						( { identifier, label }: AiCapabilityOption ) => ( {
 							value: identifier,
 							label,
 						} )
 					) }
-					onChange={ ( value ) => setFoundationalCapability( value ) }
+					onChange={ ( value: AiCapability ) =>
+						setFoundationalCapability( value )
+					}
 					__nextHasNoMarginBottom
 					__next40pxDefaultSize
 				/>
@@ -92,7 +109,9 @@ export default function PlaygroundCapabilitiesPanel() {
 					className="ai-services-playground-additional-capabilities"
 					value={ additionalCapabilities }
 					options={ additionalCapabilityOptions }
-					onToggle={ toggleAdditionalCapability }
+					onToggle={ ( value: string ) =>
+						toggleAdditionalCapability( value as AiCapability )
+					}
 					__nextHasNoMarginBottom
 				/>
 			</Flex>

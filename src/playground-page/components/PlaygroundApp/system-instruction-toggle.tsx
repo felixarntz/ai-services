@@ -21,7 +21,7 @@ import { store as playgroundStore } from '../../store';
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function SystemInstructionToggle() {
 	const { registerShortcut } = useDispatch( keyboardShortcutsStore );
@@ -40,8 +40,9 @@ export default function SystemInstructionToggle() {
 		} );
 	}, [ registerShortcut ] );
 
-	const isSystemInstructionVisible = useSelect( ( select ) =>
-		select( playgroundStore ).isSystemInstructionVisible()
+	const isSystemInstructionVisible = useSelect(
+		( select ) => select( playgroundStore ).isSystemInstructionVisible(),
+		[]
 	);
 
 	const { showSystemInstruction, hideSystemInstruction } =
@@ -58,11 +59,13 @@ export default function SystemInstructionToggle() {
 		toggleSystemInstruction();
 	} );
 
-	const shortcut = useSelect( ( select ) =>
-		select( keyboardShortcutsStore ).getShortcutRepresentation(
-			'ai-services/toggle-system-instruction',
-			'display'
-		)
+	const shortcut = useSelect(
+		( select ) =>
+			select( keyboardShortcutsStore ).getShortcutRepresentation(
+				'ai-services/toggle-system-instruction',
+				'display'
+			),
+		[]
 	);
 
 	return (
@@ -74,7 +77,7 @@ export default function SystemInstructionToggle() {
 			aria-controls="ai-services-playground-system-instruction"
 			aria-pressed={ isSystemInstructionVisible }
 			aria-expanded={ isSystemInstructionVisible }
-			shortcut={ shortcut }
+			shortcut={ shortcut ? shortcut : undefined }
 		/>
 	);
 }

@@ -21,6 +21,7 @@ type WordPressAttachment = {
 	id: number;
 	url: string;
 	mime: string;
+	icon: string;
 	sizes?: Record< string, WordPressAttachmentSizeData >;
 	[ key: string ]: unknown;
 };

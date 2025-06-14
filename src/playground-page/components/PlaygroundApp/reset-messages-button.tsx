@@ -20,14 +20,15 @@ import { store as playgroundStore } from '../../store';
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function ResetMessagesButton() {
 	const [ isConfirmDialogVisible, setIsConfirmDialogVisible ] =
-		useState( false );
+		useState< boolean >( false );
 
-	const messages = useSelect( ( select ) =>
-		select( playgroundStore ).getMessages()
+	const messages = useSelect(
+		( select ) => select( playgroundStore ).getMessages(),
+		[]
 	);
 	const disabled = messages.length === 0;
 

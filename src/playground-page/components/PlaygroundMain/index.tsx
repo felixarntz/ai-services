@@ -11,7 +11,7 @@ import './style.scss';
  *
  * @since 0.4.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function PlaygroundMain() {
 	return (

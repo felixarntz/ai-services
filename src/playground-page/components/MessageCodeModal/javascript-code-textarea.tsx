@@ -121,7 +121,7 @@ const getJavaScriptCode = (
 				{
 					...rawData.modelParams.tools[ 0 ],
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					functionDeclarations: '$function_declarations' as any, // Hack to allow for placeholder.
+					functionDeclarations: 'functionDeclarations' as any, // Hack to allow for placeholder.
 				},
 				...rawData.modelParams.tools.slice( 1 ),
 			],

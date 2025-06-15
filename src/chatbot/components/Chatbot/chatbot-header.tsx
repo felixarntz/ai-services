@@ -1,24 +1,30 @@
 /**
- * External dependencies
- */
-import PropTypes from 'prop-types';
-
-/**
  * Internal dependencies
  */
 import { useChatbotConfig } from '../../config';
+
+type ChatbotHeaderProps = {
+	/**
+	 * Function to call when the close button is clicked.
+	 */
+	onClose: () => void;
+};
 
 /**
  * Renders the chatbot header.
  *
  * @since 0.3.0
  *
- * @param {Object}   props         Component props.
- * @param {Function} props.onClose Function to call when the close button is clicked.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-export default function ChatbotHeader( { onClose } ) {
+export default function ChatbotHeader( props: ChatbotHeaderProps ) {
+	const { onClose } = props;
+
 	const labels = useChatbotConfig( 'labels' );
+	if ( ! labels ) {
+		return null;
+	}
 
 	return (
 		<div className="ai-services-chatbot__header">
@@ -43,7 +49,3 @@ export default function ChatbotHeader( { onClose } ) {
 		</div>
 	);
 }
-
-ChatbotHeader.propTypes = {
-	onClose: PropTypes.func.isRequired,
-};

@@ -14,15 +14,15 @@ import ChatbotApp from './components/ChatbotApp';
  *
  * @since 0.1.0
  *
- * @param {Component} Component    The component to be mounted.
- * @param {Element}   renderTarget The target element to render the component into.
+ * @param jsx          - The JSX node to be mounted.
+ * @param renderTarget - The target element to render the JSX into.
  */
-function mountApp( Component, renderTarget ) {
+function mountApp( jsx: JSX.Element, renderTarget: Element ) {
 	if ( createRoot ) {
 		const root = createRoot( renderTarget );
-		root.render( Component );
+		root.render( jsx );
 	} else {
-		render( Component, renderTarget );
+		render( jsx, renderTarget );
 	}
 }
 

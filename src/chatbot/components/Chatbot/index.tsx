@@ -2,8 +2,8 @@
  * External dependencies
  */
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { helpers, store as aiStore } from '@ai-services/ai';
+import type { Content } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -19,27 +19,47 @@ import ChatbotHeader from './chatbot-header';
 import ChatbotMessage from './chatbot-message';
 import SendIcon from './send-icon';
 import './style.scss';
+import type {
+	ChatbotMessage as ChatbotMessageType,
+	AsyncContentGenerator,
+} from '../../types';
+
+type ChatbotProps = {
+	/**
+	 * Function to call when the history of messages is updated.
+	 */
+	onUpdateMessages?: ( messages: ChatbotMessageType[] ) => void;
+	/**
+	 * Function to call when the close button is clicked.
+	 */
+	onClose: () => void;
+	/**
+	 * Class name to use on the chatbot container.
+	 */
+	className?: string;
+};
+
+const EMPTY_MESSAGES_ARRAY: ChatbotMessageType[] = [];
 
 /**
  * Renders the chatbot.
  *
  * @since 0.3.0
  *
- * @param {Object}   props                  Component props.
- * @param {Function} props.onUpdateMessages Function to call when the history of messages is updated.
- * @param {Function} props.onClose          Function to call when the close button is clicked.
- * @param {string}   props.className        Class name to use on the chatbot container.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-export default function Chatbot( { onUpdateMessages, onClose, className } ) {
+export default function Chatbot( props: ChatbotProps ) {
+	const { onUpdateMessages, onClose, className } = props;
+
 	const chatId = useChatbotConfig( 'chatId' );
 	const labels = useChatbotConfig( 'labels' );
 	const initialBotMessage = useChatbotConfig( 'initialBotMessage' );
 	const streaming = useChatbotConfig( 'useStreaming' );
 	const getErrorChatResponse = useChatbotConfig( 'getErrorChatResponse' );
 
-	const messagesContainerRef = useRef();
-	const inputRef = useRef();
+	const messagesContainerRef = useRef< HTMLDivElement | null >( null );
+	const inputRef = useRef< HTMLInputElement | null >( null );
 
 	const scrollIntoView = () => {
 		setTimeout( () => {
@@ -65,12 +85,17 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 	const [ input, setInputValue ] = useState( '' );
 
 	const [ currentMessageGenerator, setCurrentMessageGenerator ] =
-		useState( null );
+		useState< AsyncContentGenerator | null >( null );
 
 	const { sendMessage, streamSendMessage, receiveContent } =
 		useDispatch( aiStore );
 
-	const sendPrompt = async ( message ) => {
+	const sendPrompt = async ( message: string ) => {
+		if ( ! chatId ) {
+			console.error( 'Chat ID not set.' ); // eslint-disable-line no-console
+			return;
+		}
+
 		try {
 			if ( streaming ) {
 				const messageGenerator = await streamSendMessage(
@@ -98,18 +123,30 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 				receiveContent( chatId, {
 					...helpers.textToContent( aiResponseText, 'model' ),
 					type: 'error',
-				} );
+				} as Content ); // Force additional field into Content type.
 			} else {
 				console.error( error ); // eslint-disable-line no-console
 			}
 		}
 	};
 
-	const messages = useSelect( ( select ) =>
-		select( aiStore ).getChat( chatId )
+	const messages = useSelect(
+		( select ) => {
+			if ( ! chatId ) {
+				return EMPTY_MESSAGES_ARRAY;
+			}
+			return select( aiStore ).getChat( chatId ) as ChatbotMessageType[];
+		},
+		[ chatId ]
 	);
-	const loading = useSelect( ( select ) =>
-		select( aiStore ).isChatLoading( chatId )
+	const loading = useSelect(
+		( select ) => {
+			if ( ! chatId ) {
+				return false;
+			}
+			return select( aiStore ).isChatLoading( chatId );
+		},
+		[ chatId ]
 	);
 
 	useEffect( () => {
@@ -131,7 +168,7 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 		}
 		const timeout = setTimeout( () => onUpdateMessages( messages ), 500 );
 		return () => clearTimeout( timeout );
-	}, [ messages, onUpdateMessages, streaming, setCurrentMessageGenerator ] );
+	}, [ messages, onUpdateMessages, streaming ] );
 
 	useEffect( () => {
 		// While there is a message generator streaming, keep scrolling to the bottom of the chat.
@@ -143,7 +180,7 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 		return () => clearInterval( interval );
 	}, [ currentMessageGenerator ] );
 
-	const handleSubmit = ( event ) => {
+	const handleSubmit = ( event: React.FormEvent< HTMLFormElement > ) => {
 		event.preventDefault();
 
 		if ( ! input ) {
@@ -154,6 +191,10 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 		scrollIntoView();
 		setInputValue( '' );
 	};
+
+	if ( ! chatId || ! labels ) {
+		return null;
+	}
 
 	return (
 		<div className={ clsx( 'ai-services-chatbot__container', className ) }>
@@ -171,7 +212,7 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 							} }
 						/>
 					) }
-					{ messages.map( ( content, index ) => (
+					{ messages.map( ( content, index: number ) => (
 						<ChatbotMessage key={ index } content={ content } />
 					) ) }
 					{ loading && (
@@ -226,8 +267,3 @@ export default function Chatbot( { onUpdateMessages, onClose, className } ) {
 		</div>
 	);
 }
-
-Chatbot.propTypes = {
-	onClose: PropTypes.func.isRequired,
-	className: PropTypes.string,
-};

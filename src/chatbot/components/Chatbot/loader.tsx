@@ -3,7 +3,7 @@
  *
  * @since 0.3.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function Loader() {
 	return (

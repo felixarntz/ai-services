@@ -1,12 +1,19 @@
 /**
+ * External dependencies
+ */
+import type { SVGProps } from 'react';
+
+type SendIconProps = SVGProps< SVGSVGElement >;
+
+/**
  * Renders the send icon.
  *
  * @since 0.3.0
  *
- * @param {Object} props The component props.
- * @return {Component} The component to be rendered.
+ * @param props - The component props.
+ * @returns The component to be rendered.
  */
-export default function SendIcon( props ) {
+export default function SendIcon( props: SendIconProps ) {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

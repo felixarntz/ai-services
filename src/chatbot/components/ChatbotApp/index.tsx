@@ -4,6 +4,7 @@
 import Markdown from 'markdown-to-jsx';
 import { enums, store as aiStore } from '@ai-services/ai';
 import { PluginIcon } from '@ai-services/components';
+import type { AvailableServicesArgs } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -26,18 +27,25 @@ import { ESCAPE } from '@wordpress/keycodes';
 import Chatbot from '../Chatbot';
 import { ChatbotConfigProvider } from '../../config';
 import './style.scss';
+import type {
+	ChatbotConfig,
+	ChatbotMessage,
+	ResponseRendererProps,
+} from '../../types';
 
 const CHAT_ID = 'aisChatbotPrimary';
-const SERVICE_ARGS = { capabilities: [ enums.AiCapability.TEXT_GENERATION ] };
+const SERVICE_ARGS: AvailableServicesArgs = {
+	capabilities: [ enums.AiCapability.TEXT_GENERATION ],
+};
 
-const retrieveVisibility = () => {
+const retrieveVisibility = (): boolean => {
 	const chatbotVisibility = window.sessionStorage.getItem(
 		'ai-services-built-in-chatbot-visibility'
 	);
 	return chatbotVisibility === 'visible';
 };
 
-const storeVisibility = ( isVisible ) => {
+const storeVisibility = ( isVisible: boolean ): void => {
 	if ( isVisible ) {
 		window.sessionStorage.setItem(
 			'ai-services-built-in-chatbot-visibility',
@@ -50,21 +58,29 @@ const storeVisibility = ( isVisible ) => {
 	}
 };
 
-const retrieveHistory = () => {
+const retrieveHistory = (): ChatbotMessage[] => {
 	const chatbotHistory = window.sessionStorage.getItem(
 		'ai-services-built-in-chatbot-history'
 	);
 	return chatbotHistory ? JSON.parse( chatbotHistory ) : [];
 };
 
-const storeHistory = ( history ) => {
+const storeHistory = ( history: ChatbotMessage[] ): void => {
 	window.sessionStorage.setItem(
 		'ai-services-built-in-chatbot-history',
 		JSON.stringify( history )
 	);
 };
 
-const getErrorChatResponse = ( error ) => {
+/**
+ * Gets the error chat response.
+ *
+ * @since 0.1.0
+ *
+ * @param error - The error object.
+ * @returns The error message.
+ */
+const getErrorChatResponse = ( error: unknown ): string => {
 	return (
 		__(
 			'I cannot respond to that due to a technical problem. Please try again.',
@@ -74,12 +90,22 @@ const getErrorChatResponse = ( error ) => {
 		sprintf(
 			/* translators: %s: error message */
 			__( 'Here is the underlying error message: %s', 'ai-services' ),
-			error?.message || error
+			error instanceof Error ? error.message : String( error )
 		)
 	);
 };
 
-const ResponseRenderer = ( { text } ) => {
+/**
+ * Renders the response from the chatbot.
+ *
+ * @since 0.1.0
+ *
+ * @param props - Component props.
+ * @returns The rendered response.
+ */
+const ResponseRenderer = ( props: ResponseRendererProps ) => {
+	const { text } = props;
+
 	const textData = useMemo( () => {
 		const parts = text.split( '---' );
 		if ( parts.length !== 3 ) {
@@ -117,7 +143,15 @@ const ResponseRenderer = ( { text } ) => {
 	);
 };
 
-const getChatbotConfig = ( serviceName ) => {
+/**
+ * Gets the chatbot configuration.
+ *
+ * @since 0.1.0
+ *
+ * @param serviceName - The name of the service.
+ * @returns The chatbot configuration.
+ */
+const getChatbotConfig = ( serviceName?: string ): ChatbotConfig => {
 	return {
 		chatId: CHAT_ID,
 		labels: {
@@ -146,13 +180,13 @@ const getChatbotConfig = ( serviceName ) => {
  *
  * @since 0.1.0
  *
- * @return {Component} The component to be rendered.
+ * @returns The component to be rendered.
  */
 export default function ChatbotApp() {
-	const chatbotRef = useRef( null );
-	const toggleButtonRef = useRef( null );
+	const chatbotRef = useRef< HTMLDivElement | null >( null );
+	const toggleButtonRef = useRef< HTMLButtonElement | null >( null );
 
-	const [ isVisible, setIsVisible ] = useState( false );
+	const [ isVisible, setIsVisible ] = useState< boolean >( false );
 
 	useEffect( () => {
 		const initialVisibility = retrieveVisibility();
@@ -172,11 +206,12 @@ export default function ChatbotApp() {
 	}, [ isVisible, toggleButtonRef ] );
 
 	const { service, hasChat } = useSelect( ( select ) => {
+		const aiStoreSelector = select( aiStore );
 		return {
-			service: select( aiStore ).getAvailableService( SERVICE_ARGS ),
-			hasChat: select( aiStore ).hasChat( CHAT_ID ),
+			service: aiStoreSelector.getAvailableService( SERVICE_ARGS ),
+			hasChat: aiStoreSelector.hasChat( CHAT_ID ) as boolean,
 		};
-	} );
+	}, [] );
 
 	const { startChat } = useDispatch( aiStore );
 
@@ -206,7 +241,7 @@ export default function ChatbotApp() {
 		}
 
 		// If focus is within the chatbot, close the chatbot when pressing ESC.
-		const handleKeyDown = ( event ) => {
+		const handleKeyDown = ( event: KeyboardEvent ) => {
 			if ( event.keyCode === ESCAPE ) {
 				toggleVisibility();
 			}
@@ -218,8 +253,11 @@ export default function ChatbotApp() {
 		};
 	}, [ chatbotRef, toggleVisibility ] );
 
-	const config = useMemo(
-		() => getChatbotConfig( service?.getServiceMetadata()?.name ),
+	const config: ChatbotConfig = useMemo(
+		() =>
+			getChatbotConfig(
+				service ? service.getServiceMetadata()?.name : undefined
+			),
 		[ service ]
 	);
 

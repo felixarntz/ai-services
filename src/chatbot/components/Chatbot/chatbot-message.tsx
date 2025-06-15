@@ -1,8 +1,8 @@
 /**
  * External dependencies
  */
-import PropTypes from 'prop-types';
 import Markdown from 'markdown-to-jsx';
+import type { Part } from '@ai-services/ai/types';
 
 /**
  * WordPress dependencies
@@ -15,15 +15,38 @@ import { useEffect, useRef } from '@wordpress/element';
 import { useChatbotConfig } from '../../config';
 import Loader from './loader';
 import UserIcon from './user-icon';
+import type {
+	ChatbotMessage as ChatbotMessageType,
+	ResponseRendererProps,
+	AsyncContentGenerator,
+} from '../../types';
 
-const DefaultResponseRenderer = ( { text } ) => (
-	<Markdown options={ { forceBlock: true, forceWrapper: true } }>
-		{ text }
-	</Markdown>
-);
+const DefaultResponseRenderer = ( props: ResponseRendererProps ) => {
+	const { text } = props;
+	return (
+		<Markdown options={ { forceBlock: true, forceWrapper: true } }>
+			{ text }
+		</Markdown>
+	);
+};
 
-const defaultRenderStreamResponse = ( text ) => {
+const defaultRenderStreamResponse = ( text: string ): string => {
 	return text.replaceAll( '\n\n', '</p><p>' ).replaceAll( '\n', '<br>' );
+};
+
+type ChatbotMessageProps = {
+	/**
+	 * The message content object.
+	 */
+	content: ChatbotMessageType;
+	/**
+	 * Content generator object, if this message is streaming.
+	 */
+	contentGenerator?: AsyncContentGenerator;
+	/**
+	 * Whether the message is loading.
+	 */
+	loading?: boolean;
 };
 
 /**
@@ -31,17 +54,12 @@ const defaultRenderStreamResponse = ( text ) => {
  *
  * @since 0.3.0
  *
- * @param {Object}  props                  Component props.
- * @param {Object}  props.content          The message content object.
- * @param {Object}  props.contentGenerator Content generator object, if this message is streaming.
- * @param {boolean} props.loading          Whether the message is loading.
- * @return {Component} The component to be rendered.
+ * @param props - Component props.
+ * @returns The component to be rendered.
  */
-export default function ChatbotMessage( {
-	content,
-	contentGenerator,
-	loading,
-} ) {
+export default function ChatbotMessage( props: ChatbotMessageProps ) {
+	const { content, contentGenerator, loading } = props;
+
 	const ResponseRenderer =
 		useChatbotConfig( 'ResponseRenderer' ) || DefaultResponseRenderer;
 	const renderStreamResponse =
@@ -51,7 +69,7 @@ export default function ChatbotMessage( {
 	const classSuffix = content.role === 'user' ? 'user' : 'assistant';
 	const errorClass = content.type === 'error' ? ' ai-services-error' : '';
 
-	const streamElementRef = useRef();
+	const streamElementRef = useRef< HTMLDivElement | null >( null );
 
 	useEffect( () => {
 		if ( ! contentGenerator || ! streamElementRef.current ) {
@@ -66,11 +84,16 @@ export default function ChatbotMessage( {
 		 */
 		const streamFragment = document.implementation.createHTMLDocument();
 		streamFragment.write( '<div><p>' );
-		streamElementRef.current.appendChild( streamFragment.body.firstChild );
+		streamElementRef.current.appendChild(
+			streamFragment.body.firstChild as Node
+		);
 
 		const readStream = async () => {
 			for await ( const chunk of contentGenerator ) {
-				if ( ! chunk.parts?.[ 0 ]?.text ) {
+				if (
+					! chunk.parts.length ||
+					! ( 'text' in chunk.parts[ 0 ] )
+				) {
 					continue;
 				}
 				streamFragment.write(
@@ -114,8 +137,8 @@ export default function ChatbotMessage( {
 				>
 					{ !! contentGenerator && <div ref={ streamElementRef } /> }
 					{ ! contentGenerator &&
-						content.parts.map( ( part, index ) =>
-							!! part.text ? (
+						content.parts.map( ( part: Part, index ) =>
+							'text' in part && !! part.text ? (
 								<ResponseRenderer
 									key={ index }
 									text={ part.text }
@@ -130,12 +153,3 @@ export default function ChatbotMessage( {
 		</div>
 	);
 }
-
-ChatbotMessage.propTypes = {
-	content: PropTypes.shape( {
-		role: PropTypes.string,
-		parts: PropTypes.arrayOf( PropTypes.object ),
-	} ).isRequired,
-	contentGenerator: PropTypes.object,
-	loading: PropTypes.bool,
-};

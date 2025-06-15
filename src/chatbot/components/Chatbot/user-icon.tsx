@@ -1,12 +1,19 @@
 /**
+ * External dependencies
+ */
+import type { SVGProps } from 'react';
+
+type UserIconProps = SVGProps< SVGSVGElement >;
+
+/**
  * Renders the user icon.
  *
  * @since 0.3.0
  *
- * @param {Object} props The component props.
- * @return {Component} The component to be rendered.
+ * @param props - The component props.
+ * @returns The component to be rendered.
  */
-export default function UserIcon( props ) {
+export default function UserIcon( props: UserIconProps ) {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

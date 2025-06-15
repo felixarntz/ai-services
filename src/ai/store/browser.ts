@@ -40,6 +40,11 @@ let browser: ServiceResource;
  */
 export async function getBrowserServiceData(): Promise< ServiceResource > {
 	if ( ! browser ) {
+		// Currently Edge and Chrome support the built-in prompt API.
+		const browserModelName = navigator.userAgent.includes( 'Edg' )
+			? 'Phi-4-mini'
+			: 'Gemini Nano';
+
 		const capabilities = await getBrowserAiCapabilities();
 		browser = {
 			slug: 'browser',
@@ -56,7 +61,7 @@ export async function getBrowserServiceData(): Promise< ServiceResource > {
 					? {
 							default: {
 								slug: 'default',
-								name: 'Gemini Nano', // The model used in Chrome under the hood.
+								name: browserModelName,
 								capabilities,
 							},
 					  }

@@ -224,8 +224,7 @@ const actions = {
 		return async ( { dispatch }: DispatcherArgs ) => {
 			const session = chatSessionInstances[ chatId ];
 			if ( ! session ) {
-				logError( `Chat ${ chatId } not found.` );
-				return;
+				throw new Error( `Chat ${ chatId } not found.` );
 			}
 
 			const newContent = formatNewContent( content );
@@ -272,8 +271,7 @@ const actions = {
 		return async ( { dispatch }: DispatcherArgs ) => {
 			const session = chatSessionInstances[ chatId ];
 			if ( ! session ) {
-				logError( `Chat ${ chatId } not found.` );
-				return;
+				throw new Error( `Chat ${ chatId } not found.` );
 			}
 
 			const newContent = formatNewContent( content );

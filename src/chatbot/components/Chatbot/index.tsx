@@ -23,6 +23,7 @@ import type {
 	ChatbotMessage as ChatbotMessageType,
 	AsyncContentGenerator,
 } from '../../types';
+import logError from '../../../utils/log-error';
 
 type ChatbotProps = {
 	/**
@@ -92,7 +93,7 @@ export default function Chatbot( props: ChatbotProps ) {
 
 	const sendPrompt = async ( message: string ) => {
 		if ( ! chatId ) {
-			console.error( 'Chat ID not set.' ); // eslint-disable-line no-console
+			logError( 'Chat ID not set.' );
 			return;
 		}
 
@@ -125,7 +126,7 @@ export default function Chatbot( props: ChatbotProps ) {
 					type: 'error',
 				} as Content ); // Force additional field into Content type.
 			} else {
-				console.error( error ); // eslint-disable-line no-console
+				logError( error );
 			}
 		}
 	};

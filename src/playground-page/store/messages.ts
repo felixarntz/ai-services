@@ -35,6 +35,7 @@ import type {
 	AiPlaygroundMessageAdditionalData,
 	WordPressAttachment,
 } from '../types';
+import errorToString from '../../utils/error-to-string';
 
 const EMPTY_MESSAGE_ARRAY: AiPlaygroundMessage[] = [];
 
@@ -357,7 +358,7 @@ const formatNewContent = async (
 
 const formatErrorContent = ( error: unknown ) => {
 	return helpers.textToContent(
-		error instanceof Error ? error.message : String( error ),
+		errorToString( error ),
 		enums.ContentRole.MODEL
 	);
 };

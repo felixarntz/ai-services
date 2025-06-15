@@ -32,6 +32,8 @@ import type {
 	ChatbotMessage,
 	ResponseRendererProps,
 } from '../../types';
+import errorToString from '../../../utils/error-to-string';
+import logError from '../../../utils/log-error';
 
 const CHAT_ID = 'aisChatbotPrimary';
 const SERVICE_ARGS: AvailableServicesArgs = {
@@ -90,7 +92,7 @@ const getErrorChatResponse = ( error: unknown ): string => {
 		sprintf(
 			/* translators: %s: error message */
 			__( 'Here is the underlying error message: %s', 'ai-services' ),
-			error instanceof Error ? error.message : String( error )
+			errorToString( error )
 		)
 	);
 };
@@ -218,8 +220,7 @@ export default function ChatbotApp() {
 	useEffect( () => {
 		if ( ! hasChat && isVisible ) {
 			if ( service === null ) {
-				// eslint-disable-next-line no-console
-				console.error(
+				logError(
 					'No AI service found with the required capabilities!'
 				);
 			} else if ( service ) {

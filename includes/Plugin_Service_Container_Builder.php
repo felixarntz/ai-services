@@ -23,6 +23,8 @@ use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Depen
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Entities\Post_Repository;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
+use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Runner;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 use Vendor_NS\WP_Starter_Plugin_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
@@ -116,13 +118,21 @@ class Plugin_Service_Container_Builder {
 		$this->container['site_env']         = static function () {
 			return new Site_Env();
 		};
+		$this->container['network_env']      = static function () {
+			return new Network_Env();
+		};
+		$this->container['network_runner']   = static function ( $cont ) {
+			return new Network_Runner( $cont['network_env'] );
+		};
 		$this->container['plugin_installer'] = static function ( $cont ) {
-			return new Plugin_Installer(
+			$installer = new Plugin_Installer(
 				$cont['plugin_env'],
 				$cont['option_container']['wpsp_version'],
 				$cont['option_container']['wpsp_delete_data'],
 				$cont['option_container']['wpsp_options']
 			);
+			$installer->set_network_runner( $cont['network_runner'] );
+			return $installer;
 		};
 	}
 

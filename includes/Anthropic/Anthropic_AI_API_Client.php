@@ -37,7 +37,7 @@ class Anthropic_AI_API_Client extends Generic_AI_API_Client {
 	 * @param string              $default_api_version The default API version.
 	 * @param string              $api_name            The (human-readable) API name.
 	 * @param Request_Handler     $request_handler     The request handler instance.
-	 * @param Authentication|null $authentication      Optional. The authentication instance. Defaults to null.
+	 * @param Authentication|null $authentication      Optional. The authentication instance. Default null.
 	 */
 	public function __construct(
 		string $default_base_url,

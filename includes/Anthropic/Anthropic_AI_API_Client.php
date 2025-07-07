@@ -37,17 +37,20 @@ class Anthropic_AI_API_Client extends Generic_AI_API_Client {
 	 * @param string              $default_api_version The default API version.
 	 * @param string              $api_name            The (human-readable) API name.
 	 * @param Request_Handler     $request_handler     The request handler instance.
-	 * @param Authentication      $authentication      The authentication instance.
+	 * @param Authentication|null $authentication      Optional. The authentication instance. Defaults to null.
 	 */
 	public function __construct(
 		string $default_base_url,
 		string $default_api_version,
 		string $api_name,
 		Request_Handler $request_handler,
-		Authentication $authentication
+		?Authentication $authentication = null
 	) {
 		// Set custom header name for Anthropic API key authentication.
-		$authentication->set_header_name( 'x-api-key' );
+		if ( $authentication ) {
+			$authentication->set_header_name( 'x-api-key' );
+		}
+
 		parent::__construct( $default_base_url, $default_api_version, $api_name, $request_handler, $authentication );
 	}
 

@@ -100,7 +100,7 @@ final class Services_API {
 		Request_Handler $request_handler,
 		Container $container,
 		Key_Value_Repository $repository,
-		Option_Encrypter $option_encrypter = null
+		?Option_Encrypter $option_encrypter = null
 	) {
 		$this->current_user     = $current_user;
 		$this->request_handler  = $request_handler;

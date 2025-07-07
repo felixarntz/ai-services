@@ -58,7 +58,7 @@ final class Candidates_Stream_Processor {
 	 * @param callable|null $chunk_callback Optional. Callback that is called for each chunk of candidates.
 	 * @return Candidates The complete candidates instance.
 	 */
-	public function read_all( callable $chunk_callback = null ): Candidates {
+	public function read_all( ?callable $chunk_callback = null ): Candidates {
 		foreach ( $this->generator as $candidates ) {
 			$this->add_chunk( $candidates );
 			if ( null !== $chunk_callback ) {

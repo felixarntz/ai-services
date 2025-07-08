@@ -43,7 +43,7 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	 * @param Request_Handler  $request_handler Optional. The request handler instance to use for requests. Default is a
 	 *                                          new HTTP_With_Streams instance.
 	 */
-	public function __construct( Service_Metadata $metadata, Authentication $authentication, Request_Handler $request_handler = null ) {
+	public function __construct( Service_Metadata $metadata, Authentication $authentication, ?Request_Handler $request_handler = null ) {
 		$this->set_service_metadata( $metadata );
 		$this->set_api_client(
 			new Google_AI_API_Client(

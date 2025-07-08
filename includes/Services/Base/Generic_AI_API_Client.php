@@ -80,7 +80,7 @@ class Generic_AI_API_Client implements Generative_AI_API_Client {
 		string $default_api_version,
 		string $api_name,
 		Request_Handler $request_handler,
-		Authentication $authentication = null
+		?Authentication $authentication = null
 	) {
 		$this->default_base_url    = $default_base_url;
 		$this->default_api_version = $default_api_version;

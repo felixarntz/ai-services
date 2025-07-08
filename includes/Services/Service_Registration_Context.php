@@ -65,7 +65,7 @@ final class Service_Registration_Context {
 		string $slug,
 		Service_Metadata $metadata,
 		Request_Handler $request_handler,
-		Authentication $authentication = null
+		?Authentication $authentication = null
 	) {
 		$this->slug            = $slug;
 		$this->metadata        = $metadata;

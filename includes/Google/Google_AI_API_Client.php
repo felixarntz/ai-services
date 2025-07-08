@@ -36,7 +36,7 @@ class Google_AI_API_Client extends Generic_AI_API_Client {
 		string $default_api_version,
 		string $api_name,
 		Request_Handler $request_handler,
-		Authentication $authentication = null
+		?Authentication $authentication = null
 	) {
 		// Set custom header name for Google API key authentication.
 		if ( $authentication ) {

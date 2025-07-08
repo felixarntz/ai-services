@@ -169,6 +169,26 @@ class Plugin_Main implements With_Hooks {
 	 */
 	private function add_service_hooks(): void {
 		// Register options.
+		$this->load_options();
+
+		// Register scripts and styles.
+		add_action(
+			'init',
+			function () {
+				$this->container['plugin_script_style_loader']->register_scripts_and_styles();
+			}
+		);
+
+		// Register admin pages.
+		$this->load_admin_pages();
+	}
+
+	/**
+	 * Loads the plugin options.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function load_options(): void {
 		$option_registrar = new Option_Hook_Registrar( $this->container['option_registry'] );
 		$option_registrar->add_register_callback(
 			function ( $registry ) {
@@ -181,16 +201,14 @@ class Plugin_Main implements With_Hooks {
 				}
 			}
 		);
+	}
 
-		// Register scripts and styles.
-		add_action(
-			'init',
-			function () {
-				$this->container['plugin_script_style_loader']->register_scripts_and_styles();
-			}
-		);
-
-		// Register settings page.
+	/**
+	 * Loads the plugin admin pages.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function load_admin_pages(): void {
 		add_action(
 			'admin_menu',
 			function () {

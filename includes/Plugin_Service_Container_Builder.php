@@ -17,6 +17,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Dependenc
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Current_User;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Input;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Env;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Network_Runner;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Plugin_Env;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Service_Container;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Site_Env;
@@ -126,12 +127,17 @@ final class Plugin_Service_Container_Builder {
 		$this->container['network_env']      = static function () {
 			return new Network_Env();
 		};
+		$this->container['network_runner']   = static function ( $cont ) {
+			return new Network_Runner( $cont['network_env'] );
+		};
 		$this->container['plugin_installer'] = static function ( $cont ) {
-			return new Plugin_Installer(
+			$installer = new Plugin_Installer(
 				$cont['plugin_env'],
 				$cont['option_container']['ais_version'],
 				$cont['option_container']['ais_delete_data']
 			);
+			$installer->set_network_runner( $cont['network_runner'] );
+			return $installer;
 		};
 	}
 

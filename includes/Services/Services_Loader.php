@@ -186,7 +186,7 @@ final class Services_Loader implements With_Hooks {
 	}
 
 	/**
-	 * Loads the plugin's REST API routes..
+	 * Loads the plugin's REST API routes.
 	 *
 	 * @since 0.1.0
 	 */

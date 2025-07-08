@@ -16,7 +16,7 @@ import type { StoreConfig, Action, ThunkArgs } from '../utils/store-types';
 const PLUGIN_SETTINGS_PREFIX = 'ais_';
 const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';
 
-type Settings = Record< string, string | boolean >;
+type Settings = Record< string, unknown >;
 
 export enum ActionType {
 	Unknown = 'REDUX_UNKNOWN',
@@ -35,7 +35,7 @@ type SaveSettingsStartAction = Action< ActionType.SaveSettingsStart >;
 type SaveSettingsFinishAction = Action< ActionType.SaveSettingsFinish >;
 type SetSettingAction = Action<
 	ActionType.SetSetting,
-	{ setting: string; value: string | boolean }
+	{ setting: string; value: unknown }
 >;
 
 export type CombinedAction =
@@ -255,7 +255,7 @@ const actions = {
 	 * @param value   - The new value for the setting.
 	 * @returns Action creator.
 	 */
-	setSetting( setting: string, value: string | boolean ) {
+	setSetting( setting: string, value: unknown ) {
 		return ( { dispatch }: DispatcherArgs ) => {
 			dispatch( {
 				type: ActionType.SetSetting,
@@ -423,7 +423,9 @@ const selectors = {
 
 	getSetting: createRegistrySelector(
 		( select ) => ( _state: State, setting: string ) => {
-			const settings = select( STORE_NAME ).getSettings();
+			const settings = select( STORE_NAME ).getSettings() as
+				| Settings
+				| undefined;
 			if ( settings === undefined ) {
 				return undefined;
 			}
@@ -431,7 +433,7 @@ const selectors = {
 				logError( `Invalid setting ${ setting }.` );
 				return undefined;
 			}
-			return settings[ setting ];
+			return settings[ setting ] as unknown;
 		}
 	),
 
@@ -440,7 +442,11 @@ const selectors = {
 	},
 
 	getDeleteData: ( state: State ) => {
-		return selectors.getSetting( state, 'deleteData' );
+		const setting = selectors.getSetting( state, 'deleteData' );
+		if ( setting === undefined ) {
+			return undefined;
+		}
+		return setting as boolean;
 	},
 
 	isSettingModified: ( state: State, setting: string ) => {

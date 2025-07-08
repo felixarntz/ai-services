@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/felixarntz/wp-oop-plugin-lib.git",
-                "reference": "cd9b1bd97975650f76b8a01547d9d0307105ea79"
+                "reference": "1fdfe74746fef54fe33a1abde9b78ffa0c27436d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/cd9b1bd97975650f76b8a01547d9d0307105ea79",
-                "reference": "cd9b1bd97975650f76b8a01547d9d0307105ea79",
+                "url": "https://api.github.com/repos/felixarntz/wp-oop-plugin-lib/zipball/1fdfe74746fef54fe33a1abde9b78ffa0c27436d",
+                "reference": "1fdfe74746fef54fe33a1abde9b78ffa0c27436d",
                 "shasum": ""
             },
             "require": {
@@ -198,7 +198,7 @@
                 "issues": "https://github.com/felixarntz/wp-oop-plugin-lib/issues",
                 "source": "https://github.com/felixarntz/wp-oop-plugin-lib/tree/main"
             },
-            "time": "2025-07-05T21:30:30+00:00"
+            "time": "2025-07-08T21:33:08+00:00"
         }
     ],
     "packages-dev": [],

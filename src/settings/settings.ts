@@ -438,7 +438,14 @@ const selectors = {
 	),
 
 	getApiKey: ( state: State, service: string ) => {
-		return selectors.getSetting( state, `${ camelCase( service ) }ApiKey` );
+		const setting = selectors.getSetting(
+			state,
+			`${ camelCase( service ) }ApiKey`
+		);
+		if ( setting === undefined ) {
+			return undefined;
+		}
+		return setting as string;
 	},
 
 	getDeleteData: ( state: State ) => {

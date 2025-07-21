@@ -199,6 +199,25 @@ class Plugin_Main implements With_Hooks {
 	 */
 	private function add_service_hooks(): void {
 		// Register options.
+		$this->load_options();
+
+		// Load chatbot if needed.
+		add_action(
+			'init',
+			function () {
+				if ( $this->container['chatbot_loader']->can_load() ) {
+					$this->container['chatbot_loader']->load( $this->container['chatbot'] );
+				}
+			}
+		);
+	}
+
+	/**
+	 * Loads the plugin options.
+	 *
+	 * @since n.e.x.t
+	 */
+	private function load_options(): void {
 		$option_registrar = new Option_Hook_Registrar( $this->container['option_registry'] );
 		$option_registrar->add_register_callback(
 			function ( $registry ) {
@@ -208,16 +227,6 @@ class Plugin_Main implements With_Hooks {
 						$option->get_key(),
 						$option->get_registration_args()
 					);
-				}
-			}
-		);
-
-		// Load chatbot if needed.
-		add_action(
-			'init',
-			function () {
-				if ( $this->container['chatbot_loader']->can_load() ) {
-					$this->container['chatbot_loader']->load( $this->container['chatbot'] );
 				}
 			}
 		);

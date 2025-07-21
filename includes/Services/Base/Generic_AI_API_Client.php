@@ -80,7 +80,7 @@ class Generic_AI_API_Client implements Generative_AI_API_Client {
 		string $default_api_version,
 		string $api_name,
 		Request_Handler $request_handler,
-		Authentication $authentication = null
+		?Authentication $authentication = null
 	) {
 		$this->default_base_url    = $default_base_url;
 		$this->default_api_version = $default_api_version;
@@ -100,10 +100,16 @@ class Generic_AI_API_Client implements Generative_AI_API_Client {
 	 * @return Request The request instance.
 	 */
 	public function create_get_request( string $path, array $params, array $request_options = array() ): Request {
+		$request_url     = $this->get_request_url( $path, $request_options );
+		$request_options = $this->filter_request_options(
+			$this->add_default_options( $request_options ),
+			$request_url
+		);
+
 		$request = new Get_Request(
-			$this->get_request_url( $path, $request_options ),
+			$request_url,
 			$params,
-			$this->add_default_options( $request_options )
+			$request_options
 		);
 		$this->authenticate_request( $request );
 		return $request;
@@ -120,10 +126,16 @@ class Generic_AI_API_Client implements Generative_AI_API_Client {
 	 * @return Request The request instance.
 	 */
 	public function create_post_request( string $path, array $params, array $request_options = array() ): Request {
+		$request_url     = $this->get_request_url( $path, $request_options );
+		$request_options = $this->filter_request_options(
+			$this->add_default_options( $request_options ),
+			$request_url
+		);
+
 		$request = new JSON_Post_Request(
-			$this->get_request_url( $path, $request_options ),
+			$request_url,
 			$params,
-			$this->add_default_options( $request_options )
+			$request_options
 		);
 		$this->authenticate_request( $request );
 		return $request;
@@ -202,5 +214,37 @@ class Generic_AI_API_Client implements Generative_AI_API_Client {
 	 */
 	final protected function get_request_handler(): Request_Handler {
 		return $this->request_handler;
+	}
+
+	/**
+	 * Filters the request options, with awareness of the request URL.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $request_options The request options.
+	 * @param string               $request_url    The request URL.
+	 * @return array<string, mixed> The filtered request options.
+	 */
+	private function filter_request_options( array $request_options, string $request_url ): array {
+		if ( isset( $request_options['timeout'] ) ) {
+			$timeout = $request_options['timeout'];
+
+			/**
+			 * Filters the request timeout to use for an API request to an AI service.
+			 *
+			 * @since n.e.x.t
+			 *
+			 * @param int    $timeout     The request timeout in seconds.
+			 * @param string $request_url The request URL.
+			 */
+			$request_options['timeout'] = (int) apply_filters( 'ai_services_request_timeout', $timeout, $request_url );
+
+			// If the filtered timeout is invalid, use the original value.
+			if ( $request_options['timeout'] <= 0 ) {
+				$request_options['timeout'] = $timeout;
+			}
+		}
+
+		return $request_options;
 	}
 }

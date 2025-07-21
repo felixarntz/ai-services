@@ -37,12 +37,12 @@ final class Data_Encryption {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param string|null $key  Optional. Key to use for encryption. If not passed, the default key determined by
-	 *                          constants will be used.
-	 * @param string|null $salt Optional. Salt to use for encryption. If not passed, the default salt determined by
-	 *                          constants will be used.
+	 * @param ?string $key  Optional. Key to use for encryption. If not passed, the default key determined by constants
+	 *                      will be used.
+	 * @param ?string $salt Optional. Salt to use for encryption. If not passed, the default salt determined by
+	 *                      constants will be used.
 	 */
-	public function __construct( string $key = null, string $salt = null ) {
+	public function __construct( ?string $key = null, ?string $salt = null ) {
 		$this->key  = $key ?? $this->get_default_key();
 		$this->salt = $salt ?? $this->get_default_salt();
 	}

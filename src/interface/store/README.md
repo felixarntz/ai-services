@@ -17,6 +17,7 @@ The primary purpose of the code within this directory is to:
 ## Architecture
 
 The main store is initialized in `src/interface/store/index.ts`, which combines several smaller store configurations:
+
 - `src/interface/store/sidebar.ts`: Manages the state of sidebars, including which sidebar is active and the default sidebar.
 - `src/interface/store/modal.ts`: Handles the state of modals, allowing them to be opened, closed, and toggled.
 - `src/interface/store/panel.ts`: Manages the active state of collapsible panels within the interface.

@@ -13,6 +13,8 @@ use Felix_Arntz\AI_Services\Anthropic\Anthropic_AI_Text_Generation_Model;
 use Felix_Arntz\AI_Services\Google\Google_AI_Image_Generation_Model;
 use Felix_Arntz\AI_Services\Google\Google_AI_Service;
 use Felix_Arntz\AI_Services\Google\Google_AI_Text_Generation_Model;
+use Felix_Arntz\AI_Services\Mistral\Mistral_AI_Service;
+use Felix_Arntz\AI_Services\Mistral\Mistral_AI_Text_Generation_Model;
 use Felix_Arntz\AI_Services\Mock\Mock_AI_Image_Generation_Model;
 use Felix_Arntz\AI_Services\Mock\Mock_AI_Service;
 use Felix_Arntz\AI_Services\Mock\Mock_AI_Text_Generation_Model;
@@ -321,6 +323,25 @@ class Plugin_Main implements With_Hooks {
 						Google_AI_Text_Generation_Model::class,
 						Google_AI_Image_Generation_Model::class,
 					)
+				),
+				'allow_override'  => false,
+			)
+		);
+		$this->services_api->register_service(
+			'mistral',
+			static function ( Service_Registration_Context $context ) {
+				return new Mistral_AI_Service(
+					$context->get_metadata(),
+					$context->get_authentication(),
+					$context->get_request_handler()
+				);
+			},
+			array(
+				'name'            => 'Mistral',
+				'credentials_url' => 'https://admin.mistral.ai/organization/api-keys',
+				'type'            => Service_Type::CLOUD,
+				'capabilities'    => AI_Capabilities::get_model_classes_capabilities(
+					array( Mistral_AI_Text_Generation_Model::class )
 				),
 				'allow_override'  => false,
 			)

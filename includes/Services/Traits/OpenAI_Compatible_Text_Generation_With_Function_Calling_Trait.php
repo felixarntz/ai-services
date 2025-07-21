@@ -95,7 +95,10 @@ trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	 * @return bool True if the tool call was successfully prepared, false otherwise.
 	 */
 	protected function prepare_response_message_tool_call( Parts $parts, array $tool_call_data ): bool {
-		if ( ! isset( $tool_call_data['type'] ) || 'function' !== $tool_call_data['type'] || ! isset( $tool_call_data['function'] ) ) {
+		// Not all OpenAI compatible APIs include a 'type' key, so we only check its value if it is set.
+		if (
+			( isset( $tool_call_data['type'] ) && 'function' !== $tool_call_data['type'] ) ||
+			! isset( $tool_call_data['function'] ) ) {
 			return false;
 		}
 

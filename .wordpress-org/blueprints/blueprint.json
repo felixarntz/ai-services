@@ -1,5 +1,5 @@
 {
-    "landingPage": "/wp-admin/admin.php?page=ais_playground",
+    "landingPage": "/wp-admin/options-general.php?page=ais_services",
     "features": {
       "networking": true
     },

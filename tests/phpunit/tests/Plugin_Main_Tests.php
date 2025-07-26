@@ -8,10 +8,10 @@
 namespace Felix_Arntz\AI_Services\PHPUnit\Tests;
 
 use Felix_Arntz\AI_Services\Chatbot\Chatbot_Loader;
-use Felix_Arntz\AI_Services\Installation\Plugin_Installer;
 use Felix_Arntz\AI_Services\PHPUnit\Includes\Test_Case;
 use Felix_Arntz\AI_Services\Plugin_Main;
 use Felix_Arntz\AI_Services\Services\Services_API_Instance;
+use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Installation\Contracts\Installer;
 use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\Options\Option_Container;
 
 /**
@@ -61,7 +61,7 @@ class Plugin_Main_Tests extends Test_Case {
 	 * @covers Plugin_Main::maybe_install_data
 	 */
 	public function test_maybe_install_data_on_init_without_capability() {
-		$installer_mock = $this->createBasicMock( Plugin_Installer::class );
+		$installer_mock = $this->createBasicMock( Installer::class );
 
 		$container = $this->getInaccessibleProperty( $this->plugin_main, 'container' );
 		$container->set(
@@ -82,7 +82,7 @@ class Plugin_Main_Tests extends Test_Case {
 	 * @covers Plugin_Main::maybe_install_data
 	 */
 	public function test_maybe_install_data_on_init_with_capability() {
-		$installer_mock = $this->createBasicMock( Plugin_Installer::class );
+		$installer_mock = $this->createBasicMock( Installer::class );
 
 		$container = $this->getInaccessibleProperty( $this->plugin_main, 'container' );
 		$container->set(
@@ -109,7 +109,7 @@ class Plugin_Main_Tests extends Test_Case {
 	 * @covers Plugin_Main::maybe_install_data
 	 */
 	public function test_maybe_install_data_on_activation_hook_single() {
-		$installer_mock = $this->createBasicMock( Plugin_Installer::class );
+		$installer_mock = $this->createBasicMock( Installer::class );
 
 		$container = $this->getInaccessibleProperty( $this->plugin_main, 'container' );
 		$container->set(
@@ -130,7 +130,7 @@ class Plugin_Main_Tests extends Test_Case {
 	 * @covers Plugin_Main::maybe_install_data
 	 */
 	public function test_maybe_install_data_on_activation_hook_network_wide() {
-		$installer_mock = $this->createBasicMock( Plugin_Installer::class );
+		$installer_mock = $this->createBasicMock( Installer::class );
 
 		$container = $this->getInaccessibleProperty( $this->plugin_main, 'container' );
 		$container->set(

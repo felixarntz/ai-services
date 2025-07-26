@@ -78,6 +78,7 @@ export async function getBrowserServiceData(): Promise< ServiceResource > {
  * @since 0.1.0
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
  * @since 0.6.0 Checks for newer `LanguageModel` property.
+ * @since n.e.x.t Supports `CHAT_HISTORY` capability.
  *
  * @returns The list of AI capabilities.
  */
@@ -100,6 +101,7 @@ async function getBrowserAiCapabilities(): Promise< AiCapability[] > {
 		const browserAiAvailability = await llm.availability();
 		if ( browserAiAvailability === 'available' ) {
 			capabilities.push( enums.AiCapability.TEXT_GENERATION );
+			capabilities.push( enums.AiCapability.CHAT_HISTORY );
 		}
 	}
 

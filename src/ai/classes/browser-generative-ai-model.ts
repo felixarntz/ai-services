@@ -37,14 +37,20 @@ interface LanguageModelCreateCoreOptions {
 	temperature?: number;
 }
 interface LanguageModelCreateOptions extends LanguageModelCreateCoreOptions {
-	systemPrompt?: string;
-	initialPrompts?: LanguageModelMessage[];
+	initialPrompts?:
+		| [ LanguageModelSystemMessage, ...LanguageModelMessage[] ]
+		| LanguageModelMessage[];
 }
 interface LanguageModelMessage {
 	role: LanguageModelMessageRole;
 	content: string;
 }
+interface LanguageModelSystemMessage {
+	role: LanguageModelSystemMessageRole;
+	content: string;
+}
 type LanguageModelMessageRole = 'user' | 'assistant';
+type LanguageModelSystemMessageRole = 'system';
 interface LanguageModel {
 	prompt: (
 		input: LanguageModelPrompt,
@@ -74,7 +80,7 @@ interface LanguageModelPromptOptions {
  */
 function prepareContentForBrowser(
 	content: string | Part[] | Content | Content[]
-): string {
+): LanguageModelPrompt {
 	if ( typeof content === 'string' ) {
 		return content;
 	}
@@ -86,9 +92,20 @@ function prepareContentForBrowser(
 			'parts' in content[ 0 ] &&
 			content.length > 1
 		) {
-			throw new Error(
-				'The browser service does not support history at this time.'
-			);
+			return ( content as Content[] ).map( ( item ) => {
+				const text = item.parts
+					.map( ( part ) => ( 'text' in part ? part.text : '' ) )
+					.filter( Boolean )
+					.join( '\n' );
+
+				return {
+					role:
+						item.role === enums.ContentRole.USER
+							? 'user'
+							: 'assistant',
+					content: text,
+				};
+			} );
 		}
 
 		let parts: Part[];
@@ -145,15 +162,20 @@ async function createBrowserLlm(
 		}
 	}
 	if ( modelParams.systemInstruction ) {
+		const systemPrompt: LanguageModelSystemMessage = {
+			role: 'system',
+			content: '',
+		};
 		if ( typeof modelParams.systemInstruction === 'string' ) {
-			browserParams.systemPrompt = modelParams.systemInstruction;
+			systemPrompt.content = modelParams.systemInstruction;
 		} else if (
 			modelParams.systemInstruction.parts.length &&
 			'text' in modelParams.systemInstruction.parts[ 0 ]
 		) {
-			browserParams.systemPrompt =
+			systemPrompt.content =
 				modelParams.systemInstruction.parts[ 0 ].text;
 		}
+		browserParams.initialPrompts = [ systemPrompt ];
 	}
 
 	let llm: LanguageModelFactory | undefined;

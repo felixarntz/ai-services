@@ -12,7 +12,7 @@
 	"homepage": "https://the-plugin.com",
 	"devDependencies": {
 		"@wordpress/dependency-extraction-webpack-plugin": "^6.22.0",
-		"@wordpress/env": "^10.22.0",
+		"@wordpress/env": "^10.27.0",
 		"@wordpress/eslint-plugin": "^22.8.0",
 		"@wordpress/scripts": "^30.15.0",
 		"eslint-import-resolver-node": "^0.3.0",

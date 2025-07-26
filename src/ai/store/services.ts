@@ -177,9 +177,16 @@ const resolvers = {
 	 */
 	getServices() {
 		return async ( { dispatch }: DispatcherArgs ) => {
-			const services: ServiceResource[] = await apiFetch( {
-				path: '/ai-services/v1/services',
-			} );
+			// Only load client-side AI services if API requests are skipped.
+			let services: ServiceResource[] = [];
+			if (
+				! ( 'AI_SERVICES_SKIP_API_REQUEST' in window ) ||
+				! window.AI_SERVICES_SKIP_API_REQUEST
+			) {
+				services = await apiFetch( {
+					path: '/ai-services/v1/services',
+				} );
+			}
 			services.push( await getBrowserServiceData() );
 			dispatch.receiveServices( services );
 		};

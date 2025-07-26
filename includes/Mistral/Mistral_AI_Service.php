@@ -95,6 +95,7 @@ class Mistral_AI_Service extends Abstract_AI_Service implements With_API_Client 
 				$models_data[ $model_slug ] = Model_Metadata::from_array(
 					array_filter(
 						array(
+
 							/*
 							 * While the model data includes a 'name' key, it is actually just the model slug again.
 							 * Therefore we ignore it here.

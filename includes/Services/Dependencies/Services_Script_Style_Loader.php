@@ -62,6 +62,8 @@ class Services_Script_Style_Loader {
 	 * Registers the plugin's available scripts and styles.
 	 *
 	 * @since 0.1.0
+	 *
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	public function register_scripts_and_styles(): void {
 		/**

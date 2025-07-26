@@ -31,7 +31,7 @@ final class AI_Capabilities {
 	/**
 	 * Gets the combined AI capabilities that the given model classes support.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string[] $model_classes The model class names.
 	 * @return string[] The AI capabilities that the model classes support, based on the interfaces they implement.
@@ -132,7 +132,7 @@ final class AI_Capabilities {
 	 *
 	 * @since 0.1.0
 	 * @since 0.5.0 Now expects an array of model data shapes, mapped by model slug.
-	 * @since n.e.x.t Now expects a map of model metadata objects.
+	 * @since 0.7.0 Now expects a map of model metadata objects.
 	 *
 	 * @param array<string, Model_Metadata> $models       Metadata for each model, mapped by model slug.
 	 * @param string[]                      $capabilities The required capabilities that the models should  satisfy.
@@ -161,7 +161,7 @@ final class AI_Capabilities {
 	/**
 	 * Gets the model class name from the given model class names that satisfies the given capabilities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string[] $model_classes The model class names.
 	 * @param string[] $capabilities  The required capabilities that the models should satisfy.

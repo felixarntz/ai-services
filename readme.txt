@@ -6,7 +6,7 @@ Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
 Tested up to: 6.8
-Stable tag:   0.6.5
+Stable tag:   0.7.0
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Tags:         ai, text generation, image generation, function calling, multimodal
@@ -295,6 +295,55 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 4. AI Playground code modal showing PHP and JavaScript code for the current prompt and configuration
 
 == Changelog ==
+
+= 0.7.0 =
+
+**Features:**
+
+* Add support for Mistral AI with text generation, multimodal input, and function calling. ([5e6d4fe](https://github.com/felixarntz/ai-services/commit/5e6d4fea49ec5ba807f265b259aaee4a882c4220))
+* Add support for Perplexity AI (Sonar models) with text generation, multimodal input, and web search. ([b793955](https://github.com/felixarntz/ai-services/commit/b793955330796615ba4f6b0bbb19d93ebcd6f9d1))
+* Add support for xAI (Grok models) with text generation, multimodal input, function calling, and web search, as well as image generation. ([8407c9c](https://github.com/felixarntz/ai-services/commit/8407c9c2399f75777a75df07bf89614eae72305f))
+* Add support for text-to-speech, via new TEXT_TO_SPEECH AI capability and necessary infrastructure in PHP and JavaScript. Props [sethrubenstein](https://github.com/sethrubenstein). ([9d3652e](https://github.com/felixarntz/ai-services/commit/9d3652eee9e31aece4ef870fc4363423907eaea9), [#31](https://github.com/felixarntz/ai-services/issues/31))
+* Add support for text-to-speech to OpenAI service and its applicable models. ([f73341a](https://github.com/felixarntz/ai-services/commit/f73341a5deacaf65635438b0ca4d11775f8e5191))
+* Add support for multimodal audio output (speech generation) for applicable Google and OpenAI models. ([28651c2](https://github.com/felixarntz/ai-services/commit/28651c2a7ea298869680d3c9e6dbe04a66778608))
+* Introduce `ai_services_skip_api_request` filter to effectively enable client-side only mode using the browser built-in models, e.g. for unauthenticated visitors. ([2224db1](https://github.com/felixarntz/ai-services/commit/2224db122f8526a6d56b227b4bd2df5316c5511c))
+
+**Enhancements:**
+
+* Support chat history for built-in browser model, and update to latest API for providing system instruction. ([f522a30](https://github.com/felixarntz/ai-services/commit/f522a30ebbe7eef9aee9f0d1e19eebae7ccafd5e))
+* Allow using text-to-speech capabilities in the AI Playground. ([daefd02](https://github.com/felixarntz/ai-services/commit/daefd0267e687b54c18f50b37065be66db94ce41))
+* Allow selecting which output modalities to request in the AI Playground (for models which support multimodal output). ([3997520](https://github.com/felixarntz/ai-services/commit/39975200bf1edc18a541bc0eb8ce4c51692e91a1))
+* Implement new base classes and traits for OpenAI compatible generative models, to drastically reduce boilerplate for supporting different services. ([9515864](https://github.com/felixarntz/ai-services/commit/951586481493f322ffdbaf3b7831f468bd11f246))
+* Add `ai_services_request_timeout` filter to centrally customize AI API request timeout. Props [EvanHerman](https://github.com/EvanHerman). ([7a9c302](https://github.com/felixarntz/ai-services/commit/7a9c30272607e3a0752f2e56bf063d1c4b62b6e9), [#38](https://github.com/felixarntz/ai-services/issues/38))
+* Add WordPress Playground `blueprint.json` for plugin preview. Props [fellyph](https://github.com/fellyph). ([#42](https://github.com/felixarntz/ai-services/pull/42))
+* Enhance settings UI by better visual separation of fields through additional spacing. ([e0434a5](https://github.com/felixarntz/ai-services/commit/e0434a549526fff31095bb42a67eb2d2f5467635))
+* Show Edge built-in AI model name in AI Playground for browser built-in AI service when using Edge. Props [sethrubenstein](https://github.com/sethrubenstein). ([48b8807](https://github.com/felixarntz/ai-services/commit/48b8807dfd129e66dffa39936982d68893a54aaf), [#35](https://github.com/felixarntz/ai-services/issues/35))
+* Implement mock AI service for testing. Props [swissspidy](https://github.com/swissspidy). ([4d3f236](https://github.com/felixarntz/ai-services/commit/4d3f236e8de4cbe34c01eae1b2256fb9a0f8ff66), [77e4f96](https://github.com/felixarntz/ai-services/commit/77e4f96c2cb65bfd8cf8baa4a0b3436fd88bd8b2), [#32](https://github.com/felixarntz/ai-services/issues/32))
+* Improve system instruction for experimental built-in chatbot. ([135f1a9](https://github.com/felixarntz/ai-services/commit/135f1a98c14891d873198fdef9465ca6b58d137f), [6150a80](https://github.com/felixarntz/ai-services/commit/6150a8015eeead1b4e9d9fb2aed809102ee0c88b))
+* Migrate AI Playground code (store and components) to TypeScript. ([2c936b4](https://github.com/felixarntz/ai-services/commit/2c936b4badf04bc2ab9395c9cd68cc3b98ab1e50))
+* Migrate experimental built-in chatbot code to TypeScript. ([924bb59](https://github.com/felixarntz/ai-services/commit/924bb59f0517f7b782f0c0ca2becf93d6f6a57fd))
+* Implement new `Modality` enum in PHP and JavaScript. ([51169f3](https://github.com/felixarntz/ai-services/commit/51169f394f7985b65c914bb634ee16dcec83fb23))
+* Improve settings store implementation for stability and flexibility. ([b7ec1c5](https://github.com/felixarntz/ai-services/commit/b7ec1c5cd19dd06c59e9a7f82c93b8d1c94c225a))
+* Enhance API error reporting in API client trait. ([9232c60](https://github.com/felixarntz/ai-services/commit/9232c600672cbf93272b9087f4b5c56ef519529f))
+* Use `logError` utility instead of `console.error` in ai store and settings store. ([03bacf6](https://github.com/felixarntz/ai-services/commit/03bacf6a6c88ea2003d310232ce179bad0beefa9))
+* Implement `errorToString` utility function to improve error handling through client-side UI. ([ae5ad8b](https://github.com/felixarntz/ai-services/commit/ae5ad8b158515c35f1d147cce5105189b222f805))
+* Implement API client helper method for API scoped bad request exceptions. ([6f66fb0](https://github.com/felixarntz/ai-services/commit/6f66fb040ec93bfacfa8e3bdf482fa5068349a09))
+
+**Bug Fixes:**
+
+* Fix bug where some Google models could be missing from the API response and therefore seem to be unavailable. ([75b8ce2](https://github.com/felixarntz/ai-services/commit/75b8ce21a5d719118b68bcca9794655aa8c6077b))
+* Fix OpenAI API compatible models to include reasoning output, also resolving potential streaming errors. ([7fd69c9](https://github.com/felixarntz/ai-services/commit/7fd69c9bc8ee8c1a4dc06e973f2c76bcd3310e52))
+* Fix service registration handling to only set up authentication for CLOUD services. ([a2ef6b0](https://github.com/felixarntz/ai-services/commit/a2ef6b026d303a36f25d67136bb22b9ca86df3ce))
+* Fix `getApiKey` selector return type and `ApiKeyControl` props. ([29b416a](https://github.com/felixarntz/ai-services/commit/29b416a4a683864a79143ce669506772dcc1159e))
+* Fix PHP 8.4 deprecated implicit nullable parameters and use constant for Anthropic API version. Props [JosephGabito](https://github.com/JosephGabito). ([#40](https://github.com/felixarntz/ai-services/pull/40), [06571b7](https://github.com/felixarntz/ai-services/commit/06571b7fc1b035fe3bd122c1cafb4524314d6b06))
+* Fix AI API image generation request error handling in JS. ([387d42a](https://github.com/felixarntz/ai-services/commit/387d42a374739bd076f4b775ecbb78ad68059085))
+* Fix typo in `Text_Generation_Config` parameter description. ([52956e1](https://github.com/felixarntz/ai-services/commit/52956e1fca845d1d5586aa2479ee7acf4e679ddf))
+* Fix minor code flaw with incorrect array size. ([4bc9e1b](https://github.com/felixarntz/ai-services/commit/4bc9e1bf55d201a268bfe7150b113b78164d3e94))
+
+**Documentation:**
+
+* Document how to transform text to speech in PHP and JavaScript. ([515e696](https://github.com/felixarntz/ai-services/commit/515e69698fc6d5e137832e6a85940ddc23b4b4f7))
+* Document TypeScript code (for human and LLM consumption). ([6685047](https://github.com/felixarntz/ai-services/commit/66850478ab5b7bc9e80e8a6fc804506e3456d3b2))
 
 = 0.6.5 =
 

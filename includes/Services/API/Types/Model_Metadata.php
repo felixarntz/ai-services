@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -16,14 +16,14 @@ use InvalidArgumentException;
 /**
  * Value class representing metadata about a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 final class Model_Metadata implements Arrayable, With_JSON_Schema {
 
 	/**
 	 * The model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $slug;
@@ -31,7 +31,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * The model name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $name;
@@ -39,7 +39,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * List of AI capabilities supported by the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string[]
 	 */
 	private $capabilities;
@@ -47,7 +47,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $args {
 	 *     The arguments for the model metadata.
@@ -71,7 +71,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the model slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The model slug.
 	 */
@@ -82,7 +82,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the model name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The model name.
 	 */
@@ -93,7 +93,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the list of AI capabilities supported by the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string[] List of AI capabilities supported by the model.
 	 */
@@ -104,7 +104,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The array representation.
 	 */
@@ -119,7 +119,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Creates a Model_Metadata instance from an array of model metadata arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $args The model metadata arguments.
 	 * @return Model_Metadata The Model_Metadata instance.
@@ -131,7 +131,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Parses the model metadata arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $args The model metadata arguments.
 	 * @return array<string, mixed> The parsed model metadata arguments.
@@ -168,7 +168,7 @@ final class Model_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the JSON schema for the model metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\Generation_Config
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\C
 /**
  * Interface for a class representing configuration options for a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 interface Generation_Config extends Arrayable, With_JSON_Schema {
 
 	/**
 	 * Returns the value for the given supported argument.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string $name The argument name.
 	 * @return mixed The argument value, or its default value if not set.
@@ -32,7 +32,7 @@ interface Generation_Config extends Arrayable, With_JSON_Schema {
 	 *
 	 * Only includes arguments that have an explicit value set, i.e. not defaults.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The arguments.
 	 */
@@ -41,7 +41,7 @@ interface Generation_Config extends Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the additional arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The additional arguments.
 	 */

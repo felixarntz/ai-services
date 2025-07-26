@@ -221,7 +221,7 @@ class Plugin_Main implements With_Hooks {
 	/**
 	 * Loads the plugin options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 */
 	private function load_options(): void {
 		$option_registrar = new Option_Hook_Registrar( $this->container['option_registry'] );
@@ -418,7 +418,7 @@ class Plugin_Main implements With_Hooks {
 	 * Since the mock AI service is purely for testing, it is opt-in. The registration happens on 'plugins_loaded', to
 	 * allow other plugins to decide whether to opt in via the {@see 'ai_services_register_mock_service'} filter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 */
 	private function maybe_register_mock_service(): void {
 		add_action(
@@ -432,7 +432,7 @@ class Plugin_Main implements With_Hooks {
 				 *
 				 * This serves no real purpose on a production site and is purely intended for testing.
 				 *
-				 * @since n.e.x.t
+				 * @since 0.7.0
 				 *
 				 * @param bool $register_mock_service Whether to register the mock AI service.
 				 */

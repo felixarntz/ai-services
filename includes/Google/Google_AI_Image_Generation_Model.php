@@ -228,7 +228,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	/**
 	 * Gets the content transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The content transformers.
 	 */
@@ -244,7 +244,7 @@ class Google_AI_Image_Generation_Model extends Abstract_AI_Model implements With
 	 * Gets the generation configuration transformers.
 	 *
 	 * @since 0.5.0
-	 * @since n.e.x.t Changed to non-static.
+	 * @since 0.7.0 Changed to non-static.
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

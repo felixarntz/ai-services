@@ -72,7 +72,7 @@ class Services_Script_Style_Loader {
 		 * This effectively enables a "client-side only" mode for the AI Services plugin,
 		 * where only client-side models on the user's device are used.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.7.0
 		 *
 		 * @param bool $skip_api_request Whether to skip API requests for all AI services.
 		 *                               By default, this is true if the user is not logged in.

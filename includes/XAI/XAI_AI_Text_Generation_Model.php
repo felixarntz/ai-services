@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\XAI\XAI_AI_Text_Generation_Model
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -23,7 +23,7 @@ use InvalidArgumentException;
 /**
  * Class representing an xAI text generation AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class XAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generation_Model implements With_Function_Calling, With_Multimodal_Input, With_Web_Search {
 	use OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
@@ -34,7 +34,7 @@ class XAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generation_
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param Model_Metadata           $metadata        The model metadata.
@@ -55,7 +55,7 @@ class XAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generation_
 	/**
 	 * Prepares the API request parameters for generating text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating text content.
@@ -79,7 +79,7 @@ class XAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generation_
 	/**
 	 * Prepares a single tool for the API request, amending the provided parameters as needed.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $params The parameters to prepare the tools for. Passed by reference.
 	 * @param Tool                 $tool   The tool to prepare.

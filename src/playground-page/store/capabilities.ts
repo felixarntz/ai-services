@@ -194,7 +194,7 @@ const actions = {
 	/**
 	 * Receives available modalities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param modalities - Modalities, as array of objects with `identifier` and `label` properties.
 	 * @returns Action creator.
@@ -315,7 +315,7 @@ const resolvers = {
 	/**
 	 * Loads modalities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @returns Action creator.
 	 */

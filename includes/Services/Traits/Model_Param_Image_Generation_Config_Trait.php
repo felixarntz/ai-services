@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\Model_Param_Image_Generation_Config_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model that uses `Image_Generation_Config`.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait Model_Param_Image_Generation_Config_Trait {
 
 	/**
 	 * The image generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Image_Generation_Config|null
 	 */
 	private $image_generation_config;
@@ -29,7 +29,7 @@ trait Model_Param_Image_Generation_Config_Trait {
 	/**
 	 * Gets the image generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Image_Generation_Config|null The image generation configuration, or null if not set.
 	 */
@@ -40,7 +40,7 @@ trait Model_Param_Image_Generation_Config_Trait {
 	/**
 	 * Sets the image generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Image_Generation_Config $image_generation_config The image generation configuration.
 	 */
@@ -51,7 +51,7 @@ trait Model_Param_Image_Generation_Config_Trait {
 	/**
 	 * Sets the image generation configuration if provided in the `generationConfig` model parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *

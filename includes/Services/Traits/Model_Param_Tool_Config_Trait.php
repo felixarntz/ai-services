@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\Model_Param_Tool_Config_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model that uses `Tool_Config`.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait Model_Param_Tool_Config_Trait {
 
 	/**
 	 * The tool configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Tool_Config|null
 	 */
 	private $tool_config;
@@ -29,7 +29,7 @@ trait Model_Param_Tool_Config_Trait {
 	/**
 	 * Gets the tool configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Tool_Config|null The tool configuration, or null if not set.
 	 */
@@ -40,7 +40,7 @@ trait Model_Param_Tool_Config_Trait {
 	/**
 	 * Sets the tool configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Tool_Config $tool_config The tool configuration.
 	 */
@@ -51,7 +51,7 @@ trait Model_Param_Tool_Config_Trait {
 	/**
 	 * Sets the tool configuration if provided in the `toolConfig` model parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *

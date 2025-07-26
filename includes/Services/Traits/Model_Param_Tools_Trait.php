@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\Model_Param_Tools_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model that uses `Tools`.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait Model_Param_Tools_Trait {
 
 	/**
 	 * The tools instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Tools|null
 	 */
 	private $tools;
@@ -29,7 +29,7 @@ trait Model_Param_Tools_Trait {
 	/**
 	 * Gets the tools instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Tools|null The tools instance, or null if not set.
 	 */
@@ -40,7 +40,7 @@ trait Model_Param_Tools_Trait {
 	/**
 	 * Sets the tools instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Tools $tools The tools instance.
 	 */
@@ -51,7 +51,7 @@ trait Model_Param_Tools_Trait {
 	/**
 	 * Sets the tools instance if provided in the `tools` model parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *

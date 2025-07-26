@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -21,7 +21,7 @@ use InvalidArgumentException;
 /**
  * Trait for an OpenAI compatible text generation model which implements function calling.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	use Model_Param_Tool_Config_Trait;
@@ -30,7 +30,7 @@ trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	/**
 	 * Prepares the API request parameters for generating text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating text content.
@@ -61,7 +61,7 @@ trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	/**
 	 * Transforms a given candidate from the API response into a Parts instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $candidate_data The API response candidate data.
 	 * @return Parts The Parts instance.
@@ -88,7 +88,7 @@ trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	/**
 	 * Prepares a given tool call from the response message, amending the provided Parts instance as needed.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Parts                $parts          The Parts instance to amend.
 	 * @param array<string, mixed> $tool_call_data The tool call data from the response message.
@@ -116,7 +116,7 @@ trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	/**
 	 * Prepares a single tool for the API request, amending the provided parameters as needed.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $params The parameters to prepare the tools for. Passed by reference.
 	 * @param Tool                 $tool   The tool to prepare.
@@ -153,7 +153,7 @@ trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	/**
 	 * Prepares the API request tool choice parameter for the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Tool_Config $tool_config The tool config to prepare the parameter with.
 	 * @return array<string, mixed> The tool config parameter value.
@@ -179,7 +179,7 @@ trait OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
 	/**
 	 * Gets the content transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The content transformers.
 	 *

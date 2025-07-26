@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Mock\Mock_AI_Service
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -19,14 +19,14 @@ use Felix_Arntz\AI_Services\Services\Util\AI_Capabilities;
 /**
  * Class for a mock AI service.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class Mock_AI_Service extends Abstract_AI_Service {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Service_Metadata $metadata The service metadata.
 	 */
@@ -37,7 +37,7 @@ class Mock_AI_Service extends Abstract_AI_Service {
 	/**
 	 * Lists the available generative model slugs and their metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.
@@ -89,7 +89,7 @@ class Mock_AI_Service extends Abstract_AI_Service {
 	/**
 	 * Creates a new model instance for the provided model metadata and parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Model_Metadata       $model_metadata  The model metadata.
 	 * @param array<string, mixed> $model_params    Model parameters. See {@see Generative_AI_Service::get_model()} for

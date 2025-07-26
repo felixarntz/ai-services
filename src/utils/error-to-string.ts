@@ -1,7 +1,7 @@
 /**
  * Transforms an error object into a user-facing error message.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  *
  * @param error - The error to transform.
  * @returns The error message as a string.

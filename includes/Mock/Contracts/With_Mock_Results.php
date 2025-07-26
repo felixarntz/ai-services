@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Mock\Contracts\With_Mock_Results
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use Felix_Arntz\AI_Services\Services\API\Types\Content;
 /**
  * Interface for a mock model class that can receive expected results.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 interface With_Mock_Results {
 
 	/**
 	 * Sets the mock content to expect from subsequent AI requests, or a request satisfying certain criteria.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string|Content|Candidates|callable $content The mock content to expect for any subsequent AI requests. A
 	 *                                                    callback can be provided alternatively to a concrete result,

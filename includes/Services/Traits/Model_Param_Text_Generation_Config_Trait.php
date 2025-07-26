@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\Model_Param_Text_Generation_Config_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model that uses `Text_Generation_Config`.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait Model_Param_Text_Generation_Config_Trait {
 
 	/**
 	 * The text generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Text_Generation_Config|null
 	 */
 	private $text_generation_config;
@@ -29,7 +29,7 @@ trait Model_Param_Text_Generation_Config_Trait {
 	/**
 	 * Gets the text generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Text_Generation_Config|null The text generation configuration, or null if not set.
 	 */
@@ -40,7 +40,7 @@ trait Model_Param_Text_Generation_Config_Trait {
 	/**
 	 * Sets the text generation configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Text_Generation_Config $text_generation_config The text generation configuration.
 	 */
@@ -51,7 +51,7 @@ trait Model_Param_Text_Generation_Config_Trait {
 	/**
 	 * Sets the text generation configuration if provided in the `generationConfig` model parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *

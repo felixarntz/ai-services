@@ -51,7 +51,7 @@ final class Tools implements Collection, Arrayable, With_JSON_Schema {
 	/**
 	 * Adds a web search tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string[] $allowed_domains    Optional. The allowed domains. Default empty array.
 	 * @param string[] $disallowed_domains Optional. The disallowed domains. Default empty array.

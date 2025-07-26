@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Text_To_Speech_Config
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use Felix_Arntz\AI_Services\Services\Base\Abstract_Generation_Config;
 /**
  * Class representing text-to-speech configuration options for a generative AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class Text_To_Speech_Config extends Abstract_Generation_Config {
 
 	/**
 	 * Returns the voice identifier.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The voice identifier, or empty string if not set.
 	 */
@@ -31,7 +31,7 @@ class Text_To_Speech_Config extends Abstract_Generation_Config {
 	/**
 	 * Returns the response MIME type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The response MIME type, or empty string if not set.
 	 */
@@ -42,7 +42,7 @@ class Text_To_Speech_Config extends Abstract_Generation_Config {
 	/**
 	 * Gets the definition for the supported arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The supported arguments definition.
 	 */
@@ -54,7 +54,7 @@ class Text_To_Speech_Config extends Abstract_Generation_Config {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

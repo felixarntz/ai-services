@@ -75,7 +75,7 @@ export default class GenerativeAiModel {
 	/**
 	 * Gets the model metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @returns Model metadata.
 	 */
@@ -236,7 +236,7 @@ export default class GenerativeAiModel {
 	/**
 	 * Transforms text to speech using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param content - The content to transform to speech.
 	 * @returns Model response candidates with the generated speech.

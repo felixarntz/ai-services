@@ -29,7 +29,7 @@ interface Generative_AI_Model {
 	/**
 	 * Gets the model metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Model_Metadata The model metadata.
 	 */

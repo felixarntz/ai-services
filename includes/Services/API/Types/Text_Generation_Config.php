@@ -17,7 +17,7 @@ use InvalidArgumentException;
  *
  * @since 0.2.0
  * @since 0.5.0 Renamed from `Generation_Config`.
- * @since n.e.x.t Now extends `Abstract_Generation_Config`.
+ * @since 0.7.0 Now extends `Abstract_Generation_Config`.
  */
 class Text_Generation_Config extends Abstract_Generation_Config {
 
@@ -167,7 +167,7 @@ class Text_Generation_Config extends Abstract_Generation_Config {
 	/**
 	 * Gets the definition for the supported arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The supported arguments definition.
 	 */
@@ -179,7 +179,7 @@ class Text_Generation_Config extends Abstract_Generation_Config {
 	/**
 	 * Sanitizes the given value based on the given type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param mixed  $value    The value to sanitize.
 	 * @param string $type     The type to sanitize the value to. Must be one of 'array', 'string', 'object',

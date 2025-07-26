@@ -53,7 +53,7 @@ abstract class Abstract_Enum implements Enum {
 	/**
 	 * Gets the value map for the given child class name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string $class_name The child class name.
 	 * @return array<string, bool> The value map.

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Base\OpenAI_Compatible_AI_Text_Generation_Model
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -35,7 +35,7 @@ use InvalidArgumentException;
 /**
  * Generic implementation of an OpenAI API compatible text generation AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Text_Generation, With_Chat_History {
 	use With_API_Client_Trait;
@@ -47,7 +47,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param Model_Metadata           $metadata        The model metadata.
@@ -71,7 +71,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Sends a request to generate text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -106,7 +106,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Sends a request to generate text content, streaming the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -144,7 +144,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Prepares the API request parameters for generating text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating text content.
@@ -180,7 +180,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Extracts the candidates with content from the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $response_data         The response data.
 	 * @param ?Candidates          $prev_chunk_candidates The candidates from the previous chunk in case of a streaming
@@ -232,7 +232,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Merges a streaming response chunk with the previous candidates data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $candidates_data The candidates data from the previous chunk.
 	 * @param array<string, mixed> $chunk_data      The response chunk data.
@@ -278,7 +278,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Transforms a given candidate from the API response into a Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $candidate_data The API response candidate data.
 	 * @param int                  $index          The index of the candidate in the response.
@@ -312,7 +312,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Transforms a given candidate from the API response into a Parts instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $candidate_data The API response candidate data.
 	 * @return Parts The Parts instance.
@@ -333,7 +333,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Gets the content transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The content transformers.
 	 *
@@ -413,7 +413,7 @@ class OpenAI_Compatible_AI_Text_Generation_Model extends Abstract_AI_Model imple
 	/**
 	 * Gets the generation configuration transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

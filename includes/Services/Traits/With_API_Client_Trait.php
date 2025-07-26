@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\With_API_Client_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use RuntimeException;
 /**
  * Trait for a service or model which implements the With_API_Client interface.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait With_API_Client_Trait {
 
 	/**
 	 * The AI API client instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Generative_AI_API_Client
 	 */
 	private $api_client;
@@ -29,7 +29,7 @@ trait With_API_Client_Trait {
 	/**
 	 * Gets the API client instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Generative_AI_API_Client The API client instance.
 	 *
@@ -46,7 +46,7 @@ trait With_API_Client_Trait {
 	/**
 	 * Sets the API client instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Generative_AI_API_Client $api_client The API client instance.
 	 */

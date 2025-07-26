@@ -138,7 +138,7 @@ function prepareContentForBrowser(
  * @since 0.3.0
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
  * @since 0.6.0 Checks for newer `LanguageModel` property.
- * @since n.e.x.t Renamed from `createSession`.
+ * @since 0.7.0 Renamed from `createSession`.
  *
  * @param modelParams - Model parameters.
  * @returns The browser model instance.

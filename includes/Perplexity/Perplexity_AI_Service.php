@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Perplexity\Perplexity_AI_Service
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -27,7 +27,7 @@ use RuntimeException;
 /**
  * Class for the Perplexity AI service.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class Perplexity_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	use With_API_Client_Trait;
@@ -38,7 +38,7 @@ class Perplexity_AI_Service extends Abstract_AI_Service implements With_API_Clie
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Service_Metadata $metadata        The service metadata.
 	 * @param Authentication   $authentication  The authentication credentials.
@@ -64,7 +64,7 @@ class Perplexity_AI_Service extends Abstract_AI_Service implements With_API_Clie
 	 * In case of a cloud based service, this is typically used to check whether the current service credentials are
 	 * valid. For other service types, this may check other requirements, or simply return true.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return bool True if the service is connected, false otherwise.
 	 *
@@ -99,7 +99,7 @@ class Perplexity_AI_Service extends Abstract_AI_Service implements With_API_Clie
 	/**
 	 * Lists the available generative model slugs and their metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.
@@ -152,7 +152,7 @@ class Perplexity_AI_Service extends Abstract_AI_Service implements With_API_Clie
 	/**
 	 * Creates a new model instance for the provided model metadata and parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Model_Metadata       $model_metadata  The model metadata.
 	 * @param array<string, mixed> $model_params    Model parameters. See {@see Generative_AI_Service::get_model()} for
@@ -172,7 +172,7 @@ class Perplexity_AI_Service extends Abstract_AI_Service implements With_API_Clie
 	/**
 	 * Sorts model slugs by preference.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string[] $model_slugs The model slugs to sort.
 	 * @return string[] The model slugs, sorted by preference.

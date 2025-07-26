@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\OpenAI\OpenAI_AI_Text_To_Speech_Model
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -32,7 +32,7 @@ use InvalidArgumentException;
 /**
  * Class representing an OpenAI text to speech AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_API_Client, With_Text_To_Speech {
 	use With_API_Client_Trait;
@@ -45,7 +45,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	 *
 	 * Internal temporary storage to not have to pass it around, as it should not be part of the interface.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $expected_mime_type = 'audio/mpeg';
@@ -53,7 +53,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param Model_Metadata           $metadata        The model metadata.
@@ -81,7 +81,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	/**
 	 * Sends a request to transform text to speech.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[]            $contents        The content to transform to speech.
 	 * @param array<string, mixed> $request_options The request options.
@@ -130,7 +130,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	/**
 	 * Prepares the API request parameters for transforming text to speech.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents The contents to transform to speech.
 	 * @return array<string, mixed> The parameters for transforming text to speech.
@@ -171,7 +171,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	/**
 	 * Extracts the candidates with content from the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string $response_body The response body, as raw audio bytes.
 	 * @return Candidates The candidates with content parts.
@@ -193,7 +193,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	/**
 	 * Transforms a given candidate from the API response into a Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string $response_body The response body, as raw audio bytes.
 	 * @return Content The Content instance.
@@ -230,7 +230,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	/**
 	 * Gets the content transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The content transformers.
 	 */
@@ -245,7 +245,7 @@ class OpenAI_AI_Text_To_Speech_Model extends Abstract_AI_Model implements With_A
 	/**
 	 * Gets the generation configuration transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

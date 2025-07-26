@@ -668,7 +668,7 @@ final class AI_Services_Command {
 	 *
 	 * @since 0.2.0
 	 * @since 0.5.0 Return type changed to a map of model data shapes.
-	 * @since n.e.x.t Return type changed to a map of model metadata objects.
+	 * @since 0.7.0 Return type changed to a map of model metadata objects.
 	 *
 	 * @param string $service_slug The service slug.
 	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.

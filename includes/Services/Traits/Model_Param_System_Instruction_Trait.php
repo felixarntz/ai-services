@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\Model_Param_System_Instruction_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model that uses a system instruction.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait Model_Param_System_Instruction_Trait {
 
 	/**
 	 * The system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Content|null
 	 */
 	private $system_instruction;
@@ -30,7 +30,7 @@ trait Model_Param_System_Instruction_Trait {
 	/**
 	 * Gets the system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Content|null The system instruction, or null if not set.
 	 */
@@ -41,7 +41,7 @@ trait Model_Param_System_Instruction_Trait {
 	/**
 	 * Sets the system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content $system_instruction The system instruction.
 	 */
@@ -52,7 +52,7 @@ trait Model_Param_System_Instruction_Trait {
 	/**
 	 * Sets the system instruction if provided in the `systemInstruction` model parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *

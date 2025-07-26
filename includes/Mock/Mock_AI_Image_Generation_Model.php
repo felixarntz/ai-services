@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Mock\Mock_AI_Image_Generation_Model
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -25,7 +25,7 @@ use InvalidArgumentException;
 /**
  * Class representing a mock image generation AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class Mock_AI_Image_Generation_Model extends Abstract_AI_Model implements With_Mock_Results, With_Image_Generation {
 	use With_Mock_Results_Trait;
@@ -36,7 +36,7 @@ class Mock_AI_Image_Generation_Model extends Abstract_AI_Model implements With_M
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Model_Metadata       $metadata        The model metadata.
 	 * @param array<string, mixed> $model_params    Optional. Additional model parameters. See
@@ -58,7 +58,7 @@ class Mock_AI_Image_Generation_Model extends Abstract_AI_Model implements With_M
 	/**
 	 * Sends a request to generate an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -73,7 +73,7 @@ class Mock_AI_Image_Generation_Model extends Abstract_AI_Model implements With_M
 	/**
 	 * Gets the default candidates to return for AI requests where no expected response was provided.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Candidates The default candidates.
 	 */

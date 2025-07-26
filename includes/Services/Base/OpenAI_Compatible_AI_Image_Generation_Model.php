@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Base\OpenAI_Compatible_AI_Image_Generation_Model
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -31,7 +31,7 @@ use InvalidArgumentException;
 /**
  * Generic implementation of an OpenAI API compatible text generation AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model implements With_API_Client, With_Image_Generation {
 	use With_API_Client_Trait;
@@ -44,7 +44,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	 *
 	 * Internal temporary storage to not have to pass it around, as it should not be part of the interface.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $expected_mime_type = 'image/png';
@@ -52,7 +52,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param Model_Metadata           $metadata        The model metadata.
@@ -80,7 +80,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Sends a request to generate an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[]            $contents        Prompts for the content to generate.
 	 * @param array<string, mixed> $request_options The request options.
@@ -129,7 +129,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Gets the API route for generating an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents The contents to generate an image for.
 	 * @return string The route for generating an image.
@@ -141,7 +141,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Prepares the API request parameters for generating an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents The contents to generate an image for.
 	 * @return array<string, mixed> The parameters for generating an image.
@@ -184,7 +184,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Extracts the candidates with content from the response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $response_data The response data.
 	 * @return Candidates The candidates with content parts.
@@ -218,7 +218,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Transforms a given candidate from the API response into a Content instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $candidate_data The API response candidate data.
 	 * @param int                  $index          The index of the candidate in the response.
@@ -263,7 +263,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Gets the content transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The content transformers.
 	 */
@@ -278,7 +278,7 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 	/**
 	 * Gets the generation configuration transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

@@ -126,7 +126,7 @@ trait Generative_AI_API_Client_Trait {
 	/**
 	 * Processes the response body from the API.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Response $response         The response instance. Must not be a stream response, i.e. not implement the
 	 *                                   With_Stream interface.
@@ -206,7 +206,7 @@ trait Generative_AI_API_Client_Trait {
 	/**
 	 * Creates a new exception for a bad request, i.e. invalid or unsupported request data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string $message The error message to include in the exception.
 	 * @return InvalidArgumentException The exception instance.

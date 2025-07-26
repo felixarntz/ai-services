@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Perplexity\Perplexity_AI_Text_Generation_Model
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -22,7 +22,7 @@ use InvalidArgumentException;
 /**
  * Class representing a Perplexity text generation AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class Perplexity_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generation_Model implements With_Multimodal_Input, With_Web_Search {
 	use Model_Param_Tools_Trait;
@@ -30,7 +30,7 @@ class Perplexity_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Gene
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Generative_AI_API_Client $api_client      The AI API client instance.
 	 * @param Model_Metadata           $metadata        The model metadata.
@@ -95,7 +95,7 @@ class Perplexity_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Gene
 	/**
 	 * Gets the generation configuration transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

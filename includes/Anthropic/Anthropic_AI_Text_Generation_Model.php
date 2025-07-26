@@ -401,7 +401,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * Gets the content transformers.
 	 *
 	 * @since 0.2.0
-	 * @since n.e.x.t Changed to non-static.
+	 * @since 0.7.0 Changed to non-static.
 	 *
 	 * @return array<string, callable> The content transformers.
 	 *
@@ -472,7 +472,7 @@ class Anthropic_AI_Text_Generation_Model extends Abstract_AI_Model implements Wi
 	 * Gets the generation configuration transformers.
 	 *
 	 * @since 0.2.0
-	 * @since n.e.x.t Changed to non-static.
+	 * @since 0.7.0 Changed to non-static.
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

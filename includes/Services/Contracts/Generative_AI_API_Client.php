@@ -24,7 +24,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a GET request instance for the given parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
 	 * @param array<string, mixed> $params          The request parameters.
@@ -36,7 +36,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a POST request instance for the given parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string               $path            The path to the API endpoint, relative to the base URL and version.
 	 * @param array<string, mixed> $params          The request parameters.
@@ -76,7 +76,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Processes the response body from the API.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Response $response         The response instance. Must not be a stream response, i.e. not implement the
 	 *                                   With_Stream interface.
@@ -109,7 +109,7 @@ interface Generative_AI_API_Client {
 	/**
 	 * Creates a new exception for a bad request, i.e. invalid or unsupported request data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string $message The error message to include in the exception.
 	 * @return InvalidArgumentException The exception instance.

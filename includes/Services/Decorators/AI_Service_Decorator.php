@@ -64,7 +64,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	/**
 	 * Gets the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Service_Metadata The service metadata.
 	 */
@@ -98,7 +98,7 @@ class AI_Service_Decorator implements Generative_AI_Service {
 	 *
 	 * @since 0.1.0
 	 * @since 0.5.0 Return type changed to a map of model data shapes.
-	 * @since n.e.x.t Return type changed to a map of model metadata objects.
+	 * @since 0.7.0 Return type changed to a map of model metadata objects.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.

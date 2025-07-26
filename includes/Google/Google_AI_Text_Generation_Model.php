@@ -100,7 +100,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	/**
 	 * Sets the safety settings if provided in the `safetySettings` model parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *
@@ -420,7 +420,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * Gets the content transformers.
 	 *
 	 * @since 0.2.0
-	 * @since n.e.x.t Changed to non-static.
+	 * @since 0.7.0 Changed to non-static.
 	 *
 	 * @return array<string, callable> The content transformers.
 	 *
@@ -519,7 +519,7 @@ class Google_AI_Text_Generation_Model extends Abstract_AI_Model implements With_
 	 * Gets the generation configuration transformers.
 	 *
 	 * @since 0.2.0
-	 * @since n.e.x.t Changed to non-static.
+	 * @since 0.7.0 Changed to non-static.
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

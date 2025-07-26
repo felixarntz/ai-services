@@ -173,7 +173,7 @@ class Service_Entity implements Entity {
 	 *
 	 * @since 0.1.0
 	 * @since 0.5.0 Return type changed to a map of model data shapes.
-	 * @since n.e.x.t Return type changed to a map of model metadata objects.
+	 * @since 0.7.0 Return type changed to a map of model metadata objects.
 	 *
 	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.
 	 */

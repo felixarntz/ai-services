@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\With_Text_To_Speech_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -19,14 +19,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model which implements the With_Text_To_Speech interface.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait With_Text_To_Speech_Trait {
 
 	/**
 	 * Transforms text to speech using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         The content to transform to speech.
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.
@@ -43,7 +43,7 @@ trait With_Text_To_Speech_Trait {
 	/**
 	 * Sanitizes the input content for text to speech.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string|Parts|Content|Content[] $content The input content.
 	 * @return Content[] The sanitized content.
@@ -58,7 +58,7 @@ trait With_Text_To_Speech_Trait {
 	/**
 	 * Sends a request to transform text to speech.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[]            $contents        The content to transform to speech.
 	 * @param array<string, mixed> $request_options The request options.

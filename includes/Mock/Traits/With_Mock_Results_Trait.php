@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Mock\Traits\With_Mock_Results_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -18,14 +18,14 @@ use Felix_Arntz\AI_Services\Services\Util\Formatter;
 /**
  * Trait for a mock model which implements the With_Mock_Results interface.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait With_Mock_Results_Trait {
 
 	/**
 	 * The expected candidates object.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var ?Candidates
 	 */
 	private $expected_candidates = null;
@@ -33,7 +33,7 @@ trait With_Mock_Results_Trait {
 	/**
 	 * The callbacks for expected candidates objects.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var callable[]
 	 */
 	private $expected_candidates_callbacks = array();
@@ -41,7 +41,7 @@ trait With_Mock_Results_Trait {
 	/**
 	 * Sets the mock content to expect from subsequent AI requests, or a request satisfying certain criteria.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string|Content|Candidates|callable $content The mock content to expect for any subsequent AI requests. A
 	 *                                                    callback can be provided alternatively to a concrete result,
@@ -74,7 +74,7 @@ trait With_Mock_Results_Trait {
 	 * If no expected candidates were provided and no provided expected callbacks match, a fallback default response
 	 * will be returned.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents Contents (commonly containing only a single item) with the AI request.
 	 * @return Candidates The resolved candidates.
@@ -97,7 +97,7 @@ trait With_Mock_Results_Trait {
 	/**
 	 * Gets the default candidates to return for AI requests where no expected response was provided.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Candidates The default candidates.
 	 */
@@ -106,7 +106,7 @@ trait With_Mock_Results_Trait {
 	/**
 	 * Parses the given content into a Candidates object.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string|Parts|Content|Candidate|Candidates $content The content to parse.
 	 * @return Candidates The resulting Candidates object.

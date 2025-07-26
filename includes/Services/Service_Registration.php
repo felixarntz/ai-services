@@ -35,7 +35,7 @@ final class Service_Registration {
 	/**
 	 * The service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Service_Metadata
 	 */
 	private $metadata;
@@ -43,7 +43,7 @@ final class Service_Registration {
 	/**
 	 * Whether the service can be overridden through another registration with the same slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var bool
 	 */
 	private $allow_override;
@@ -130,7 +130,7 @@ final class Service_Registration {
 	/**
 	 * Gets the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Service_Metadata The service metadata.
 	 */

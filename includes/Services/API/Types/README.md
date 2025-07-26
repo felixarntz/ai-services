@@ -22,7 +22,7 @@ The data types in this directory adhere to several architectural patterns:
     -   A `to_array(): array` method for serializing the object's data back into an array.
     -   Examples include `Blob`, `Candidate`, `Content`, `History_Entry`, `Model_Metadata`, and `Service_Metadata`.
 
--   **Collections**: Classes like `Candidates`, `Parts`, and `Tools` serve as typed collections for other data type objects within this directory. They typically implement the `Collection` and `Arrayable` interfaces (from the `Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts` namespace) to provide iterable and array-convertible functionalities.
+-   **Collections**: Classes like `Candidates`, `Parts`, and `Tools` serve as typed collections for other data type objects within this directory. They typically implement the `Collection` and `Arrayable` interfaces (from the `Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\General\Contracts` namespace) to provide iterable and array-convertible functionalities. The `Parts` directory contains classes for different types of content parts that can be used with generative AI models. `Abstract_Part.php` is an abstract base class for all part types, providing common functionality. `File_Data_Part.php`, `Function_Call_Part.php`, `Function_Response_Part.php`, `Inline_Data_Part.php`, and `Text_Part.php` are concrete classes for different types of parts: file data, function calls, function responses, inline data, and text.
 
 -   **Configuration Objects**: These classes are used to pass specific settings and options to AI models or services.
     -   `Image_Generation_Config`, `Text_Generation_Config`, and `Tool_Config` are key examples.
@@ -56,12 +56,14 @@ The API allows defining tools that AI models can utilize, particularly for funct
 -   **`Tools/Abstract_Tool.php`**: An abstract base class for concrete `Tool` implementations.
 -   **Concrete Tool Types** (located in `Tools/` directory):
     -   `Function_Declarations_Tool.php`: Allows defining a list of functions (with names, descriptions, and parameter schemas) that the AI model is permitted to call.
+    -   `Web_Search_Tool.php`: Allows the AI model to use a web search tool.
 
 ### 3. Chat and History Management
 
 Classes related to managing conversations and their history:
 
--   **`Chat_Session.php`**: Manages an interactive chat with a generative AI model. It handles the conversation history and provides methods like `send_message()` and `stream_send_message()` to interact with the model.
+-   **`Chat_Session.php`**: Manages an interactive chat session with a generative AI model. It handles the conversation history and provides methods like `send_message()` and `stream_send_message()` to interact with the model.
+
 -   **`History.php`**: Represents a persisted chat history, typically identified by a `feature` and a `slug`. It contains a list of `History_Entry` objects.
 -   **`History_Entry.php`**: Represents a single turn or message within a `History` object, primarily composed of a `Content` object and any additional metadata.
 

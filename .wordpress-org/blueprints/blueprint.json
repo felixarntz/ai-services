@@ -1,24 +1,23 @@
 {
-    "landingPage": "/wp-admin/options-general.php?page=ais_services",
-    "features": {
-      "networking": true
-    },
-    "steps": [
-      {
-        "step": "installPlugin",
-        "pluginData": {
-          "resource": "wordpress.org/plugins",
-          "slug": "ai-services"
-        },
-        "options": {
-          "activate": true
-        }
-      },
-      {
-        "step": "login",
-        "username": "admin",
-        "password": "password"
-      }
-    ]
-  }
-  
+	"landingPage": "/wp-admin/options-general.php?page=ais_services",
+	"features": {
+		"networking": true
+	},
+	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "ai-services"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		}
+	]
+}

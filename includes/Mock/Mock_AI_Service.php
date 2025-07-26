@@ -51,7 +51,6 @@ class Mock_AI_Service extends Abstract_AI_Service {
 				'num_models'   => 5,
 				'capabilities' => array(
 					AI_Capability::CHAT_HISTORY,
-					AI_Capability::FUNCTION_CALLING,
 					AI_Capability::MULTIMODAL_INPUT,
 					AI_Capability::TEXT_GENERATION,
 				),

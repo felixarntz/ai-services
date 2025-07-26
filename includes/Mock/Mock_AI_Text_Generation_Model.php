@@ -15,14 +15,11 @@ use Felix_Arntz\AI_Services\Services\API\Types\Content;
 use Felix_Arntz\AI_Services\Services\API\Types\Model_Metadata;
 use Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Model;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Chat_History;
-use Felix_Arntz\AI_Services\Services\Contracts\With_Function_Calling;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Multimodal_Input;
 use Felix_Arntz\AI_Services\Services\Contracts\With_Text_Generation;
 use Felix_Arntz\AI_Services\Services\Exception\Generative_AI_Exception;
 use Felix_Arntz\AI_Services\Services\Traits\Model_Param_System_Instruction_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Text_Generation_Config_Trait;
-use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Tool_Config_Trait;
-use Felix_Arntz\AI_Services\Services\Traits\Model_Param_Tools_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Chat_History_Trait;
 use Felix_Arntz\AI_Services\Services\Traits\With_Text_Generation_Trait;
 use Generator;
@@ -33,13 +30,11 @@ use InvalidArgumentException;
  *
  * @since n.e.x.t
  */
-class Mock_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Mock_Results, With_Text_Generation, With_Chat_History, With_Function_Calling, With_Multimodal_Input {
+class Mock_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Mock_Results, With_Text_Generation, With_Chat_History, With_Multimodal_Input {
 	use With_Mock_Results_Trait;
 	use With_Text_Generation_Trait;
 	use With_Chat_History_Trait;
 	use Model_Param_Text_Generation_Config_Trait;
-	use Model_Param_Tool_Config_Trait;
-	use Model_Param_Tools_Trait;
 	use Model_Param_System_Instruction_Trait;
 
 	/**
@@ -59,8 +54,6 @@ class Mock_AI_Text_Generation_Model extends Abstract_AI_Model implements With_Mo
 		$this->set_model_metadata( $metadata );
 
 		$this->set_text_generation_config_from_model_params( $model_params );
-		$this->set_tool_config_from_model_params( $model_params );
-		$this->set_tools_from_model_params( $model_params );
 		$this->set_system_instruction_from_model_params( $model_params );
 
 		$this->set_request_options( $request_options );

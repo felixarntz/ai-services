@@ -42,9 +42,11 @@ class OpenAI_AI_Image_Generation_Model extends OpenAI_Compatible_AI_Image_Genera
 		if ( str_starts_with( $this->get_model_slug(), 'gpt-image-' ) ) {
 			$generation_config = $this->get_image_generation_config();
 
-			$response_mime_type = $generation_config->get_response_mime_type();
-			if ( $response_mime_type ) {
-				$params['output_format'] = preg_replace( '/^image\//', '', $response_mime_type );
+			if ( $generation_config ) {
+				$response_mime_type = $generation_config->get_response_mime_type();
+				if ( $response_mime_type ) {
+					$params['output_format'] = preg_replace( '/^image\//', '', $response_mime_type );
+				}
 			}
 
 			unset( $params['response_format'] );

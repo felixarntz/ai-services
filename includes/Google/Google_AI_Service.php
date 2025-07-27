@@ -25,7 +25,7 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
  * Class for the Google AI service.
  *
  * @since 0.1.0
- * @since n.e.x.t Now extends `Abstract_AI_Service`.
+ * @since 0.7.0 Now extends `Abstract_AI_Service`.
  */
 class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	use With_API_Client_Trait;
@@ -61,7 +61,7 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	 *
 	 * @since 0.1.0
 	 * @since 0.5.0 Return type changed to a map of model data shapes.
-	 * @since n.e.x.t Return type changed to a map of model metadata objects.
+	 * @since 0.7.0 Return type changed to a map of model metadata objects.
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.
@@ -163,7 +163,7 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	/**
 	 * Creates a new model instance for the provided model metadata and parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Model_Metadata       $model_metadata  The model metadata.
 	 * @param array<string, mixed> $model_params    Model parameters. See {@see Generative_AI_Service::get_model()} for

@@ -75,7 +75,7 @@ function ServiceApiKeyControl( props: ServiceApiKeyControlProps ) {
 /**
  * Renders the cards for all the settings controls.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  *
  * @returns The component to be rendered.
  */

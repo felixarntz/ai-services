@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Base\Abstract_Generation_Config
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -17,7 +17,7 @@ use InvalidArgumentException;
  * Base class representing configuration options for a generative AI model.
  *
  * @since 0.2.0 Originally implemented as non-abstract class `Types\Generation_Config`.
- * @since n.e.x.t
+ * @since 0.7.0
  */
 abstract class Abstract_Generation_Config implements Generation_Config {
 
@@ -42,7 +42,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 	/**
 	 * Default values for the sanitized configuration arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var array<string, mixed>
 	 */
 	private $defaults;
@@ -67,7 +67,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 	/**
 	 * Returns the value for the given supported argument.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string $name The argument name.
 	 * @return mixed The argument value, or its default value if not set.
@@ -85,7 +85,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 	 *
 	 * Only includes arguments that have an explicit value set, i.e. not defaults.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The arguments.
 	 */
@@ -132,7 +132,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 	/**
 	 * Gets the definition for the supported arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The supported arguments definition.
 	 */
@@ -141,7 +141,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 	/**
 	 * Gets the default values for the supported arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $args_definition The arguments definition.
 	 * @return array<string, mixed> The default values.
@@ -185,7 +185,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 	 * Sanitizes the given arguments.
 	 *
 	 * @since 0.2.0
-	 * @since n.e.x.t The $args_definition parameter was added.
+	 * @since 0.7.0 The $args_definition parameter was added.
 	 *
 	 * @param array<string, mixed> $args            The arguments to sanitize.
 	 * @param array<string, mixed> $args_definition The arguments definition.

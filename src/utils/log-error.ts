@@ -6,7 +6,7 @@ import errorToString from './error-to-string';
 /**
  * Logs an error message to the console.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  *
  * @param error - The error to log.
  */

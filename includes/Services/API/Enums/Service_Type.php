@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Enums\Service_Type
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -11,7 +11,7 @@ namespace Felix_Arntz\AI_Services\Services\API\Enums;
 /**
  * Class for the service type enum.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 final class Service_Type extends Abstract_Enum {
 
@@ -22,7 +22,7 @@ final class Service_Type extends Abstract_Enum {
 	/**
 	 * Gets all values for the enum.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string[] The list of all values.
 	 */

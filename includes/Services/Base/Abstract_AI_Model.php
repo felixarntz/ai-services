@@ -22,7 +22,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * The model metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Model_Metadata
 	 */
 	private $metadata;
@@ -49,7 +49,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Gets the model metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Model_Metadata The model metadata.
 	 *
@@ -77,7 +77,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Sets the model metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Model_Metadata $metadata The model metadata.
 	 */
@@ -88,7 +88,7 @@ abstract class Abstract_AI_Model implements Generative_AI_Model {
 	/**
 	 * Sets the request options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $request_options The request options.
 	 */

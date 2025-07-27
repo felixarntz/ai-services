@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\XAI\XAI_AI_Image_Generation_Model
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -13,7 +13,7 @@ use Felix_Arntz\AI_Services\Services\Base\OpenAI_Compatible_AI_Image_Generation_
 /**
  * Class representing an xAI image generation AI model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 class XAI_AI_Image_Generation_Model extends OpenAI_Compatible_AI_Image_Generation_Model {
 

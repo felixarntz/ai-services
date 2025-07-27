@@ -14,7 +14,7 @@ use Felix_Arntz\AI_Services\Services\Base\Abstract_Generation_Config;
  * Class representing image configuration options for a generative AI model.
  *
  * @since 0.5.0
- * @since n.e.x.t Now extends `Abstract_Generation_Config`.
+ * @since 0.7.0 Now extends `Abstract_Generation_Config`.
  */
 class Image_Generation_Config extends Abstract_Generation_Config {
 
@@ -65,7 +65,7 @@ class Image_Generation_Config extends Abstract_Generation_Config {
 	/**
 	 * Gets the definition for the supported arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The supported arguments definition.
 	 */

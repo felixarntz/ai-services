@@ -16,14 +16,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
  * Class to interact directly with the Google Generative Language API.
  *
  * @since 0.1.0
- * @since n.e.x.t Now extends `Generic_AI_API_Client`.
+ * @since 0.7.0 Now extends `Generic_AI_API_Client`.
  */
 class Google_AI_API_Client extends Generic_AI_API_Client {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string              $default_base_url    The default base URL for the API.
 	 * @param string              $default_api_version The default API version.
@@ -66,7 +66,7 @@ class Google_AI_API_Client extends Generic_AI_API_Client {
 	/**
 	 * Adds additional default request options to the given request options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $request_options The request options.
 	 * @return array<string, mixed> The updated request options.

@@ -2,7 +2,7 @@
 /**
  * Trait Felix_Arntz\AI_Services\Services\Traits\Model_Param_Text_To_Speech_Config_Trait
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -14,14 +14,14 @@ use InvalidArgumentException;
 /**
  * Trait for a model that uses `Text_To_Speech_Config`.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 trait Model_Param_Text_To_Speech_Config_Trait {
 
 	/**
 	 * The text to speech configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Text_To_Speech_Config|null
 	 */
 	private $text_to_speech_config;
@@ -29,7 +29,7 @@ trait Model_Param_Text_To_Speech_Config_Trait {
 	/**
 	 * Gets the text to speech configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Text_To_Speech_Config|null The text to speech configuration, or null if not set.
 	 */
@@ -40,7 +40,7 @@ trait Model_Param_Text_To_Speech_Config_Trait {
 	/**
 	 * Sets the text to speech configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Text_To_Speech_Config $text_to_speech_config The text to speech configuration.
 	 */
@@ -51,7 +51,7 @@ trait Model_Param_Text_To_Speech_Config_Trait {
 	/**
 	 * Sets the text to speech configuration if provided in the `generationConfig` model parameter.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params The model parameters.
 	 *

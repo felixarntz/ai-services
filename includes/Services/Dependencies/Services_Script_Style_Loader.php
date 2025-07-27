@@ -62,8 +62,23 @@ class Services_Script_Style_Loader {
 	 * Registers the plugin's available scripts and styles.
 	 *
 	 * @since 0.1.0
+	 *
+	 * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
 	 */
 	public function register_scripts_and_styles(): void {
+		/**
+		 * Filters whether to skip API requests for all AI services.
+		 *
+		 * This effectively enables a "client-side only" mode for the AI Services plugin,
+		 * where only client-side models on the user's device are used.
+		 *
+		 * @since 0.7.0
+		 *
+		 * @param bool $skip_api_request Whether to skip API requests for all AI services.
+		 *                               By default, this is true if the user is not logged in.
+		 */
+		$skip_api_request = (bool) apply_filters( 'ai_services_skip_api_request', ! is_user_logged_in() );
+
 		$this->script_registry->register(
 			'ais-ai',
 			array(
@@ -72,6 +87,12 @@ class Services_Script_Style_Loader {
 				'strategy' => 'defer',
 			)
 		);
+		if ( $skip_api_request ) {
+			$this->script_registry->add_inline_code(
+				'ais-ai',
+				'window.AI_SERVICES_SKIP_API_REQUEST = true;'
+			);
+		}
 
 		$this->script_registry->register(
 			'ais-settings',

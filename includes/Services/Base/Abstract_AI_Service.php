@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Base\Abstract_AI_Service
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -22,14 +22,14 @@ use RuntimeException;
 /**
  * Base class for an AI service.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 abstract class Abstract_AI_Service implements Generative_AI_Service {
 
 	/**
 	 * The service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Service_Metadata
 	 */
 	private $metadata;
@@ -37,7 +37,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The service slug.
 	 */
@@ -48,7 +48,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	/**
 	 * Gets the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Service_Metadata The service metadata.
 	 *
@@ -68,7 +68,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	 * In case of a cloud based service, this is typically used to check whether the current service credentials are
 	 * valid. For other service types, this may check other requirements, or simply return true.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return bool True if the service is connected, false otherwise.
 	 *
@@ -92,7 +92,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	/**
 	 * Gets a generative model instance for the provided model parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $model_params    {
 	 *     Optional. Model parameters. Default empty array.
@@ -154,7 +154,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	/**
 	 * Creates a new model instance for the provided model metadata and parameters.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Model_Metadata       $model_metadata  The model metadata.
 	 * @param array<string, mixed> $model_params    Model parameters. See {@see Generative_AI_Service::get_model()} for
@@ -167,7 +167,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	/**
 	 * Sorts model slugs by preference.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string[] $model_slugs The model slugs to sort.
 	 * @return string[] The model slugs, sorted by preference.
@@ -180,7 +180,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	/**
 	 * Sets the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Service_Metadata $metadata The service metadata.
 	 */
@@ -191,7 +191,7 @@ abstract class Abstract_AI_Service implements Generative_AI_Service {
 	/**
 	 * Lists the available generative model slugs and their metadata, wrapped in a transient cache.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $request_options Optional. The request options. Default empty array.
 	 * @return array<string, Model_Metadata> Metadata for each model, mapped by model slug.

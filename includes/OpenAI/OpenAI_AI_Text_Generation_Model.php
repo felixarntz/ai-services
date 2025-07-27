@@ -28,7 +28,7 @@ use InvalidArgumentException;
  *
  * @since 0.1.0
  * @since 0.5.0 Renamed from `OpenAI_AI_Model`.
- * @since n.e.x.t Now extends `OpenAI_Compatible_AI_Text_Generation_Model` instead of `Abstract_AI_Model`.
+ * @since 0.7.0 Now extends `OpenAI_Compatible_AI_Text_Generation_Model` instead of `Abstract_AI_Model`.
  */
 class OpenAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generation_Model implements With_Function_Calling, With_Multimodal_Input, With_Multimodal_Output {
 	use OpenAI_Compatible_Text_Generation_With_Function_Calling_Trait {
@@ -41,7 +41,7 @@ class OpenAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generati
 	 *
 	 * Internal temporary storage to not have to pass it around, as it should not be part of the interface.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $expected_audio_mime_type = 'audio/mpeg';
@@ -70,7 +70,7 @@ class OpenAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generati
 	/**
 	 * Prepares the API request parameters for generating text content.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param Content[] $contents The contents to generate text for.
 	 * @return array<string, mixed> The parameters for generating text content.
@@ -104,7 +104,7 @@ class OpenAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generati
 	/**
 	 * Prepares a single tool for the API request, amending the provided parameters as needed.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $params The parameters to prepare the tools for. Passed by reference.
 	 * @param Tool                 $tool   The tool to prepare.
@@ -143,7 +143,7 @@ class OpenAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generati
 	/**
 	 * Transforms a given candidate from the API response into a Parts instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $candidate_data The API response candidate data.
 	 * @return Parts The Parts instance.
@@ -168,7 +168,7 @@ class OpenAI_AI_Text_Generation_Model extends OpenAI_Compatible_AI_Text_Generati
 	/**
 	 * Gets the generation configuration transformers.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, callable> The generation configuration transformers.
 	 */

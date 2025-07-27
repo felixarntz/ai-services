@@ -61,7 +61,7 @@ export default class GenerativeAiService {
 	/**
 	 * Gets the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @returns Service metadata.
 	 */
@@ -227,7 +227,7 @@ export default class GenerativeAiService {
 	 *
 	 * This is a short-hand method for `service.getModel( modelParams ).textToSpeech( content )`.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param content     - The content to transform to speech.
 	 * @param modelParams - Model parameters. At a minimum this must include the unique "feature" identifier.

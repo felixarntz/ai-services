@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Tools\Web_Search_Tool
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -13,14 +13,14 @@ use InvalidArgumentException;
 /**
  * Class for a web search tool for a generative model.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 final class Web_Search_Tool extends Abstract_Tool {
 
 	/**
 	 * Gets the allowed domains for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string[] The allowed domains.
 	 */
@@ -31,7 +31,7 @@ final class Web_Search_Tool extends Abstract_Tool {
 	/**
 	 * Gets the disallowed domains for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string[] The disallowed domains.
 	 */
@@ -42,7 +42,7 @@ final class Web_Search_Tool extends Abstract_Tool {
 	/**
 	 * Formats the data for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $data The tool data.
 	 * @return array<string, mixed> Formatted data.
@@ -68,7 +68,7 @@ final class Web_Search_Tool extends Abstract_Tool {
 	/**
 	 * Gets the default data for the tool.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> Default data.
 	 */
@@ -84,7 +84,7 @@ final class Web_Search_Tool extends Abstract_Tool {
 	/**
 	 * Returns the JSON schema for the expected input.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

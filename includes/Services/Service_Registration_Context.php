@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\Service_Registration_Context
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -15,14 +15,14 @@ use Felix_Arntz\AI_Services_Dependencies\Felix_Arntz\WP_OOP_Plugin_Lib\HTTP\Cont
 /**
  * Value class with service context dependencies and data that can be used to create a service instance.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 final class Service_Registration_Context {
 
 	/**
 	 * The service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $slug;
@@ -30,7 +30,7 @@ final class Service_Registration_Context {
 	/**
 	 * The service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Service_Metadata
 	 */
 	private $metadata;
@@ -38,7 +38,7 @@ final class Service_Registration_Context {
 	/**
 	 * The service request handler instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Request_Handler
 	 */
 	private $request_handler;
@@ -46,7 +46,7 @@ final class Service_Registration_Context {
 	/**
 	 * The service authentication instance, if any.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Authentication|null
 	 */
 	private $authentication;
@@ -54,7 +54,7 @@ final class Service_Registration_Context {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string              $slug            The service slug.
 	 * @param Service_Metadata    $metadata        The service metadata.
@@ -76,7 +76,7 @@ final class Service_Registration_Context {
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The service slug.
 	 */
@@ -87,7 +87,7 @@ final class Service_Registration_Context {
 	/**
 	 * Gets the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Service_Metadata The service metadata.
 	 */
@@ -98,7 +98,7 @@ final class Service_Registration_Context {
 	/**
 	 * Gets the service request handler instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Request_Handler The service request handler instance.
 	 */
@@ -109,7 +109,7 @@ final class Service_Registration_Context {
 	/**
 	 * Gets the service authentication instance, if any.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Authentication|null The service authentication instance, if any.
 	 */

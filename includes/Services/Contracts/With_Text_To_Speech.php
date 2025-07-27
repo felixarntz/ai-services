@@ -2,7 +2,7 @@
 /**
  * Interface Felix_Arntz\AI_Services\Services\Contracts\With_Text_To_Speech
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -17,14 +17,14 @@ use InvalidArgumentException;
 /**
  * Interface for a model which allows transforming text to speech.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 interface With_Text_To_Speech {
 
 	/**
 	 * Transforms text to speech using the model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param string|Parts|Content|Content[] $content         The content to transform to speech.
 	 * @param array<string, mixed>           $request_options Optional. The request options. Default empty array.

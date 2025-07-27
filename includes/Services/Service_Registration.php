@@ -8,6 +8,7 @@
 
 namespace Felix_Arntz\AI_Services\Services;
 
+use Felix_Arntz\AI_Services\Services\API\Enums\Service_Type;
 use Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata;
 use Felix_Arntz\AI_Services\Services\Authentication\API_Key_Authentication;
 use Felix_Arntz\AI_Services\Services\Contracts\Generative_AI_Service;
@@ -34,7 +35,7 @@ final class Service_Registration {
 	/**
 	 * The service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var Service_Metadata
 	 */
 	private $metadata;
@@ -42,7 +43,7 @@ final class Service_Registration {
 	/**
 	 * Whether the service can be overridden through another registration with the same slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var bool
 	 */
 	private $allow_override;
@@ -108,7 +109,10 @@ final class Service_Registration {
 		$this->allow_override = isset( $args['allow_override'] ) ? (bool) $args['allow_override'] : true;
 		$this->instance_args  = $this->parse_instance_args( $args );
 
-		$option_definitions = API_Key_Authentication::get_option_definitions( $slug );
+		$option_definitions = array();
+		if ( $this->metadata->get_type() === Service_Type::CLOUD ) {
+			$option_definitions = API_Key_Authentication::get_option_definitions( $slug );
+		}
 
 		$this->authentication_option_slugs = array();
 		foreach ( $option_definitions as $option_slug => $option_args ) {
@@ -126,7 +130,7 @@ final class Service_Registration {
 	/**
 	 * Gets the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return Service_Metadata The service metadata.
 	 */
@@ -176,17 +180,20 @@ final class Service_Registration {
 
 		$slug = $this->metadata->get_slug();
 
-		// For now an API key is the only authentication method supported.
-		$api_key = $authentication_options[0]->get_value();
-		if ( ! $api_key ) {
-			throw new RuntimeException(
-				sprintf(
-					'Cannot instantiate service %s without an API key.',
-					htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-				)
-			);
+		$authentication = null;
+		if ( count( $authentication_options ) > 0 ) {
+			// For now an API key is the only authentication method supported.
+			$api_key = $authentication_options[0]->get_value();
+			if ( ! $api_key ) {
+				throw new RuntimeException(
+					sprintf(
+						'Cannot instantiate service %s without an API key.',
+						htmlspecialchars( $slug ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					)
+				);
+			}
+			$authentication = new API_Key_Authentication( $api_key );
 		}
-		$authentication = new API_Key_Authentication( $api_key );
 
 		$context = new Service_Registration_Context(
 			$slug,

@@ -2,7 +2,7 @@
 /**
  * Class Felix_Arntz\AI_Services\Services\API\Types\Service_Metadata
  *
- * @since n.e.x.t
+ * @since 0.7.0
  * @package ai-services
  */
 
@@ -17,14 +17,14 @@ use InvalidArgumentException;
 /**
  * Value class representing metadata about a generative AI service.
  *
- * @since n.e.x.t
+ * @since 0.7.0
  */
 final class Service_Metadata implements Arrayable, With_JSON_Schema {
 
 	/**
 	 * The service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $slug;
@@ -32,7 +32,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * The service name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $name;
@@ -40,7 +40,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * The service credentials URL.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $credentials_url;
@@ -48,7 +48,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * The service type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string
 	 */
 	private $type;
@@ -56,7 +56,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * List of AI capabilities supported by the service and its models.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 * @var string[]
 	 */
 	private $capabilities;
@@ -64,7 +64,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $args {
 	 *     The arguments for the service metadata.
@@ -92,7 +92,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the service slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The service slug.
 	 */
@@ -103,7 +103,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the service name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The service name.
 	 */
@@ -114,7 +114,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the service credentials URL.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The service credentials URL.
 	 */
@@ -125,7 +125,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the service type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string The service type.
 	 */
@@ -136,7 +136,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Gets the list of AI capabilities supported by the service and its models.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return string[] List of AI capabilities supported by the service and its models.
 	 */
@@ -147,7 +147,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the array representation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The array representation.
 	 */
@@ -164,7 +164,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Creates a Service_Metadata instance from an array of service metadata arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $args The service metadata arguments.
 	 * @return Service_Metadata The Service_Metadata instance.
@@ -176,7 +176,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Parses the service metadata arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @param array<string, mixed> $args The service metadata arguments.
 	 * @return array<string, mixed> The parsed service metadata arguments.
@@ -240,7 +240,7 @@ final class Service_Metadata implements Arrayable, With_JSON_Schema {
 	/**
 	 * Returns the JSON schema for the service metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.0
 	 *
 	 * @return array<string, mixed> The JSON schema.
 	 */

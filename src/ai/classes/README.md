@@ -20,10 +20,10 @@ The primary purpose of the code within this directory is to:
 The main classes in this directory and their responsibilities are:
 
 -   **`GenerativeAiService.ts`**:
-    This is the base class representing an AI service provider (e.g., OpenAI, Anthropic, Google). It is responsible for listing available models within that service and providing instances of `GenerativeAiModel` configured for specific tasks or features. It acts as the entry point for accessing models of a particular service.
+    This is the base class representing an AI service provider (e.g., OpenAI, Anthropic, Google). It is responsible for listing available models within that service and providing instances of `GenerativeAiModel` configured for specific tasks or features. It acts as the entry point for accessing models of a particular service. It also provides access to service metadata.
 
 -   **`GenerativeAiModel.ts`**:
-    This class represents a specific AI model from a service. It handles the actual API calls to the backend for operations like text generation (`generateText`, `streamGenerateText`) and image generation (`generateImage`). It encapsulates model-specific parameters and capabilities.
+    This class represents a specific AI model from a service. It handles the actual API calls to the backend for operations like text generation (`generateText`, `streamGenerateText`), image generation (`generateImage`), and text to speech (`textToSpeech`). It encapsulates model-specific parameters and capabilities.
 
 -   **`BrowserGenerativeAiService.ts` & `BrowserGenerativeAiModel.ts`**:
     These are specialized versions of `GenerativeAiService` and `GenerativeAiModel`, respectively. They are designed for interacting with AI models that run directly in the user's browser, leveraging browser-native APIs (e.g., `window.LanguageModel`). `BrowserGenerativeAiModel` adapts the browser's API to conform to the plugin's standard `Candidates` response structure.

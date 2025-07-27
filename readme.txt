@@ -369,6 +369,7 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 
 * Document how to transform text to speech in PHP and JavaScript. ([515e696](https://github.com/felixarntz/ai-services/commit/515e69698fc6d5e137832e6a85940ddc23b4b4f7))
 * Document TypeScript code (for human and LLM consumption). ([6685047](https://github.com/felixarntz/ai-services/commit/66850478ab5b7bc9e80e8a6fc804506e3456d3b2))
+* Add WordPress Playground link to `README.md`. Props [iftakharul-islam](https://github.com/iftakharul-islam). ([#43](https://github.com/felixarntz/ai-services/pull/43))
 
 = 0.6.5 =
 

@@ -39,8 +39,11 @@ Here's a (non-comprehensive) feature list:
 * Built-in AI service implementations
     * [Anthropic (Claude)](https://www.anthropic.com/claude)
     * [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
+    * [Mistral](https://mistral.ai/)
     * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
-    * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
+    * [Perplexity (Sonar)](https://www.perplexity.ai/)
+    * [xAI (Grok)](https://x.ai/)
+    * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis) and [Edge's built-in AI APIs](https://blogs.windows.com/msedgedev/2025/05/19/introducing-the-prompt-and-writing-assistance-apis/))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 
 **Disclaimer:** The AI Services plugin is still in its early stages, with a limited feature set and more being added. A crucial part of refining the plugin is shaping the APIs to make them easy to use and cover the different generative AI capabilities that the AI services offer in a uniform way. That's why your feedback is much appreciated!
@@ -67,9 +70,19 @@ The use of the third party AI services is subject to the respective terms of ser
     * [Google Terms of Service](https://policies.google.com/terms)
     * [Google AI Terms of Service](https://policies.google.com/terms/generative-ai)
     * [Google Privacy Policy](https://policies.google.com/privacy)
+* [Mistral](https://mistral.ai/)
+    * [Mistral Terms of Service](https://mistral.ai/terms#terms-of-service)
+    * [Mistral Privacy Policy](https://mistral.ai/terms#privacy-policy)
 * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
     * [OpenAI Terms of Use](https://openai.com/policies/row-terms-of-use/)
     * [OpenAI Privacy Policy](https://openai.com/policies/row-privacy-policy/)
+* [Perplexity (Sonar)](https://www.perplexity.ai/)
+    * [Perplexity Terms of Service](https://www.perplexity.ai/hub/legal/terms-of-service)
+    * [Perplexity Privacy Policy](https://www.perplexity.ai/hub/legal/privacy-policy)
+* [xAI (Grok)](https://x.ai/)
+    * [xAI Terms of Service - Consumer](https://x.ai/legal/terms-of-service)
+    * [xAI Terms of Service - Enterprise](https://x.ai/legal/terms-of-service-enterprise)
+    * [xAI Privacy Policy](https://x.ai/legal/privacy-policy)
 
 = Code examples for using the API =
 

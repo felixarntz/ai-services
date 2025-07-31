@@ -33,8 +33,11 @@ Here's a (non-comprehensive) feature list:
 * Built-in AI service implementations
     * [Anthropic (Claude)](https://www.anthropic.com/claude)
     * [Google (Gemini, Imagen)](https://ai.google.dev/gemini-api)
+    * [Mistral](https://mistral.ai/)
     * [OpenAI (GPT, Dall-E)](https://openai.com/chatgpt/)
-    * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis))
+    * [Perplexity (Sonar)](https://www.perplexity.ai/)
+    * [xAI (Grok)](https://x.ai/)
+    * Browser (client-side only; experimental support for [Chrome's built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis) and [Edge's built-in AI APIs](https://blogs.windows.com/msedgedev/2025/05/19/introducing-the-prompt-and-writing-assistance-apis/))
 * Additional AI service integrations can be registered and will then be available in the same way as built-in ones
 
 ## Why?

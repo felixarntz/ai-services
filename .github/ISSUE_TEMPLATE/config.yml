@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support Request
+    url: https://wordpress.org/support/plugin/wp-starter-plugin/
+    about: Ask for help in the WP Starter Plugin support forum.

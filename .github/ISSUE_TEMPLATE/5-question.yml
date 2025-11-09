@@ -1,5 +1,5 @@
 name: Question
-description: Ask a question about using WP Starter Plugin.
+description: Ask a question about using AI Services.
 labels: ['question']
 body:
   - type: markdown

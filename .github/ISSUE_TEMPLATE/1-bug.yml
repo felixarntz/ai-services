@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug you encountered while using WP Starter Plugin.
+description: Report a bug you encountered while using AI Services.
 labels: ['bug']
 body:
   - type: markdown
@@ -30,7 +30,7 @@ body:
       label: Additional Context
       description: Please share information about your environment, such as project version, PHP version, and operating system.
       placeholder: |
-        - WP Starter Plugin version:
+        - AI Services version:
         - PHP version:
         - Other relevant information:
     validations:

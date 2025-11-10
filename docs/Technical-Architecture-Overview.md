@@ -68,7 +68,7 @@ The AI Services plugin provides a centralized infrastructure for integrating var
 ## Extensibility
 
 * **Registering New Services:** Developers can implement the `Generative_AI_Service` interface and register their custom service implementation using the `Services_API::register_service()` method. This makes the custom service available alongside the built-in ones throughout the plugin's APIs and UI.
-* **Filters and Actions:** Various WordPress filters and actions are available for customization (e.g., `ai_services_model_params` to modify model parameters, `ais_load_services_capabilities` to adjust user permissions).
+* **Filters and Actions:** Various WordPress filters and actions are available for customization (e.g., `ai_services_model_params` to modify model parameters, `ai_services_load_services_capabilities` to adjust user permissions).
 
 ## Directory Structure
 

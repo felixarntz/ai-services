@@ -162,7 +162,7 @@ class Services_Loader_Tests extends Test_Case {
 		// Ensure the action is fired and receives the capability controller.
 		$controller_passed_to_action_hook = null;
 		add_action(
-			'ais_load_services_capabilities',
+			'ai_services_load_services_capabilities',
 			static function ( $controller ) use ( &$controller_passed_to_action_hook ) {
 				$controller_passed_to_action_hook = $controller;
 			}

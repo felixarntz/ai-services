@@ -201,7 +201,9 @@ class Service_Entity implements Entity {
 		$option = sprintf( 'ais_%s_api_key', $this->slug );
 
 		// These filters are part of get_option() and allow plugins to short-circuit the option retrieval.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$pre = apply_filters( "pre_option_{$option}", false, $option, '' );
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$pre = apply_filters( 'pre_option', $pre, $option, '' );
 
 		return false !== $pre;

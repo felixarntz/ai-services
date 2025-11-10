@@ -35,7 +35,7 @@ class OpenAI_AI_Image_Generation_Model extends OpenAI_Compatible_AI_Image_Genera
 
 		/*
 		 * For the gpt-image-* models, an optional 'output_format' parameter can be set to receive a different image
-		 * MIME type than the default 'iamge/png'.
+		 * MIME type other than the default 'image/png'.
 		 * At the same time, the 'response_format' parameter is not supported by these models, as they will always
 		 * return base64-encoded data.
 		 */

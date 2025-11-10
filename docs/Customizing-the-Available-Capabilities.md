@@ -24,7 +24,7 @@ Here is a list of the available user capabilities, what they are for, and how th
 
 ## How to customize the default behavior
 
-The AI Services plugin's `ais_load_services_capabilities` action hook can be used to customize the way that these capabilities are granted by default. It receives an instance of a capability controller class which exposes methods to change the behavior.
+The AI Services plugin's `ai_services_load_services_capabilities` action hook can be used to customize the way that these capabilities are granted by default. It receives an instance of a capability controller class which exposes methods to change the behavior.
 
 Below are some examples of how this action hook could be used:
 
@@ -34,7 +34,7 @@ You can alter which WordPress Core capability a user needs to have to be granted
 
 ```php
 add_action(
-	'ais_load_services_capabilities',
+	'ai_services_load_services_capabilities',
 	function ( $capability_controller ) {
 		$capability_controller->grant_cap_for_base_caps(
 			'ais_access_services',
@@ -52,7 +52,7 @@ The following snippet would disable granting the plugin capabilities based on an
 
 ```php
 add_action(
-	'ais_load_services_capabilities',
+	'ai_services_load_services_capabilities',
 	function ( $capability_controller ) {
 		$capability_controller->grant_cap_for_base_caps( 'ais_access_services', array() );
 		$capability_controller->grant_cap_for_base_caps( 'ais_manage_services', array() );
@@ -68,7 +68,7 @@ Here is an example which would lead to the `openai` AI service to be only access
 
 ```php
 add_action(
-	'ais_load_services_capabilities',
+	'ai_services_load_services_capabilities',
 	function ( $capability_controller ) {
 		$capability_controller->set_meta_map_callback(
 			'ais_access_service',
@@ -92,7 +92,7 @@ For example, the following snippet would prevent any user from accessing and usi
 
 ```php
 add_action(
-	'ais_load_services_capabilities',
+	'ai_services_load_services_capabilities',
 	function ( $capability_controller ) {
 		$capability_controller->set_meta_map_callback(
 			'ais_use_playground',

@@ -24,9 +24,16 @@ type Availability =
 	| 'downloadable'
 	| 'downloading'
 	| 'available';
+type LanguageModelMessageType = 'text' | 'image' | 'audio';
+interface LanguageModelExpected {
+	type: LanguageModelMessageType;
+	languages?: string[];
+}
 interface LanguageModelCreateCoreOptions {
 	topK?: number;
 	temperature?: number;
+	expectedInputs?: LanguageModelExpected[];
+	expectedOutputs?: LanguageModelExpected[];
 }
 
 let browser: ServiceResource;
@@ -98,10 +105,29 @@ async function getBrowserAiCapabilities(): Promise< AiCapability[] > {
 	}
 
 	if ( llm && typeof llm.availability === 'function' ) {
-		const browserAiAvailability = await llm.availability();
-		if ( browserAiAvailability === 'available' ) {
+		// First, include check for multimodal input support.
+		const browserMultimodalAiAvailability = await llm.availability( {
+			expectedInputs: [
+				{ type: 'text', languages: [ 'en' ] },
+				{ type: 'image', languages: [ 'en' ] },
+				{ type: 'audio', languages: [ 'en' ] },
+			],
+			expectedOutputs: [ { type: 'text', languages: [ 'en' ] } ],
+		} );
+		if ( browserMultimodalAiAvailability === 'available' ) {
 			capabilities.push( enums.AiCapability.TEXT_GENERATION );
 			capabilities.push( enums.AiCapability.CHAT_HISTORY );
+			capabilities.push( enums.AiCapability.MULTIMODAL_INPUT );
+		} else if ( browserMultimodalAiAvailability === 'unavailable' ) {
+			// Fall back to checking without multimodal input.
+			const browserAiAvailability = await llm.availability( {
+				expectedInputs: [ { type: 'text', languages: [ 'en' ] } ],
+				expectedOutputs: [ { type: 'text', languages: [ 'en' ] } ],
+			} );
+			if ( browserAiAvailability === 'available' ) {
+				capabilities.push( enums.AiCapability.TEXT_GENERATION );
+				capabilities.push( enums.AiCapability.CHAT_HISTORY );
+			}
 		}
 	}
 

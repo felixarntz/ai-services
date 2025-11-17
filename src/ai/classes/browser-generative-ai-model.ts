@@ -3,7 +3,7 @@
  */
 import GenerativeAiModel from './generative-ai-model';
 import * as enums from '../enums';
-import { textToContent } from '../helpers';
+import { textToContent, base64DataUrlToBase64Data } from '../helpers';
 import { validateContent, validateCapabilities } from '../util';
 import { getResponseGenerator } from '../../utils/process-stream';
 import {
@@ -32,22 +32,38 @@ type Availability =
 	| 'downloadable'
 	| 'downloading'
 	| 'available';
+type LanguageModelMessageType = 'text' | 'image' | 'audio';
+interface LanguageModelExpected {
+	type: LanguageModelMessageType;
+	languages?: string[];
+}
 interface LanguageModelCreateCoreOptions {
 	topK?: number;
 	temperature?: number;
+	expectedInputs?: LanguageModelExpected[];
+	expectedOutputs?: LanguageModelExpected[];
 }
 interface LanguageModelCreateOptions extends LanguageModelCreateCoreOptions {
 	initialPrompts?:
 		| [ LanguageModelSystemMessage, ...LanguageModelMessage[] ]
 		| LanguageModelMessage[];
 }
+type LanguageModelMessageValue =
+	| ImageBitmapSource
+	| AudioBuffer
+	| BufferSource
+	| string;
+interface LanguageModelMessageContent {
+	type: LanguageModelMessageType;
+	value: LanguageModelMessageValue;
+}
 interface LanguageModelMessage {
 	role: LanguageModelMessageRole;
-	content: string;
+	content: LanguageModelMessageContent[] | string;
 }
 interface LanguageModelSystemMessage {
 	role: LanguageModelSystemMessageRole;
-	content: string;
+	content: LanguageModelMessageContent[] | string;
 }
 type LanguageModelMessageRole = 'user' | 'assistant';
 type LanguageModelSystemMessageRole = 'system';
@@ -65,6 +81,70 @@ type LanguageModelPrompt = string | LanguageModelMessage[];
 interface LanguageModelPromptOptions {
 	responseConstraint?: Record< string, unknown >;
 	signal?: AbortSignal;
+}
+
+/**
+ * Translates base64 encoded data to a BufferSource.
+ *
+ * @since n.e.x.t
+ *
+ * @param base64 - The base64 encoded string.
+ * @returns The BufferSource representation of the data.
+ */
+function base64ToBufferSource( base64: string ): BufferSource {
+	const base64Data = base64DataUrlToBase64Data( base64 );
+
+	const binaryString = atob( base64Data );
+	const bytes = new Uint8Array( binaryString.length );
+	for ( let i = 0; i < binaryString.length; i++ ) {
+		bytes[ i ] = binaryString.charCodeAt( i );
+	}
+	return bytes.buffer;
+}
+
+/**
+ * Prepares content parts for the browser AI API.
+ *
+ * @since n.e.x.t
+ *
+ * @param parts - The content parts.
+ * @returns The prepared content parts.
+ */
+function prepareContentPartsForBrowser(
+	parts: Part[]
+): LanguageModelMessageContent[] | string {
+	if ( parts.length === 1 && 'text' in parts[ 0 ] ) {
+		return parts[ 0 ].text;
+	}
+
+	return parts.map( ( part ) => {
+		if ( 'text' in part ) {
+			return {
+				type: 'text',
+				value: part.text,
+			};
+		}
+
+		if ( 'inlineData' in part ) {
+			if ( part.inlineData.mimeType.startsWith( 'audio/' ) ) {
+				return {
+					type: 'audio',
+					value: base64ToBufferSource( part.inlineData.data ),
+				};
+			}
+			if ( part.inlineData.mimeType.startsWith( 'image/' ) ) {
+				return {
+					type: 'image',
+					value: base64ToBufferSource( part.inlineData.data ),
+				};
+			}
+			throw new Error(
+				`Unsupported inline data mime type for browser AI: ${ part.inlineData.mimeType }`
+			);
+		}
+
+		throw new Error( 'Unsupported part type for browser AI.' );
+	} );
 }
 
 /**
@@ -93,17 +173,12 @@ function prepareContentForBrowser(
 			content.length > 1
 		) {
 			return ( content as Content[] ).map( ( item ) => {
-				const text = item.parts
-					.map( ( part ) => ( 'text' in part ? part.text : '' ) )
-					.filter( Boolean )
-					.join( '\n' );
-
 				return {
 					role:
 						item.role === enums.ContentRole.USER
 							? 'user'
 							: 'assistant',
-					content: text,
+					content: prepareContentPartsForBrowser( item.parts ),
 				};
 			} );
 		}
@@ -115,19 +190,68 @@ function prepareContentForBrowser(
 			// Assuming it's an array of Part if not an array of Content.
 			parts = content as Part[];
 		}
-		return parts
-			.map( ( part ) => ( 'text' in part ? part.text : '' ) )
-			.filter( Boolean )
-			.join( '\n' );
+		const browserContentParts = prepareContentPartsForBrowser( parts );
+		if ( typeof browserContentParts === 'string' ) {
+			return browserContentParts;
+		}
+		return [
+			{
+				role: 'user',
+				content: browserContentParts,
+			},
+		];
 	}
 
 	if ( typeof content === 'object' ) {
-		return content.parts
-			.map( ( part ) => ( 'text' in part ? part.text : '' ) )
-			.join( '\n' );
+		const browserContentParts = prepareContentPartsForBrowser(
+			content.parts
+		);
+		if ( typeof browserContentParts === 'string' ) {
+			return browserContentParts;
+		}
+		return [
+			{
+				role:
+					content.role === enums.ContentRole.USER
+						? 'user'
+						: 'assistant',
+				content: browserContentParts,
+			},
+		];
 	}
 
 	throw new Error( 'Invalid content format.' );
+}
+
+/**
+ * Gets the modalities present in a prompt.
+ *
+ * @since n.e.x.t
+ *
+ * @param prompt - The prompt to analyze.
+ * @returns The set of modalities present in the prompt.
+ */
+function getBrowserPromptModalities(
+	prompt: LanguageModelPrompt
+): Set< LanguageModelMessageType > {
+	const modalities = new Set< LanguageModelMessageType >();
+
+	if ( typeof prompt === 'string' ) {
+		modalities.add( 'text' );
+		return modalities;
+	}
+
+	for ( const message of prompt ) {
+		if ( typeof message.content === 'string' ) {
+			modalities.add( 'text' );
+		} else {
+			for ( const contentItem of message.content ) {
+				modalities.add( contentItem.type );
+			}
+		}
+	}
+
+	return modalities;
 }
 
 /**
@@ -139,12 +263,15 @@ function prepareContentForBrowser(
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
  * @since 0.6.0 Checks for newer `LanguageModel` property.
  * @since 0.7.0 Renamed from `createSession`.
+ * @since n.e.x.t Added `inputModalities` parameter.
  *
- * @param modelParams - Model parameters.
+ * @param modelParams     - Model parameters.
+ * @param inputModalities - Optional set of input modalities to consider.
  * @returns The browser model instance.
  */
 async function createBrowserLlm(
-	modelParams: ModelParams
+	modelParams: ModelParams,
+	inputModalities?: Set< LanguageModelMessageType >
 ): Promise< LanguageModel > {
 	const browserParams: LanguageModelCreateOptions = {};
 	if (
@@ -177,6 +304,20 @@ async function createBrowserLlm(
 		}
 		browserParams.initialPrompts = [ systemPrompt ];
 	}
+	if ( inputModalities ) {
+		const expectedInputs: LanguageModelExpected[] = [];
+		inputModalities.forEach( ( modality ) => {
+			expectedInputs.push( { type: modality, languages: [ 'en' ] } );
+		} );
+		browserParams.expectedInputs = expectedInputs;
+		browserParams.expectedOutputs = [
+			{ type: 'text', languages: [ 'en' ] },
+		];
+	} else {
+		browserParams.expectedOutputs = [
+			{ type: 'text', languages: [ 'en' ] },
+		];
+	}
 
 	let llm: LanguageModelFactory | undefined;
 	if ( 'LanguageModel' in window ) {
@@ -195,7 +336,9 @@ async function createBrowserLlm(
 	}
 
 	if ( Object.keys( browserParams ).length === 0 ) {
-		return llm.create();
+		return llm.create( {
+			expectedOutputs: [ { type: 'text', languages: [ 'en' ] } ],
+		} );
 	}
 
 	try {
@@ -206,7 +349,9 @@ async function createBrowserLlm(
 			'Failed to create browser session with modelParams, therefore creating default session. Original error:',
 			error
 		);
-		return llm.create();
+		return llm.create( {
+			expectedOutputs: [ { type: 'text', languages: [ 'en' ] } ],
+		} );
 	}
 }
 
@@ -262,9 +407,10 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 		// Do some very basic validation.
 		validateContent( content );
 
-		const llm = await createBrowserLlm( this.modelParams );
-		const text = prepareContentForBrowser( content );
-		const resultText = await llm.prompt( text );
+		const prompt = prepareContentForBrowser( content );
+		const modalities = getBrowserPromptModalities( prompt );
+		const llm = await createBrowserLlm( this.modelParams, modalities );
+		const resultText = await llm.prompt( prompt );
 
 		// Normalize result shape to match candidates API syntax from other services.
 		return [
@@ -292,9 +438,10 @@ export default class BrowserGenerativeAiModel extends GenerativeAiModel {
 		// Do some very basic validation.
 		validateContent( content );
 
-		const llm = await createBrowserLlm( this.modelParams );
-		const text = prepareContentForBrowser( content );
-		const resultTextStream = llm.promptStreaming( text );
+		const prompt = prepareContentForBrowser( content );
+		const modalities = getBrowserPromptModalities( prompt );
+		const llm = await createBrowserLlm( this.modelParams, modalities );
+		const resultTextStream = llm.promptStreaming( prompt );
 		const resultTextGenerator = getResponseGenerator( resultTextStream );
 
 		// Normalize result shape to match candidates API syntax from other services.

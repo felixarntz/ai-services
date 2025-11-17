@@ -260,6 +260,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 				return $value;
 			case 'integer':
 				return (int) $value;
+			case 'number':
 			case 'float':
 				return (float) $value;
 			case 'boolean':

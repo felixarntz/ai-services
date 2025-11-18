@@ -200,6 +200,9 @@ class OpenAI_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	 * @param string $a_slug First model slug.
 	 * @param string $b_slug Second model slug.
 	 * @return int Comparison result.
+	 *
+	 * @SuppressWarnings(PHPMD.NPathComplexity)
+	 * @SuppressWarnings(PHPMD.CyclomaticComplexity)
 	 */
 	private function model_sort_callback( string $a_slug, string $b_slug ): int {
 		// Prefer non-preview models over preview models.

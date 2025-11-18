@@ -178,22 +178,39 @@ class Perplexity_AI_Service extends Abstract_AI_Service implements With_API_Clie
 	 * @return string[] The model slugs, sorted by preference.
 	 */
 	protected function sort_models_by_preference( array $model_slugs ): array {
-		$get_preference_group = static function ( $model_slug ) {
-			if ( 'sonar' === $model_slug ) {
-				return 0;
-			}
-			if ( 'sonar-pro' === $model_slug ) {
-				return 1;
-			}
-			return 2;
-		};
+		usort( $model_slugs, array( $this, 'model_sort_callback' ) );
+		return $model_slugs;
+	}
 
-		$preference_groups = array_fill( 0, 3, array() );
-		foreach ( $model_slugs as $model_slug ) {
-			$group                         = $get_preference_group( $model_slug );
-			$preference_groups[ $group ][] = $model_slug;
+	/**
+	 * Callback function for sorting models by slug, to be used with `usort()`.
+	 *
+	 * This method expresses preferences for certain models or model families within the provider by putting them
+	 * earlier in the sorted list. The objective is not to be opinionated about which models are better, but to ensure
+	 * that more commonly used, more recent, or flagship models are presented first to users.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $a_slug First model slug.
+	 * @param string $b_slug Second model slug.
+	 * @return int Comparison result.
+	 */
+	private function model_sort_callback( string $a_slug, string $b_slug ): int {
+		// Prefer 'sonar-pro' over 'sonar' over others.
+		if ( 'sonar-pro' === $a_slug && 'sonar-pro' !== $b_slug ) {
+			return -1;
+		}
+		if ( 'sonar-pro' === $b_slug && 'sonar-pro' !== $a_slug ) {
+			return 1;
+		}
+		if ( 'sonar' === $a_slug && 'sonar' !== $b_slug ) {
+			return -1;
+		}
+		if ( 'sonar' === $b_slug && 'sonar' !== $a_slug ) {
+			return 1;
 		}
 
-		return array_merge( ...$preference_groups );
+		// Fallback: Sort alphabetically.
+		return strcmp( $a_slug, $b_slug );
 	}
 }

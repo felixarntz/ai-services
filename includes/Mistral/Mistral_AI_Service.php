@@ -140,23 +140,49 @@ class Mistral_AI_Service extends Abstract_AI_Service implements With_API_Client 
 	 * @return string[] The model slugs, sorted by preference.
 	 */
 	protected function sort_models_by_preference( array $model_slugs ): array {
-		// Prioritize latest, non-experimental models, preferring cheaper ones.
-		$get_preference_group = static function ( $model_slug ) {
-			if ( str_ends_with( $model_slug, '-latest' ) ) {
-				if ( str_starts_with( $model_slug, 'mistral-small' ) ) {
-					return 0;
-				}
-				return 1;
-			}
-			return 2;
-		};
+		usort( $model_slugs, array( $this, 'model_sort_callback' ) );
+		return $model_slugs;
+	}
 
-		$preference_groups = array_fill( 0, 3, array() );
-		foreach ( $model_slugs as $model_slug ) {
-			$group                         = $get_preference_group( $model_slug );
-			$preference_groups[ $group ][] = $model_slug;
+	/**
+	 * Callback function for sorting models by slug, to be used with `usort()`.
+	 *
+	 * This method expresses preferences for certain models or model families within the provider by putting them
+	 * earlier in the sorted list. The objective is not to be opinionated about which models are better, but to ensure
+	 * that more commonly used, more recent, or flagship models are presented first to users.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $a_slug First model slug.
+	 * @param string $b_slug Second model slug.
+	 * @return int Comparison result.
+	 */
+	private function model_sort_callback( string $a_slug, string $b_slug ): int {
+		// Prefer models starting with "mistral-".
+		if ( str_starts_with( $a_slug, 'mistral-' ) && ! str_starts_with( $b_slug, 'mistral-' ) ) {
+			return -1;
+		}
+		if ( str_starts_with( $b_slug, 'mistral-' ) && ! str_starts_with( $a_slug, 'mistral-' ) ) {
+			return 1;
 		}
 
-		return array_merge( ...$preference_groups );
+		// Then prefer models ending with "-latest".
+		if ( str_ends_with( $a_slug, '-latest' ) && ! str_ends_with( $b_slug, '-latest' ) ) {
+			return -1;
+		}
+		if ( str_ends_with( $b_slug, '-latest' ) && ! str_ends_with( $a_slug, '-latest' ) ) {
+			return 1;
+		}
+
+		// Then prefer models starting with "mistral-small".
+		if ( str_starts_with( $a_slug, 'mistral-small' ) && ! str_starts_with( $b_slug, 'mistral-small' ) ) {
+			return -1;
+		}
+		if ( str_starts_with( $b_slug, 'mistral-small' ) && ! str_starts_with( $a_slug, 'mistral-small' ) ) {
+			return 1;
+		}
+
+		// Fallback: Sort alphabetically.
+		return strcmp( $a_slug, $b_slug );
 	}
 }

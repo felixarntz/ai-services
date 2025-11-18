@@ -197,29 +197,86 @@ class Google_AI_Service extends Abstract_AI_Service implements With_API_Client {
 	 * @return string[] The model slugs, sorted by preference.
 	 */
 	protected function sort_models_by_preference( array $model_slugs ): array {
-		// Prioritize latest, non-experimental models, preferring cheaper ones.
-		$get_preference_group = static function ( $model_slug ) {
-			if ( str_starts_with( $model_slug, 'gemini-2.0' ) ) {
-				if ( str_ends_with( $model_slug, '-flash' ) ) {
-					return 0;
-				}
-				return 1;
-			}
-			if ( str_starts_with( $model_slug, 'gemini-' ) ) {
-				if ( str_ends_with( $model_slug, '-flash' ) ) {
-					return 2;
-				}
-				return 3;
-			}
-			return 4;
-		};
+		usort( $model_slugs, array( $this, 'model_sort_callback' ) );
+		return $model_slugs;
+	}
 
-		$preference_groups = array_fill( 0, 5, array() );
-		foreach ( $model_slugs as $model_slug ) {
-			$group                         = $get_preference_group( $model_slug );
-			$preference_groups[ $group ][] = $model_slug;
+	/**
+	 * Callback function for sorting models by slug, to be used with `usort()`.
+	 *
+	 * This method expresses preferences for certain models or model families within the provider by putting them
+	 * earlier in the sorted list. The objective is not to be opinionated about which models are better, but to ensure
+	 * that more commonly used, more recent, or flagship models are presented first to users.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $a_slug First model slug.
+	 * @param string $b_slug Second model slug.
+	 * @return int Comparison result.
+	 */
+	private function model_sort_callback( string $a_slug, string $b_slug ): int {
+		// Prefer non-experimental models over experimental models.
+		if ( str_contains( $a_slug, '-exp' ) && ! str_contains( $b_slug, '-exp' ) ) {
+			return 1;
+		}
+		if ( str_contains( $b_slug, '-exp' ) && ! str_contains( $a_slug, '-exp' ) ) {
+			return -1;
 		}
 
-		return array_merge( ...$preference_groups );
+		// Prefer non-preview models over preview models.
+		if ( str_contains( $a_slug, '-preview' ) && ! str_contains( $b_slug, '-preview' ) ) {
+			return 1;
+		}
+		if ( str_contains( $b_slug, '-preview' ) && ! str_contains( $a_slug, '-preview' ) ) {
+			return -1;
+		}
+
+		// Prefer Gemini models over non-Gemini models.
+		if ( str_starts_with( $a_slug, 'gemini-' ) && ! str_starts_with( $b_slug, 'gemini-' ) ) {
+			return -1;
+		}
+		if ( str_starts_with( $b_slug, 'gemini-' ) && ! str_starts_with( $a_slug, 'gemini-' ) ) {
+			return 1;
+		}
+
+		// Prefer Gemini models with version numbers (e.g. 'gemini-2.5', 'gemini-2.0') over those without.
+		$a_match = preg_match( '/^gemini-([0-9.]+)(-[a-z0-9-]+)$/', $a_slug, $a_matches );
+		$b_match = preg_match( '/^gemini-([0-9.]+)(-[a-z0-9-]+)$/', $b_slug, $b_matches );
+		if ( $a_match && ! $b_match ) {
+			return -1;
+		}
+		if ( $b_match && ! $a_match ) {
+			return 1;
+		}
+		if ( $a_match && $b_match ) {
+			// Prefer later model versions.
+			$a_version = $a_matches[1];
+			$b_version = $b_matches[1];
+			if ( version_compare( $a_version, $b_version, '>' ) ) {
+				return -1;
+			}
+			if ( version_compare( $b_version, $a_version, '>' ) ) {
+				return 1;
+			}
+
+			// Prefer '-pro' models over other suffixes.
+			if ( '-pro' === $a_matches[2] && '-pro' !== $b_matches[2] ) {
+				return -1;
+			}
+			if ( '-pro' === $b_matches[2] && '-pro' !== $a_matches[2] ) {
+				return 1;
+			}
+
+			// Prefer '-flash' models over other suffixes.
+			if ( '-flash' === $a_matches[2] && '-flash' !== $b_matches[2] ) {
+				return -1;
+			}
+			if ( '-flash' === $b_matches[2] && '-flash' !== $a_matches[2] ) {
+				return 1;
+			}
+		}
+
+		// Fallback: Sort alphabetically.
+		return strcmp( $a_slug, $b_slug );
 	}
 }

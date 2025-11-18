@@ -145,35 +145,96 @@ class Anthropic_AI_Service extends Abstract_AI_Service implements With_API_Clien
 	 * @return string[] The model slugs, sorted by preference.
 	 */
 	protected function sort_models_by_preference( array $model_slugs ): array {
-		// Prioritize latest, non-experimental models, preferring Sonnet.
-		$get_preference_group = static function ( $model_slug ) {
-			if ( str_starts_with( $model_slug, 'claude-3-7' ) ) {
-				if ( str_contains( $model_slug, '-sonnet' ) ) {
-					return 0;
-				}
-				return 1;
-			}
-			if ( str_starts_with( $model_slug, 'claude-3-5' ) ) {
-				if ( str_contains( $model_slug, '-sonnet' ) ) {
-					return 2;
-				}
-				return 3;
-			}
-			if ( str_starts_with( $model_slug, 'claude-' ) ) {
-				if ( str_contains( $model_slug, '-sonnet' ) ) {
-					return 4;
-				}
-				return 5;
-			}
-			return 6;
-		};
+		usort( $model_slugs, array( $this, 'model_sort_callback' ) );
+		return $model_slugs;
+	}
 
-		$preference_groups = array_fill( 0, 7, array() );
-		foreach ( $model_slugs as $model_slug ) {
-			$group                         = $get_preference_group( $model_slug );
-			$preference_groups[ $group ][] = $model_slug;
+	/**
+	 * Callback function for sorting models by slug, to be used with `usort()`.
+	 *
+	 * This method expresses preferences for certain models or model families within the provider by putting them
+	 * earlier in the sorted list. The objective is not to be opinionated about which models are better, but to ensure
+	 * that more commonly used, more recent, or flagship models are presented first to users.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $a_slug First model slug.
+	 * @param string $b_slug Second model slug.
+	 * @return int Comparison result.
+	 */
+	private function model_sort_callback( string $a_slug, string $b_slug ): int {
+		// Prefer Claude models over non-Claude models.
+		if ( str_starts_with( $a_slug, 'claude-' ) && ! str_starts_with( $b_slug, 'claude-' ) ) {
+			return -1;
+		}
+		if ( str_starts_with( $b_slug, 'claude-' ) && ! str_starts_with( $a_slug, 'claude-' ) ) {
+			return 1;
 		}
 
-		return array_merge( ...$preference_groups );
+		/*
+		 * Prefer Claude models where the version number isn't the second segment (e.g. 'claude-sonnet-4')
+		 * over those where it is (e.g. 'claude-2', 'claude-3-5-sonnet'). The latter is only used for older models.
+		 */
+		if ( ! preg_match( '/^claude-\d/', $a_slug ) && preg_match( '/^claude-\d/', $b_slug ) ) {
+			return -1;
+		}
+		if ( ! preg_match( '/^claude-\d/', $b_slug ) && preg_match( '/^claude-\d/', $a_slug ) ) {
+			return 1;
+		}
+
+		/*
+		 * Prefer Claude models with type and version number (e.g. 'claude-sonnet-4', 'claude-sonnet-4-5-20250929')
+		 * over those without. An optional date suffix may also be present.
+		 */
+		$a_match = preg_match( '/^claude-([a-z]+)-(\d(-\d)?)(-[0-9]+)?$/', $a_slug, $a_matches );
+		$b_match = preg_match( '/^claude-([a-z]+)-(\d(-\d)?)(-[0-9]+)?$/', $b_slug, $b_matches );
+		if ( $a_match && ! $b_match ) {
+			return -1;
+		}
+		if ( $b_match && ! $a_match ) {
+			return 1;
+		}
+		if ( $a_match && $b_match ) {
+			// Prefer later model versions.
+			$a_version = str_replace( '-', '.', $a_matches[2] );
+			$b_version = str_replace( '-', '.', $b_matches[2] );
+			if ( version_compare( $a_version, $b_version, '>' ) ) {
+				return -1;
+			}
+			if ( version_compare( $b_version, $a_version, '>' ) ) {
+				return 1;
+			}
+
+			// Prefer models without a suffix (i.e. base models) over those with a suffix.
+			if ( ! isset( $a_matches[4] ) && isset( $b_matches[4] ) ) {
+				return -1;
+			}
+			if ( ! isset( $b_matches[4] ) && isset( $a_matches[4] ) ) {
+				return 1;
+			}
+
+			// Prefer 'sonnet' models over other types.
+			if ( 'sonnet' === $a_matches[1] && 'sonnet' !== $b_matches[1] ) {
+				return -1;
+			}
+			if ( 'sonnet' === $b_matches[1] && 'sonnet' !== $a_matches[1] ) {
+				return 1;
+			}
+
+			// Prefer later release dates.
+			if ( isset( $a_matches[4] ) && isset( $b_matches[4] ) ) {
+				$a_date = (int) substr( $a_matches[4], 1 );
+				$b_date = (int) substr( $b_matches[4], 1 );
+				if ( $a_date > $b_date ) {
+					return -1;
+				}
+				if ( $b_date > $a_date ) {
+					return 1;
+				}
+			}
+		}
+
+		// Fallback: Sort alphabetically.
+		return strcmp( $a_slug, $b_slug );
 	}
 }

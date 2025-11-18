@@ -46,6 +46,16 @@ class Plugin_Installer extends Abstract_Installer {
 			Service_Request_Cache::invalidate_caches( 'google' );
 			Service_Request_Cache::invalidate_caches( 'openai' );
 		}
+
+		if ( version_compare( $old_version, '0.7.1', '<' ) ) {
+			// Invalidate all existing service caches since model results changed.
+			Service_Request_Cache::invalidate_caches( 'anthropic' );
+			Service_Request_Cache::invalidate_caches( 'google' );
+			Service_Request_Cache::invalidate_caches( 'mistral' );
+			Service_Request_Cache::invalidate_caches( 'openai' );
+			Service_Request_Cache::invalidate_caches( 'perplexity' );
+			Service_Request_Cache::invalidate_caches( 'xai' );
+		}
 	}
 
 	/**

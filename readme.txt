@@ -5,8 +5,8 @@ Plugin URI:   https://felixarntz.github.io/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
-Tested up to: 6.8
-Stable tag:   0.7.0
+Tested up to: 6.9
+Stable tag:   0.7.1
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Tags:         ai, text generation, image generation, function calling, multimodal
@@ -308,6 +308,19 @@ You can also contribute to the plugin by translating it. Simply visit [translate
 4. AI Playground code modal showing PHP and JavaScript code for the current prompt and configuration
 
 == Changelog ==
+
+= 0.7.1 =
+
+**Enhancements:**
+
+* Add support for multimodal input for Chrome and Edge built-in AI. ([294c86a](https://github.com/felixarntz/ai-services/commit/294c86aab746be0318c0601c5238468d61fa3672))
+* Update provider model sorting to be more flexible and future-proof. ([584d8f3](https://github.com/felixarntz/ai-services/commit/584d8f360e54cc098f17ad0482f96634600d9e67))
+* Rename `ais_load_services_capabilities` action to `ai_services_load_services_capabilities`. ([1557214](https://github.com/felixarntz/ai-services/commit/1557214e8982997849ad2e7a70e67facd57260d4))
+
+**Bug Fixes:**
+
+* Fix missing image generation support for Nano Banana. ([fde4e4c](https://github.com/felixarntz/ai-services/commit/fde4e4c2c7fdb32bcaa279fd03b46c8675f89d7d))
+* Fix sanitization bug for float values in generation config. ([f5dc61b](https://github.com/felixarntz/ai-services/commit/f5dc61ba22607098aef50fac22da7ce2d02bb102))
 
 = 0.7.0 =
 

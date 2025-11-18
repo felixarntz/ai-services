@@ -86,7 +86,7 @@ interface LanguageModelPromptOptions {
 /**
  * Translates base64 encoded data to a BufferSource.
  *
- * @since n.e.x.t
+ * @since 0.7.1
  *
  * @param base64 - The base64 encoded string.
  * @returns The BufferSource representation of the data.
@@ -105,7 +105,7 @@ function base64ToBufferSource( base64: string ): BufferSource {
 /**
  * Prepares content parts for the browser AI API.
  *
- * @since n.e.x.t
+ * @since 0.7.1
  *
  * @param parts - The content parts.
  * @returns The prepared content parts.
@@ -226,7 +226,7 @@ function prepareContentForBrowser(
 /**
  * Gets the modalities present in a prompt.
  *
- * @since n.e.x.t
+ * @since 0.7.1
  *
  * @param prompt - The prompt to analyze.
  * @returns The set of modalities present in the prompt.
@@ -263,7 +263,7 @@ function getBrowserPromptModalities(
  * @since 0.4.0 Checks for newer `ai.languageModel` property.
  * @since 0.6.0 Checks for newer `LanguageModel` property.
  * @since 0.7.0 Renamed from `createSession`.
- * @since n.e.x.t Added `inputModalities` parameter.
+ * @since 0.7.1 Added `inputModalities` parameter.
  *
  * @param modelParams     - Model parameters.
  * @param inputModalities - Optional set of input modalities to consider.

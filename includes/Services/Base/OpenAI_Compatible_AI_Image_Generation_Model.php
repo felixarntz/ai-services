@@ -70,10 +70,6 @@ class OpenAI_Compatible_AI_Image_Generation_Model extends Abstract_AI_Model impl
 		$this->set_image_generation_config_from_model_params( $model_params );
 		$this->set_system_instruction_from_model_params( $model_params );
 
-		// Since image generation can be heavy, increase default request timeout to 30 seconds.
-		if ( ! isset( $request_options['timeout'] ) ) {
-			$request_options['timeout'] = 30;
-		}
 		$this->set_request_options( $request_options );
 	}
 

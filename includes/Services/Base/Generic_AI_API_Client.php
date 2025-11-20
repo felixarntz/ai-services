@@ -176,7 +176,7 @@ class Generic_AI_API_Client implements Generative_AI_API_Client {
 	 */
 	protected function add_default_options( array $request_options ): array {
 		if ( ! isset( $request_options['timeout'] ) ) {
-			$request_options['timeout'] = 15;
+			$request_options['timeout'] = 30;
 		}
 		return $request_options;
 	}

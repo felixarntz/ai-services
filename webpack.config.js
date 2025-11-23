@@ -2,6 +2,7 @@
  * External dependencies
  */
 const { sync: glob } = require( 'fast-glob' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const path = require( 'path' );
 
 /**
@@ -112,6 +113,17 @@ module.exports = {
 				}
 				return undefined;
 			},
+		} ),
+		new CopyWebpackPlugin( {
+			patterns: [
+				{
+					from: path.resolve(
+						__dirname,
+						'node_modules/wp-interface/build-style'
+					),
+					to: path.resolve( __dirname, 'build/wp-interface' ),
+				},
+			],
 		} ),
 	],
 	entry: getEntryPoints(),

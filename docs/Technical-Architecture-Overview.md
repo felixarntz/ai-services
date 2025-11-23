@@ -39,12 +39,10 @@ The AI Services plugin provides a centralized infrastructure for integrating var
 * **State Management (`@wordpress/data`):** Uses Redux-based stores for managing application state:
     * `@ai-services/ai` (`src/ai/`): Core store for managing available services, models, and making AI requests.
     * `@ai-services/settings` (`src/settings/`): Manages plugin settings, primarily API keys.
-    * `@ai-services/interface` (`src/interface/`): Handles general UI state like sidebars and modals.
     * `@ai-services/playground` (`src/playground-page/store/`): Manages state specific to the AI Playground screen (selected service/model, messages, function declarations, etc.).
 * **UI Components:**
     * Relies heavily on standard WordPress components (`@wordpress/components`, `@wordpress/icons`, etc.).
     * Provides reusable components specific to the plugin in `src/components/` (e.g., `ApiKeyControl`, `Parts`, `PluginIcon`).
-    * Defines higher-level UI structure components in `src/interface/` (e.g., `App`, `Header`, `Sidebar`, `Modal`).
 * **Build Process (`webpack.config.js`, `build/`):** Uses Webpack to bundle JavaScript and CSS assets. Each main folder in `src/` (e.g., `ai`, `settings`, `services-page`, `playground-page`) corresponds to a separate entry point, generating JS and CSS bundles in the `build/` directory. Asset manifests (`*.asset.php`) are generated for WordPress script/style dependency management.
 * **Admin Pages:**
     * **Settings Page (`src/services-page/`):** React application allowing users to configure API keys for registered services. Uses the `@ai-services/settings` store.

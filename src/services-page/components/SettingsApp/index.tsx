@@ -1,14 +1,14 @@
 /**
  * External dependencies
  */
+import { PluginIcon } from '@ai-services/components';
 import {
 	App,
 	Header,
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
-} from '@ai-services/interface';
-import { PluginIcon } from '@ai-services/components';
+} from 'wp-interface';
 
 /**
  * WordPress dependencies
@@ -27,14 +27,6 @@ import SettingsCards from '../SettingsCards';
 import SettingsStatus from '../SettingsStatus';
 import './style.scss';
 
-const interfaceLabels = {
-	header: __( 'Settings top bar', 'ai-services' ),
-	body: __( 'Settings content', 'ai-services' ),
-	sidebar: __( 'Settings sidebar', 'ai-services' ),
-	actions: __( 'Settings actions', 'ai-services' ),
-	footer: __( 'Settings footer', 'ai-services' ),
-};
-
 /**
  * Renders the full settings application.
  *
@@ -43,8 +35,55 @@ const interfaceLabels = {
  * @returns The component to be rendered.
  */
 export default function SettingsApp() {
+	const labels = {
+		header: __( 'Settings top bar', 'ai-services' ),
+		body: __( 'Settings content', 'ai-services' ),
+		sidebar: __( 'Settings sidebar', 'ai-services' ),
+		actions: __( 'Settings actions', 'ai-services' ),
+		footer: __( 'Settings footer', 'ai-services' ),
+		keyboardShortcutsModalTitle: __(
+			'Keyboard shortcuts',
+			'ai-services'
+		),
+		keyboardShortcutsModalCloseButtonLabel: __(
+			'Close keyboard shortcuts modal',
+			'ai-services'
+		),
+		keyboardShortcutsGlobalSectionTitle: __(
+			'Global shortcuts',
+			'ai-services'
+		),
+	};
+
+	const shortcutsDescriptions = {
+		'keyboard-shortcuts': __(
+			'Display these keyboard shortcuts.',
+			'ai-services'
+		),
+		'next-region': __(
+			'Navigate to the next part of the screen.',
+			'ai-services'
+		),
+		'previous-region': __(
+			'Navigate to the previous part of the screen.',
+			'ai-services'
+		),
+		'toggle-distraction-free': __(
+			'Toggle distraction free mode.',
+			'ai-services'
+		),
+		'toggle-sidebar': __(
+			'Show or hide the sidebar.',
+			'ai-services'
+		),
+	};
+
 	return (
-		<App labels={ interfaceLabels }>
+		<App
+			scope="ai-services"
+			labels={ labels }
+			shortcutsDescriptions={ shortcutsDescriptions }
+		>
 			<SettingsShortcutsRegister />
 			<SettingsShortcuts />
 			<UnsavedChangesWarning />

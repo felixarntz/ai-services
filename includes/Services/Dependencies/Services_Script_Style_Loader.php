@@ -113,15 +113,6 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->script_registry->register(
-			'ais-interface',
-			array(
-				'src'      => $this->plugin_env->url( 'build/interface/index.js' ),
-				'manifest' => $this->plugin_env->path( 'build/interface/index.asset.php' ),
-				'strategy' => 'defer',
-			)
-		);
-
-		$this->script_registry->register(
 			'ais-services-page',
 			array(
 				'src'      => $this->plugin_env->url( 'build/services-page/index.js' ),
@@ -152,10 +143,10 @@ class Services_Script_Style_Loader {
 		$this->style_registry->register(
 			'ais-interface',
 			array(
-				'src'          => $this->plugin_env->url( 'build/interface/style-index.css' ),
-				'path'         => $this->plugin_env->path( 'build/interface/style-index.css' ),
-				'manifest'     => $this->plugin_env->path( 'build/interface/index.asset.php' ),
+				'src'          => $this->plugin_env->url( 'build/wp-interface/style.css' ),
+				'path'         => $this->plugin_env->path( 'build/wp-interface/style.css' ),
 				'dependencies' => array( 'wp-components', 'wp-editor' ),
+				'version'      => '1.0.0',
 			)
 		);
 

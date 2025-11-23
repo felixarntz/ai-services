@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
+
+/**
  * WordPress dependencies
  */
 import apiFetch from '@wordpress/api-fetch';
@@ -11,7 +16,6 @@ import { __ } from '@wordpress/i18n';
  */
 import { STORE_NAME } from './name';
 import logError from '../utils/log-error';
-import type { StoreConfig, Action, ThunkArgs } from '../utils/store-types';
 
 const PLUGIN_SETTINGS_PREFIX = 'ais_';
 const SAVE_SETTINGS_NOTICE_ID = 'SAVE_SETTINGS_NOTICE_ID';

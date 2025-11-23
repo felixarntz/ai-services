@@ -65,15 +65,6 @@ class Plugin_Script_Style_Loader {
 	 */
 	public function register_scripts_and_styles(): void {
 		$this->script_registry->register(
-			'wpsp-interface',
-			array(
-				'src'      => $this->plugin_env->url( 'build/interface/index.js' ),
-				'manifest' => $this->plugin_env->path( 'build/interface/index.asset.php' ),
-				'strategy' => 'defer',
-			)
-		);
-
-		$this->script_registry->register(
 			'wpsp-settings',
 			array(
 				'src'      => $this->plugin_env->url( 'build/settings/index.js' ),
@@ -94,10 +85,10 @@ class Plugin_Script_Style_Loader {
 		$this->style_registry->register(
 			'wpsp-interface',
 			array(
-				'src'          => $this->plugin_env->url( 'build/interface/style-index.css' ),
-				'path'         => $this->plugin_env->path( 'build/interface/style-index.css' ),
-				'manifest'     => $this->plugin_env->path( 'build/interface/index.asset.php' ),
+				'src'          => $this->plugin_env->url( 'build/wp-interface/style.css' ),
+				'path'         => $this->plugin_env->path( 'build/wp-interface/style.css' ),
 				'dependencies' => array( 'wp-components', 'wp-editor' ),
+				'version'      => '1.0.0-beta.1',
 			)
 		);
 

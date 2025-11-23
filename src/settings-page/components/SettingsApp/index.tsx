@@ -7,7 +7,7 @@ import {
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
-} from '@wp-starter-plugin/interface';
+} from '@felixarntz/wp-interface';
 
 /**
  * WordPress dependencies
@@ -25,14 +25,6 @@ import SettingsMoreMenu from '../SettingsMoreMenu';
 import SettingsCards from '../SettingsCards';
 import SettingsStatus from '../SettingsStatus';
 
-const interfaceLabels = {
-	header: __( 'Settings top bar', 'wp-starter-plugin' ),
-	body: __( 'Settings content', 'wp-starter-plugin' ),
-	sidebar: __( 'Settings sidebar', 'wp-starter-plugin' ),
-	actions: __( 'Settings actions', 'wp-starter-plugin' ),
-	footer: __( 'Settings footer', 'wp-starter-plugin' ),
-};
-
 /**
  * Renders the full settings application.
  *
@@ -41,8 +33,55 @@ const interfaceLabels = {
  * @returns The component to be rendered.
  */
 export default function SettingsApp() {
+	const labels = {
+		header: __( 'Settings top bar', 'wp-starter-plugin' ),
+		body: __( 'Settings content', 'wp-starter-plugin' ),
+		sidebar: __( 'Settings sidebar', 'wp-starter-plugin' ),
+		actions: __( 'Settings actions', 'wp-starter-plugin' ),
+		footer: __( 'Settings footer', 'wp-starter-plugin' ),
+		keyboardShortcutsModalTitle: __(
+			'Keyboard shortcuts',
+			'wp-starter-plugin'
+		),
+		keyboardShortcutsModalCloseButtonLabel: __(
+			'Close keyboard shortcuts modal',
+			'wp-starter-plugin'
+		),
+		keyboardShortcutsGlobalSectionTitle: __(
+			'Global shortcuts',
+			'wp-starter-plugin'
+		),
+	};
+
+	const shortcutsDescriptions = {
+		'keyboard-shortcuts': __(
+			'Display these keyboard shortcuts.',
+			'wp-starter-plugin'
+		),
+		'next-region': __(
+			'Navigate to the next part of the screen.',
+			'wp-starter-plugin'
+		),
+		'previous-region': __(
+			'Navigate to the previous part of the screen.',
+			'wp-starter-plugin'
+		),
+		'toggle-distraction-free': __(
+			'Toggle distraction free mode.',
+			'wp-starter-plugin'
+		),
+		'toggle-sidebar': __(
+			'Show or hide the sidebar.',
+			'wp-starter-plugin'
+		),
+	};
+
 	return (
-		<App labels={ interfaceLabels }>
+		<App
+			scope="wp-starter-plugin"
+			labels={ labels }
+			shortcutsDescriptions={ shortcutsDescriptions }
+		>
 			<SettingsShortcutsRegister />
 			<SettingsShortcuts />
 			<UnsavedChangesWarning />

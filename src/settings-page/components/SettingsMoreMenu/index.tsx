@@ -1,24 +1,12 @@
 /**
  * External dependencies
  */
-import {
-	DistractionFreePreferenceToggleMenuItem,
-	KeyboardShortcutsMenuItem,
-} from '@wp-starter-plugin/interface';
+import { MoreMenu } from '@felixarntz/wp-interface';
 
 /**
  * WordPress dependencies
  */
 import { __, _x } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
-import { external, moreVertical } from '@wordpress/icons';
-import {
-	MenuGroup,
-	MenuItem,
-	VisuallyHidden,
-	DropdownMenu,
-} from '@wordpress/components';
-import { store as preferencesStore } from '@wordpress/preferences';
 
 /**
  * Renders the More menu to display in the header of the settings app.
@@ -28,61 +16,54 @@ import { store as preferencesStore } from '@wordpress/preferences';
  * @returns The component to be rendered.
  */
 export default function SettingsMoreMenu() {
-	const showIconLabels = useSelect(
-		( select ) =>
-			select( preferencesStore ).get(
-				'wp-starter-plugin',
-				'showIconLabels'
-			),
-		[]
-	);
-
 	return (
-		<DropdownMenu
-			icon={ moreVertical }
-			label={ __( 'Options', 'wp-starter-plugin' ) }
-			popoverProps={ {
-				placement: 'bottom-end',
-				className: 'more-menu-dropdown__content',
-			} }
-			toggleProps={ {
-				showTooltip: ! showIconLabels,
-				...( showIconLabels ? { variant: 'tertiary' } : {} ),
-				tooltipPosition: 'bottom',
-				size: 'compact',
-			} }
+		<MoreMenu
+			menuLabel={ __( 'Options', 'wp-starter-plugin' ) }
+			externalLinkA11yHint={
+				/* translators: accessibility text */
+				__( '(opens in a new tab)', 'wp-starter-plugin' )
+			}
 		>
 			{ () => (
 				<>
-					<MenuGroup label={ _x( 'View', 'noun' ) }>
-						<DistractionFreePreferenceToggleMenuItem />
-					</MenuGroup>
-					<MenuGroup label={ __( 'Tools' ) }>
-						<KeyboardShortcutsMenuItem />
-						<MenuItem
-							icon={ external }
-							// @ts-expect-error This prop is valid, but is missing from the type definition.
+					<MoreMenu.MenuGroup label={ _x( 'View', 'noun' ) }>
+						<MoreMenu.DistractionFreePreferenceToggleMenuItem
+							menuItemLabel={ __(
+								'Distraction free',
+								'wp-starter-plugin'
+							) }
+							menuItemInfo={ __(
+								'Hide secondary interface to help focus',
+								'wp-starter-plugin'
+							) }
+							messageActivated={ __(
+								'Distraction free mode activated',
+								'wp-starter-plugin'
+							) }
+							messageDeactivated={ __(
+								'Distraction free mode deactivated',
+								'wp-starter-plugin'
+							) }
+						/>
+					</MoreMenu.MenuGroup>
+					<MoreMenu.MenuGroup label={ __( 'Tools' ) }>
+						<MoreMenu.KeyboardShortcutsMenuItem
+							menuItemLabel={ __(
+								'Keyboard shortcuts',
+								'wp-starter-plugin'
+							) }
+						/>
+						<MoreMenu.ExternalLinkMenuItem
 							href={ __(
 								'https://wordpress.org/support/plugin/wp-starter-plugin/',
 								'wp-starter-plugin'
 							) }
-							target="_blank"
-							rel="noopener noreferrer"
 						>
 							{ __( 'Support', 'wp-starter-plugin' ) }
-							<VisuallyHidden as="span">
-								{
-									/* translators: accessibility text */
-									__(
-										'(opens in a new tab)',
-										'wp-starter-plugin'
-									)
-								}
-							</VisuallyHidden>
-						</MenuItem>
-					</MenuGroup>
+						</MoreMenu.ExternalLinkMenuItem>
+					</MoreMenu.MenuGroup>
 				</>
 			) }
-		</DropdownMenu>
+		</MoreMenu>
 	);
 }

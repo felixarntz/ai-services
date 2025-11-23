@@ -24,6 +24,7 @@
 		"esModuleInterop": false,
 		"resolveJsonModule": true,
 		"pretty": true,
+		"baseUrl": ".",
 		"paths": {
 			"@wp-starter-plugin/*": [ "./src/*" ]
 		},

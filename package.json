@@ -33,8 +33,8 @@
 		"@wordpress/keycodes": "^4.35.0",
 		"@wordpress/notices": "^5.35.0",
 		"clsx": "^2.1.1",
-		"wp-interface": "file:../../misc/wp-packages/packages/wp-interface",
-		"wp-store-utils": "file:../../misc/wp-packages/packages/wp-store-utils"
+		"wp-interface": "^1.0.0-beta.2",
+		"wp-store-utils": "^1.0.0-beta.2"
 	},
 	"scripts": {
 		"build": "wp-scripts build && tsc --build",

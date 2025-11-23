@@ -119,7 +119,7 @@ module.exports = {
 				{
 					from: path.resolve(
 						__dirname,
-						'node_modules/@felixarntz/wp-interface/build-style'
+						'node_modules/wp-interface/build-style'
 					),
 					to: path.resolve( __dirname, 'build/wp-interface' ),
 				},

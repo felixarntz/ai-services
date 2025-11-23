@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { combineStoreConfigs } from '@felixarntz/wp-store-utils';
+import { combineStoreConfigs } from 'wp-store-utils';
 
 /**
  * WordPress dependencies

@@ -7,7 +7,7 @@ import {
 	HeaderActions,
 	Footer,
 	PinnedSidebars,
-} from '@felixarntz/wp-interface';
+} from 'wp-interface';
 
 /**
  * WordPress dependencies

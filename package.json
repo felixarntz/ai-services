@@ -24,8 +24,6 @@
 		"typescript": "^5.8.3"
 	},
 	"dependencies": {
-		"@felixarntz/wp-interface": "file:../../misc/wp-packages/packages/wp-interface",
-		"@felixarntz/wp-store-utils": "file:../../misc/wp-packages/packages/wp-store-utils",
 		"@wordpress/api-fetch": "^7.22.0",
 		"@wordpress/components": "^30.8.0",
 		"@wordpress/data": "^10.35.0",
@@ -34,7 +32,9 @@
 		"@wordpress/keyboard-shortcuts": "^5.35.0",
 		"@wordpress/keycodes": "^4.35.0",
 		"@wordpress/notices": "^5.35.0",
-		"clsx": "^2.1.1"
+		"clsx": "^2.1.1",
+		"wp-interface": "file:../../misc/wp-packages/packages/wp-interface",
+		"wp-store-utils": "file:../../misc/wp-packages/packages/wp-store-utils"
 	},
 	"scripts": {
 		"build": "wp-scripts build && tsc --build",

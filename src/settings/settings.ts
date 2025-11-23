@@ -1,11 +1,7 @@
 /**
  * External dependencies
  */
-import type {
-	StoreConfig,
-	Action,
-	ThunkArgs,
-} from '@felixarntz/wp-store-utils';
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
 
 /**
  * WordPress dependencies

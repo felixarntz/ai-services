@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { MoreMenu } from '@felixarntz/wp-interface';
+import { MoreMenu } from 'wp-interface';
 
 /**
  * WordPress dependencies

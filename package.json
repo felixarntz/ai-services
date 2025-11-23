@@ -36,6 +36,7 @@
 		"@wordpress/keyboard-shortcuts": "^5.35.0",
 		"@wordpress/keycodes": "^4.35.0",
 		"@wordpress/notices": "^5.35.0",
+		"@wordpress/preferences": "^4.35.0",
 		"clsx": "^2.1.1",
 		"markdown-to-jsx": "^7.5.0",
 		"memize": "^2.1.0",

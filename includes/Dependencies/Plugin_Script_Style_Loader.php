@@ -83,12 +83,12 @@ class Plugin_Script_Style_Loader {
 		);
 
 		$this->style_registry->register(
-			'wpsp-interface',
+			'wpsp-wp-interface',
 			array(
 				'src'          => $this->plugin_env->url( 'build/wp-interface/style.css' ),
 				'path'         => $this->plugin_env->path( 'build/wp-interface/style.css' ),
 				'dependencies' => array( 'wp-components', 'wp-editor' ),
-				'version'      => '1.0.0-beta.1',
+				'version'      => '1.0.0',
 			)
 		);
 
@@ -98,7 +98,7 @@ class Plugin_Script_Style_Loader {
 				'src'          => $this->plugin_env->url( 'build/settings-page/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/settings-page/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/settings-page/index.asset.php' ),
-				'dependencies' => array( 'wp-components', 'wpsp-interface' ),
+				'dependencies' => array( 'wp-components', 'wpsp-wp-interface' ),
 			)
 		);
 	}

@@ -2,8 +2,6 @@
  * External dependencies
  */
 import { enums } from '@ai-services/ai';
-import { MultiCheckboxControl } from '@ai-services/components';
-import { store as interfaceStore } from '@ai-services/interface';
 import type {
 	AiCapability,
 	Modality,
@@ -11,6 +9,8 @@ import type {
 	ImageGenerationConfig,
 	TextToSpeechConfig,
 } from '@ai-services/ai/types';
+import { MultiCheckboxControl } from 'wp-admin-components';
+import { store as interfaceStore, useInterfaceScope } from 'wp-interface';
 
 /**
  * WordPress dependencies
@@ -40,6 +40,8 @@ const EMPTY_MODALITY_ARRAY: Modality[] = [];
  * @returns The component to be rendered.
  */
 export default function PlaygroundModelConfigPanel() {
+	const scope = useInterfaceScope();
+
 	const {
 		foundationalCapability,
 		additionalCapabilities,
@@ -51,39 +53,48 @@ export default function PlaygroundModelConfigPanel() {
 		aspectRatio,
 		voice,
 		isPanelOpened,
-	} = useSelect( ( select ) => {
-		const {
-			getFoundationalCapability,
-			getAdditionalCapabilities,
-			getAvailableModalities,
-			getModelParam,
-		} = select( playgroundStore );
-		const { isPanelActive } = select( interfaceStore );
+	} = useSelect(
+		( select ) => {
+			const {
+				getFoundationalCapability,
+				getAdditionalCapabilities,
+				getAvailableModalities,
+				getModelParam,
+			} = select( playgroundStore );
+			const { isPanelActive } = select( interfaceStore );
 
-		return {
-			foundationalCapability: getFoundationalCapability() as AiCapability,
-			additionalCapabilities:
-				getAdditionalCapabilities() as AiCapability[],
-			availableModalities: getAvailableModalities(),
-			maxOutputTokens: getModelParam(
-				'maxOutputTokens'
-			) as TextGenerationConfig[ 'maxOutputTokens' ],
-			temperature: getModelParam(
-				'temperature'
-			) as TextGenerationConfig[ 'temperature' ],
-			topP: getModelParam( 'topP' ) as TextGenerationConfig[ 'topP' ],
-			outputModalities:
-				( getModelParam(
-					'outputModalities'
-				) as TextGenerationConfig[ 'outputModalities' ] ) ||
-				EMPTY_MODALITY_ARRAY,
-			aspectRatio: getModelParam(
-				'aspectRatio'
-			) as ImageGenerationConfig[ 'aspectRatio' ],
-			voice: getModelParam( 'voice' ) as TextToSpeechConfig[ 'voice' ],
-			isPanelOpened: isPanelActive( 'playground-model-config' ),
-		};
-	}, [] );
+			return {
+				foundationalCapability:
+					getFoundationalCapability() as AiCapability,
+				additionalCapabilities:
+					getAdditionalCapabilities() as AiCapability[],
+				availableModalities: getAvailableModalities(),
+				maxOutputTokens: getModelParam(
+					'maxOutputTokens'
+				) as TextGenerationConfig[ 'maxOutputTokens' ],
+				temperature: getModelParam(
+					'temperature'
+				) as TextGenerationConfig[ 'temperature' ],
+				topP: getModelParam( 'topP' ) as TextGenerationConfig[ 'topP' ],
+				outputModalities:
+					( getModelParam(
+						'outputModalities'
+					) as TextGenerationConfig[ 'outputModalities' ] ) ||
+					EMPTY_MODALITY_ARRAY,
+				aspectRatio: getModelParam(
+					'aspectRatio'
+				) as ImageGenerationConfig[ 'aspectRatio' ],
+				voice: getModelParam(
+					'voice'
+				) as TextToSpeechConfig[ 'voice' ],
+				isPanelOpened: isPanelActive(
+					scope,
+					'playground-model-config'
+				),
+			};
+		},
+		[ scope ]
+	);
 
 	const { setModelParam } = useDispatch( playgroundStore );
 	const { togglePanel } = useDispatch( interfaceStore );
@@ -102,7 +113,7 @@ export default function PlaygroundModelConfigPanel() {
 		<PanelBody
 			title={ __( 'Model configuration', 'ai-services' ) }
 			opened={ isPanelOpened }
-			onToggle={ () => togglePanel( 'playground-model-config' ) }
+			onToggle={ () => togglePanel( scope, 'playground-model-config' ) }
 			className="ai-services-playground-model-config-panel"
 		>
 			{ foundationalCapability === enums.AiCapability.TEXT_GENERATION && (
@@ -122,7 +133,7 @@ export default function PlaygroundModelConfigPanel() {
 								) }
 								value={ outputModalities }
 								options={ modalityOptions }
-								onChange={ ( value ) =>
+								onChange={ ( value: string[] ) =>
 									setModelParam( 'outputModalities', value )
 								}
 								__nextHasNoMarginBottom

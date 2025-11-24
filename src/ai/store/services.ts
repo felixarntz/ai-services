@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
+
+/**
  * WordPress dependencies
  */
 import apiFetch from '@wordpress/api-fetch';
@@ -11,7 +16,6 @@ import { STORE_NAME } from './name';
 import { getBrowserServiceData } from './browser';
 import GenerativeAiService from '../classes/generative-ai-service';
 import BrowserGenerativeAiService from '../classes/browser-generative-ai-service';
-import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 import type { ServiceResource, AvailableServicesArgs } from '../types';
 
 const serviceInstances: Record< string, GenerativeAiService > = {};

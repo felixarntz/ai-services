@@ -233,7 +233,7 @@ export default function Input() {
 		};
 	}, [ inputRef, searchLastMessage ] );
 
-	let inputPlaceholder = __( 'Enter AI prompt', 'ai-services' );
+	let inputPlaceholder: string;
 	if ( allowFunctionResponse && includeHistory ) {
 		inputPlaceholder = __(
 			'Enter AI prompt or JSON data for a function response',
@@ -254,6 +254,8 @@ export default function Input() {
 			'Enter AI prompt to generate content',
 			'ai-services'
 		);
+	} else {
+		inputPlaceholder = __( 'Enter AI prompt', 'ai-services' );
 	}
 
 	const attachmentIds = useMemo(
@@ -302,7 +304,7 @@ export default function Input() {
 													'Selected file: %s',
 													'ai-services'
 												),
-												attachment.filename
+												attachment.filename as string
 											) }
 											width="80"
 											height="80"

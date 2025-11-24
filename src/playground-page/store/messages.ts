@@ -15,6 +15,7 @@ import type {
 	ImageGenerationConfig,
 	TextToSpeechConfig,
 } from '@ai-services/ai/types';
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
 
 /**
  * WordPress dependencies
@@ -29,7 +30,6 @@ import { uploadMedia } from '@wordpress/media-utils';
  */
 import { STORE_NAME } from './name';
 import logError from '../../utils/log-error';
-import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 import type {
 	AiPlaygroundMessage,
 	AiPlaygroundMessageAdditionalData,
@@ -876,7 +876,7 @@ const actions = {
 									'Saving file failed with error: %s',
 									'ai-services'
 								),
-								err.message || err
+								errorToString( err )
 							),
 							{
 								id: UPLOAD_ATTACHMENT_NOTICE_ID,

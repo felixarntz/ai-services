@@ -41,10 +41,7 @@ export default function SettingsApp() {
 		sidebar: __( 'Settings sidebar', 'ai-services' ),
 		actions: __( 'Settings actions', 'ai-services' ),
 		footer: __( 'Settings footer', 'ai-services' ),
-		keyboardShortcutsModalTitle: __(
-			'Keyboard shortcuts',
-			'ai-services'
-		),
+		keyboardShortcutsModalTitle: __( 'Keyboard shortcuts', 'ai-services' ),
 		keyboardShortcutsModalCloseButtonLabel: __(
 			'Close keyboard shortcuts modal',
 			'ai-services'
@@ -72,10 +69,7 @@ export default function SettingsApp() {
 			'Toggle distraction free mode.',
 			'ai-services'
 		),
-		'toggle-sidebar': __(
-			'Show or hide the sidebar.',
-			'ai-services'
-		),
+		'toggle-sidebar': __( 'Show or hide the sidebar.', 'ai-services' ),
 	};
 
 	return (

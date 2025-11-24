@@ -131,17 +131,17 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->style_registry->register(
-			'ais-components',
+			'ais-wp-admin-components',
 			array(
-				'src'          => $this->plugin_env->url( 'build/components/style-index.css' ),
-				'path'         => $this->plugin_env->path( 'build/components/style-index.css' ),
-				'manifest'     => $this->plugin_env->path( 'build/components/index.asset.php' ),
+				'src'          => $this->plugin_env->url( 'build/wp-admin-components/style.css' ),
+				'path'         => $this->plugin_env->path( 'build/wp-admin-components/style.css' ),
 				'dependencies' => array( 'wp-components' ),
+				'version'      => '1.0.0',
 			)
 		);
 
 		$this->style_registry->register(
-			'ais-interface',
+			'ais-wp-interface',
 			array(
 				'src'          => $this->plugin_env->url( 'build/wp-interface/style.css' ),
 				'path'         => $this->plugin_env->path( 'build/wp-interface/style.css' ),
@@ -151,12 +151,22 @@ class Services_Script_Style_Loader {
 		);
 
 		$this->style_registry->register(
+			'ais-components',
+			array(
+				'src'          => $this->plugin_env->url( 'build/components/style-index.css' ),
+				'path'         => $this->plugin_env->path( 'build/components/style-index.css' ),
+				'manifest'     => $this->plugin_env->path( 'build/components/index.asset.php' ),
+				'dependencies' => array( 'wp-components', 'ais-wp-admin-components' ),
+			)
+		);
+
+		$this->style_registry->register(
 			'ais-services-page',
 			array(
 				'src'          => $this->plugin_env->url( 'build/services-page/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/services-page/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/services-page/index.asset.php' ),
-				'dependencies' => array( 'wp-components', 'ais-components', 'ais-interface' ),
+				'dependencies' => array( 'wp-components', 'ais-components', 'ais-wp-interface' ),
 			)
 		);
 
@@ -166,7 +176,7 @@ class Services_Script_Style_Loader {
 				'src'          => $this->plugin_env->url( 'build/playground-page/style-index.css' ),
 				'path'         => $this->plugin_env->path( 'build/playground-page/style-index.css' ),
 				'manifest'     => $this->plugin_env->path( 'build/playground-page/index.asset.php' ),
-				'dependencies' => array( 'wp-components', 'ais-components', 'ais-interface' ),
+				'dependencies' => array( 'wp-components', 'ais-components', 'ais-wp-interface' ),
 			)
 		);
 	}

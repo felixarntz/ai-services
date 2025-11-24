@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { store as aiStore } from '@ai-services/ai';
-import { store as interfaceStore } from '@ai-services/interface';
+import { store as interfaceStore, useInterfaceScope } from 'wp-interface';
 
 /**
  * WordPress dependencies
@@ -38,6 +38,8 @@ const MODEL_SELECT_PLACEHOLDER_OPTIONS = [
  * @returns The component to be rendered.
  */
 export default function PlaygroundServiceModelPanel() {
+	const scope = useInterfaceScope();
+
 	const {
 		hasAnyAvailableServices,
 		availableServices,
@@ -47,30 +49,40 @@ export default function PlaygroundServiceModelPanel() {
 		servicesSettingsUrl,
 		currentUserCanManageServices,
 		isPanelOpened,
-	} = useSelect( ( select ) => {
-		const {
-			getAvailableServices,
-			getAvailableModels,
-			getService,
-			getModel,
-		} = select( playgroundStore );
-		const { getPluginSettingsUrl, currentUserCan, hasAvailableServices } =
-			select( aiStore );
-		const { isPanelActive } = select( interfaceStore );
+	} = useSelect(
+		( select ) => {
+			const {
+				getAvailableServices,
+				getAvailableModels,
+				getService,
+				getModel,
+			} = select( playgroundStore );
+			const {
+				getPluginSettingsUrl,
+				currentUserCan,
+				hasAvailableServices,
+			} = select( aiStore );
+			const { isPanelActive } = select( interfaceStore );
 
-		return {
-			hasAnyAvailableServices: hasAvailableServices(),
-			availableServices: getAvailableServices(),
-			availableModels: getAvailableModels(),
-			service: getService(),
-			model: getModel(),
-			servicesSettingsUrl: getPluginSettingsUrl(),
-			currentUserCanManageServices: currentUserCan(
-				'ais_manage_services'
-			),
-			isPanelOpened: isPanelActive( 'playground-service-model', true ),
-		};
-	}, [] );
+			return {
+				hasAnyAvailableServices: hasAvailableServices(),
+				availableServices: getAvailableServices(),
+				availableModels: getAvailableModels(),
+				service: getService(),
+				model: getModel(),
+				servicesSettingsUrl: getPluginSettingsUrl(),
+				currentUserCanManageServices: currentUserCan(
+					'ais_manage_services'
+				),
+				isPanelOpened: isPanelActive(
+					scope,
+					'playground-service-model',
+					true
+				),
+			};
+		},
+		[ scope ]
+	);
 
 	const { setService, setModel } = useDispatch( playgroundStore );
 	const { togglePanel } = useDispatch( interfaceStore );
@@ -129,7 +141,7 @@ export default function PlaygroundServiceModelPanel() {
 		<PanelBody
 			title={ __( 'Model selection', 'ai-services' ) }
 			opened={ isPanelOpened }
-			onToggle={ () => togglePanel( 'playground-service-model' ) }
+			onToggle={ () => togglePanel( scope, 'playground-service-model' ) }
 			className="ai-services-playground-service-model-panel"
 		>
 			{ availableServices !== undefined && (

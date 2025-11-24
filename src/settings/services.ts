@@ -2,6 +2,7 @@
  * External dependencies
  */
 import type { ServiceResource } from '@ai-services/ai/types';
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
 
 /**
  * WordPress dependencies
@@ -14,7 +15,6 @@ import { createRegistrySelector } from '@wordpress/data';
  */
 import { STORE_NAME } from './name';
 import logError from '../utils/log-error';
-import type { StoreConfig, Action, ThunkArgs } from '../utils/store-types';
 
 export enum ActionType {
 	Unknown = 'REDUX_UNKNOWN',

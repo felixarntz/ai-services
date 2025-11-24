@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
+
+/**
  * WordPress dependencies
  */
 import apiFetch from '@wordpress/api-fetch';
@@ -8,7 +13,6 @@ import { createRegistrySelector } from '@wordpress/data';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 
 type PluginData = {
 	plugin_slug: string;

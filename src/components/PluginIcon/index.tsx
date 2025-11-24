@@ -2,7 +2,6 @@
  * WordPress dependencies
  */
 import { SVG, Circle, G, Path } from '@wordpress/components';
-import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
@@ -17,10 +16,8 @@ import type { PluginIconProps } from './types';
  * @param props - Component props.
  * @returns The component to be rendered.
  */
-export default function PluginIcon(
-	props: WordPressComponentProps< PluginIconProps, 'svg' >
-) {
-	const { size, hideCircle, invertColor, ...extraProps } = props;
+export default function PluginIcon( props: PluginIconProps ) {
+	const { size, hideCircle, invertColor } = props;
 
 	const circleColor = invertColor ? '#ffffff' : '#0174aa';
 	const iconColor = invertColor ? '#0174aa' : '#ffffff';
@@ -32,7 +29,6 @@ export default function PluginIcon(
 			fill="#ff0000"
 			width={ size }
 			height={ size }
-			{ ...extraProps }
 		>
 			{ ! hideCircle && (
 				<Circle cx="256" cy="256" r="256" fill={ circleColor } />

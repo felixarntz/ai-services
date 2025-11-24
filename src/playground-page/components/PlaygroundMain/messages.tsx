@@ -2,8 +2,8 @@
  * External dependencies
  */
 import { Parts } from '@ai-services/components';
-import { store as interfaceStore } from '@ai-services/interface';
 import type { Part, InlineDataPart } from '@ai-services/ai/types';
+import { store as interfaceStore, useInterfaceScope } from 'wp-interface';
 
 /**
  * WordPress dependencies
@@ -183,6 +183,8 @@ function Message( props: MessageProps ) {
  * @returns The component to be rendered.
  */
 export default function Messages() {
+	const scope = useInterfaceScope();
+
 	const messages = useSelect(
 		( select ) => select( playgroundStore ).getMessages(),
 		[]
@@ -237,9 +239,9 @@ export default function Messages() {
 	const onViewMessageCode = useCallback(
 		( message: AiPlaygroundMessage ) => {
 			setActiveMessage( message );
-			openModal( 'message-code' );
+			openModal( scope, 'message-code' );
 		},
-		[ setActiveMessage, openModal ]
+		[ scope, setActiveMessage, openModal ]
 	);
 
 	return (

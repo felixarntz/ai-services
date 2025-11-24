@@ -1,9 +1,9 @@
 /**
  * External dependencies
  */
-import { OptionsFilterSearchControl, Tabs } from '@ai-services/components';
-import { Modal } from '@ai-services/interface';
 import type { FunctionDeclaration } from '@ai-services/ai/types';
+import { OptionsFilterSearchControl, Tabs } from 'wp-admin-components';
+import { Modal } from 'wp-interface';
 
 /**
  * WordPress dependencies
@@ -579,6 +579,7 @@ export default function FunctionDeclarationsModal() {
 		<Modal
 			identifier="function-declarations"
 			title={ __( 'Manage function declarations', 'ai-services' ) }
+			closeButtonLabel={ __( 'Close modal', 'ai-services' ) }
 			className="ai-services-playground-function-declarations-modal"
 		>
 			<div className="ai-services-playground-function-declarations-modal__content">

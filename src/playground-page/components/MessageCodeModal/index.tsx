@@ -1,10 +1,10 @@
 /**
  * External dependencies
  */
-import { Tabs } from '@ai-services/components';
-import { Modal } from '@ai-services/interface';
 import { enums, store as aiStore } from '@ai-services/ai';
 import type { Candidates } from '@ai-services/ai/types';
+import { Tabs } from 'wp-admin-components';
+import { Modal } from 'wp-interface';
 
 /**
  * WordPress dependencies
@@ -77,6 +77,7 @@ export default function MessageCodeModal() {
 					? __( 'Message code', 'ai-services' )
 					: __( 'Message raw JSON data', 'ai-services' )
 			}
+			closeButtonLabel={ __( 'Close modal', 'ai-services' ) }
 			className="ai-services-playground__message-code-modal"
 		>
 			{ type === 'user' &&
@@ -85,7 +86,9 @@ export default function MessageCodeModal() {
 				additionalData.foundationalCapability && (
 					<Tabs
 						selectedTabId={ selectedTabId }
-						onSelect={ ( id ) => id && setSelectedTabId( id ) }
+						onSelect={ ( id: string | null | undefined ) =>
+							id && setSelectedTabId( id )
+						}
 						orientation="horizontal"
 					>
 						<Tabs.TabList className="ai-services-playground__message-code-tabs">

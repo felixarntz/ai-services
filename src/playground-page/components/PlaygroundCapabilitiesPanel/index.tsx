@@ -1,10 +1,10 @@
 /**
  * External dependencies
  */
-import { MultiCheckboxControl } from '@ai-services/components';
-import { store as interfaceStore } from '@ai-services/interface';
 import type { AiCapabilityOption } from '@ai-services/playground-page/types';
 import type { AiCapability } from '@ai-services/ai/types';
+import { MultiCheckboxControl } from 'wp-admin-components';
+import { store as interfaceStore, useInterfaceScope } from 'wp-interface';
 
 /**
  * WordPress dependencies
@@ -34,32 +34,42 @@ type PlaygroundCapabilitiesPanelSelectProps = {
  * @returns The component to be rendered.
  */
 export default function PlaygroundCapabilitiesPanel() {
+	const scope = useInterfaceScope();
+
 	const {
 		availableFoundationalCapabilities,
 		availableAdditionalCapabilities,
 		foundationalCapability,
 		additionalCapabilities,
 		isPanelOpened,
-	}: PlaygroundCapabilitiesPanelSelectProps = useSelect( ( select ) => {
-		const {
-			getAvailableFoundationalCapabilities,
-			getAvailableAdditionalCapabilities,
-			getFoundationalCapability,
-			getAdditionalCapabilities,
-		} = select( playgroundStore );
-		const { isPanelActive } = select( interfaceStore );
+	}: PlaygroundCapabilitiesPanelSelectProps = useSelect(
+		( select ) => {
+			const {
+				getAvailableFoundationalCapabilities,
+				getAvailableAdditionalCapabilities,
+				getFoundationalCapability,
+				getAdditionalCapabilities,
+			} = select( playgroundStore );
+			const { isPanelActive } = select( interfaceStore );
 
-		return {
-			availableFoundationalCapabilities:
-				getAvailableFoundationalCapabilities(),
-			availableAdditionalCapabilities:
-				getAvailableAdditionalCapabilities(),
-			foundationalCapability: getFoundationalCapability() as AiCapability,
-			additionalCapabilities:
-				getAdditionalCapabilities() as AiCapability[],
-			isPanelOpened: isPanelActive( 'playground-capabilities', true ),
-		};
-	}, [] );
+			return {
+				availableFoundationalCapabilities:
+					getAvailableFoundationalCapabilities(),
+				availableAdditionalCapabilities:
+					getAvailableAdditionalCapabilities(),
+				foundationalCapability:
+					getFoundationalCapability() as AiCapability,
+				additionalCapabilities:
+					getAdditionalCapabilities() as AiCapability[],
+				isPanelOpened: isPanelActive(
+					scope,
+					'playground-capabilities',
+					true
+				),
+			};
+		},
+		[ scope ]
+	);
 
 	const { setFoundationalCapability, toggleAdditionalCapability } =
 		useDispatch( playgroundStore );
@@ -84,7 +94,7 @@ export default function PlaygroundCapabilitiesPanel() {
 		<PanelBody
 			title={ __( 'Capabilities', 'ai-services' ) }
 			opened={ isPanelOpened }
-			onToggle={ () => togglePanel( 'playground-capabilities' ) }
+			onToggle={ () => togglePanel( scope, 'playground-capabilities' ) }
 			className="ai-services-playground-capabilities-panel"
 		>
 			<Flex direction="column" gap="4">
@@ -94,7 +104,7 @@ export default function PlaygroundCapabilitiesPanel() {
 					value={ foundationalCapability }
 					options={ availableFoundationalCapabilities.map(
 						( { identifier, label }: AiCapabilityOption ) => ( {
-							value: identifier,
+							value: identifier as AiCapability,
 							label,
 						} )
 					) }

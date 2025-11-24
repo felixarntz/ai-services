@@ -119,6 +119,13 @@ module.exports = {
 				{
 					from: path.resolve(
 						__dirname,
+						'node_modules/wp-admin-components/build-style'
+					),
+					to: path.resolve( __dirname, 'build/wp-admin-components' ),
+				},
+				{
+					from: path.resolve(
+						__dirname,
 						'node_modules/wp-interface/build-style'
 					),
 					to: path.resolve( __dirname, 'build/wp-interface' ),

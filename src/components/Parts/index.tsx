@@ -9,7 +9,6 @@ import { helpers } from '@ai-services/ai';
  */
 import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
 
 /**
  * Internal dependencies
@@ -25,7 +24,7 @@ import './style.scss';
  * @param props - Component props.
  * @returns The component to be rendered.
  */
-function Media( props: WordPressComponentProps< MediaProps, null > ) {
+function Media( props: MediaProps ) {
 	const { mimeType, src } = props;
 
 	if ( mimeType.startsWith( 'image' ) ) {
@@ -51,9 +50,7 @@ function Media( props: WordPressComponentProps< MediaProps, null > ) {
  * @param props - Component props.
  * @returns The component to be rendered.
  */
-function JsonTextarea(
-	props: WordPressComponentProps< JsonTextareaProps, null >
-) {
+function JsonTextarea( props: JsonTextareaProps ) {
 	const { data, label } = props;
 
 	const dataJson = useMemo( () => {
@@ -80,9 +77,7 @@ function JsonTextarea(
  * @param props - Component props.
  * @returns The component to be rendered.
  */
-export default function Parts(
-	props: WordPressComponentProps< PartsProps, null >
-) {
+export default function Parts( props: PartsProps ) {
 	const { parts } = props;
 
 	return parts.map( ( part, index ) => {

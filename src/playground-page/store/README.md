@@ -30,7 +30,6 @@ The primary purpose of the code within this directory is to:
 - **`@wordpress/preferences`**: Used for persisting user preferences, such as selected capabilities, service, model, and function declarations.
 - **`@ai-services/ai`**: Provides enums, helpers, and the core AI store (`aiStore`) for interacting with AI services and models. This is referenced from `src/ai/`.
 - **`memize`**: Used for memoizing selectors to optimize performance.
-- **`../../utils/store-types`**: Provides TypeScript types for store configurations, actions, and thunks, likely located in `src/utils/`.
 - **`../types`**: Contains TypeScript type definitions specific to the playground page, likely located in `src/playground-page/`.
 
 ## State Management

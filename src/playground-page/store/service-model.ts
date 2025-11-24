@@ -8,6 +8,7 @@ import type {
 	AiCapability,
 	FunctionDeclaration,
 } from '@ai-services/ai/types';
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
 
 /**
  * WordPress dependencies
@@ -19,7 +20,6 @@ import { store as preferencesStore } from '@wordpress/preferences';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 import type { AiServiceOption, AiModelOption } from '../types';
 
 const EMPTY_FUNCTION_DECLARATION_ARRAY: FunctionDeclaration[] = [];

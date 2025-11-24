@@ -34,8 +34,8 @@ export default function PlaygroundStatus() {
 				model: getModel(),
 				messages: getMessages(),
 				loading: isLoading(),
-				serviceName: getServiceName(),
-				modelName: getModelName(),
+				serviceName: getServiceName() as string,
+				modelName: getModelName() as string,
 			};
 		}, [] );
 

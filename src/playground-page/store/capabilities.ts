@@ -4,6 +4,7 @@
 import { enums } from '@ai-services/ai';
 import memoize from 'memize';
 import type { AiCapability } from '@ai-services/ai/types';
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
 
 /**
  * WordPress dependencies
@@ -16,7 +17,6 @@ import { store as preferencesStore } from '@wordpress/preferences';
  * Internal dependencies
  */
 import { STORE_NAME } from './name';
-import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 import type { AiCapabilityOption, ModalityOption } from '../types';
 
 const EMPTY_CAPABILITY_ARRAY: AiCapability[] = [];

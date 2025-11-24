@@ -45,7 +45,9 @@ export default function SettingsMoreMenu() {
 		>
 			{ () => (
 				<>
-					<MoreMenu.MenuGroup label={ _x( 'View', 'noun', 'ai-services' ) }>
+					<MoreMenu.MenuGroup
+						label={ _x( 'View', 'noun', 'ai-services' ) }
+					>
 						<MoreMenu.DistractionFreePreferenceToggleMenuItem
 							menuItemLabel={ __(
 								'Distraction free',
@@ -73,7 +75,9 @@ export default function SettingsMoreMenu() {
 							) }
 						/>
 						{ !! playgroundUrl && (
-							<MoreMenu.InternalLinkMenuItem href={ playgroundUrl }>
+							<MoreMenu.InternalLinkMenuItem
+								href={ playgroundUrl }
+							>
 								{ __(
 									'AI Services Playground',
 									'ai-services'
@@ -81,18 +85,16 @@ export default function SettingsMoreMenu() {
 							</MoreMenu.InternalLinkMenuItem>
 						) }
 					</MoreMenu.MenuGroup>
-					<MoreMenu.MenuGroup label={ __( 'Resources', 'ai-services' ) }>
+					<MoreMenu.MenuGroup
+						label={ __( 'Resources', 'ai-services' ) }
+					>
 						{ !! supportUrl && (
-							<MoreMenu.ExternalLinkMenuItem
-								href={ supportUrl }
-							>
+							<MoreMenu.ExternalLinkMenuItem href={ supportUrl }>
 								{ __( 'Support', 'ai-services' ) }
 							</MoreMenu.ExternalLinkMenuItem>
 						) }
 						{ !! homepageUrl && (
-							<MoreMenu.ExternalLinkMenuItem
-								href={ homepageUrl }
-							>
+							<MoreMenu.ExternalLinkMenuItem href={ homepageUrl }>
 								{ __( 'Homepage', 'ai-services' ) }
 							</MoreMenu.ExternalLinkMenuItem>
 						) }

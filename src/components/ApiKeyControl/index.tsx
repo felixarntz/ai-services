@@ -1,15 +1,18 @@
 /**
+ * External dependencies
+ */
+import { SensitiveTextControl } from 'wp-admin-components';
+
+/**
  * WordPress dependencies
  */
 import { ExternalLink } from '@wordpress/components';
 import { createInterpolateElement } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
-import type { WordPressComponentProps } from '@wordpress/components/build-types/context';
+import { __, _x, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
-import SensitiveTextControl from '../SensitiveTextControl';
 import type { ApiKeyControlProps } from './types';
 
 /**
@@ -23,9 +26,7 @@ import type { ApiKeyControlProps } from './types';
  * @param props - Component props.
  * @returns The component to be rendered.
  */
-export default function ApiKeyControl(
-	props: WordPressComponentProps< ApiKeyControlProps, null >
-) {
+export default function ApiKeyControl( props: ApiKeyControlProps ) {
 	const { service, apiKey, onChangeApiKey, omitCredentialsLink, className } =
 		props;
 
@@ -103,6 +104,8 @@ export default function ApiKeyControl(
 				__( 'Hide API key for %s.', 'ai-services' ),
 				service.metadata?.name
 			) }
+			buttonShowText={ _x( 'Show', 'action', 'ai-services' ) }
+			buttonHideText={ _x( 'Hide', 'action', 'ai-services' ) }
 			__nextHasNoMarginBottom
 			__next40pxDefaultSize
 		/>

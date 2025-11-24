@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import type { StoreConfig, Action, ThunkArgs } from 'wp-store-utils';
+
+/**
  * WordPress dependencies
  */
 import { resolveSelect } from '@wordpress/data';
@@ -12,7 +17,6 @@ import GenerativeAiService from '../classes/generative-ai-service';
 import * as enums from '../enums';
 import { formatNewContent } from '../util';
 import logError from '../../utils/log-error';
-import type { StoreConfig, Action, ThunkArgs } from '../../utils/store-types';
 import {
 	Content,
 	Part,

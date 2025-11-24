@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import { combineStoreConfigs } from 'wp-store-utils';
+
+/**
  * WordPress dependencies
  */
 import { createReduxStore, register } from '@wordpress/data';
@@ -10,7 +15,6 @@ import { STORE_NAME } from './name';
 import capabilitiesStoreConfig from './capabilities';
 import serviceModelStoreConfig from './service-model';
 import messagesStoreConfig from './messages';
-import combineStoreConfigs from '../../utils/combine-store-configs';
 
 const storeConfig = combineStoreConfigs(
 	capabilitiesStoreConfig,

@@ -125,7 +125,7 @@ abstract class Abstract_Generation_Config implements Generation_Config {
 	 *
 	 * @throws InvalidArgumentException Thrown if the data is missing required fields.
 	 */
-	public static function from_array( array $data ): static {
+	public static function from_array( array $data ) {
 		return new static( $data );
 	}
 

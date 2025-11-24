@@ -26,7 +26,9 @@ export default function SettingsMoreMenu() {
 		>
 			{ () => (
 				<>
-					<MoreMenu.MenuGroup label={ _x( 'View', 'noun', 'wp-starter-plugin' ) }>
+					<MoreMenu.MenuGroup
+						label={ _x( 'View', 'noun', 'wp-starter-plugin' ) }
+					>
 						<MoreMenu.DistractionFreePreferenceToggleMenuItem
 							menuItemLabel={ __(
 								'Distraction free',
@@ -46,7 +48,9 @@ export default function SettingsMoreMenu() {
 							) }
 						/>
 					</MoreMenu.MenuGroup>
-					<MoreMenu.MenuGroup label={ __( 'Tools', 'wp-starter-plugin' ) }>
+					<MoreMenu.MenuGroup
+						label={ __( 'Tools', 'wp-starter-plugin' ) }
+					>
 						<MoreMenu.KeyboardShortcutsMenuItem
 							menuItemLabel={ __(
 								'Keyboard shortcuts',

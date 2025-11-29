@@ -41,8 +41,8 @@
 		"markdown-to-jsx": "^7.5.0",
 		"memize": "^2.1.0",
 		"wp-admin-components": "^1.0.0-beta.3",
-		"wp-interface": "^1.0.0-beta.4",
-		"wp-store-utils": "^1.0.0-beta.4"
+		"wp-interface": "^1.0.0",
+		"wp-store-utils": "^1.0.0"
 	},
 	"scripts": {
 		"build": "wp-scripts build && tsc --build",

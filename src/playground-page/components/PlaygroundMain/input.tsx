@@ -107,7 +107,7 @@ export default function Input() {
 		useSelect( ( select ) => {
 			const { getService, getModel, getMessages } =
 				select( playgroundStore );
-			const { getServices } = select( aiStore );
+			const { getServices, getWpVersion } = select( aiStore );
 
 			const currentService = getService();
 			const currentModel = getModel();
@@ -127,6 +127,29 @@ export default function Input() {
 				}
 			}
 
+			// The way to check capabilities for media upload changed in WP 6.9.
+			const wpVersion = getWpVersion();
+			let canUserUploadCheck: { kind: string; name: string };
+			if ( wpVersion ) {
+				const [ major, minor ] = wpVersion.split( '.' ).map( Number );
+				if ( major < 7 && ! ( major === 6 && minor === 9 ) ) {
+					canUserUploadCheck = {
+						kind: 'root',
+						name: 'media',
+					};
+				} else {
+					canUserUploadCheck = {
+						kind: 'postType',
+						name: 'attachment',
+					};
+				}
+			} else {
+				canUserUploadCheck = {
+					kind: 'postType',
+					name: 'attachment',
+				};
+			}
+
 			const { canUser } = select( coreStore );
 
 			return {
@@ -134,11 +157,7 @@ export default function Input() {
 				model: currentModel,
 				capabilities: currentCapabilities,
 				messages: getMessages(),
-				canUploadMedia:
-					canUser( 'create', {
-						kind: 'root',
-						name: 'media',
-					} ) ?? true,
+				canUploadMedia: canUser( 'create', canUserUploadCheck ) ?? true,
 			};
 		}, [] );
 

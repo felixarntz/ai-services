@@ -412,7 +412,7 @@ class Self_REST_Route extends Abstract_REST_Route {
 	/**
 	 * Gets the current WordPress version.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.7.4
 	 *
 	 * @return string WordPress version.
 	 */

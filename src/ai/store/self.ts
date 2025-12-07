@@ -23,6 +23,7 @@ type PluginData = {
 	plugin_contributing_url: string;
 	plugin_settings_url: string;
 	plugin_playground_url: string;
+	wp_version: string;
 	current_user_capabilities: Record< string, boolean >;
 };
 
@@ -194,6 +195,15 @@ const selectors = {
 			return undefined;
 		}
 		return pluginData.plugin_playground_url;
+	} ),
+
+	getWpVersion: createRegistrySelector( ( select ) => () => {
+		const pluginData: PluginData | undefined =
+			select( STORE_NAME ).getPluginData();
+		if ( ! pluginData ) {
+			return undefined;
+		}
+		return pluginData.wp_version;
 	} ),
 
 	currentUserCan: createRegistrySelector(

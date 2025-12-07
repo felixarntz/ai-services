@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'AI_SERVICES_VERSION', '0.7.3' );
+define( 'AI_SERVICES_VERSION', '0.7.4' );
 define( 'AI_SERVICES_MINIMUM_PHP', '7.2' );
 define( 'AI_SERVICES_MINIMUM_WP', '6.0' );
 

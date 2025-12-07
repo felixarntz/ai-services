@@ -187,6 +187,12 @@ class Self_REST_Route extends Abstract_REST_Route {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'wp_version'                => array(
+					'description' => __( 'WordPress version.', 'ai-services' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
 				'current_user_capabilities' => array(
 					'description'          => __( 'Map of the plugin capabilities and whether they are granted for the current user.', 'ai-services' ),
 					'type'                 => 'object',
@@ -281,6 +287,9 @@ class Self_REST_Route extends Abstract_REST_Route {
 					break;
 				case 'plugin_playground_url':
 					$value = $this->get_admin_url( $this->tools_menu, $this->playground_page );
+					break;
+				case 'wp_version':
+					$value = $this->get_wp_version();
 					break;
 				case 'current_user_capabilities':
 					$value = $this->get_current_user_capabilities();
@@ -398,6 +407,24 @@ class Self_REST_Route extends Abstract_REST_Route {
 			$page->get_slug(),
 			$this->site_env->admin_url( $menu_file )
 		);
+	}
+
+	/**
+	 * Gets the current WordPress version.
+	 *
+	 * @since 0.7.4
+	 *
+	 * @return string WordPress version.
+	 */
+	private function get_wp_version(): string {
+		// Load unmodified WordPress version.
+		require ABSPATH . WPINC . '/version.php'; // @phpstan-ignore require.fileNotFound
+
+		if ( ! isset( $wp_version ) || ! is_string( $wp_version ) ) {
+			$wp_version = '';
+		}
+
+		return $wp_version;
 	}
 
 	/**

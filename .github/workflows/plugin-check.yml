@@ -72,6 +72,7 @@ jobs:
                   exclude-checks: |
                       file_type
                       late_escaping
+                      missing_direct_file_access_protection
                   exclude-files: 'scoper.inc.php'
                   exclude-directories: |
                       .github

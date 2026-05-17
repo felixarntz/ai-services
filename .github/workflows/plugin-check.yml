@@ -69,6 +69,7 @@ jobs:
                   wp-version: ${{ matrix.wordpress }}
                   # Exclude file_type because of the dev files present in the repository.
                   # Exclude late_escaping because it unnecessarily flags unescaped exceptions in third-party code.
+                  # Exclude missing_direct_file_access_protection because it's a pointless requirement on pure class files.
                   exclude-checks: |
                       file_type
                       late_escaping

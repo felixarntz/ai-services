@@ -5,7 +5,7 @@ Plugin URI:   https://felixarntz.github.io/ai-services/
 Author:       Felix Arntz
 Author URI:   https://felix-arntz.me
 Contributors: flixos90
-Tested up to: 6.9
+Tested up to: 7.0
 Stable tag:   0.7.4
 License:      GPLv2 or later
 License URI:  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html

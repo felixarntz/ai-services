@@ -67,13 +67,13 @@ jobs:
               uses: wordpress/plugin-check-action@v1
               with:
                   wp-version: ${{ matrix.wordpress }}
+                  # Exclude direct_file_access because it's a pointless requirement on pure class files.
                   # Exclude file_type because of the dev files present in the repository.
                   # Exclude late_escaping because it unnecessarily flags unescaped exceptions in third-party code.
-                  # Exclude missing_direct_file_access_protection because it's a pointless requirement on pure class files.
                   exclude-checks: |
+                      direct_file_access
                       file_type
                       late_escaping
-                      missing_direct_file_access_protection
                   exclude-files: 'scoper.inc.php'
                   exclude-directories: |
                       .github

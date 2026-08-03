@@ -3,7 +3,7 @@
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
 > [!NOTE]
-> **This plugin is effectively deprecated.**
+> **This plugin is effectively obsolete.**
 >
 > AI Services was the spiritual predecessor to the [PHP AI Client package](https://github.com/WordPress/php-ai-client) and its [WordPress-specific integration](https://github.com/WordPress/wp-ai-client), both of which were eventually merged into WordPress Core and released as a flagship feature of WordPress 7.0.
 >

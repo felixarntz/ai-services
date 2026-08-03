@@ -2,6 +2,13 @@
 
 Makes AI centrally available in WordPress, whether via PHP, REST API, JavaScript, or WP-CLI - for any provider.
 
+> [!NOTE]
+> **This plugin is effectively deprecated.**
+>
+> AI Services was the spiritual predecessor to the [PHP AI Client package](https://github.com/WordPress/php-ai-client) and its [WordPress-specific integration](https://github.com/WordPress/wp-ai-client), both of which were eventually merged into WordPress Core and released as a flagship feature of WordPress 7.0.
+>
+> Please build your WordPress AI features on top of the AI Client bundled in WordPress Core.
+
 | AI Services: Settings screen | AI Services: Playground screen |
 | ------------- | ------------- |
 | ![The AI Services settings screen where users can paste their AI service credentials](https://raw.githubusercontent.com/felixarntz/ai-services/refs/heads/main/.wordpress-org/screenshot-1.png)  | ![Multimodal text generation in the AI Playground where users can explore the different AI model capabilities](https://raw.githubusercontent.com/felixarntz/ai-services/refs/heads/main/.wordpress-org/screenshot-2.png)  |
